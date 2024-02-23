@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import log from '../utils/logger';
 
 interface ResponseError extends Error {
@@ -8,13 +8,12 @@ interface ResponseError extends Error {
 const handlerError = async (
   error: ResponseError,
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   try {
     const message = error.message || 'Internal Server Error!';
     const status = error.status || 500;
-    const func = res.locals.func;
+    const func = res.locals.func || 'Not found function';
     const url = req.method + req.baseUrl + req.url;
 
     log.error(`${url}, ${func}: ${message}`);

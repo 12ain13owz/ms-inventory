@@ -1,15 +1,23 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import sequelize from '../utils/sequelize';
 
-class User extends Model {
-  id: number;
+export class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
+> {
+  id?: number;
   email: string;
   password: string;
   firstname: string;
   lastname: string;
-  role: 'admin' | 'user';
-  remakr: string;
-  active: boolean;
+  role?: 'admin' | 'user';
+  active?: boolean;
+  remark?: string;
 }
 
 export default User.init(
@@ -46,6 +54,9 @@ export default User.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    remark: {
+      type: DataTypes.STRING,
     },
   },
   { sequelize, modelName: 'User', timestamps: true }

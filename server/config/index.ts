@@ -8,6 +8,8 @@ interface DatabaseConfig {
 
 interface AppConfig {
   port: number;
+  recaptcha: { siteKey: string };
+  recaptchaUrl: string;
   database: DatabaseConfig;
   accessTokenPrivateKey: string;
   accessTokenPublicKey: string;
@@ -16,7 +18,9 @@ interface AppConfig {
 }
 
 const config: AppConfig = {
-  port: Number(process.env.PORT) || 3500,
+  port: Number(process.env.PORT) || 3000,
+  recaptcha: { siteKey: process.env.SITEKEY || '' },
+  recaptchaUrl: 'https://www.google.com/recaptcha/api/siteverify',
   database: {
     dialect: 'sqlite',
     storage: './database/ms_stock.sqlite',

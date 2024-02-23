@@ -1,1 +1,52 @@
-<p>login works!</p>
+<div class="view">
+  <div class="rgba-stylish-strong"></div>
+</div>
+
+<div class="login-wrapper dark-theme">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    @if (isLoading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <img src="assets/images/logo-bsru.png" alt="logo" />
+    <h1>ระบบพัสดุ</h1>
+    <mat-form-field>
+      <mat-label>E-mail</mat-label>
+      <input matInput type="email" formControlName="email" />
+      <mat-icon matSuffix fontIcon="email"></mat-icon>
+
+      <mat-error>
+        <app-error-field
+          [control]="email"
+          [errorMessage]="validationField.email"
+        ></app-error-field>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        autocomplete="false"
+      />
+      <mat-icon matSuffix fontIcon="lock"></mat-icon>
+
+      <mat-error>
+        <app-error-field
+          [control]="password"
+          [errorMessage]="validationField.password"
+        ></app-error-field>
+      </mat-error>
+    </mat-form-field>
+
+    <button type="button" (click)="onSubmit()" [disabled]="isLoading">
+      <span class="text">Log in</span>
+    </button>
+
+    <div class="forgot-password">
+      <a>Forgot your password?</a>
+    </div>
+  </form>
+</div>

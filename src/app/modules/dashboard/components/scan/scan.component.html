@@ -1,1 +1,48 @@
-<p>scan works!</p>
+<mat-card class="bg-card">
+  <mat-card-header class="mb-10">
+    <mat-card-title>Form</mat-card-title>
+    <mat-card-subtitle>User</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content class="box">
+    <div class="row">
+      <mat-form-field>
+        <mat-label class="label-in">First Name</mat-label>
+        <input matInput />
+        <mat-icon matSuffix fontIcon="lock"></mat-icon>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>E-mail</mat-label>
+      <input type="email" matInput />
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Country</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Post Code</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions style="gap: 10px">
+    <button mat-raised-button color="primary">Submit</button>
+    <button mat-button color="warn">Reset</button>
+  </mat-card-actions>
+</mat-card>

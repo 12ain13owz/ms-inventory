@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap");
+@import "./app/core/theme/theme.scss";
+@import "ngx-toastr/toastr";
 
 html,
 body {
@@ -8,4 +10,8 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", "Prompt", sans-serif;
+}
+
+mat-error {
+  margin-top: 4px;
 }
