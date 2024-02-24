@@ -1,14 +1,15 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import log from '../utils/logger';
 
 interface ResponseError extends Error {
   status?: number;
 }
 
-const handlerError = async (
+const errorHandler = async (
   error: ResponseError,
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const message = error.message || 'Internal Server Error!';
@@ -19,8 +20,8 @@ const handlerError = async (
     log.error(`${url}, ${func}: ${message}`);
     res.status(status).json({ message });
   } catch (error) {
-    res.sendStatus(500);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-export default handlerError;
+export default errorHandler;

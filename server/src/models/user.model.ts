@@ -10,14 +10,14 @@ export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  id?: number;
+  id: number;
   email: string;
   password: string;
   firstname: string;
   lastname: string;
-  role?: 'admin' | 'user';
-  active?: boolean;
-  remark?: string;
+  role: 'admin' | 'user';
+  active: boolean;
+  remark: string;
 }
 
 export default User.init(
@@ -59,5 +59,18 @@ export default User.init(
       type: DataTypes.STRING,
     },
   },
-  { sequelize, modelName: 'User', timestamps: true }
+  {
+    indexes: [{ unique: true, fields: ['email'] }],
+    sequelize,
+    modelName: 'User',
+    timestamps: true,
+  }
 );
+
+export const privateUserFields = [
+  'password',
+  'active',
+  'remark',
+  'createdAt',
+  'updatedAt',
+];

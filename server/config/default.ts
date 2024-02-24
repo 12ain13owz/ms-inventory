@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 import { Dialect } from 'sequelize';
 
 interface DatabaseConfig {
@@ -8,26 +9,26 @@ interface DatabaseConfig {
 
 interface AppConfig {
   port: number;
-  recaptcha: { siteKey: string };
-  recaptchaUrl: string;
+  // recaptcha: { siteKey: string };
+  // recaptchaUrl: string;
   database: DatabaseConfig;
   accessTokenPrivateKey: string;
   accessTokenPublicKey: string;
-  refrestTokenPrivateKey: string;
+  refreshTokenPrivateKey: string;
   refreshTokenPublicKey: string;
 }
 
 const config: AppConfig = {
   port: Number(process.env.PORT) || 3000,
-  recaptcha: { siteKey: process.env.SITEKEY || '' },
-  recaptchaUrl: 'https://www.google.com/recaptcha/api/siteverify',
+  // recaptcha: { siteKey: process.env.SITEKEY || '' },
+  // recaptchaUrl: 'https://www.google.com/recaptcha/api/siteverify',
   database: {
     dialect: 'sqlite',
     storage: './database/ms_stock.sqlite',
   },
   accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY || '',
   accessTokenPublicKey: process.env.ACCESS_TOKEN_PUBLIC_KEY || '',
-  refrestTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY || '',
+  refreshTokenPrivateKey: process.env.REFRESH_TOKEN_PRIVATE_KEY || '',
   refreshTokenPublicKey: process.env.REFRESH_TOKEN_PUBLIC_KEY || '',
 };
 

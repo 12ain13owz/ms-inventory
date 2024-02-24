@@ -10,3 +10,7 @@ export function createUser(user: User, t?: Transaction) {
 export function findUserById(id: number) {
   return UserModel.findByPk(id);
 }
+
+export function findUserByEmail(email: string) {
+  return UserModel.findOne({ where: { email } });
+}

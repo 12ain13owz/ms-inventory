@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
-import { LoginModel } from '../models/login.model';
-import { exhaustMap, of } from 'rxjs';
+import { LoginRequest } from '../models/login.model';
+import { AuthToken } from '../../shared/models/token.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  login(data: LoginModel) {
-    return this.http.post(this.apiUrl + 'login', data);
+  login(data: LoginRequest): Observable<AuthToken> {
+    return this.http.post<AuthToken>(this.apiUrl + 'auth/login', data);
   }
 }

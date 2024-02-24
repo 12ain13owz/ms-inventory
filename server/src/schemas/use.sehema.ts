@@ -3,12 +3,11 @@ import { TypeOf, object, string } from 'zod';
 export const LoginUserSchema = object({
   body: object({
     email: string({
-      required_error: 'กรุณาระบุ Email ค่ะ',
-    }).email('รูปแบบของ Email ไม่ถูกต้องค่ะ'),
+      required_error: 'กรุณาระบุ Email',
+    }).email('รูปแบบของ Email ไม่ถูกต้อง'),
     password: string({
-      required_error: 'กรุณาระบุ Password ค่ะ',
-    }),
-    receptchaToken: string({}),
+      required_error: 'กรุณาระบุ Password',
+    }).min(1, { message: 'กรุณาระบุ Password' }),
   }),
 });
 

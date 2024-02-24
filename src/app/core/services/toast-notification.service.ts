@@ -9,7 +9,7 @@ export class ToastNotificationService {
 
   private toastOptions: Partial<IndividualConfig> = {
     closeButton: true,
-    timeOut: 3000,
+    timeOut: 5000,
     progressBar: true,
     newestOnTop: true,
     progressAnimation: 'increasing',

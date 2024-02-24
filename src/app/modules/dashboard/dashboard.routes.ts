@@ -4,12 +4,15 @@ import { DashboardComponent } from './dashboard.component';
 import { ScanComponent } from './components/scan/scan.component';
 import { ItemComponent } from './components/item/item.component';
 import { LogComponent } from './components/log/log.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
+    canActivateChild: [authGuard],
     children: [
+      { path: '', redirectTo: 'scan', pathMatch: 'full' },
       { path: 'scan', component: ScanComponent },
       { path: 'item', component: ItemComponent },
       { path: 'log', component: LogComponent },

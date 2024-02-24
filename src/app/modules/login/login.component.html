@@ -27,11 +27,14 @@
       <mat-label>Password</mat-label>
       <input
         matInput
+        [type]="hidePassword ? 'password' : 'text'"
         type="password"
         formControlName="password"
         autocomplete="false"
       />
-      <mat-icon matSuffix fontIcon="lock"></mat-icon>
+      <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{
+        hidePassword ? "visibility_off" : "visibility"
+      }}</mat-icon>
 
       <mat-error>
         <app-error-field
@@ -41,7 +44,7 @@
       </mat-error>
     </mat-form-field>
 
-    <button type="button" (click)="onSubmit()" [disabled]="isLoading">
+    <button type="submit" [disabled]="isLoading">
       <span class="text">Log in</span>
     </button>
 

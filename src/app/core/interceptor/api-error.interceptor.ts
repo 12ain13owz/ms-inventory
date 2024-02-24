@@ -12,7 +12,7 @@ export const ApiErrorInterceptor: HttpInterceptorFn = (req, next) => {
       const message =
         status === 500
           ? 'Internal Server Error!'
-          : error.message || 'Unknown Error!';
+          : error.error.message || 'Unknown Error!';
 
       toastr.error(status.toString(), message);
       return throwError(() => error);

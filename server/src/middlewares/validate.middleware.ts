@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
+import { newError } from '../utils/error';
 
 export const validate =
   (schema: AnyZodObject) =>
@@ -21,7 +22,6 @@ export const validate =
         status = 400;
       }
 
-      const e = Object.assign(new Error(message), { status });
-      next(e);
+      next(newError(status, message));
     }
   };

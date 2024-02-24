@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-export interface LoginModel {
+export interface LoginRequest {
   email: string;
   password: string;
   receptchaToken: string;

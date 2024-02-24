@@ -43,8 +43,8 @@ $text-title: #9c27b0;
     max-width: 400px;
     padding: 40px 60px;
     background: rgba(0, 0, 0, 0.7);
-    border-radius: 20px;
-    box-shadow: 5px 10px 20px #111;
+    border-radius: 6px;
+    box-shadow: 5px 10px 20px #2a154e;
 
     img {
       position: absolute;
@@ -63,10 +63,8 @@ $text-title: #9c27b0;
     mat-progress-bar {
       position: absolute;
       top: 0;
-      left: 50%;
-      translate: (-50%);
-      width: 95%;
-      border-radius: 10px;
+      left: 0;
+      border-radius: 6px;
     }
 
     mat-form-field {
