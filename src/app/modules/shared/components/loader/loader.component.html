@@ -1,0 +1,79 @@
+@if (form === 'card') {
+<mat-card>
+  <mat-card-header>
+    <ngx-skeleton-loader
+      [theme]="{ height: heigh, background: backgroundColor, width: '100px' }"
+      appearance="line"
+    />
+  </mat-card-header>
+
+  <form>
+    <mat-card-content class="loader-box">
+      <ngx-skeleton-loader
+        [theme]="{
+          height: heigh,
+          background: backgroundColor,
+          width: '100%'
+        }"
+        appearance="line"
+      />
+
+      <ngx-skeleton-loader
+        [theme]="{
+          height: heigh,
+          background: backgroundColor,
+          width: '100%'
+        }"
+        appearance="line"
+      />
+
+      <div class="loader-row">
+        <ngx-skeleton-loader
+          [theme]="{
+            height: heigh,
+            background: backgroundColor,
+            width: '100%'
+          }"
+          appearance="line"
+        />
+        <ngx-skeleton-loader
+          [theme]="{
+            height: heigh,
+            background: backgroundColor,
+            width: '100%'
+          }"
+          appearance="line"
+        />
+      </div>
+
+      <ngx-skeleton-loader
+        [theme]="{
+          height: heigh,
+          background: backgroundColor,
+          width: '100%'
+        }"
+        appearance="line"
+      />
+      <div class="loader-action">
+        <ngx-skeleton-loader
+          [theme]="{
+            height: heigh,
+            background: backgroundColor,
+            width: '100px'
+          }"
+          appearance="line"
+        />
+
+        <ngx-skeleton-loader
+          [theme]="{
+            height: heigh,
+            background: backgroundColor,
+            width: '100px'
+          }"
+          appearance="line"
+        />
+      </div>
+    </mat-card-content>
+  </form>
+</mat-card>
+}

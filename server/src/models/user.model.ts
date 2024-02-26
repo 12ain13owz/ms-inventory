@@ -67,10 +67,12 @@ export default User.init(
   }
 );
 
-export const privateUserFields = [
+export const privateUserToken = [
   'password',
   'active',
   'remark',
   'createdAt',
   'updatedAt',
 ];
+
+export const privateUserFields = ['password', 'createdAt', 'updatedAt'];

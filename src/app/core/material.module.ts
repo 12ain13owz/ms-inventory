@@ -11,6 +11,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   exports: [
@@ -25,6 +26,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatMenuModule,
     MatSlideToggleModule,
     MatExpansionModule,
+    MatRadioModule,
   ],
   providers: [
     {

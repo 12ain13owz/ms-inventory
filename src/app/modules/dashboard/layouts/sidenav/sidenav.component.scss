@@ -6,14 +6,11 @@ mat-nav-list {
   display: flex;
   align-items: center;
   gap: 10px;
+  transition: 0.3s;
 }
 
-.active {
-  background-color: #673ab7;
-
-  .link-box {
-    color: #fff;
-  }
+a {
+  transition: all 0.3s;
 }
 
 mat-expansion-panel-header {

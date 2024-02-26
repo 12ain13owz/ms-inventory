@@ -1,25 +1,27 @@
 <mat-toolbar>เมนู</mat-toolbar>
 <mat-nav-list>
-  <a mat-list-item routerLink="/scan" routerLinkActive="active">
+  <a mat-list-item routerLink="/scan" routerLinkActive="link-active">
     <div class="link-box">
       <mat-icon matListIcon>qr_code</mat-icon>
       <div mat-line>สแกน</div>
     </div>
   </a>
 
-  <a mat-list-item routerLink="/item" routerLinkActive="active">
+  <a mat-list-item routerLink="/item" routerLinkActive="link-active">
     <div class="link-box">
       <mat-icon matListIcon>wysiwyg</mat-icon>
       <div mat-line>อุปกรณ์</div>
     </div>
   </a>
 
-  <a mat-list-item routerLink="/log" routerLinkActive="active">
+  <a mat-list-item routerLink="/log" routerLinkActive="link-active">
     <div class="link-box">
       <mat-icon matListIcon>view_timeline</mat-icon>
       <div mat-line>ประวัติ</div>
     </div>
   </a>
+
+  <mat-divider></mat-divider>
 
   <mat-accordion>
     <mat-expansion-panel
@@ -34,7 +36,11 @@
       </mat-expansion-panel-header>
 
       <mat-nav-list>
-        <a mat-list-item routerLink="/setting/user" routerLinkActive="active">
+        <a
+          mat-list-item
+          routerLink="/setting/user"
+          routerLinkActive="link-active"
+        >
           <div class="link-box">
             <mat-icon matListIcon>manage_accounts</mat-icon>
             <div mat-line>บัญชีผู้ใช้งาน</div>
@@ -44,7 +50,7 @@
         <a
           mat-list-item
           routerLink="/setting/category"
-          routerLinkActive="active"
+          routerLinkActive="link-active"
         >
           <div class="link-box">
             <mat-icon matListIcon>list_alt</mat-icon>
@@ -52,7 +58,11 @@
           </div>
         </a>
 
-        <a mat-list-item routerLink="/setting/status" routerLinkActive="active">
+        <a
+          mat-list-item
+          routerLink="/setting/status"
+          routerLinkActive="link-active"
+        >
           <div class="link-box">
             <mat-icon matListIcon>dataset</mat-icon>
             <div mat-line>สถานะอุปกรณ์</div>

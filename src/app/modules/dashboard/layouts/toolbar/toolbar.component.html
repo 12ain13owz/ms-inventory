@@ -24,7 +24,12 @@
 </mat-toolbar>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item>
+  <a mat-menu-item routerLink="/profile">
+    <mat-icon>person</mat-icon>
+    <span>Profile</span>
+  </a>
+
+  <button type="button" mat-menu-item>
     <mat-icon>dark_mode</mat-icon>
     <span>Dark</span>
     <mat-slide-toggle

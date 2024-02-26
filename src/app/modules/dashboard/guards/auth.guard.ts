@@ -29,6 +29,7 @@ export const authGuard: CanActivateChildFn = async (childRoute, state) => {
   const user = omit(decoded, ['iat', 'exp']);
   const expired = await jwtHelper.isTokenExpired();
   if (!expired) {
+    console.log(2);
     userService.setUser(user);
     return true;
   }
@@ -41,7 +42,6 @@ export const authGuard: CanActivateChildFn = async (childRoute, state) => {
     }),
     catchError(() => {
       tokenService.removeToken();
-      router.navigate(['login']);
       return of(false);
     })
   );

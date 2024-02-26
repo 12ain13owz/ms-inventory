@@ -1,0 +1,79 @@
+@defer (when userForm.value) {
+<mat-card class="form-container">
+  <mat-card-header>
+    <mat-card-title>Profile</mat-card-title>
+  </mat-card-header>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" id="formuser">
+    <mat-card-content class="box">
+      <mat-form-field>
+        <mat-label>E-mail</mat-label>
+        <input type="email" matInput formControlName="email" />
+      </mat-form-field>
+
+      <div class="row">
+        <mat-form-field>
+          <mat-label class="label-in">First Name</mat-label>
+          <input type="text" matInput formControlName="firstname" #firstname />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Last Name</mat-label>
+          <input type="text" matInput formControlName="lastname" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Role</mat-label>
+        <input type="text" matInput formControlName="role" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Remark</mat-label>
+        <input type="text" matInput formControlName="remark" />
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions style="gap: 10px">
+      <button type="submit" mat-raised-button color="primary">Submit</button>
+      <button type="button" mat-button color="warn" (click)="onReset()">
+        Reset
+      </button>
+    </mat-card-actions>
+  </form>
+</mat-card>
+
+<!-- <mat-card class="form-container">
+  <mat-card-header>
+    <mat-card-title>Change password</mat-card-title>
+  </mat-card-header>
+
+  <form [formGroup]="passForm" #passFormDirect="ngForm" id="formpass">
+    <mat-card-content class="box">
+      <mat-form-field>
+        <mat-label>Old password</mat-label>
+        <input type="password" matInput formControlName="opassword" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>New password</mat-label>
+        <input type="password" matInput formControlName="npassword" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Confirm new password</mat-label>
+        <input type="password" matInput formControlName="cpassword" />
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions style="gap: 10px">
+      <button mat-raised-button color="primary">Submit</button>
+      <button mat-button color="warn" (click)="onReset(passFormDirect)">
+        Reset
+      </button>
+    </mat-card-actions>
+  </form>
+</mat-card> -->
+} @placeholder (minimum 500ms) {
+<app-loader></app-loader>
+}

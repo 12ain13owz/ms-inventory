@@ -4,7 +4,7 @@ import config from 'config';
 import { LoginUserInput } from '../schemas/auth.schema';
 import { findUserByEmail, findUserById } from '../services/user.service';
 import { newError } from '../utils/error';
-import { privateUserFields } from '../models/user.model';
+import { privateUserToken } from '../models/user.model';
 import { signAccessToken, signRefreshToken, verifyJwt } from '../utils/jwt';
 
 const tokenKey = 'refresh_token';
@@ -28,7 +28,7 @@ export async function loginHandler(
     if (!isValidPassword) throw newError(401, 'Email หรือ Password ไม่ตรงกัน');
     if (!user.active) throw newError(401, 'Email นี้ไม่ได้รับอนุญาติให้ใช้งาน');
 
-    const accessToken = signAccessToken(user, privateUserFields);
+    const accessToken = signAccessToken(user, privateUserToken);
     const refreshToken = signRefreshToken(user.id);
 
     res.clearCookie(tokenKey);
@@ -70,18 +70,20 @@ export async function refreshTokenHandler(
 
   try {
     const token = req.cookies[tokenKey];
-    if (!token) throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่');
+    if (!token)
+      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่', true);
 
     const decoded = verifyJwt<{ userId: number }>(
       token,
       'refreshTokenPublicKey'
     );
-    if (!decoded) throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่');
+    if (!decoded)
+      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่', true);
 
     const user = await findUserById(decoded.userId);
-    if (!user) throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่');
+    if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
 
-    const accessToken = signAccessToken(user, privateUserFields);
+    const accessToken = signAccessToken(user, privateUserToken);
     const refreshToken = signRefreshToken(user.id);
 
     res.clearCookie(tokenKey);

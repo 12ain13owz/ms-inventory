@@ -1,5 +1,5 @@
-<mat-card class="bg-card">
-  <mat-card-header class="mb-10">
+<mat-card>
+  <mat-card-header>
     <mat-card-title>Form</mat-card-title>
     <mat-card-subtitle>User</mat-card-subtitle>
   </mat-card-header>
@@ -42,13 +42,7 @@
   </mat-card-content>
 
   <mat-card-actions style="gap: 10px">
-    <button mat-raised-button color="primary" (click)="onClick()">
-      Submit
-    </button>
+    <button mat-raised-button color="primary">Submit</button>
     <button mat-button color="warn">Reset</button>
   </mat-card-actions>
 </mat-card>
-
-@for (user of users; track $index) {
-{{ user.id }}
-}

@@ -15,3 +15,47 @@ body {
 mat-error {
   margin-top: 4px;
 }
+
+.form-container {
+  .box {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.link-active {
+  background-color: #673ab7 !important;
+
+  .link-box {
+    color: #fff;
+  }
+}
+
+.dark-theme {
+  .link-active {
+    background-color: #9c27b0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-container {
+    .row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+}

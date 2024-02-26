@@ -8,17 +8,21 @@ import { authGuard } from './guards/auth.guard';
 import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { userResolver } from './resolver/user.resolver';
 
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
+    resolve: [userResolver],
     canActivateChild: [authGuard],
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },
       { path: 'scan', component: ScanComponent },
       { path: 'item', component: ItemComponent },
       { path: 'log', component: LogComponent },
+      { path: 'profile', component: ProfileComponent },
       {
         path: 'setting',
         canActivateChild: [],

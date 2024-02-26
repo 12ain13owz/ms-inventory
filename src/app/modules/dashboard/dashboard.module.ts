@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { StatusComponent } from './components/status/status.component';
     UserComponent,
     CategoryComponent,
     StatusComponent,
+    ProfileComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
 })

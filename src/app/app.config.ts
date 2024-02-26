@@ -9,9 +9,10 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
-import { ApiErrorInterceptor } from './core/interceptor/api-error.interceptor';
+import { ErrorInterceptor } from './core/interceptor/error.interceptor';
 import { JwtConfig, JwtModule } from '@auth0/angular-jwt';
 import { environment } from '../environments/environment.development';
+import { authInterceptor } from './core/interceptor/auth.interceptor';
 
 const config: JwtConfig = {
   tokenGetter: () => localStorage.getItem('accessToken'),
@@ -23,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(
-      withInterceptors([ApiErrorInterceptor]),
+      withInterceptors([ErrorInterceptor, authInterceptor]),
       withInterceptorsFromDi()
     ),
     provideToastr(),
