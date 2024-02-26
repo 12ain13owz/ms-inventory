@@ -1,10 +1,7 @@
 import { Routes } from '@angular/router';
 import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
-import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
-  { path: 'test', component: TestComponent },
-
   {
     path: '',
     loadChildren: () =>

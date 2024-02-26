@@ -9,6 +9,7 @@ interface DatabaseConfig {
 
 interface AppConfig {
   port: number;
+  node_env: string;
   // recaptcha: { siteKey: string };
   // recaptchaUrl: string;
   database: DatabaseConfig;
@@ -20,6 +21,7 @@ interface AppConfig {
 
 const config: AppConfig = {
   port: Number(process.env.PORT) || 3000,
+  node_env: process.env.NODE_ENV || 'development',
   // recaptcha: { siteKey: process.env.SITEKEY || '' },
   // recaptchaUrl: 'https://www.google.com/recaptcha/api/siteverify',
   database: {

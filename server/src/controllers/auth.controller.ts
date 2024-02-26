@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { LoginUserInput } from '../schemas/use.sehema';
+import config from 'config';
+import { LoginUserInput } from '../schemas/auth.schema';
 import { findUserByEmail, findUserById } from '../services/user.service';
 import { newError } from '../utils/error';
 import { privateUserFields } from '../models/user.model';
 import { signAccessToken, signRefreshToken, verifyJwt } from '../utils/jwt';
+
+const tokenKey = 'refresh_token';
+const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
 export async function loginHandler(
   req: Request<{}, {}, LoginUserInput>,
@@ -27,7 +31,31 @@ export async function loginHandler(
     const accessToken = signAccessToken(user, privateUserFields);
     const refreshToken = signRefreshToken(user.id);
 
-    res.json({ accessToken, refreshToken });
+    res.clearCookie(tokenKey);
+    res.cookie(tokenKey, refreshToken, {
+      path: '/',
+      expires: expiresCookie,
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: config.get<string>('node_env') === 'production',
+    });
+
+    res.json({ accessToken });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function logoutHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  res.locals.func = 'logoutHandler';
+
+  try {
+    res.clearCookie(tokenKey);
+    res.json({ message: 'ok' });
   } catch (error) {
     next(error);
   }
@@ -41,7 +69,9 @@ export async function refreshTokenHandler(
   res.locals.func = 'refreshTokenHandler';
 
   try {
-    const token = req.headers['x-refresh-token'] as string;
+    const token = req.cookies[tokenKey];
+    if (!token) throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่');
+
     const decoded = verifyJwt<{ userId: number }>(
       token,
       'refreshTokenPublicKey'
@@ -54,7 +84,15 @@ export async function refreshTokenHandler(
     const accessToken = signAccessToken(user, privateUserFields);
     const refreshToken = signRefreshToken(user.id);
 
-    res.json({ accessToken, refreshToken });
+    res.clearCookie(tokenKey);
+    res.cookie(tokenKey, refreshToken, {
+      path: '/',
+      expires: expiresCookie,
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: config.get<string>('node_env') === 'production',
+    });
+    res.json({ accessToken });
   } catch (error) {
     next(error);
   }

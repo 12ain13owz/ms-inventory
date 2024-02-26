@@ -3,35 +3,36 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { TokenService } from '../../shared/services/token.service';
 import { Router } from '@angular/router';
-import { AuthToken } from '../../shared/models/token.model';
-import { Observable } from 'rxjs';
+import { AccessToken } from '../../shared/models/token.model';
+import { Observable, catchError, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl: string = environment.apiUrl;
+  private apiUrl: string = environment.apiUrl + 'auth/';
   constructor(
     private router: Router,
     private http: HttpClient,
     private tokenService: TokenService
   ) {}
 
-  logout(): void {
+  logout(): Observable<{ message: string }> {
     this.tokenService.removeToken();
     this.router.navigate(['/login']);
+
+    return this.http.post<{ message: string }>(
+      this.apiUrl + 'logout',
+      {},
+      { withCredentials: true }
+    );
   }
 
-  refreshToken(refreshToken: string): Observable<AuthToken> {
-    return this.http.post<AuthToken>(
-      this.apiUrl + 'auth/refresh',
+  refreshToken(): Observable<AccessToken> {
+    return this.http.post<AccessToken>(
+      this.apiUrl + 'refresh',
       {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-refresh-token': refreshToken,
-        },
-      }
+      { withCredentials: true }
     );
   }
 }

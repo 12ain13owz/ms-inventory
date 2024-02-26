@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { LoginUserInput } from '../schemas/use.sehema';
+import { LoginUserInput } from '../schemas/auth.schema';
 
 export async function verifyReceptcha(
   req: Request<{}, {}, LoginUserInput>,

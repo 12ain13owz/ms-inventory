@@ -1,14 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import {
-  Subject,
-  Subscription,
-  catchError,
-  exhaustMap,
-  finalize,
-  of,
-  tap,
-  throwError,
-} from 'rxjs';
+import { Subscription, finalize } from 'rxjs';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { LoginService } from './services/login.service';
 import { LoginForm, LoginRequest } from './models/login.model';
@@ -28,7 +19,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   private recaptchaV3Service = inject(ReCaptchaV3Service);
   private tokenService = inject(TokenService);
   private loginService = inject(LoginService);
-  private loginRequest$ = new Subject<LoginRequest>();
 
   validationField = LOGIN.validationField;
   loginForm: LoginForm;
@@ -58,7 +48,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         this.tokenService.setAccessToken(res.accessToken);
-        this.tokenService.setRefreshToken(res.refreshToken);
         this.router.navigate(['/']);
       });
   }

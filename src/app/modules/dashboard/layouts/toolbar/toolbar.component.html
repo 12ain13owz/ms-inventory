@@ -15,28 +15,27 @@
       @if (user$ | async; as user) {
       <span>{{ user.firstname }} {{ user.lastname }}</span>
       }
-    </div>
 
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="menu"
-      aria-label="Example icon-button with a menu"
-    >
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>dialpad</mat-icon>
-        <span>Redial</span>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
       </button>
-      <button mat-menu-item disabled>
-        <mat-icon>voicemail</mat-icon>
-        <span>Check voice mail</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>notifications_off</mat-icon>
-        <span>Disable alerts</span>
-      </button>
-    </mat-menu>
+    </div>
   </div>
 </mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>dark_mode</mat-icon>
+    <span>Dark</span>
+    <mat-slide-toggle
+      style="margin-left: 50px"
+      [(ngModel)]="isDarkTheme"
+      (click)="onSwitchTheme($event)"
+    ></mat-slide-toggle>
+  </button>
+
+  <button type="button" mat-menu-item (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+    <span>Log out</span>
+  </button>
+</mat-menu>

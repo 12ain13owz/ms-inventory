@@ -10,6 +10,8 @@ import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { Observable, Subscription, filter } from 'rxjs';
 import { Event, NavigationEnd, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-toolbar',
@@ -19,15 +21,19 @@ import { Event, NavigationEnd, Router } from '@angular/router';
 export class ToolbarComponent implements OnInit, OnDestroy {
   @Output() menuToggle = new EventEmitter();
 
+  private document: Document = inject(DOCUMENT);
   private subscription = new Subscription();
   private router = inject(Router);
   private userService = inject(UserService);
+  private authService = inject(AuthService);
 
-  user: User;
+  private themeKey: string = 'dark-theme';
+  isDarkTheme: boolean;
   user$: Observable<User>;
   title: string;
 
   ngOnInit(): void {
+    this.setTheme();
     this.user$ = this.userService.onUserListener();
     this.title = this.setTitle(this.router.url);
 
@@ -45,6 +51,32 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   onMenuToggle(): void {
     this.menuToggle.emit();
+  }
+
+  onLogout(): void {
+    this.authService.logout().subscribe();
+  }
+
+  onSwitchTheme(event: MouseEvent) {
+    event.stopPropagation();
+    const classTheme = this.document.documentElement.classList;
+
+    if (this.isDarkTheme) {
+      classTheme.add(this.themeKey);
+      localStorage.setItem(this.themeKey, this.isDarkTheme.toString());
+    } else {
+      classTheme.remove(this.themeKey);
+      localStorage.setItem(this.themeKey, this.isDarkTheme.toString());
+    }
+  }
+
+  private setTheme(): void {
+    const classTheme = this.document.documentElement.classList;
+    this.isDarkTheme =
+      localStorage.getItem(this.themeKey) === 'true' ? true : false;
+
+    if (this.isDarkTheme) classTheme.add(this.themeKey);
+    else localStorage.setItem(this.themeKey, this.isDarkTheme.toString());
   }
 
   private setTitle(url: string): string {

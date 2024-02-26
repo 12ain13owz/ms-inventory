@@ -1,0 +1,29 @@
+mat-nav-list {
+  padding: 0;
+}
+
+.link-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.active {
+  background-color: #673ab7;
+
+  .link-box {
+    color: #fff;
+  }
+}
+
+mat-expansion-panel-header {
+  padding: 0 16px;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 !important;
+
+  a {
+    padding-left: 24px;
+  }
+}

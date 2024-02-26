@@ -7,7 +7,8 @@ import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../../shared/services/token.service';
 import { catchError, map, of } from 'rxjs';
-import { AuthToken } from '../../shared/models/token.model';
+import { AccessToken } from '../../shared/models/token.model';
+import { ToastNotificationService } from '../../../core/services/toast-notification.service';
 
 export const authGuard: CanActivateChildFn = async (childRoute, state) => {
   const router = inject(Router);
@@ -15,26 +16,27 @@ export const authGuard: CanActivateChildFn = async (childRoute, state) => {
   const authService = inject(AuthService);
   const userService = inject(UserService);
   const tokenService = inject(TokenService);
+  const toastService = inject(ToastNotificationService);
 
-  const refreshToken = tokenService.getRefreshToken();
-  if (!refreshToken || refreshToken === 'undefined') {
-    tokenService.removeToken();
+  const accessToken = tokenService.getAccessToken();
+  if (!accessToken || accessToken === 'undefined') {
+    toastService.error('404', 'ไม่พบ Token! กรุณาเข้าสู่ระบบ');
     router.navigate(['login']);
     return false;
   }
 
+  const decoded = await jwtHelper.decodeToken<DecodeUser>();
+  const user = omit(decoded, ['iat', 'exp']);
   const expired = await jwtHelper.isTokenExpired();
   if (!expired) {
-    const decoded = await jwtHelper.decodeToken<DecodeUser>();
-    const user = omit(decoded, ['iat', 'exp']);
     userService.setUser(user);
     return true;
   }
 
-  const observable = authService.refreshToken(refreshToken).pipe(
-    map((res: AuthToken) => {
+  const observable = authService.refreshToken().pipe(
+    map(async (res: AccessToken) => {
       tokenService.setAccessToken(res.accessToken);
-      tokenService.setRefreshToken(res.refreshToken);
+      userService.setUser(user);
       return true;
     }),
     catchError(() => {

@@ -42,7 +42,13 @@
   </mat-card-content>
 
   <mat-card-actions style="gap: 10px">
-    <button mat-raised-button color="primary">Submit</button>
+    <button mat-raised-button color="primary" (click)="onClick()">
+      Submit
+    </button>
     <button mat-button color="warn">Reset</button>
   </mat-card-actions>
 </mat-card>
+
+@for (user of users; track $index) {
+{{ user.id }}
+}

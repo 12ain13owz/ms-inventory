@@ -9,6 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   exports: [
@@ -21,6 +23,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatInputModule,
     MatProgressBarModule,
     MatMenuModule,
+    MatSlideToggleModule,
+    MatExpansionModule,
   ],
   providers: [
     {

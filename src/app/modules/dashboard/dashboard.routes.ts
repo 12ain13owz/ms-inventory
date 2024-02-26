@@ -5,6 +5,9 @@ import { ScanComponent } from './components/scan/scan.component';
 import { ItemComponent } from './components/item/item.component';
 import { LogComponent } from './components/log/log.component';
 import { authGuard } from './guards/auth.guard';
+import { UserComponent } from './components/user/user.component';
+import { CategoryComponent } from './components/category/category.component';
+import { StatusComponent } from './components/status/status.component';
 
 export const routes: Routes = [
   {
@@ -16,6 +19,15 @@ export const routes: Routes = [
       { path: 'scan', component: ScanComponent },
       { path: 'item', component: ItemComponent },
       { path: 'log', component: LogComponent },
+      {
+        path: 'setting',
+        canActivateChild: [],
+        children: [
+          { path: 'user', component: UserComponent },
+          { path: 'category', component: CategoryComponent },
+          { path: 'status', component: StatusComponent },
+        ],
+      },
     ],
   },
 ];
