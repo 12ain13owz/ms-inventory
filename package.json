@@ -21,7 +21,6 @@
     "@angular/platform-browser-dynamic": "^17.2.2",
     "@angular/router": "^17.2.2",
     "@auth0/angular-jwt": "^5.2.0",
-    "lodash": "^4.17.21",
     "ng-recaptcha": "^13.2.1",
     "ngx-skeleton-loader": "^9.0.0",
     "ngx-toastr": "^18.0.0",

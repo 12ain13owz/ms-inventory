@@ -7,7 +7,7 @@ import { catchError, map, of } from 'rxjs';
 import { AccessToken } from '../../shared/models/token.model';
 import { ToastNotificationService } from '../../../core/services/toast-notification.service';
 
-export const authGuard: CanActivateChildFn = async (childRoute, state) => {
+export const authGuard: CanActivateChildFn = (childRoute, state) => {
   const router = inject(Router);
   const jwtHelper = inject(JwtHelperService);
   const authService = inject(AuthService);
@@ -21,16 +21,14 @@ export const authGuard: CanActivateChildFn = async (childRoute, state) => {
     return false;
   }
 
-  const expired = await jwtHelper.isTokenExpired();
+  const expired = jwtHelper.isTokenExpired();
   if (!expired) return true;
 
-  const observable = authService.refreshToken().pipe(
+  return authService.refreshToken().pipe(
     map((res: AccessToken) => {
       tokenService.setAccessToken(res.accessToken);
       return true;
     }),
     catchError(() => of(false))
   );
-
-  return await observable.toPromise();
 };
