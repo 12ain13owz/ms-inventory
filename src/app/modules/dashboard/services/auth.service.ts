@@ -4,7 +4,7 @@ import { environment } from '../../../../environments/environment.development';
 import { TokenService } from '../../shared/services/token.service';
 import { Router } from '@angular/router';
 import { AccessToken } from '../../shared/models/token.model';
-import { Observable, catchError, tap, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

@@ -1,9 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateChildFn, Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { omit } from 'lodash';
-import { DecodeUser } from '../models/user.model';
-import { UserService } from '../services/user.service';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../../shared/services/token.service';
 import { catchError, map, of } from 'rxjs';
@@ -14,7 +11,6 @@ export const authGuard: CanActivateChildFn = async (childRoute, state) => {
   const router = inject(Router);
   const jwtHelper = inject(JwtHelperService);
   const authService = inject(AuthService);
-  const userService = inject(UserService);
   const tokenService = inject(TokenService);
   const toastService = inject(ToastNotificationService);
 
@@ -25,25 +21,15 @@ export const authGuard: CanActivateChildFn = async (childRoute, state) => {
     return false;
   }
 
-  const decoded = await jwtHelper.decodeToken<DecodeUser>();
-  const user = omit(decoded, ['iat', 'exp']);
   const expired = await jwtHelper.isTokenExpired();
-  if (!expired) {
-    console.log(2);
-    userService.setUser(user);
-    return true;
-  }
+  if (!expired) return true;
 
   const observable = authService.refreshToken().pipe(
-    map(async (res: AccessToken) => {
+    map((res: AccessToken) => {
       tokenService.setAccessToken(res.accessToken);
-      userService.setUser(user);
       return true;
     }),
-    catchError(() => {
-      tokenService.removeToken();
-      return of(false);
-    })
+    catchError(() => of(false))
   );
 
   return await observable.toPromise();

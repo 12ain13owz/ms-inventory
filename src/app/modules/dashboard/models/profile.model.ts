@@ -1,21 +1,16 @@
 import { FormControl, FormGroup } from '@angular/forms';
 
-export interface User {
+export interface Profile {
   id: number;
   email: string;
   firstname: string;
   lastname: string;
   role: string;
-  active?: boolean;
-  remark?: string;
+  active: boolean;
+  remark: string;
 }
 
-export interface DecodeUser extends User {
-  iat: number;
-  exp: number;
-}
-
-export interface UserForm
+export interface ProfileForm
   extends FormGroup<{
     email: FormControl<string>;
     firstname: FormControl<string>;

@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription, finalize } from 'rxjs';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { LoginService } from './services/login.service';
-import { LoginForm, LoginRequest } from './models/login.model';
+import { LoginForm } from './models/login.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LOGIN } from './constants/login.constant';
 import { Router } from '@angular/router';
 import { TokenService } from '../shared/services/token.service';
+import { ProfileService } from '../dashboard/services/profile.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private recaptchaV3Service = inject(ReCaptchaV3Service);
   private tokenService = inject(TokenService);
   private loginService = inject(LoginService);
+  private profileService = inject(ProfileService);
 
   validationField = LOGIN.validationField;
   loginForm: LoginForm;
@@ -48,6 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         this.tokenService.setAccessToken(res.accessToken);
+        this.profileService.setProfile(res.payload);
         this.router.navigate(['/']);
       });
   }

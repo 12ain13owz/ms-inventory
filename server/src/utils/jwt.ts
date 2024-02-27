@@ -1,13 +1,10 @@
 import config from 'config';
 import { SignOptions, sign, verify } from 'jsonwebtoken';
 import log from './logger';
-import { User } from '../models/user.model';
-import { omit } from 'lodash';
 
-export function signAccessToken(user: User, privateFields: string[]) {
+export function signAccessToken(userId: number) {
   try {
-    const payload = omit(user.dataValues, privateFields);
-    const accessToken = signJwt(payload, 'accessTokenPrivateKey', {
+    const accessToken = signJwt({ userId }, 'accessTokenPrivateKey', {
       expiresIn: '1d',
     });
 

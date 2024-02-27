@@ -6,9 +6,9 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { ProfileService } from '../../services/profile.service';
 import { Subscription } from 'rxjs';
-import { UserForm } from '../../models/user.model';
+import { ProfileForm } from '../../models/profile.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -20,22 +20,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild('firstname') firstname!: ElementRef<HTMLInputElement>;
 
   private subscription = new Subscription();
-  private userService = inject(UserService);
+  private profileService = inject(ProfileService);
 
-  userForm: UserForm;
-  passForm: FormGroup;
+  profileForm: ProfileForm;
 
   ngOnInit(): void {
-    this.initUserForm();
-    this.subscription = this.userService.onUserListener().subscribe((user) =>
-      this.userForm.setValue({
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        role: user.role,
-        remark: user.remark || '',
-      })
-    );
+    this.initProfileForm();
+    this.subscription = this.profileService
+      .onProfileListener()
+      .subscribe((profile) =>
+        this.profileForm.setValue({
+          email: profile.email,
+          firstname: profile.firstname,
+          lastname: profile.lastname,
+          role: profile.role,
+          remark: profile.remark || '',
+        })
+      );
   }
 
   ngOnDestroy(): void {
@@ -43,16 +44,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(this.userForm.value);
+    console.log(this.profileForm.value);
   }
 
   onReset() {
-    this.userForm.reset();
+    this.profileForm.reset();
     this.firstname.nativeElement.focus();
   }
 
-  private initUserForm(): void {
-    this.userForm = new FormGroup({
+  private initProfileForm(): void {
+    this.profileForm = new FormGroup({
       email: new FormControl(
         { value: null, disabled: true },
         {

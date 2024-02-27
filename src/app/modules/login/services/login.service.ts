@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { LoginRequest } from '../models/login.model';
-import { AccessToken } from '../../shared/models/token.model';
+import { LoginRespones } from '../../shared/models/token.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +13,8 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  login(data: LoginRequest): Observable<AccessToken> {
-    return this.http.post<AccessToken>(this.apiUrl + 'auth/login', data, {
+  login(data: LoginRequest): Observable<LoginRespones> {
+    return this.http.post<LoginRespones>(this.apiUrl + 'auth/login', data, {
       withCredentials: true,
     });
   }

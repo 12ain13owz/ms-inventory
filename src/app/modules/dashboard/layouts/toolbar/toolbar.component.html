@@ -12,8 +12,8 @@
     <span>{{ title }}</span>
 
     <div class="toolbar-right">
-      @if (user$ | async; as user) {
-      <span>{{ user.firstname }} {{ user.lastname }}</span>
+      @if (profile$ | async; as profile) {
+      <span>{{ profile.firstname }} {{ profile.lastname }}</span>
       }
 
       <button mat-icon-button [matMenuTriggerFor]="menu">

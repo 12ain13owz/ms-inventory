@@ -4,8 +4,9 @@ import config from 'config';
 import { LoginUserInput } from '../schemas/auth.schema';
 import { findUserByEmail, findUserById } from '../services/user.service';
 import { newError } from '../utils/error';
-import { privateUserToken } from '../models/user.model';
+import { privateUserFields, privateUserToken } from '../models/user.model';
 import { signAccessToken, signRefreshToken, verifyJwt } from '../utils/jwt';
+import { omit } from 'lodash';
 
 const tokenKey = 'refresh_token';
 const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
@@ -28,8 +29,9 @@ export async function loginHandler(
     if (!isValidPassword) throw newError(401, 'Email หรือ Password ไม่ตรงกัน');
     if (!user.active) throw newError(401, 'Email นี้ไม่ได้รับอนุญาติให้ใช้งาน');
 
-    const accessToken = signAccessToken(user, privateUserToken);
+    const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
+    const payload = omit(user.dataValues, privateUserFields);
 
     res.clearCookie(tokenKey);
     res.cookie(tokenKey, refreshToken, {
@@ -40,7 +42,7 @@ export async function loginHandler(
       secure: config.get<string>('node_env') === 'production',
     });
 
-    res.json({ accessToken });
+    res.json({ accessToken, payload });
   } catch (error) {
     next(error);
   }
@@ -83,7 +85,7 @@ export async function refreshTokenHandler(
     const user = await findUserById(decoded.userId);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
 
-    const accessToken = signAccessToken(user, privateUserToken);
+    const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
 
     res.clearCookie(tokenKey);

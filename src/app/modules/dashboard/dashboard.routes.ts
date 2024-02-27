@@ -9,13 +9,13 @@ import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { userResolver } from './resolver/user.resolver';
+import { profileResolver } from './resolver/profile.resolver';
 
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    resolve: [userResolver],
+    resolve: [profileResolver],
     canActivateChild: [authGuard],
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },

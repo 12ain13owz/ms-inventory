@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Observable, Subscription, filter } from 'rxjs';
-import { User } from '../../models/user.model';
-import { UserService } from '../../services/user.service';
+import { Profile } from '../../models/profile.model';
+import { ProfileService } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 
@@ -23,16 +23,16 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
   private router = inject(Router);
-  private userService = inject(UserService);
+  private profileService = inject(ProfileService);
   private authService = inject(AuthService);
   private themeService = inject(ThemeService);
 
   isDarkTheme: boolean;
-  user$: Observable<User>;
+  profile$: Observable<Profile>;
   title: string;
 
   ngOnInit(): void {
-    this.user$ = this.userService.onUserListener();
+    this.profile$ = this.profileService.onProfileListener();
     this.title = this.setTitle(this.router.url);
     this.isDarkTheme = this.themeService.getTheme();
 
