@@ -23,4 +23,9 @@ export class ProfileService {
     this.profile = profile;
     this.profile$.next(profile);
   }
+
+  updateProfile(profile: Partial<Profile>) {
+    this.profile = { ...this.profile, ...profile };
+    this.profile$.next(this.profile);
+  }
 }

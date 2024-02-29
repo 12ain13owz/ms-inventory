@@ -1,19 +1,20 @@
-import { NextFunction, Request, Response } from 'express';
-import bcrypt from 'bcrypt';
 import config from 'config';
+import { NextFunction, Request } from 'express';
+import { ExtendedResponse } from '../types/express';
 import { LoginUserInput } from '../schemas/auth.schema';
 import { findUserByEmail, findUserById } from '../services/user.service';
 import { newError } from '../utils/error';
-import { privateUserFields, privateUserToken } from '../models/user.model';
+import { privateUserFields } from '../models/user.model';
 import { signAccessToken, signRefreshToken, verifyJwt } from '../utils/jwt';
 import { omit } from 'lodash';
+import { comparePassword } from '../utils/hash';
 
 const tokenKey = 'refresh_token';
 const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
 export async function loginHandler(
   req: Request<{}, {}, LoginUserInput>,
-  res: Response,
+  res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'loginHandler';
@@ -22,10 +23,7 @@ export async function loginHandler(
     const user = await findUserByEmail(req.body.email);
     if (!user) throw newError(404, 'ไม่พบ Email');
 
-    const isValidPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
+    const isValidPassword = comparePassword(req.body.password, user.password);
     if (!isValidPassword) throw newError(401, 'Email หรือ Password ไม่ตรงกัน');
     if (!user.active) throw newError(401, 'Email นี้ไม่ได้รับอนุญาติให้ใช้งาน');
 
@@ -50,14 +48,14 @@ export async function loginHandler(
 
 export async function logoutHandler(
   req: Request,
-  res: Response,
+  res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'logoutHandler';
 
   try {
     res.clearCookie(tokenKey);
-    res.json({ message: 'ok' });
+    res.json({ message: 'Logout success.' });
   } catch (error) {
     next(error);
   }
@@ -65,7 +63,7 @@ export async function logoutHandler(
 
 export async function refreshTokenHandler(
   req: Request,
-  res: Response,
+  res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'refreshTokenHandler';

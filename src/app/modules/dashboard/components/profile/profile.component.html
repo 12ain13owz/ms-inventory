@@ -1,10 +1,10 @@
-@defer (when profileForm.value) {
+@defer (when profile) {
 <mat-card class="form-container">
   <mat-card-header>
     <mat-card-title>Profile</mat-card-title>
   </mat-card-header>
 
-  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-card-content class="box">
       <mat-form-field>
         <mat-label>E-mail</mat-label>
@@ -14,7 +14,7 @@
       <div class="row">
         <mat-form-field>
           <mat-label class="label-in">First Name</mat-label>
-          <input type="text" matInput formControlName="firstname" #firstname />
+          <input type="text" matInput formControlName="firstname" />
         </mat-form-field>
 
         <mat-form-field>
@@ -34,12 +34,18 @@
       </mat-form-field>
     </mat-card-content>
 
+    <mat-divider></mat-divider>
     <mat-card-actions style="gap: 10px">
       <button type="submit" mat-raised-button color="primary">Submit</button>
       <button type="button" mat-button color="warn" (click)="onReset()">
         Reset
       </button>
     </mat-card-actions>
+    <mat-card-footer>
+      @if (isLoading) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+    </mat-card-footer>
   </form>
 </mat-card>
 } @placeholder (minimum 500ms) {

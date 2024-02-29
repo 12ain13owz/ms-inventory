@@ -18,3 +18,11 @@ export function findUserByEmail(email: string) {
 export function findAllUser() {
   return UserModel.findAll();
 }
+
+export function updateUser(id: number, user: Partial<User>) {
+  return UserModel.update(user, { where: { id } });
+}
+
+export function updateUserPassword(id: number, password: string) {
+  return UserModel.update({ password }, { where: { id } });
+}

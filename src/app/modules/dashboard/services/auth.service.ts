@@ -21,11 +21,9 @@ export class AuthService {
     this.tokenService.removeToken();
     this.router.navigate(['/login']);
 
-    return this.http.post<{ message: string }>(
-      this.apiUrl + 'logout',
-      {},
-      { withCredentials: true }
-    );
+    return this.http.delete<{ message: string }>(this.apiUrl + 'logout', {
+      withCredentials: true,
+    });
   }
 
   refreshToken(): Observable<AccessToken> {

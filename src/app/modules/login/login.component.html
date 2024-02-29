@@ -3,7 +3,7 @@
 </div>
 
 <div class="login-wrapper dark-theme">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     @if (isLoading) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }

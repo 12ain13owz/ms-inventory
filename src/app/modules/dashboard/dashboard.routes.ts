@@ -10,6 +10,7 @@ import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { profileResolver } from './resolver/profile.resolver';
+import { PasswordComponent } from './components/password/password.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,7 @@ export const routes: Routes = [
       { path: 'item', component: ItemComponent },
       { path: 'log', component: LogComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'password', component: PasswordComponent },
       {
         path: 'setting',
         canActivateChild: [],

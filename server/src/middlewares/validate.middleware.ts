@@ -1,11 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
+import { ExtendedResponse } from '../types/express';
 import { AnyZodObject, ZodError } from 'zod';
 import { newError } from '../utils/error';
 
 export const validate =
   (schema: AnyZodObject) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request<unknown>, res: ExtendedResponse, next: NextFunction) => {
     res.locals.func = 'validate';
+
     try {
       schema.parse({
         body: req.body,

@@ -1,13 +1,33 @@
 import { Router } from 'express';
 import {
-  getAllUserHandler,
-  getUserHandeler,
-} from '../../controllers/user.controller';
-import { verifyToken } from '../../middlewares/verify.middleware';
+  getProfileHandeler,
+  updateProfileHandler,
+  updatePasswordHandler,
+} from '../../controllers/profile.controller';
+import { isUserActive, verifyToken } from '../../middlewares/verify.middleware';
+import { validate } from '../../middlewares/validate.middleware';
+import {
+  getProfileSchema,
+  updateProfileSchema,
+  updatePasswordSchema,
+} from '../../schemas/profile.schema';
 
 const router = Router();
 
-router.get('/:id', [verifyToken], getUserHandeler);
-router.get('/users', getAllUserHandler);
+router.get(
+  '/:id',
+  [validate(getProfileSchema), verifyToken, isUserActive],
+  getProfileHandeler
+);
+router.put(
+  '/',
+  [validate(updateProfileSchema), verifyToken, isUserActive],
+  updateProfileHandler
+);
+router.post(
+  '/password',
+  [validate(updatePasswordSchema), verifyToken, isUserActive],
+  updatePasswordHandler
+);
 
 export default router;

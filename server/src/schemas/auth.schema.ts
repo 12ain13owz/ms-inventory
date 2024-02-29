@@ -1,13 +1,13 @@
-import { TypeOf, object, string, number } from 'zod';
+import { TypeOf, object, string } from 'zod';
 
 export const LoginUserSchema = object({
   body: object({
     email: string({
-      required_error: 'กรุณาระบุ Email',
-    }).email('รูปแบบของ Email ไม่ถูกต้อง'),
+      required_error: 'กรุณาระบุ E-mail',
+    }).email('รูปแบบ E-mail ไม่ถูกต้อง'),
     password: string({
       required_error: 'กรุณาระบุ Password',
-    }).min(1, { message: 'กรุณาระบุ Password' }),
+    }),
   }),
 });
 

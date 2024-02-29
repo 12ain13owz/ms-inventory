@@ -14,6 +14,7 @@ import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { PasswordComponent } from './components/password/password.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     CategoryComponent,
     StatusComponent,
     ProfileComponent,
+    PasswordComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
 })

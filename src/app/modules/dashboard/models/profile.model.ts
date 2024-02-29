@@ -18,3 +18,16 @@ export interface ProfileForm
     role: FormControl<string>;
     remark: FormControl<string>;
   }> {}
+
+export interface Password {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface PasswordForm
+  extends FormGroup<{
+    oldPassword: FormControl<string>;
+    newPassword: FormControl<string>;
+    confirmPassword: FormControl<string>;
+  }> {}

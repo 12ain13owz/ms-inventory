@@ -23,12 +23,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   private profileService = inject(ProfileService);
 
   validationField = LOGIN.validationField;
-  loginForm: LoginForm;
+  form: LoginForm;
   isLoading: boolean = false;
   hidePassword: boolean = true;
 
   ngOnInit(): void {
-    this.initLoginForm();
+    this.initForm();
 
     this.subscription = this.recaptchaV3Service
       .execute('importantAction')
@@ -42,11 +42,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) return;
+    if (this.form.invalid) return;
 
     this.isLoading = true;
     this.loginService
-      .login(this.loginForm.getRawValue())
+      .login(this.form.getRawValue())
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         this.tokenService.setAccessToken(res.accessToken);
@@ -55,27 +55,27 @@ export class LoginComponent implements OnInit, OnDestroy {
       });
   }
 
-  private initLoginForm(): void {
-    this.loginForm = new FormGroup({
+  get email(): FormControl<string> {
+    return this.form.controls['email'];
+  }
+
+  get password(): FormControl<string> {
+    return this.form.controls['password'];
+  }
+
+  get receptchaToken(): FormControl<string> {
+    return this.form.controls['receptchaToken'];
+  }
+
+  private initForm(): void {
+    this.form = new FormGroup({
       email: new FormControl('test@t.com', {
         validators: [Validators.required, Validators.email],
       }),
-      password: new FormControl('123456', {
+      password: new FormControl('!Qwerty123', {
         validators: [Validators.required],
       }),
       receptchaToken: new FormControl(null),
     });
-  }
-
-  get email() {
-    return this.loginForm.controls['email'];
-  }
-
-  get password() {
-    return this.loginForm.controls['password'];
-  }
-
-  get receptchaToken() {
-    return this.loginForm.controls['receptchaToken'];
   }
 }

@@ -1,15 +1,15 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { ProfileApiService } from './../../services/profile-api.service';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
-import { Subscription } from 'rxjs';
-import { ProfileForm } from '../../models/profile.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Profile, ProfileForm } from '../../models/profile.model';
+import {
+  AbstractControl,
+  FormBuilder,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { Subscription, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -17,62 +17,52 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  @ViewChild('firstname') firstname!: ElementRef<HTMLInputElement>;
-
   private subscription = new Subscription();
   private profileService = inject(ProfileService);
+  private ProfileApiService = inject(ProfileApiService);
+  private formBuilder = inject(FormBuilder);
 
-  profileForm: ProfileForm;
+  form: ProfileForm;
+  profile: Profile;
+  isLoading: boolean = false;
 
   ngOnInit(): void {
-    this.initProfileForm();
     this.subscription = this.profileService
       .onProfileListener()
-      .subscribe((profile) =>
-        this.profileForm.setValue({
-          email: profile.email,
-          firstname: profile.firstname,
-          lastname: profile.lastname,
-          role: profile.role,
-          remark: profile.remark || '',
-        })
-      );
+      .subscribe((profile) => {
+        this.profile = profile;
+        this.initForm();
+      });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  onSubmit() {
-    console.log(this.profileForm.value);
+  onSubmit(): void {
+    if (this.form.invalid) return;
+    this.isLoading = true;
+
+    const payload: Partial<Profile> = { ...this.form.value };
+    this.ProfileApiService.updateProfile(payload)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe();
   }
 
-  onReset() {
-    this.profileForm.reset();
-    this.firstname.nativeElement.focus();
+  onReset(): void {
+    this.form.reset();
   }
 
-  private initProfileForm(): void {
-    this.profileForm = new FormGroup({
-      email: new FormControl(
-        { value: null, disabled: true },
-        {
-          validators: [Validators.required, Validators.email],
-        }
-      ),
-      firstname: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-      lastname: new FormControl(null, {
-        validators: [Validators.required],
-      }),
-      role: new FormControl(
-        { value: null, disabled: true },
-        {
-          validators: [Validators.required],
-        }
-      ),
-      remark: new FormControl({ value: null, disabled: true }),
+  private initForm(): void {
+    this.form = this.formBuilder.nonNullable.group({
+      email: [this.profile.email, [Validators.required, Validators.email]],
+      firstname: [this.profile.firstname, [Validators.required]],
+      lastname: [this.profile.lastname, [Validators.required]],
+      role: [
+        { value: this.profile.role, disabled: true },
+        [Validators.required],
+      ],
+      remark: [this.profile.remark],
     });
   }
 }

@@ -1,24 +1,22 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
+import { ExtendedResponse } from '../types/express';
 import { LoginUserInput } from '../schemas/auth.schema';
 import { newError } from '../utils/error';
 import { verifyJwt } from '../utils/jwt';
+import { findUserById } from '../services/user.service';
 
 interface decodeUser {
-  id: number;
-  email: string;
-  firstname: string;
-  lastname: string;
-  role: string;
+  userId: number;
   iat: number;
+  exp: number;
 }
 
 export async function verifyToken(
   req: Request<unknown>,
-  res: Response,
+  res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'verifyToken';
-
   try {
     const accessToken = (req.headers.authorization || '').replace(
       /^Bearer\s/,
@@ -30,7 +28,27 @@ export async function verifyToken(
     if (!decoded)
       throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่', true);
 
-    res.locals.user = decoded;
+    res.locals.userId = decoded.userId;
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function isUserActive(
+  req: Request<unknown>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'isUserActive';
+
+  try {
+    const user = await findUserById(res.locals.userId!);
+    if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
+    if (!user.active)
+      throw newError(401, 'บัญชีนี้ไม่ได้รับอนุญาติให้ใช้งาน', true);
+
+    res.locals.user = user.dataValues;
     next();
   } catch (error) {
     next(error);
@@ -39,7 +57,7 @@ export async function verifyToken(
 
 export async function verifyReceptcha(
   req: Request<{}, {}, LoginUserInput>,
-  res: Response,
+  res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'verifyReceptcha';

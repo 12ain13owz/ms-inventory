@@ -12,14 +12,11 @@ body {
   font-family: Roboto, "Helvetica Neue", "Prompt", sans-serif;
 }
 
-mat-error {
-  margin-top: 4px;
-}
-
 .form-container {
   .box {
     display: flex;
     flex-direction: column;
+    gap: 8px;
   }
 
   .row {
