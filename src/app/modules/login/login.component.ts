@@ -7,7 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LOGIN } from './constants/login.constant';
 import { Router } from '@angular/router';
 import { TokenService } from '../shared/services/token.service';
-import { ProfileService } from '../dashboard/services/profile.service';
+import { ProfileService } from '../dashboard/services/profile/profile.service';
 
 @Component({
   selector: 'app-login',

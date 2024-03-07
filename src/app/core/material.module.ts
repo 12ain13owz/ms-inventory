@@ -12,6 +12,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   exports: [
@@ -27,6 +31,10 @@ import { MatRadioModule } from '@angular/material/radio';
     MatSlideToggleModule,
     MatExpansionModule,
     MatRadioModule,
+    MatTableModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     {

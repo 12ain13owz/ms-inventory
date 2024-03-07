@@ -10,9 +10,9 @@ export class Category extends Model<
   InferAttributes<Category>,
   InferCreationAttributes<Category>
 > {
-  id: number;
+  id?: number;
   name: string;
-  remark: string;
+  remark: string | null;
   active: boolean;
 }
 
@@ -34,7 +34,8 @@ export default Category.init(
       defaultValue: true,
     },
     remark: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
+      defaultValue: '',
     },
   },
   {

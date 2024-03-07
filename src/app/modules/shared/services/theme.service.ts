@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +34,7 @@ export class ThemeService {
   }
 
   setTheme(theme: boolean) {
+    this.isDarkTheme = theme;
     this.isDarkTheme$.next(theme);
   }
 }

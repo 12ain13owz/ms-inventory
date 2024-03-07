@@ -4,7 +4,7 @@ import {
   updateProfileHandler,
   updatePasswordHandler,
 } from '../../controllers/profile.controller';
-import { isUserActive, verifyToken } from '../../middlewares/verify.middleware';
+import { isUserActive, verifyToken } from '../../middlewares/auth.middleware';
 import { validate } from '../../middlewares/validate.middleware';
 import {
   getProfileSchema,

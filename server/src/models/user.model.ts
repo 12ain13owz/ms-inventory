@@ -10,14 +10,14 @@ export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  id: number;
+  id?: number;
   email: string;
   password: string;
   firstname: string;
   lastname: string;
   role: 'admin' | 'user';
   active: boolean;
-  remark: string;
+  remark?: string;
 }
 
 export default User.init(
@@ -31,7 +31,7 @@ export default User.init(
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
-      validate: { isEmail: true },
+      validate: { isEmail: { msg: 'รูปแบบ E-mail ไม่ถูกต้อง' } },
     },
     password: {
       type: DataTypes.STRING,
@@ -56,7 +56,8 @@ export default User.init(
       defaultValue: true,
     },
     remark: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
+      defaultValue: '',
     },
   },
   {

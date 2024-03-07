@@ -6,7 +6,7 @@ export const LoginUserSchema = object({
       required_error: 'กรุณาระบุ E-mail',
     }).email('รูปแบบ E-mail ไม่ถูกต้อง'),
     password: string({
-      required_error: 'กรุณาระบุ Password',
+      required_error: 'กรุณาระบุรหัสผ่าน',
     }),
   }),
 });

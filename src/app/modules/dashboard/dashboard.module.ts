@@ -15,6 +15,8 @@ import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { PasswordComponent } from './components/password/password.component';
+import { CategoryEditComponent } from './components/category/category-edit/category-edit.component';
+import { StatusEditComponent } from './components/status/status-edit/status-edit.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { PasswordComponent } from './components/password/password.component';
     StatusComponent,
     ProfileComponent,
     PasswordComponent,
+    CategoryEditComponent,
+    StatusEditComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
 })

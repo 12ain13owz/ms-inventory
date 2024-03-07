@@ -9,8 +9,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable, Subscription, finalize, take } from 'rxjs';
-import { ProfileService } from '../../services/profile.service';
-import { ProfileApiService } from '../../services/profile-api.service';
+import { ProfileService } from '../../services/profile/profile.service';
+import { ProfileApiService } from '../../services/profile/profile-api.service';
 import { Password, PasswordForm, Profile } from '../../models/profile.model';
 import { PASSWORD } from '../../constants/password.constant';
 
@@ -72,12 +72,12 @@ export class PasswordComponent implements OnInit {
   private initForm(): void {
     this.form = this.formBuilder.group(
       {
-        oldPassword: ['', [Validators.required]],
+        oldPassword: ['123', [Validators.required]],
         newPassword: [
-          '',
+          '!Qwerty123456',
           [Validators.required, Validators.pattern(this.patternPassword)],
         ],
-        confirmPassword: [''],
+        confirmPassword: ['!Qwerty123456'],
       },
       { validator: this.comparePasswordValidator }
     );

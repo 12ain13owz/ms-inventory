@@ -11,6 +11,8 @@ import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { profileResolver } from './resolver/profile.resolver';
 import { PasswordComponent } from './components/password/password.component';
+import { categoryResolver } from './resolver/category.resolver';
+import { statusResolver } from './resolver/status.resolver';
 
 export const routes: Routes = [
   {
@@ -30,8 +32,16 @@ export const routes: Routes = [
         canActivateChild: [],
         children: [
           { path: 'user', component: UserComponent },
-          { path: 'category', component: CategoryComponent },
-          { path: 'status', component: StatusComponent },
+          {
+            path: 'category',
+            component: CategoryComponent,
+            resolve: [categoryResolver],
+          },
+          {
+            path: 'status',
+            component: StatusComponent,
+            resolve: [statusResolver],
+          },
         ],
       },
     ],

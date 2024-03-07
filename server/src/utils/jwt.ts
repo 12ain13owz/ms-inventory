@@ -2,7 +2,7 @@ import config from 'config';
 import { SignOptions, sign, verify } from 'jsonwebtoken';
 import log from './logger';
 
-export function signAccessToken(userId: number) {
+export function signAccessToken(userId: number): string | null {
   try {
     const accessToken = signJwt({ userId }, 'accessTokenPrivateKey', {
       expiresIn: '1d',
@@ -17,7 +17,7 @@ export function signAccessToken(userId: number) {
   }
 }
 
-export function signRefreshToken(userId: number) {
+export function signRefreshToken(userId: number): string | null {
   try {
     const refreshtoken = signJwt({ userId }, 'refreshTokenPrivateKey', {
       expiresIn: '7d',
@@ -36,7 +36,7 @@ export function signJwt(
   object: Record<string, unknown>,
   keyName: 'accessTokenPrivateKey' | 'refreshTokenPrivateKey',
   options?: SignOptions | undefined
-) {
+): string | null {
   try {
     const signingKey = config.get<string>(keyName);
 
@@ -55,7 +55,7 @@ export function signJwt(
 export function verifyJwt<T>(
   token: string,
   keyName: 'accessTokenPublicKey' | 'refreshTokenPublicKey'
-) {
+): T | null {
   try {
     const publicKey = config.get<string>(keyName);
     const decode = verify(token, publicKey) as T;

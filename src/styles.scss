@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap");
 @import "./app/core/theme/theme.scss";
 @import "ngx-toastr/toastr";
+@import "@sweetalert2/theme-dark/dark.scss";
 
 html,
 body {
@@ -10,6 +11,10 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", "Prompt", sans-serif;
+}
+
+h2 {
+  margin-bottom: 0 !important;
 }
 
 .form-container {
@@ -30,8 +35,16 @@ body {
   }
 }
 
+.mb-16 {
+  margin-bottom: 16px;
+}
+
 .mb-20 {
   margin-bottom: 20px;
+}
+
+.w-100 {
+  width: 100%;
 }
 
 .link-active {
@@ -42,10 +55,30 @@ body {
   }
 }
 
+.toggle-on {
+  color: #46a24b;
+}
+
+.toggle-off {
+  color: #f44336;
+}
+
 .dark-theme {
   .link-active {
     background-color: #9c27b0 !important;
   }
+
+  .bg-color {
+    background-color: #303030 !important;
+  }
+}
+
+.mat-column-no {
+  flex: 0 0 70px !important;
+}
+
+.mat-column-active {
+  flex: 0 0 70px !important;
 }
 
 @media (max-width: 600px) {

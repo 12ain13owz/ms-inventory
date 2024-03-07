@@ -9,8 +9,8 @@ import {
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Observable, Subscription, filter } from 'rxjs';
 import { Profile } from '../../models/profile.model';
-import { ProfileService } from '../../services/profile.service';
-import { AuthService } from '../../services/auth.service';
+import { ProfileService } from '../../services/profile/profile.service';
+import { AuthApiService } from '../../services/auth/auth-api.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 
 @Component({
@@ -24,7 +24,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private router = inject(Router);
   private profileService = inject(ProfileService);
-  private authService = inject(AuthService);
+  private authService = inject(AuthApiService);
   private themeService = inject(ThemeService);
 
   isDarkTheme: boolean;

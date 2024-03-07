@@ -1,14 +1,8 @@
-import { ProfileApiService } from './../../services/profile-api.service';
+import { ProfileApiService } from '../../services/profile/profile-api.service';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ProfileService } from '../../services/profile.service';
+import { ProfileService } from '../../services/profile/profile.service';
 import { Profile, ProfileForm } from '../../models/profile.model';
-import {
-  AbstractControl,
-  FormBuilder,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription, finalize } from 'rxjs';
 
 @Component({
@@ -22,9 +16,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private ProfileApiService = inject(ProfileApiService);
   private formBuilder = inject(FormBuilder);
 
+  isLoading: boolean = false;
   form: ProfileForm;
   profile: Profile;
-  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.subscription = this.profileService

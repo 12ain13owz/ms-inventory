@@ -2,8 +2,8 @@
   <div class="rgba-stylish-strong"></div>
 </div>
 
-<div class="login-wrapper dark-theme">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+<div class="login-wrapper">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dark-theme">
     @if (isLoading) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }

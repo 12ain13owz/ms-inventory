@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { newError } from '../utils/error';
+import { newError } from '../utils/helper';
 
 const router = Router();
 

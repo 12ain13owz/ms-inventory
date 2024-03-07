@@ -1,49 +1,58 @@
 import { TypeOf, object, string, boolean } from 'zod';
 
+const id = 'ไม่พบข้อมูลผู้ใช้ในระบบ';
+const email = 'ไม่พบข้อมูล E-mail';
+const emailInvalid = 'รูปแบบ E-mail ไม่ถูกต้อง';
+const firstname = 'ไม่พบข้อมูลชื่อผู้ใช้งาน';
+const lastname = 'ไม่พบข้อมูลนามสกุลผู้ใช้งาน';
+
+const oldPassword = 'ไม่พบข้อมูลรหัสผ่านเก่า';
+const newPassword = 'ไม่พบข้อมูลรหัสผ่านใหม่';
+const confirmPassword = 'ไม่พบข้อมูลยืนยันรหัสผ่าน';
+const regexInValid =
+  'รูปแบบรหัสผ่านไม่ถูกต้อง! ต้องมีตัวเล็ก, ตัวใหญ่, ตัวเลข, อักษรพิเศษ และไม่ต่ำกว่า 8 ตัวอักษร';
+const comparePassword = 'รหัสผ่านไม่ตรงกัน';
+
+const regexPassword = new RegExp(
+  '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
+);
+
 export const getProfileSchema = object({
   params: object({
-    id: string({ required_error: 'ไม่พบข้อมูลผู้ใช้ในระบบ' })
-      .min(1, { message: 'ไม่พบข้อมูลผู้ใช้ในระบบ' })
+    id: string({ required_error: id })
+      .min(1, { message: id })
       .transform(Number),
   }),
 });
 
 export const updateProfileSchema = object({
   body: object({
-    email: string({ required_error: 'ไม่พบข้อมูล E-mail' })
+    email: string({ required_error: email })
       .min(1, {
-        message: 'ไม่พบข้อมูล E-mail',
+        message: email,
       })
-      .email({ message: 'รูปแบบ E-mail ไม่ถูกต้อง' }),
-    firstname: string({ required_error: 'ไม่พบข้อมูล First name' }).min(1, {
-      message: 'ไม่พบข้อมูล First name',
+      .email({ message: emailInvalid }),
+    firstname: string({ required_error: firstname }).min(1, {
+      message: firstname,
     }),
-    lastname: string({ required_error: 'ไม่พบข้อมูล Last name' }).min(1, {
-      message: 'ไม่พบข้อมูล Last name',
+    lastname: string({ required_error: lastname }).min(1, {
+      message: lastname,
     }),
     role: string().optional(),
     active: boolean().optional(),
-    remark: string({ required_error: 'ไม่พบข้อมูล Remark' }),
+    remark: string().optional(),
   }),
 });
 
-// ต้องมี ตัวเล็ก, ตัวใหญ่, ตัวเลข, อักษรพิเศษ และไม่ต่ำกว่า 8 ตัวอักษร
-const regexPassword = new RegExp(
-  '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
-);
 export const updatePasswordSchema = object({
   body: object({
-    oldPassword: string({ required_error: 'ไม่พบข้อมูล Old password' }),
-    newPassword: string({ required_error: 'ไม่พบข้อมูล New password' }).regex(
-      regexPassword,
-      {
-        message:
-          'รูปแบบ Password ไม่ถูกต้อง! ต้องมีตัวเล็ก, ตัวใหญ่, ตัวเลข, อักษรพิเศษ และไม่ต่ำกว่า 8 ตัวอักษร',
-      }
-    ),
-    confirmPassword: string({ required_error: 'ไม่พบข้อมูล Confirm password' }),
+    oldPassword: string({ required_error: oldPassword }),
+    newPassword: string({ required_error: newPassword }).regex(regexPassword, {
+      message: regexInValid,
+    }),
+    confirmPassword: string({ required_error: confirmPassword }),
   }).refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Password ไม่ตรงกัน',
+    message: comparePassword,
     path: ['confirmPassword'],
   }),
 });

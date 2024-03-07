@@ -1,7 +1,7 @@
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { AnyZodObject, ZodError } from 'zod';
-import { newError } from '../utils/error';
+import { newError } from '../utils/helper';
 
 export const validate =
   (schema: AnyZodObject) =>

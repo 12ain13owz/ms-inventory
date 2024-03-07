@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Profile } from '../models/profile.model';
+import { Profile } from '../../models/profile.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -19,12 +19,12 @@ export class ProfileService {
     return this.profile;
   }
 
-  setProfile(profile: Profile) {
+  setProfile(profile: Profile): void {
     this.profile = profile;
     this.profile$.next(profile);
   }
 
-  updateProfile(profile: Partial<Profile>) {
+  updateProfile(profile: Partial<Profile>): void {
     this.profile = { ...this.profile, ...profile };
     this.profile$.next(this.profile);
   }
