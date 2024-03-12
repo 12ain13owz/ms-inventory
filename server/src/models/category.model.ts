@@ -10,7 +10,7 @@ export class Category extends Model<
   InferAttributes<Category>,
   InferCreationAttributes<Category>
 > {
-  id?: number;
+  id: number | null;
   name: string;
   remark: string | null;
   active: boolean;

@@ -20,21 +20,21 @@ export class StatusApiService {
       .pipe(tap((res) => this.statusService.setStatuses(res)));
   }
 
-  createStatus(payload: Partial<Status>): Observable<StatusResponse> {
+  createStatus(payload: Status): Observable<StatusResponse> {
     return this.http
       .post<StatusResponse>(this.apiUrl, payload)
-      .pipe(tap((res) => this.statusService.addStatus(res.status)));
+      .pipe(tap((res) => this.statusService.createStatus(res.status)));
   }
 
-  updateStatus(payload: Status): Observable<Message> {
+  updateStatus(id: number, payload: Status): Observable<StatusResponse> {
     return this.http
-      .patch<Message>(this.apiUrl, payload)
-      .pipe(tap(() => this.statusService.updateStatus(payload)));
+      .patch<StatusResponse>(`${this.apiUrl}/${id}`, payload)
+      .pipe(tap((res) => this.statusService.updateStatus(res.status)));
   }
 
   deleteStatus(id: number): Observable<Message> {
     return this.http
-      .delete<Message>(this.apiUrl + '/' + id)
+      .delete<Message>(`${this.apiUrl}/${id}`)
       .pipe(tap(() => this.statusService.deleteStatus(id)));
   }
 }

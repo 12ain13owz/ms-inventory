@@ -23,21 +23,21 @@ export class CategoryApiService {
       .pipe(tap((res) => this.categoryService.setCategoryise(res)));
   }
 
-  createCategory(payload: Partial<Category>): Observable<CategoryResponse> {
+  createCategory(payload: Category): Observable<CategoryResponse> {
     return this.http
       .post<CategoryResponse>(this.apiUrl, payload)
-      .pipe(tap((res) => this.categoryService.addCategory(res.category)));
+      .pipe(tap((res) => this.categoryService.createCategory(res.category)));
   }
 
-  updateCategory(payload: Category): Observable<Message> {
+  updateCategory(id: number, payload: Category): Observable<CategoryResponse> {
     return this.http
-      .patch<Message>(this.apiUrl, payload)
-      .pipe(tap(() => this.categoryService.updateCategory(payload)));
+      .patch<CategoryResponse>(`${this.apiUrl}/${id}`, payload)
+      .pipe(tap((res) => this.categoryService.updateCategory(res.category)));
   }
 
   deleteCategory(id: number): Observable<Message> {
     return this.http
-      .delete<Message>(this.apiUrl + '/' + id)
+      .delete<Message>(`${this.apiUrl}/${id}`)
       .pipe(tap(() => this.categoryService.deleteCategory(id)));
   }
 }

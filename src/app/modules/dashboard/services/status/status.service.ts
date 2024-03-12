@@ -24,7 +24,7 @@ export class StatusService {
     return this.statuses.slice();
   }
 
-  addStatus(status: Status): void {
+  createStatus(status: Status): void {
     this.statuses.push(status);
     this.statuses$.next(this.statuses.slice());
   }

@@ -27,7 +27,7 @@ router.post(
   createStatusHandler
 );
 router.patch(
-  '/',
+  '/:id',
   [validate(updateCategorySchema), verifyToken, isUserActive, isRoleAdmin],
   updateStatusHandler
 );

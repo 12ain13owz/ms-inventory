@@ -24,7 +24,7 @@ export class CategoryService {
     return this.categories.slice();
   }
 
-  addCategory(category: Category): void {
+  createCategory(category: Category): void {
     this.categories.push(category);
     this.categories$.next(this.categories.slice());
   }

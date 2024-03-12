@@ -17,6 +17,35 @@ h2 {
   margin-bottom: 0 !important;
 }
 
+mat-table {
+  overflow: auto;
+}
+
+.mat-column-no {
+  flex: 0 0 50px;
+}
+
+.mat-column-email {
+  min-width: 100px;
+}
+
+.mat-column-name {
+  min-width: 120px;
+}
+
+.mat-column-role {
+  flex: 0 0 70px;
+}
+
+.mat-column-active {
+  flex: 0 0 70px;
+}
+
+.mat-column-action {
+  flex: 0 0 120px;
+  justify-content: center;
+}
+
 .form-container {
   .box {
     display: flex;
@@ -71,14 +100,6 @@ h2 {
   .bg-color {
     background-color: #303030 !important;
   }
-}
-
-.mat-column-no {
-  flex: 0 0 70px !important;
-}
-
-.mat-column-active {
-  flex: 0 0 70px !important;
 }
 
 @media (max-width: 600px) {

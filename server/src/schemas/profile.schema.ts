@@ -1,4 +1,4 @@
-import { TypeOf, object, string, boolean } from 'zod';
+import { TypeOf, object, string } from 'zod';
 
 const id = 'ไม่พบข้อมูลผู้ใช้ในระบบ';
 const email = 'ไม่พบข้อมูล E-mail';
@@ -17,30 +17,16 @@ const regexPassword = new RegExp(
   '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
 );
 
-export const getProfileSchema = object({
-  params: object({
-    id: string({ required_error: id })
-      .min(1, { message: id })
-      .transform(Number),
-  }),
-});
-
 export const updateProfileSchema = object({
   body: object({
-    email: string({ required_error: email })
-      .min(1, {
-        message: email,
-      })
-      .email({ message: emailInvalid }),
+    email: string({ required_error: email }).email({ message: emailInvalid }),
     firstname: string({ required_error: firstname }).min(1, {
       message: firstname,
     }),
     lastname: string({ required_error: lastname }).min(1, {
       message: lastname,
     }),
-    role: string().optional(),
-    active: boolean().optional(),
-    remark: string().optional(),
+    remark: string().optional().nullable(),
   }),
 });
 
@@ -57,6 +43,5 @@ export const updatePasswordSchema = object({
   }),
 });
 
-export type getProfileInput = TypeOf<typeof getProfileSchema>['params'];
 export type updateProfileInput = TypeOf<typeof updateProfileSchema>['body'];
 export type updatePasswordInput = TypeOf<typeof updatePasswordSchema>['body'];

@@ -20,9 +20,9 @@ export class ProfileApiService {
     private toastService: ToastNotificationService
   ) {}
 
-  getProfile(id: number): Observable<Profile> {
+  getProfile(): Observable<Profile> {
     return this.http
-      .get<Profile>(this.apiUrl + '/' + id)
+      .get<Profile>(this.apiUrl)
       .pipe(tap((profile) => this.profileService.setProfile(profile)));
   }
 
@@ -37,7 +37,7 @@ export class ProfileApiService {
 
   changePassword(payload: Password): Observable<Message> {
     return this.http
-      .post<Message>(this.apiUrl + '/password', payload)
+      .post<Message>(`${this.apiUrl}/password`, payload)
       .pipe(tap((res) => this.toastService.success('', res.message)));
   }
 }

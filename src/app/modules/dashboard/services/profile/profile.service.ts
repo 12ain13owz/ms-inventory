@@ -15,13 +15,13 @@ export class ProfileService {
     return this.profile$.asObservable();
   }
 
-  getProfile(): Profile {
-    return this.profile;
-  }
-
   setProfile(profile: Profile): void {
     this.profile = profile;
     this.profile$.next(profile);
+  }
+
+  getProfile(): Profile {
+    return this.profile;
   }
 
   updateProfile(profile: Partial<Profile>): void {

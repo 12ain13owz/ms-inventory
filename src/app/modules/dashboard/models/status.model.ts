@@ -2,7 +2,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Message } from '../../shared/models/response.model';
 
 export interface Status {
-  id: number;
+  id?: number;
   name: string;
   place: string;
   active: boolean;
@@ -11,7 +11,6 @@ export interface Status {
 
 export interface StatusForm
   extends FormGroup<{
-    id: FormControl<number>;
     name: FormControl<string>;
     place: FormControl<string>;
     active: FormControl<boolean>;

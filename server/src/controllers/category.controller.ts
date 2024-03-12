@@ -61,16 +61,18 @@ export async function createCategoryHandler(
 }
 
 export async function updateCategoryHandler(
-  req: Request<{}, {}, updateCategoryInput>,
+  req: Request<updateCategoryInput['params'], {}, updateCategoryInput['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'updateCategoryHandler';
 
   try {
+    const id = +req.params.id;
     const name = removeWhitespace(req.body.name);
     const category = await findCategoryByName(name);
-    if (category && category.id !== req.body.id)
+
+    if (category && category.id !== id)
       throw newError(400, 'ชื่อประเภทอุปกรณ์ซ้ำ');
 
     const payload: Partial<Category> = {
@@ -79,10 +81,14 @@ export async function updateCategoryHandler(
       remark: req.body.remark || '',
     };
 
-    const result = await updateCategory(req.body.id, payload);
+    const result = await updateCategory(id, payload);
     if (!result[0]) throw newError(400, 'อัพเดทประเภทอุปกรณ์ไม่สำเร็จ');
 
-    res.json({ message: 'อัพเดทประเภทอุปกรณ์สำเร็จ' });
+    const updatedCategory = { id: id, ...payload };
+    res.json({
+      message: 'อัพเดทประเภทอุปกรณ์สำเร็จ',
+      category: updatedCategory,
+    });
   } catch (error) {
     next(error);
   }
@@ -96,7 +102,7 @@ export async function deleteCategoryHandler(
   res.locals.func = 'deleteCategoryHandler';
 
   try {
-    const result = await deleteCategory(req.params.id);
+    const result = await deleteCategory(+req.params.id);
     if (!result) throw newError(400, 'ลบประเภทอุปกรณ์ไม่สำเร็จ');
 
     res.json({ message: 'ลบประเภทอุปกรณ์สำเร็จ' });

@@ -1,12 +1,12 @@
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import {
+  findUserByEmail,
   findUserById,
   updateUser,
   updateUserPassword,
 } from '../services/user.service';
 import {
-  getProfileInput,
   updateProfileInput,
   updatePasswordInput,
 } from '../schemas/profile.schema';
@@ -20,17 +20,14 @@ import { omit } from 'lodash';
 import { User, privateUserFields } from '../models/user.model';
 
 export async function getProfileHandeler(
-  req: Request<getProfileInput>,
+  req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'getProfileHandeler';
 
   try {
-    const user = await findUserById(req.params.id);
-    if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
-
-    const payload = omit(user.dataValues, privateUserFields);
+    const payload = omit(res.locals.user!, privateUserFields);
     res.json(payload);
   } catch (error) {
     next(error);
@@ -46,11 +43,18 @@ export async function updateProfileHandler(
 
   try {
     const email = normalizeUnique(req.body.email);
+    const user = await findUserByEmail(email);
+    if (user && user.id !== res.locals.userId!)
+      throw newError(
+        400,
+        'แก้ไขโปรไฟล์ไม่สำเร็จเนื่องจาก E-mail นี้มีอยู่ในระบบ'
+      );
+
     const payload: Partial<User> = {
       email: email,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
-      remark: req.body.remark,
+      remark: req.body.remark || '',
     };
 
     const result = await updateUser(res.locals.userId!, payload);

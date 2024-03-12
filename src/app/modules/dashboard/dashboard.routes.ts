@@ -13,6 +13,7 @@ import { profileResolver } from './resolver/profile.resolver';
 import { PasswordComponent } from './components/password/password.component';
 import { categoryResolver } from './resolver/category.resolver';
 import { statusResolver } from './resolver/status.resolver';
+import { userResolver } from './resolver/user.resolver';
 
 export const routes: Routes = [
   {
@@ -31,7 +32,11 @@ export const routes: Routes = [
         path: 'setting',
         canActivateChild: [],
         children: [
-          { path: 'user', component: UserComponent },
+          {
+            path: 'user',
+            component: UserComponent,
+            resolve: [userResolver],
+          },
           {
             path: 'category',
             component: CategoryComponent,

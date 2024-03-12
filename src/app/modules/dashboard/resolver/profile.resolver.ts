@@ -11,24 +11,6 @@ export const profileResolver: ResolveFn<Profile> = (route, state) => {
   const profileApiService = inject(ProfileApiService);
   const profile = profileService.getProfile();
 
-  if (profile) return profile;
-  return from(decodeToken()).pipe(
-    switchMap((userId: number) => profileApiService.getProfile(userId))
-  );
-
-  // Return Promise
-  // const jwtHelper = inject(JwtHelperService);
-  // return Promise.resolve(jwtHelper.decodeToken<{ userId: number }>()).then(
-  //   (data: { userId: number }) =>
-  //     firstValueFrom(profileApiService.getProfile(data.userId))
-  // );
-
-  // Return Observable
+  if (!profile) return profileApiService.getProfile();
+  return profile;
 };
-
-async function decodeToken(): Promise<number> {
-  const jwtHelper = inject(JwtHelperService);
-  const decoded = await jwtHelper.decodeToken<{ userId: number }>();
-
-  return decoded.userId;
-}

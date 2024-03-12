@@ -5,7 +5,6 @@ import { Profile } from '../../dashboard/models/profile.model';
 export interface LoginRequest {
   email: string;
   password: string;
-  receptchaToken: string;
 }
 
 export interface LoginResponse extends AccessToken {
@@ -16,5 +15,4 @@ export interface LoginForm
   extends FormGroup<{
     email: FormControl<string>;
     password: FormControl<string>;
-    receptchaToken: FormControl<string>;
   }> {}

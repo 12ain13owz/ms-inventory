@@ -31,17 +31,18 @@ export class CategoryEditComponent implements OnInit {
   private categoryApiService = inject(CategoryApiService);
   private operation$: Observable<Message | CategoryResponse>;
 
+  title: string = 'เพิ่มประเภทอุปกรณ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
   form: CategoryForm;
-  title: string = 'เพิ่มประเภทอุปกรณ์';
 
   ngOnInit(): void {
     this.initForm();
+
     if (this.data) {
       this.title = 'แก้ไขประเภทอุปกรณ์';
       this.isEdit = true;
-      this.form.setValue(this.data);
+      this.form.patchValue(this.data);
     }
   }
 
@@ -49,10 +50,11 @@ export class CategoryEditComponent implements OnInit {
     if (this.form.invalid) return;
     if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
 
+    const payload: Category = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.categoryApiService.updateCategory(this.form.getRawValue())
-      : this.categoryApiService.createCategory(this.form.value);
+      ? this.categoryApiService.updateCategory(this.data.id, payload)
+      : this.categoryApiService.createCategory(payload);
 
     this.operation$
       .pipe(finalize(() => (this.isLoading = false)))
@@ -63,7 +65,7 @@ export class CategoryEditComponent implements OnInit {
   }
 
   onReset(): void {
-    if (this.isEdit) this.form.setValue(this.data);
+    if (this.isEdit) this.form.patchValue(this.data);
     else this.formdirec.resetForm();
 
     this.name.nativeElement.focus();
@@ -71,7 +73,6 @@ export class CategoryEditComponent implements OnInit {
 
   private initForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      id: [null],
       name: ['', Validators.required],
       active: [true, Validators.required],
       remark: [''],

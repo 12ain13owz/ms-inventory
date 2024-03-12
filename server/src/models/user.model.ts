@@ -10,14 +10,14 @@ export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  id?: number;
+  id: number | null;
   email: string;
   password: string;
   firstname: string;
   lastname: string;
   role: 'admin' | 'user';
   active: boolean;
-  remark?: string;
+  remark: string | null;
 }
 
 export default User.init(

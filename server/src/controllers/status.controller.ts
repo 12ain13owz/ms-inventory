@@ -62,17 +62,17 @@ export async function createStatusHandler(
 }
 
 export async function updateStatusHandler(
-  req: Request<{}, {}, updateStatusInput>,
+  req: Request<updateStatusInput['params'], {}, updateStatusInput['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'updateStatusHandler';
 
   try {
+    const id = +req.params.id;
     const name = removeWhitespace(req.body.name);
     const status = await findStatusByName(name);
-    if (status && status.id !== req.body.id)
-      throw newError(400, 'ชื่อสถานะอุปกรณ์ซ้ำ');
+    if (status && status.id !== id) throw newError(400, 'ชื่อสถานะอุปกรณ์ซ้ำ');
 
     const payload: Partial<Status> = {
       name: name,
@@ -81,10 +81,11 @@ export async function updateStatusHandler(
       remark: req.body.remark || '',
     };
 
-    const result = await updateStatus(req.body.id, payload);
+    const result = await updateStatus(id, payload);
     if (!result[0]) throw newError(400, 'อัพเดทสถานะอุปกรณ์ไม่สำเร็จ');
 
-    res.json({ message: 'อัพเดทสถานะอุปกรณ์สำเร็จ' });
+    const updatedStatus = { id: id, ...payload };
+    res.json({ message: 'อัพเดทสถานะอุปกรณ์สำเร็จ', status: updatedStatus });
   } catch (error) {
     next(error);
   }
@@ -98,7 +99,7 @@ export async function deleteStatudHandler(
   res.locals.func = 'deleteStatudHandler';
 
   try {
-    const result = await deleteStatus(req.params.id);
+    const result = await deleteStatus(+req.params.id);
     if (!result) throw newError(400, 'ลบสถานะอุปกรณ์ไม่สำเร็จ');
 
     res.json({ message: 'ลบสถานะอุปกรณ์สำเร็จ' });

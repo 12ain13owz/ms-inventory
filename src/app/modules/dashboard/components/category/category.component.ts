@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Category, CategoryForm } from '../../models/category.model';
+import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category/category.service';
 import { CategoryApiService } from '../../services/category/category-api.service';
 import { Subscription, delayWhen, interval, tap } from 'rxjs';
@@ -20,7 +20,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   private categoryApiService = inject(CategoryApiService);
   private dialog = inject(MatDialog);
 
-  displayedColumns: string[] = ['name', 'active', 'remark', 'action'];
+  displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Category>(null);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

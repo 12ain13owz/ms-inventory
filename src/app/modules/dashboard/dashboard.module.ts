@@ -13,10 +13,10 @@ import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { PasswordComponent } from './components/password/password.component';
 import { CategoryEditComponent } from './components/category/category-edit/category-edit.component';
 import { StatusEditComponent } from './components/status/status-edit/status-edit.component';
+import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +33,7 @@ import { StatusEditComponent } from './components/status/status-edit/status-edit
     PasswordComponent,
     CategoryEditComponent,
     StatusEditComponent,
+    UserEditComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
 })
