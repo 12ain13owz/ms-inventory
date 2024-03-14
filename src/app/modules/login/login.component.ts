@@ -2,9 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { LoginService } from './services/login.service';
-import { LoginForm } from './models/login.model';
+import { LoginForm, LoginRequest } from './models/login.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LOGIN } from './constants/login.constant';
+import { LOGIN } from './constants/login,constant';
 
 @Component({
   selector: 'app-login',
@@ -27,9 +27,10 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) return;
 
+    const payload: LoginRequest = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.loginService
-      .login(this.form.getRawValue())
+      .login(payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => this.router.navigate(['/']));
   }

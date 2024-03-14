@@ -1,13 +1,22 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { Subscription, delayWhen, interval, tap } from 'rxjs';
+import {
+  Subscription,
+  delay,
+  delayWhen,
+  interval,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { StatusService } from '../../services/status/status.service';
 import { StatusApiService } from '../../services/status/status-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Status } from '../../models/status.model';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { StatusEditComponent } from './status-edit/status-edit.component';
+import { ValidationService } from '../../../shared/services/validation.service';
 
 @Component({
   selector: 'app-status',
@@ -18,7 +27,11 @@ export class StatusComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private statusService = inject(StatusService);
   private statusApiService = inject(StatusApiService);
+  private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = [
     'no',
@@ -29,16 +42,20 @@ export class StatusComponent implements OnInit, OnDestroy {
     'action',
   ];
   dataSource = new MatTableDataSource<Status>(null);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  pageIndex: number = 1;
 
   ngOnInit(): void {
     this.subscription = this.statusService
       .onStatusesListener()
       .pipe(
+        switchMap((statuses) =>
+          this.validationService.isEmpty(statuses)
+            ? this.statusApiService.getStatuses()
+            : of(statuses)
+        ),
         tap((statuses) => (this.dataSource.data = statuses)),
-        delayWhen(() => (this.paginator ? interval(0) : interval(100)))
+        delay(10),
+        delayWhen(() => (this.paginator ? interval(0) : interval(300)))
       )
       .subscribe(() => {
         this.dataSource.paginator = this.paginator;
@@ -48,6 +65,10 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  setPageIndex(event: PageEvent): void {
+    this.pageIndex = event.pageIndex * event.pageSize + 1;
   }
 
   onCreate(): void {

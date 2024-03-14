@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroupDirective,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Observable, Subscription, finalize, take } from 'rxjs';
+import { finalize } from 'rxjs';
 import { ProfileService } from '../../services/profile/profile.service';
 import { ProfileApiService } from '../../services/profile/profile-api.service';
 import { Password, PasswordForm, Profile } from '../../models/profile.model';
+import { ValidationService } from '../../../shared/services/validation.service';
 import { PASSWORD } from '../../constants/password.constant';
 
 @Component({
@@ -25,6 +23,7 @@ export class PasswordComponent implements OnInit {
   private profileService = inject(ProfileService);
   private profileApiService = inject(ProfileApiService);
   private formBuilder = inject(FormBuilder);
+  private validationService = inject(ValidationService);
 
   form: PasswordForm;
 
@@ -70,36 +69,21 @@ export class PasswordComponent implements OnInit {
   }
 
   private initForm(): void {
-    this.form = this.formBuilder.group(
+    this.form = this.formBuilder.nonNullable.group(
       {
-        oldPassword: ['123', [Validators.required]],
+        oldPassword: ['', [Validators.required]],
         newPassword: [
-          '!Qwerty123456',
+          '',
           [Validators.required, Validators.pattern(this.patternPassword)],
         ],
-        confirmPassword: ['!Qwerty123456'],
+        confirmPassword: [''],
       },
-      { validator: this.comparePasswordValidator }
+      {
+        validators: this.validationService.comparePasswordValidator.bind(this, [
+          'newPassword',
+          'confirmPassword',
+        ]),
+      }
     );
-  }
-
-  private comparePasswordValidator(
-    form: PasswordForm
-  ): ValidationErrors | null {
-    const newPassword = form.controls['newPassword'];
-    const confirmPassword = form.controls['confirmPassword'];
-
-    if (confirmPassword.value === '' && newPassword.value === '') {
-      confirmPassword.setErrors({ required: true });
-      return { required: true };
-    }
-
-    if (newPassword.value === confirmPassword.value) {
-      confirmPassword.setErrors(null);
-      return null;
-    }
-
-    confirmPassword.setErrors({ match: true });
-    return { match: true };
   }
 }

@@ -1,4 +1,4 @@
-export const CATEGORY = {
+export const STATUS = {
   validationField: {
     name: {
       required: 'กรุณาระบุ ชื่อ',

@@ -1,13 +1,22 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { Subscription, delayWhen, interval, tap } from 'rxjs';
+import {
+  Subscription,
+  delay,
+  delayWhen,
+  interval,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { UserService } from '../../services/user/user.service';
 import { UserApiService } from '../../services/user/user-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { User } from '../../models/user.model';
 import { UserEditComponent } from './user-edit/user-edit.component';
+import { ValidationService } from '../../../shared/services/validation.service';
 
 @Component({
   selector: 'app-user',
@@ -18,7 +27,11 @@ export class UserComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private userService = inject(UserService);
   private userApiService = inject(UserApiService);
+  private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = [
     'no',
@@ -30,16 +43,20 @@ export class UserComponent implements OnInit, OnDestroy {
     'action',
   ];
   dataSource = new MatTableDataSource<User>(null);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  pageIndex: number = 1;
 
   ngOnInit(): void {
     this.subscription = this.userService
       .onUsersListener()
       .pipe(
+        switchMap((users) =>
+          this.validationService.isEmpty(users)
+            ? this.userApiService.getUsers()
+            : of(users)
+        ),
         tap((users) => (this.dataSource.data = users)),
-        delayWhen(() => (this.paginator ? interval(0) : interval(100)))
+        delay(10),
+        delayWhen(() => (this.paginator ? interval(0) : interval(300)))
       )
       .subscribe(() => {
         this.dataSource.paginator = this.paginator;
@@ -49,6 +66,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  setPageIndex(event: PageEvent): void {
+    this.pageIndex = event.pageIndex * event.pageSize + 1;
   }
 
   onCreate(): void {

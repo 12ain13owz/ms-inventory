@@ -10,6 +10,7 @@ export interface Category {
 
 export interface CategoryForm
   extends FormGroup<{
+    id: FormControl<number>;
     name: FormControl<string>;
     active: FormControl<boolean>;
     remark: FormControl<string>;

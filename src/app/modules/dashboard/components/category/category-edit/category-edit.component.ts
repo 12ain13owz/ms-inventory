@@ -23,7 +23,7 @@ import { Message } from '../../../../shared/models/response.model';
 })
 export class CategoryEditComponent implements OnInit {
   @ViewChild('formDirec') formdirec: FormGroupDirective;
-  @ViewChild('name') name: ElementRef<HTMLInputElement>;
+  @ViewChild('nameInput') nameInput: ElementRef<HTMLInputElement>;
 
   private formBuilder = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<CategoryEditComponent>);
@@ -42,7 +42,7 @@ export class CategoryEditComponent implements OnInit {
     if (this.data) {
       this.title = 'แก้ไขประเภทอุปกรณ์';
       this.isEdit = true;
-      this.form.patchValue(this.data);
+      this.form.setValue({ id: this.data.id, ...this.data });
     }
   }
 
@@ -50,10 +50,10 @@ export class CategoryEditComponent implements OnInit {
     if (this.form.invalid) return;
     if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
 
-    const payload: Category = { ...this.form.getRawValue() };
+    const { id, ...payload }: Category = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.categoryApiService.updateCategory(this.data.id, payload)
+      ? this.categoryApiService.updateCategory(id, payload)
       : this.categoryApiService.createCategory(payload);
 
     this.operation$
@@ -68,13 +68,14 @@ export class CategoryEditComponent implements OnInit {
     if (this.isEdit) this.form.patchValue(this.data);
     else this.formdirec.resetForm();
 
-    this.name.nativeElement.focus();
+    this.nameInput.nativeElement.focus();
   }
 
   private initForm(): void {
     this.form = this.formBuilder.nonNullable.group({
-      name: ['', Validators.required],
-      active: [true, Validators.required],
+      id: [null],
+      name: ['', [Validators.required]],
+      active: [true, [Validators.required]],
       remark: [''],
     });
   }

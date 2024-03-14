@@ -17,9 +17,9 @@ const regexInValid =
 const comparePassword = 'รหัสผ่านไม่ตรงกัน';
 
 const regexPassword = new RegExp(
-  '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
 );
-const regexId = new RegExp('^[0-9]d*$'); // เฉพาะจำนวนเต็มศูนย์, บวก
+const regexId = new RegExp(/^[0-9]\d*$/);
 
 export const createUserSchema = object({
   body: object({

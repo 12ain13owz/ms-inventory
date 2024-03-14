@@ -14,7 +14,7 @@ const regexInValid =
 const comparePassword = 'รหัสผ่านไม่ตรงกัน';
 
 const regexPassword = new RegExp(
-  '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$'
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
 );
 
 export const updateProfileSchema = object({

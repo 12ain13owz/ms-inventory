@@ -2,7 +2,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Message } from '../../shared/models/response.model';
 
 export interface User {
-  id: number;
+  id?: number;
   email: string;
   firstname: string;
   lastname: string;
@@ -13,6 +13,7 @@ export interface User {
 
 export interface UserForm
   extends FormGroup<{
+    id: FormControl<number>;
     email: FormControl<string>;
     password: FormControl<string>;
     confirmPassword: FormControl<string>;

@@ -23,6 +23,7 @@
 
   <mat-divider></mat-divider>
 
+  @if (isAdmin) {
   <mat-accordion>
     <mat-expansion-panel
       [class.mat-elevation-z0]="true"
@@ -71,4 +72,5 @@
       </mat-nav-list>
     </mat-expansion-panel>
   </mat-accordion>
+  }
 </mat-nav-list>

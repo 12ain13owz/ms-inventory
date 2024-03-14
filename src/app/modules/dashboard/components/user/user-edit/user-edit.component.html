@@ -1,1 +1,143 @@
-<p>user-edit works!</p>
+<h2 mat-dialog-title>{{ title }}</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" #formDirec="ngForm">
+  <mat-dialog-content class="form-container">
+    <div class="box">
+      <mat-form-field>
+        <mat-label>E-mail</mat-label>
+        <input type="email" matInput formControlName="email" #emailInput />
+
+        <mat-error>
+          <app-error-field
+            [control]="email"
+            [errorMessage]="validationField.email"
+          ></app-error-field>
+        </mat-error>
+      </mat-form-field>
+
+      @if (!isEdit) {
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          [type]="hidePassword ? 'password' : 'text'"
+          matInput
+          formControlName="password"
+        />
+        <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{
+          hidePassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+
+        <mat-error>
+          <app-error-field
+            [control]="password"
+            [errorMessage]="validationField.password"
+          ></app-error-field>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Confirm Password</mat-label>
+        <input
+          [type]="hideConfirmPassword ? 'password' : 'text'"
+          matInput
+          formControlName="confirmPassword"
+        />
+        <mat-icon
+          matSuffix
+          (click)="hideConfirmPassword = !hideConfirmPassword"
+          >{{ hideConfirmPassword ? "visibility_off" : "visibility" }}</mat-icon
+        >
+
+        <mat-error>
+          <app-error-field
+            [control]="confirmPassword"
+            [errorMessage]="validationField.confirmPassword"
+          ></app-error-field>
+        </mat-error>
+      </mat-form-field>
+      }
+
+      <div class="row">
+        <mat-form-field>
+          <mat-label>ชื่อ</mat-label>
+          <input type="text" matInput formControlName="firstname" />
+
+          <mat-error>
+            <app-error-field
+              [control]="firstname"
+              [errorMessage]="validationField.firstname"
+            ></app-error-field>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>นามสกุล</mat-label>
+          <input type="text" matInput formControlName="lastname" />
+
+          <mat-error>
+            <app-error-field
+              [control]="lastname"
+              [errorMessage]="validationField.lastname"
+            ></app-error-field>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>สิทธิ</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let role of roleOptions" [value]="role">{{
+            role
+          }}</mat-option>
+        </mat-select>
+
+        <mat-error>
+          <app-error-field
+            [control]="role"
+            [errorMessage]="validationField.role"
+          ></app-error-field>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>หมายเหตุ</mat-label>
+        <input type="text" matInput formControlName="remark" />
+      </mat-form-field>
+
+      <div class="row-active">
+        <mat-slide-toggle formControlName="active"></mat-slide-toggle>
+        <span>เปิดใช้งาน</span>
+      </div>
+    </div>
+
+    <!-- <div class="box">
+      <mat-form-field>
+        <mat-label>ชื่อ</mat-label>
+        <input type="text" matInput formControlName="name" #name />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>สถานที่ตั้ง/จัดเก็บ</mat-label>
+        <input type="text" matInput formControlName="place" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>หมายเหตุ</mat-label>
+        <input type="text" matInput formControlName="remark" />
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-slide-toggle formControlName="active"></mat-slide-toggle>
+      <span>เปิดใช้งาน</span>
+    </div> -->
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button type="submit" mat-raised-button color="primary">Submit</button>
+    <button type="button" mat-button color="warn" (click)="onReset()">
+      Reset
+    </button>
+  </mat-dialog-actions>
+</form>
+@if (isLoading) {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

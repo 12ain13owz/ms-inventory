@@ -1,19 +1,19 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { Router } from '@angular/router';
 import { ToastNotificationService } from '../services/toast-notification.service';
-import { TokenService } from '../../modules/shared/services/token.service';
 import { AuthApiService } from '../../modules/dashboard/services/auth/auth-api.service';
+import { LoadingScreenService } from '../services/loading-screen.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toastr = inject(ToastNotificationService);
-  const router = inject(Router);
-  const tokenService = inject(TokenService);
   const authService = inject(AuthApiService);
+  const loadingScreenService = inject(LoadingScreenService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      loadingScreenService.setIsLoading(false);
+
       const logout = error.error.logout || false;
       const status = error.status || 500;
       const message =
@@ -22,11 +22,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           : error.error.message || 'Unknown Error!';
 
       toastr.error(status.toString(), message);
-      if (logout) {
-        authService.logout();
-        tokenService.removeToken();
-        router.navigate(['login']);
-      }
+      if (logout) authService.logout();
 
       return throwError(() => error);
     })

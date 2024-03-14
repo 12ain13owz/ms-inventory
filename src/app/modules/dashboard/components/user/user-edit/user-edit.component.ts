@@ -1,29 +1,148 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
-import { FormBuilder, FormGroupDirective } from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { User, UserForm, UserResponse } from '../../../models/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryEditComponent } from '../../category/category-edit/category-edit.component';
 import { UserApiService } from '../../../services/user/user-api.service';
-import { Observable } from 'rxjs';
+import { Observable, finalize } from 'rxjs';
 import { Message } from '../../../../shared/models/response.model';
+import { ValidationService } from '../../../../shared/services/validation.service';
+import { USER } from '../../../constants/user.constant';
 
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.scss',
 })
-export class UserEditComponent {
+export class UserEditComponent implements OnInit {
   @ViewChild('formDirec') formdirec: FormGroupDirective;
-  @ViewChild('email') name: ElementRef<HTMLInputElement>;
+  @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
 
   private formBuilder = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<CategoryEditComponent>);
   private data: User = inject(MAT_DIALOG_DATA);
   private userApiService = inject(UserApiService);
+  private validationService = inject(ValidationService);
   private operation$: Observable<Message | UserResponse>;
 
+  title: string = 'เพิ่มผู้ใช้งาน';
   isEdit: boolean = false;
   isLoading: boolean = false;
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
   form: UserForm;
-  title: string = 'เพิ่มผู้ใช้งาน';
+  roleOptions: string[] = ['user', 'admin'];
+  validationField = USER.validationField;
+  patternPassword = USER.patternPassword;
+
+  ngOnInit(): void {
+    this.initForm();
+
+    if (this.data) {
+      this.title = 'แก้ไขผู้ใข้งาน';
+      this.isEdit = true;
+
+      this.password.disable();
+      this.confirmPassword.disable();
+      this.form.clearValidators();
+      this.form.patchValue(this.data);
+    }
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) return;
+    if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
+
+    const { id, ...payload }: User = { ...this.form.getRawValue() };
+    this.isLoading = true;
+    this.operation$ = this.isEdit
+      ? this.userApiService.updateUser(id, payload)
+      : this.userApiService.createUser(payload);
+
+    this.operation$
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe(() => {
+        if (this.isEdit) this.dialogRef.close();
+        else this.onReset();
+      });
+  }
+
+  onReset(): void {
+    if (this.isEdit) this.form.patchValue(this.data);
+    else this.formdirec.resetForm();
+
+    this.emailInput.nativeElement.focus();
+  }
+
+  get email(): FormControl<string> {
+    return this.form.controls['email'];
+  }
+
+  get password(): FormControl<string> {
+    return this.form.controls['password'];
+  }
+
+  get confirmPassword(): FormControl<string> {
+    return this.form.controls['confirmPassword'];
+  }
+
+  get firstname(): FormControl<string> {
+    return this.form.controls['firstname'];
+  }
+
+  get lastname(): FormControl<string> {
+    return this.form.controls['lastname'];
+  }
+
+  get role(): FormControl<string> {
+    return this.form.controls['role'];
+  }
+
+  get active(): FormControl<boolean> {
+    return this.form.controls['active'];
+  }
+
+  get remark(): FormControl<string> {
+    return this.form.controls['remark'];
+  }
+
+  private initForm(): void {
+    this.form = this.formBuilder.nonNullable.group(
+      {
+        id: [null],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [Validators.required, Validators.pattern(this.patternPassword)],
+        ],
+        confirmPassword: [''],
+        firstname: ['', [Validators.required]],
+        lastname: ['', [Validators.required]],
+        role: [
+          'user',
+          [Validators.required, this.validationService.oneOf(this.roleOptions)],
+        ],
+        active: [true, [Validators.required]],
+        remark: [''],
+      },
+
+      {
+        validators: this.validationService.comparePasswordValidator.bind(this, [
+          'password',
+          'confirmPassword',
+        ]),
+      }
+    );
+  }
 }

@@ -23,7 +23,7 @@ import { Observable, finalize } from 'rxjs';
 })
 export class StatusEditComponent implements OnInit {
   @ViewChild('formDirec') formdirec: FormGroupDirective;
-  @ViewChild('name') name: ElementRef<HTMLInputElement>;
+  @ViewChild('nameInput') nameInput: ElementRef<HTMLInputElement>;
 
   private formBuilder = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<StatusEditComponent>);
@@ -42,7 +42,7 @@ export class StatusEditComponent implements OnInit {
     if (this.data) {
       this.title = 'แก้ไขสถานะอุปกรณ์';
       this.isEdit = true;
-      this.form.patchValue(this.data);
+      this.form.setValue({ id: this.data.id, ...this.data });
     }
   }
 
@@ -50,10 +50,10 @@ export class StatusEditComponent implements OnInit {
     if (this.form.invalid) return;
     if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
 
-    const payload: Status = { ...this.form.getRawValue() };
+    const { id, ...payload }: Status = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.statusApiService.updateStatus(this.data.id, payload)
+      ? this.statusApiService.updateStatus(id, payload)
       : this.statusApiService.createStatus(payload);
 
     this.operation$
@@ -68,11 +68,12 @@ export class StatusEditComponent implements OnInit {
     if (this.isEdit) this.form.patchValue(this.data);
     else this.formdirec.resetForm();
 
-    this.name.nativeElement.focus();
+    this.nameInput.nativeElement.focus();
   }
 
   private initForm(): void {
     this.form = this.formBuilder.nonNullable.group({
+      id: [null],
       name: ['', Validators.required],
       place: [''],
       active: [true, Validators.required],

@@ -3,11 +3,11 @@ import { ThemeService } from '../../services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-loader',
-  templateUrl: './loader.component.html',
-  styleUrl: './loader.component.scss',
+  selector: 'app-loading-data',
+  templateUrl: './loading-data.component.html',
+  styleUrl: './loading-data.component.scss',
 })
-export class LoaderComponent implements OnInit, OnDestroy {
+export class LoadingDataComponent implements OnInit, OnDestroy {
   @Input() heigh: string = '50px';
   @Input() form: 'card' | 'list' = 'card';
 

@@ -3,11 +3,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category/category.service';
 import { CategoryApiService } from '../../services/category/category-api.service';
-import { Subscription, delayWhen, interval, tap } from 'rxjs';
+import {
+  Subscription,
+  delay,
+  delayWhen,
+  interval,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ValidationService } from '../../../shared/services/validation.service';
 
 @Component({
   selector: 'app-category',
@@ -18,20 +27,28 @@ export class CategoryComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private categoryService = inject(CategoryService);
   private categoryApiService = inject(CategoryApiService);
+  private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
-
-  displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
-  dataSource = new MatTableDataSource<Category>(null);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
+  dataSource = new MatTableDataSource<Category>(null);
+  pageIndex: number = 1;
 
   ngOnInit(): void {
     this.subscription = this.categoryService
       .onCategoriesListener()
       .pipe(
+        switchMap((categories) =>
+          this.validationService.isEmpty(categories)
+            ? this.categoryApiService.getCategories()
+            : of(categories)
+        ),
         tap((categories) => (this.dataSource.data = categories)),
-        delayWhen(() => (this.paginator ? interval(0) : interval(100)))
+        delay(10),
+        delayWhen(() => (this.paginator ? interval(0) : interval(300)))
       )
       .subscribe(() => {
         this.dataSource.paginator = this.paginator;
@@ -41,6 +58,10 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  setPageIndex(event: PageEvent): void {
+    this.pageIndex = event.pageIndex * event.pageSize + 1;
   }
 
   onCreate(): void {

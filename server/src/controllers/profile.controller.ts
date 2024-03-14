@@ -2,7 +2,6 @@ import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import {
   findUserByEmail,
-  findUserById,
   updateUser,
   updateUserPassword,
 } from '../services/user.service';

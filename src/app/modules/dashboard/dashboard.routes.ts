@@ -1,26 +1,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
+
 import { ScanComponent } from './components/scan/scan.component';
 import { ItemComponent } from './components/item/item.component';
 import { LogComponent } from './components/log/log.component';
-import { authGuard } from './guards/auth.guard';
 import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
 import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { profileResolver } from './resolver/profile.resolver';
 import { PasswordComponent } from './components/password/password.component';
-import { categoryResolver } from './resolver/category.resolver';
-import { statusResolver } from './resolver/status.resolver';
-import { userResolver } from './resolver/user.resolver';
+import { dashboardResolver } from './dashboard.resolver';
 
 export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    resolve: [profileResolver],
     canActivateChild: [authGuard],
+    resolve: [dashboardResolver],
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },
       { path: 'scan', component: ScanComponent },
@@ -30,23 +29,12 @@ export const routes: Routes = [
       { path: 'password', component: PasswordComponent },
       {
         path: 'setting',
-        canActivateChild: [],
+        canActivateChild: [adminGuard],
         children: [
-          {
-            path: 'user',
-            component: UserComponent,
-            resolve: [userResolver],
-          },
-          {
-            path: 'category',
-            component: CategoryComponent,
-            resolve: [categoryResolver],
-          },
-          {
-            path: 'status',
-            component: StatusComponent,
-            resolve: [statusResolver],
-          },
+          { path: '', redirectTo: 'user', pathMatch: 'full' },
+          { path: 'user', component: UserComponent },
+          { path: 'category', component: CategoryComponent },
+          { path: 'status', component: StatusComponent },
         ],
       },
     ],

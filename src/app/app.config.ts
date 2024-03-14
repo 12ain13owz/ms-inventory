@@ -26,7 +26,7 @@ const config: JwtConfig = {
 
 export function loadCrucialData() {
   return function () {
-    return delay(200);
+    return delay(500);
   };
 }
 

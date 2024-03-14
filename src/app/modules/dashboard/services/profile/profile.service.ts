@@ -6,10 +6,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProfileService {
-  private profile: Profile;
+  private profile: Profile | null;
   private profile$ = new BehaviorSubject<Profile>(null);
+  private isAdmin: boolean = false;
 
-  constructor() {}
+  constructor() {
+    this.profile$.subscribe((profile) => {
+      if (profile) this.isAdmin = profile.role === 'admin';
+    });
+  }
+
+  isProfileAdmin(): boolean {
+    return this.isAdmin;
+  }
 
   onProfileListener(): Observable<Profile> {
     return this.profile$.asObservable();

@@ -1,9 +1,9 @@
-import { TypeOf, boolean, number, object, string } from 'zod';
+import { TypeOf, boolean, object, string } from 'zod';
 
 const id = 'ไม่พบข้อมูลรหัสสถานะของอุปกรณ์';
 const name = 'ไม่พบข้อมูลชื่อสถานะของอุปกรณ์';
 const active = 'ไม่พบข้อมูลสถานะการใช้งาน';
-const regexId = new RegExp('^[0-9]d*$'); // เฉพาะจำนวนเต็มศูนย์, บวก
+const regexId = new RegExp(/^[0-9]\d*$/);
 
 export const creatStatusSchema = object({
   body: object({

@@ -20,7 +20,7 @@ export class UserApiService {
       .pipe(tap((res) => this.userService.setUsers(res)));
   }
 
-  createUser(payload: Partial<User>): Observable<UserResponse> {
+  createUser(payload: User): Observable<UserResponse> {
     return this.http
       .post<UserResponse>(this.apiUrl, payload)
       .pipe(tap((res) => this.userService.createUser(res.user)));

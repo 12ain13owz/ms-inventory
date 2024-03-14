@@ -11,6 +11,7 @@ export interface Status {
 
 export interface StatusForm
   extends FormGroup<{
+    id: FormControl<number>;
     name: FormControl<string>;
     place: FormControl<string>;
     active: FormControl<boolean>;

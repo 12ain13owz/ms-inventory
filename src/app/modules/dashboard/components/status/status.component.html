@@ -84,11 +84,11 @@
 
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50, 100]"
+      (page)="setPageIndex($event)"
       showFirstLastButtons
     ></mat-paginator>
   </mat-card-content>
 </mat-card>
-
 } @placeholder (minimum 300ms) {
-<app-loader [form]="'card'"></app-loader>
+<app-loading-data [form]="'card'"></app-loading-data>
 }
