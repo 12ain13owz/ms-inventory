@@ -33,7 +33,7 @@ export class CategoryEditComponent implements OnInit {
   private operation$: Observable<Message | CategoryResponse>;
 
   form: CategoryForm;
-  title: string = 'เพิ่มประเภทอุปกรณ์';
+  title: string = 'เพิ่มประเภทพัสดุ';
   isEdit: boolean = false;
   isLoading: boolean = false;
   validationField = CATEGORY.validationField;
@@ -42,7 +42,7 @@ export class CategoryEditComponent implements OnInit {
     this.initForm();
 
     if (this.data) {
-      this.title = 'แก้ไขประเภทอุปกรณ์';
+      this.title = 'แก้ไขประเภทพัสดุ';
       this.isEdit = true;
       this.form.setValue({ id: this.data.id, ...this.data });
     }

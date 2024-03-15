@@ -5,7 +5,7 @@ import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 
 import { ScanComponent } from './components/scan/scan.component';
-import { ItemComponent } from './components/item/item.component';
+import { ParcelComponent } from './components/parcel/parcel.component';
 import { LogComponent } from './components/log/log.component';
 import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
@@ -23,7 +23,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },
       { path: 'scan', component: ScanComponent },
-      { path: 'item', component: ItemComponent },
+      { path: 'parcel', component: ParcelComponent },
       { path: 'log', component: LogComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'password', component: PasswordComponent },

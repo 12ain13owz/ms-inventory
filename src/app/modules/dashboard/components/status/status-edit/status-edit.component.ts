@@ -33,7 +33,7 @@ export class StatusEditComponent implements OnInit {
   private operation$: Observable<Message | StatusResponse>;
 
   form: StatusForm;
-  title: string = 'เพิ่มสถานะอุปกรณ์';
+  title: string = 'เพิ่มสถานะพัสดุ';
   isEdit: boolean = false;
   isLoading: boolean = false;
   validationField = STATUS.validationField;
@@ -42,7 +42,7 @@ export class StatusEditComponent implements OnInit {
     this.initForm();
 
     if (this.data) {
-      this.title = 'แก้ไขสถานะอุปกรณ์';
+      this.title = 'แก้ไขสถานะพัสดุ';
       this.isEdit = true;
       this.form.setValue({ id: this.data.id, ...this.data });
     }

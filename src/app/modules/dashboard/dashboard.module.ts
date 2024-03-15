@@ -5,7 +5,7 @@ import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { ToolbarComponent } from './layouts/toolbar/toolbar.component';
 import { SidenavComponent } from './layouts/sidenav/sidenav.component';
-import { ItemComponent } from './components/item/item.component';
+import { ParcelComponent } from './components/parcel/parcel.component';
 import { LogComponent } from './components/log/log.component';
 import { ScanComponent } from './components/scan/scan.component';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,6 @@ import { UserEditComponent } from './components/user/user-edit/user-edit.compone
     DashboardComponent,
     ToolbarComponent,
     SidenavComponent,
-    ItemComponent,
     LogComponent,
     ScanComponent,
     UserComponent,
@@ -34,6 +33,7 @@ import { UserEditComponent } from './components/user/user-edit/user-edit.compone
     CategoryEditComponent,
     StatusEditComponent,
     UserEditComponent,
+    ParcelComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
 })

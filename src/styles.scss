@@ -225,7 +225,7 @@ $h1-text-color: #ea4235;
 $normal-text-color: #202020;
 $dark-mode-text-color: #fffffc;
 
-.server-box {
+.error-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -254,6 +254,10 @@ $dark-mode-text-color: #fffffc;
   }
 }
 
+.line-2 {
+  color: #757575;
+}
+
 .dark-theme {
   .link-active {
     background-color: #9c27b0 !important;
@@ -263,9 +267,13 @@ $dark-mode-text-color: #fffffc;
     background-color: #303030 !important;
   }
 
-  .server-box {
+  .error-box {
     h3 {
       color: #fffffc;
     }
+  }
+
+  .line-2 {
+    color: #c7c7c7;
   }
 }

@@ -24,3 +24,41 @@ mat-expansion-panel-header {
     padding-left: 24px;
   }
 }
+
+mat-toolbar {
+  .toolbar-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    .toolbar-logo {
+      border-radius: 50%;
+
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .toolbar-text {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      .line-1 {
+        position: absolute;
+        top: -25px;
+        letter-spacing: 4px;
+        font-weight: 800;
+      }
+
+      .line-2 {
+        position: absolute;
+        top: -4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
