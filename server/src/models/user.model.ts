@@ -10,14 +10,14 @@ export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  id: number | null;
+  id?: number;
   email: string;
   password: string;
   firstname: string;
   lastname: string;
   role: 'admin' | 'user';
   active: boolean;
-  remark: string | null;
+  remark: string;
 }
 
 export default User.init(
@@ -48,16 +48,13 @@ export default User.init(
     role: {
       type: DataTypes.ENUM('admin', 'user'),
       allowNull: false,
-      defaultValue: 'user',
     },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true,
     },
     remark: {
       type: DataTypes.TEXT,
-      defaultValue: '',
     },
   },
   {

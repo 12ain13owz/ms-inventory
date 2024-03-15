@@ -10,10 +10,10 @@ export class Status extends Model<
   InferAttributes<Status>,
   InferCreationAttributes<Status>
 > {
-  id: number | null;
+  id?: number;
   name: string;
-  place: string | null;
-  remark: string | null;
+  place: string;
+  remark: string;
   active: boolean;
 }
 

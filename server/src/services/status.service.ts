@@ -1,15 +1,14 @@
 import { Op } from 'sequelize';
-import { Status } from '../models/status.model';
-import StatusModel from '../models/status.model';
-
-export function findStatusByName(name: string): Promise<Status | null> {
-  return StatusModel.findOne({ where: { name: { [Op.like]: name } } });
-}
+import StatusModel, { Status } from '../models/status.model';
 
 export function findAllStatus() {
   return StatusModel.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
+}
+
+export function findStatusByName(name: string): Promise<Status | null> {
+  return StatusModel.findOne({ where: { name: { [Op.like]: name } } });
 }
 
 export function createStatus(status: Status): Promise<Status> {

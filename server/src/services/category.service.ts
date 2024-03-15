@@ -1,15 +1,14 @@
 import { Op } from 'sequelize';
-import { Category } from '../models/category.model';
-import CategoryModel from '../models/category.model';
-
-export function findCategoryByName(name: string): Promise<Category | null> {
-  return CategoryModel.findOne({ where: { name: { [Op.like]: name } } });
-}
+import CategoryModel, { Category } from '../models/category.model';
 
 export function findAllCategory() {
   return CategoryModel.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
+}
+
+export function findCategoryByName(name: string): Promise<Category | null> {
+  return CategoryModel.findOne({ where: { name: { [Op.like]: name } } });
 }
 
 export function createCategory(category: Category): Promise<Category> {

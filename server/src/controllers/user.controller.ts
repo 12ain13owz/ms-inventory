@@ -52,7 +52,6 @@ export async function createUserHandler(
     const password = hashPassword(req.body.password);
     const role = req.body.role as 'admin' | 'user';
     const payload: User = new User({
-      id: null,
       email: email,
       password: password,
       firstname: req.body.firstname,
