@@ -22,7 +22,8 @@ export async function verifyToken(
       /^Bearer\s/,
       ''
     );
-    if (!accessToken) newError(403, 'ไม่พบ Token กรุณาเข้าสู่ระบบใหม่', true);
+    if (!accessToken)
+      throw newError(403, 'ไม่พบ Token กรุณาเข้าสู่ระบบใหม่', true);
 
     const decoded = verifyJwt<decodeUser>(accessToken, 'accessTokenPublicKey');
     if (!decoded)

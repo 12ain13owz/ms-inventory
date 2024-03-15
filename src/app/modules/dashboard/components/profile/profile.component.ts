@@ -4,6 +4,7 @@ import { ProfileService } from '../../services/profile/profile.service';
 import { Profile, ProfileForm } from '../../models/profile.model';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription, finalize } from 'rxjs';
+import { PROFILE } from '../../constants/profile.constant';
 
 @Component({
   selector: 'app-profile',
@@ -16,9 +17,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private ProfileApiService = inject(ProfileApiService);
   private formBuilder = inject(FormBuilder);
 
-  isLoading: boolean = false;
   form: ProfileForm;
   profile: Profile;
+  isLoading: boolean = false;
+  validationField = PROFILE.validationField;
 
   ngOnInit(): void {
     this.subscription = this.profileService
@@ -35,9 +37,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.form.invalid) return;
-    this.isLoading = true;
 
     const payload: Partial<Profile> = { ...this.form.value };
+    this.isLoading = true;
     this.ProfileApiService.updateProfile(payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe();
@@ -45,6 +47,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onReset(): void {
     this.form.reset();
+  }
+
+  get email() {
+    return this.form.controls['email'];
+  }
+
+  get firstname() {
+    return this.form.controls['firstname'];
+  }
+
+  get lastname() {
+    return this.form.controls['lastname'];
+  }
+
+  get role() {
+    return this.form.controls['role'];
   }
 
   private initForm(): void {

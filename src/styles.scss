@@ -102,16 +102,6 @@ mat-table {
   color: #f44336;
 }
 
-.dark-theme {
-  .link-active {
-    background-color: #9c27b0 !important;
-  }
-
-  .bg-color {
-    background-color: #303030 !important;
-  }
-}
-
 @media (max-width: 600px) {
   .form-container {
     .row {
@@ -228,5 +218,54 @@ mat-table {
 
   100% {
     stroke: pink;
+  }
+}
+
+$h1-text-color: #ea4235;
+$normal-text-color: #202020;
+$dark-mode-text-color: #fffffc;
+
+.server-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
+  height: 100dvh;
+  width: 100dvw;
+
+  img {
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  h1 {
+    font-size: 6rem;
+    font-weight: bold;
+    letter-spacing: 10px;
+    color: $h1-text-color;
+    text-shadow: 3px 4px 7px rgba(78, 12, 8, 0.8);
+  }
+
+  h3 {
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: $normal-text-color;
+  }
+}
+
+.dark-theme {
+  .link-active {
+    background-color: #9c27b0 !important;
+  }
+
+  .bg-color {
+    background-color: #303030 !important;
+  }
+
+  .server-box {
+    h3 {
+      color: #fffffc;
+    }
   }
 }

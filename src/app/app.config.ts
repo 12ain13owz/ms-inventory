@@ -52,6 +52,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideToastr(),
     importProvidersFrom(JwtModule.forRoot({ config })),
-    providerSplashScreen,
+    // providerSplashScreen,
   ],
 };

@@ -14,7 +14,8 @@ import {
 } from '../../../models/status.model';
 import { StatusApiService } from '../../../services/status/status-api.service';
 import { Message } from '../../../../shared/models/response.model';
-import { Observable, finalize } from 'rxjs';
+import { Observable, catchError, finalize, throwError } from 'rxjs';
+import { STATUS } from '../../../constants/status.constant';
 
 @Component({
   selector: 'app-status-edit',
@@ -31,10 +32,11 @@ export class StatusEditComponent implements OnInit {
   private statusApiService = inject(StatusApiService);
   private operation$: Observable<Message | StatusResponse>;
 
+  form: StatusForm;
   title: string = 'เพิ่มสถานะอุปกรณ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
-  form: StatusForm;
+  validationField = STATUS.validationField;
 
   ngOnInit(): void {
     this.initForm();
@@ -57,7 +59,13 @@ export class StatusEditComponent implements OnInit {
       : this.statusApiService.createStatus(payload);
 
     this.operation$
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        catchError((error) => {
+          if (error.status === 0) this.dialogRef.close();
+          return throwError(() => error);
+        }),
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe(() => {
         if (this.isEdit) this.dialogRef.close();
         else this.onReset();
@@ -69,6 +77,10 @@ export class StatusEditComponent implements OnInit {
     else this.formdirec.resetForm();
 
     this.nameInput.nativeElement.focus();
+  }
+
+  get name() {
+    return this.form.controls['name'];
   }
 
   private initForm(): void {

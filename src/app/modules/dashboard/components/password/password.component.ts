@@ -26,7 +26,6 @@ export class PasswordComponent implements OnInit {
   private validationService = inject(ValidationService);
 
   form: PasswordForm;
-
   profile: Profile;
   isLoading: boolean = false;
   validationField = PASSWORD.validationField;

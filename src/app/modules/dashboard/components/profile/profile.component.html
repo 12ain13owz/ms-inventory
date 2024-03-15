@@ -9,23 +9,51 @@
       <mat-form-field>
         <mat-label>E-mail</mat-label>
         <input type="email" matInput formControlName="email" />
+
+        <mat-error>
+          <app-error-field
+            [control]="email"
+            [errorMessage]="validationField.email"
+          ></app-error-field>
+        </mat-error>
       </mat-form-field>
 
       <div class="row">
         <mat-form-field>
           <mat-label class="label-in">First Name</mat-label>
           <input type="text" matInput formControlName="firstname" />
+
+          <mat-error>
+            <app-error-field
+              [control]="firstname"
+              [errorMessage]="validationField.firstname"
+            ></app-error-field>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Last Name</mat-label>
           <input type="text" matInput formControlName="lastname" />
+
+          <mat-error>
+            <app-error-field
+              [control]="lastname"
+              [errorMessage]="validationField.lastname"
+            ></app-error-field>
+          </mat-error>
         </mat-form-field>
       </div>
 
       <mat-form-field>
         <mat-label>Role</mat-label>
         <input type="text" matInput formControlName="role" />
+
+        <mat-error>
+          <app-error-field
+            [control]="role"
+            [errorMessage]="validationField.role"
+          ></app-error-field>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>

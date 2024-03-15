@@ -15,7 +15,7 @@ import { User, UserForm, UserResponse } from '../../../models/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryEditComponent } from '../../category/category-edit/category-edit.component';
 import { UserApiService } from '../../../services/user/user-api.service';
-import { Observable, finalize } from 'rxjs';
+import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { Message } from '../../../../shared/models/response.model';
 import { ValidationService } from '../../../../shared/services/validation.service';
 import { USER } from '../../../constants/user.constant';
@@ -36,12 +36,12 @@ export class UserEditComponent implements OnInit {
   private validationService = inject(ValidationService);
   private operation$: Observable<Message | UserResponse>;
 
+  form: UserForm;
   title: string = 'เพิ่มผู้ใช้งาน';
   isEdit: boolean = false;
   isLoading: boolean = false;
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
-  form: UserForm;
   roleOptions: string[] = ['user', 'admin'];
   validationField = USER.validationField;
   patternPassword = USER.patternPassword;
@@ -71,7 +71,13 @@ export class UserEditComponent implements OnInit {
       : this.userApiService.createUser(payload);
 
     this.operation$
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        catchError((error) => {
+          if (error.status === 0) this.dialogRef.close();
+          return throwError(() => error);
+        }),
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe(() => {
         if (this.isEdit) this.dialogRef.close();
         else this.onReset();

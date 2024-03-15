@@ -5,6 +5,13 @@
       <mat-form-field>
         <mat-label>ชื่อ</mat-label>
         <input type="text" matInput formControlName="name" #nameInput />
+
+        <mat-error>
+          <app-error-field
+            [control]="name"
+            [errorMessage]="validationField.name"
+          ></app-error-field>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>

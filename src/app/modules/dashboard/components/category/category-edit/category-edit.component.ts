@@ -13,8 +13,9 @@ import {
   CategoryForm,
   CategoryResponse,
 } from '../../../models/category.model';
-import { Observable, finalize } from 'rxjs';
+import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { Message } from '../../../../shared/models/response.model';
+import { CATEGORY } from '../../../constants/category.constant';
 
 @Component({
   selector: 'app-category-edit',
@@ -31,10 +32,11 @@ export class CategoryEditComponent implements OnInit {
   private categoryApiService = inject(CategoryApiService);
   private operation$: Observable<Message | CategoryResponse>;
 
+  form: CategoryForm;
   title: string = 'เพิ่มประเภทอุปกรณ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
-  form: CategoryForm;
+  validationField = CATEGORY.validationField;
 
   ngOnInit(): void {
     this.initForm();
@@ -57,7 +59,13 @@ export class CategoryEditComponent implements OnInit {
       : this.categoryApiService.createCategory(payload);
 
     this.operation$
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        catchError((error) => {
+          if (error.status === 0) this.dialogRef.close();
+          return throwError(() => error);
+        }),
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe(() => {
         if (this.isEdit) this.dialogRef.close();
         else this.onReset();
@@ -69,6 +77,10 @@ export class CategoryEditComponent implements OnInit {
     else this.formdirec.resetForm();
 
     this.nameInput.nativeElement.focus();
+  }
+
+  get name() {
+    return this.form.controls['name'];
   }
 
   private initForm(): void {

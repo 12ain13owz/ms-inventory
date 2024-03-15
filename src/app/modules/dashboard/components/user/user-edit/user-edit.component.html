@@ -21,6 +21,7 @@
           [type]="hidePassword ? 'password' : 'text'"
           matInput
           formControlName="password"
+          autocomplete="off"
         />
         <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{
           hidePassword ? "visibility_off" : "visibility"
@@ -40,6 +41,7 @@
           [type]="hideConfirmPassword ? 'password' : 'text'"
           matInput
           formControlName="confirmPassword"
+          autocomplete="off"
         />
         <mat-icon
           matSuffix
