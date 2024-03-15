@@ -10,7 +10,6 @@ export const creatStatusSchema = object({
     name: string({ required_error: name }).min(1, {
       message: name,
     }),
-    place: string().optional().nullable(),
     active: boolean({ required_error: active }),
     remark: string().optional().nullable(),
   }),
@@ -26,7 +25,6 @@ export const updateStatusSchema = object({
     name: string({ required_error: id }).min(1, {
       message: id,
     }),
-    place: string().optional().nullable(),
     active: boolean({ required_error: active }),
     remark: string().optional().nullable(),
   }),

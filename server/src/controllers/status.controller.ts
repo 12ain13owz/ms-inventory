@@ -45,7 +45,6 @@ export async function createStatusHandler(
 
     const payload = new Status({
       name: name,
-      place: req.body.place || '',
       active: req.body.active,
       remark: req.body.remark || '',
     });
@@ -76,7 +75,6 @@ export async function updateStatusHandler(
 
     const payload: Partial<Status> = {
       name: name,
-      place: req.body.place || '',
       active: req.body.active,
       remark: req.body.remark || '',
     };

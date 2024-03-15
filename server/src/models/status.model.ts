@@ -12,7 +12,6 @@ export class Status extends Model<
 > {
   id?: number;
   name: string;
-  place: string;
   remark: string;
   active: boolean;
 }
@@ -28,10 +27,6 @@ export default Status.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-    place: {
-      type: DataTypes.TEXT,
-      defaultValue: '',
     },
     active: {
       type: DataTypes.BOOLEAN,
