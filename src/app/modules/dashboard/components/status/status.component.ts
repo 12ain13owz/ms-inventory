@@ -33,14 +33,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  displayedColumns: string[] = [
-    'no',
-    'name',
-    'place',
-    'active',
-    'remark',
-    'action',
-  ];
+  displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Status>(null);
   pageIndex: number = 1;
 

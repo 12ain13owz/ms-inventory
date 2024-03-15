@@ -87,7 +87,6 @@ export class StatusEditComponent implements OnInit {
     this.form = this.formBuilder.nonNullable.group({
       id: [null],
       name: ['', Validators.required],
-      place: [''],
       active: [true, Validators.required],
       remark: [''],
     });
