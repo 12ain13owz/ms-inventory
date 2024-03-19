@@ -15,7 +15,7 @@ export class CategoryService {
     return this.categories$.asObservable();
   }
 
-  setCategoryise(categories: Category[]): void {
+  setCategorise(categories: Category[]): void {
     this.categories = categories;
     this.categories$.next(this.categories.slice());
   }

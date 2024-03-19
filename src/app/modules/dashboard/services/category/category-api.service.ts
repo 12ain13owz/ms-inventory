@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, pipe, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment.development';
 import { Message } from './../../../shared/models/response.model';
 import { Category, CategoryResponse } from '../../models/category.model';
 import { CategoryService } from './category.service';
+import { ValidationService } from '../../../shared/services/validation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,13 +15,17 @@ export class CategoryApiService {
 
   constructor(
     private http: HttpClient,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private validationService: ValidationService
   ) {}
 
   getCategories(): Observable<Category[]> {
-    return this.http
-      .get<Category[]>(this.apiUrl)
-      .pipe(tap((res) => this.categoryService.setCategoryise(res)));
+    return this.http.get<Category[]>(this.apiUrl).pipe(
+      tap((res) => {
+        if (!this.validationService.isEmpty(res))
+          this.categoryService.setCategorise(res);
+      })
+    );
   }
 
   createCategory(payload: Category): Observable<CategoryResponse> {

@@ -5,6 +5,7 @@ import { StatusService } from './status.service';
 import { Observable, tap } from 'rxjs';
 import { Status, StatusResponse } from '../../models/status.model';
 import { Message } from '../../../shared/models/response.model';
+import { ValidationService } from '../../../shared/services/validation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,12 +13,19 @@ import { Message } from '../../../shared/models/response.model';
 export class StatusApiService {
   private apiUrl: string = environment.apiUrl + 'status';
 
-  constructor(private http: HttpClient, private statusService: StatusService) {}
+  constructor(
+    private http: HttpClient,
+    private statusService: StatusService,
+    private validationService: ValidationService
+  ) {}
 
   getStatuses(): Observable<Status[]> {
-    return this.http
-      .get<Status[]>(this.apiUrl)
-      .pipe(tap((res) => this.statusService.setStatuses(res)));
+    return this.http.get<Status[]>(this.apiUrl).pipe(
+      tap((res) => {
+        if (!this.validationService.isEmpty(res))
+          this.statusService.setStatuses(res);
+      })
+    );
   }
 
   createStatus(payload: Status): Observable<StatusResponse> {
