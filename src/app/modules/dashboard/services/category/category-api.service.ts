@@ -36,8 +36,10 @@ export class CategoryApiService {
 
   updateCategory(id: number, payload: Category): Observable<CategoryResponse> {
     return this.http
-      .patch<CategoryResponse>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.categoryService.updateCategory(res.category)));
+      .put<CategoryResponse>(`${this.apiUrl}/${id}`, payload)
+      .pipe(
+        tap((res) => this.categoryService.updateCategory(id, res.category))
+      );
   }
 
   deleteCategory(id: number): Observable<Message> {

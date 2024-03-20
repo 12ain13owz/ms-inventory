@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, switchMap, throwError, of } from 'rxjs';
 import { ToastNotificationService } from '../services/toast-notification.service';
 import { AuthApiService } from '../../modules/dashboard/services/auth/auth-api.service';
 import { LoadingScreenService } from '../services/loading-screen.service';
@@ -26,7 +26,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       const title = status === 0 ? '500' : status.toString();
       toastr.error(title, message);
 
-      if (logout) authService.logout();
+      if (logout) authService.logout().subscribe();
       if (status === 0)
         router.navigate(['/error'], { queryParams: { redirected: true } });
 

@@ -36,8 +36,8 @@ export class StatusApiService {
 
   updateStatus(id: number, payload: Status): Observable<StatusResponse> {
     return this.http
-      .patch<StatusResponse>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.statusService.updateStatus(res.status)));
+      .put<StatusResponse>(`${this.apiUrl}/${id}`, payload)
+      .pipe(tap((res) => this.statusService.updateStatus(id, res.status)));
   }
 
   deleteStatus(id: number): Observable<Message> {

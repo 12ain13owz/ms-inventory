@@ -29,12 +29,11 @@ export class UserService {
     this.users$.next(this.users.slice());
   }
 
-  updateUser(user: User): void {
-    const id = user.id;
+  updateUser(id: number, user: User): void {
     const index = this.users.findIndex((user) => user.id === id);
 
     if (index !== -1) {
-      this.users[index] = user;
+      this.users[index] = { ...this.users[index], ...user };
       this.users$.next(this.users.slice());
     }
   }

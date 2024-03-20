@@ -4,12 +4,15 @@ import { MaterialModule } from './material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   imports: [
     SweetAlert2Module.forRoot({
       provideSwal: () => import('sweetalert2/dist/sweetalert2.js'),
     }),
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   exports: [
     CommonModule,
@@ -17,6 +20,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     HttpClientModule,
     MaterialModule,
     SweetAlert2Module,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
+  providers: [provideNgxMask()],
 })
 export class CoreModule {}

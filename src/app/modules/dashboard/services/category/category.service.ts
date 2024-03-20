@@ -29,12 +29,11 @@ export class CategoryService {
     this.categories$.next(this.categories.slice());
   }
 
-  updateCategory(category: Category): void {
-    const id = category.id;
+  updateCategory(id: number, category: Category): void {
     const index = this.categories.findIndex((category) => category.id === id);
 
     if (index !== -1) {
-      this.categories[index] = category;
+      this.categories[index] = { ...this.categories[index], ...category };
       this.categories$.next(this.categories.slice());
     }
   }

@@ -29,12 +29,11 @@ export class StatusService {
     this.statuses$.next(this.statuses.slice());
   }
 
-  updateStatus(status: Status): void {
-    const id = status.id;
+  updateStatus(id: number, status: Status): void {
     const index = this.statuses.findIndex((status) => status.id === id);
 
     if (index !== -1) {
-      this.statuses[index] = status;
+      this.statuses[index] = { ...this.statuses[index], ...status };
       this.statuses$.next(this.statuses.slice());
     }
   }

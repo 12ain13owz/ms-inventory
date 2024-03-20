@@ -37,7 +37,7 @@ export class UserApiService {
   updateUser(id: number, payload: User): Observable<UserResponse> {
     return this.http
       .patch<UserResponse>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.userService.updateUser(res.user)));
+      .pipe(tap((res) => this.userService.updateUser(id, res.user)));
   }
 
   changeUserPassword(id: number, payload: UserPassword): Observable<Message> {

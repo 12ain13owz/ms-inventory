@@ -3,7 +3,7 @@ import { LoadingScreenService } from '../../services/loading-screen.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../../environments/environment.development';
-import { catchError, finalize, throwError } from 'rxjs';
+import { catchError, delay, finalize, retry, throwError } from 'rxjs';
 import { ToastNotificationService } from '../../services/toast-notification.service';
 
 @Component({
@@ -28,10 +28,17 @@ export class ServerErrorComponent implements OnInit {
         relativeTo: this.route,
         queryParams: {},
       });
-      return;
-    }
+    } else this.checkhealth(redirected);
 
-    this.checkhealth(redirected);
+    const delayConnect = 3000;
+    const maxRetry = 10;
+    this.http
+      .get(this.apiUrl, { responseType: 'text' })
+      .pipe(
+        delay(delayConnect),
+        retry({ count: maxRetry, delay: delayConnect })
+      )
+      .subscribe(() => this.router.navigate(['/']));
   }
 
   checkhealth(redirected: string) {

@@ -17,6 +17,7 @@ import { MatSort } from '@angular/material/sort';
 import { User } from '../../models/user.model';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { ValidationService } from '../../../shared/services/validation.service';
+import { ProfileService } from '../../services/profile/profile.service';
 
 @Component({
   selector: 'app-user',
@@ -25,6 +26,7 @@ import { ValidationService } from '../../../shared/services/validation.service';
 })
 export class UserComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
+  private profileService = inject(ProfileService);
   private userService = inject(UserService);
   private userApiService = inject(UserApiService);
   private validationService = inject(ValidationService);
@@ -44,6 +46,7 @@ export class UserComponent implements OnInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource<User>(null);
   pageIndex: number = 1;
+  profileId = this.profileService.getProfile().id;
 
   ngOnInit(): void {
     this.subscription = this.userService

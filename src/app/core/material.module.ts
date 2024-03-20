@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Provider } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +18,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
+const matInputFormat: Provider = {
+  provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  useValue: { appearance: 'outline' },
+};
 
 @NgModule({
   exports: [
@@ -37,12 +44,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatPaginatorModule,
     MatSortModule,
     MatSelectModule,
+    MatDatepickerModule,
   ],
-  providers: [
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline' },
-    },
-  ],
+  providers: [DatePipe, matInputFormat],
 })
 export class MaterialModule {}

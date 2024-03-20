@@ -39,10 +39,32 @@
         <input matInput />
       </mat-form-field>
     </div>
+
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input
+        matInput
+        mask="d0/M0/0000"
+        (focusout)="onDateFocusOut()"
+        #dateInput
+      />
+      <input
+        matInput
+        [matDatepicker]="picker"
+        (dateInput)="onDateInput($event)"
+        style="visibility: hidden; position: absolute"
+      />
+      <mat-hint align="end">วัน/เดือน/พ.ศ. (5/9/2560)</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker sel></mat-datepicker>
+    </mat-form-field>
   </mat-card-content>
 
   <mat-card-actions style="gap: 10px">
     <button mat-raised-button color="primary">Submit</button>
-    <button mat-button color="warn">Reset</button>
+    <button mat-button color="warn" (click)="testDate()">Reset</button>
   </mat-card-actions>
 </mat-card>
