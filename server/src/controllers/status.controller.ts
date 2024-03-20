@@ -11,9 +11,9 @@ import {
   updateStatus,
 } from '../services/status.service';
 import {
-  createStatusInput,
-  deleteStatusInput,
-  updateStatusInput,
+  CreateStatusInput,
+  DeleteStatusInput,
+  UpdateStatusInput,
 } from '../schemas/status.schema';
 
 export async function getAllStatusHandler(
@@ -32,7 +32,7 @@ export async function getAllStatusHandler(
 }
 
 export async function createStatusHandler(
-  req: Request<{}, {}, createStatusInput>,
+  req: Request<{}, {}, CreateStatusInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -61,7 +61,7 @@ export async function createStatusHandler(
 }
 
 export async function updateStatusHandler(
-  req: Request<updateStatusInput['params'], {}, updateStatusInput['body']>,
+  req: Request<UpdateStatusInput['params'], {}, UpdateStatusInput['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -70,27 +70,27 @@ export async function updateStatusHandler(
   try {
     const id = +req.params.id;
     const name = removeWhitespace(req.body.name);
-    const status = await findStatusByName(name);
-    if (status && status.id !== id) throw newError(400, 'ชื่อสถานะอุปกรณ์ซ้ำ');
+    const existingStatus = await findStatusByName(name);
+
+    if (existingStatus && existingStatus.id !== id)
+      throw newError(400, 'ชื่อสถานะอุปกรณ์ซ้ำ');
 
     const payload: Partial<Status> = {
       name: name,
       active: req.body.active,
       remark: req.body.remark || '',
     };
-
     const result = await updateStatus(id, payload);
     if (!result[0]) throw newError(400, 'อัพเดทสถานะอุปกรณ์ไม่สำเร็จ');
 
-    const updatedStatus = { id: id, ...payload };
-    res.json({ message: 'อัพเดทสถานะอุปกรณ์สำเร็จ', status: updatedStatus });
+    res.json({ message: 'อัพเดทสถานะอุปกรณ์สำเร็จ', status: payload });
   } catch (error) {
     next(error);
   }
 }
 
 export async function deleteStatudHandler(
-  req: Request<deleteStatusInput>,
+  req: Request<DeleteStatusInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {

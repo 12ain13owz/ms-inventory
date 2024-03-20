@@ -4,9 +4,9 @@ import { omit } from 'lodash';
 import { newError, privateFields, removeWhitespace } from '../utils/helper';
 import { Category } from '../models/category.model';
 import {
-  createCategoryInput,
-  deleteCategoryInput,
-  updateCategoryInput,
+  CreateCategoryInput,
+  DeleteCategoryInput,
+  UpdateCategoryInput,
 } from '../schemas/category.schema';
 import {
   createCategory,
@@ -32,7 +32,7 @@ export async function getAllCategoryHandler(
 }
 
 export async function createCategoryHandler(
-  req: Request<{}, {}, createCategoryInput>,
+  req: Request<{}, {}, CreateCategoryInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -61,7 +61,7 @@ export async function createCategoryHandler(
 }
 
 export async function updateCategoryHandler(
-  req: Request<updateCategoryInput['params'], {}, updateCategoryInput['body']>,
+  req: Request<UpdateCategoryInput['params'], {}, UpdateCategoryInput['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -70,9 +70,9 @@ export async function updateCategoryHandler(
   try {
     const id = +req.params.id;
     const name = removeWhitespace(req.body.name);
-    const category = await findCategoryByName(name);
+    const existingCategory = await findCategoryByName(name);
 
-    if (category && category.id !== id)
+    if (existingCategory && existingCategory.id !== id)
       throw newError(400, 'ชื่อประเภทอุปกรณ์ซ้ำ');
 
     const payload: Partial<Category> = {
@@ -80,14 +80,12 @@ export async function updateCategoryHandler(
       active: req.body.active,
       remark: req.body.remark || '',
     };
-
     const result = await updateCategory(id, payload);
     if (!result[0]) throw newError(400, 'อัพเดทประเภทอุปกรณ์ไม่สำเร็จ');
 
-    const updatedCategory = { id: id, ...payload };
     res.json({
       message: 'อัพเดทประเภทอุปกรณ์สำเร็จ',
-      category: updatedCategory,
+      category: payload,
     });
   } catch (error) {
     next(error);
@@ -95,7 +93,7 @@ export async function updateCategoryHandler(
 }
 
 export async function deleteCategoryHandler(
-  req: Request<deleteCategoryInput>,
+  req: Request<DeleteCategoryInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {

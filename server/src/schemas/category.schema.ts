@@ -1,4 +1,4 @@
-import { TypeOf, boolean, number, object, string } from 'zod';
+import { TypeOf, boolean, object, string } from 'zod';
 
 const id = 'ไม่พบข้อมูลรหัสประเภทของอุปกรณ์';
 const name = 'ไม่พบข้อมูลชื่อประเภทของอุปกรณ์';
@@ -38,6 +38,6 @@ export const deleteCategorySchema = object({
   }),
 });
 
-export type createCategoryInput = TypeOf<typeof creatCategorySchema>['body'];
-export type updateCategoryInput = TypeOf<typeof updateCategorySchema>;
-export type deleteCategoryInput = TypeOf<typeof deleteCategorySchema>['params'];
+export type CreateCategoryInput = TypeOf<typeof creatCategorySchema>['body'];
+export type UpdateCategoryInput = TypeOf<typeof updateCategorySchema>;
+export type DeleteCategoryInput = TypeOf<typeof deleteCategorySchema>['params'];

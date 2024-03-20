@@ -5,22 +5,27 @@ import {
   Model,
 } from 'sequelize';
 import sequelize from '../utils/sequelize';
+import userModel from './user.model';
+import categoryModel from './category.model';
+import statusModel from './status.model';
 
 export class Parcel extends Model<
   InferAttributes<Parcel>,
   InferCreationAttributes<Parcel>
 > {
   id?: number;
+  track: string;
   code: string;
   oldCode: string;
-  track: string;
   receivedDate: Date;
   detail: string;
-  print: boolean; // เคยปริ้น Barcode แล้วหรือไม่
-  status: boolean; // สถานะ stock ตัด/ไม่ตัด
+  quantity: number;
+  print: boolean;
   remark: string;
   image: string;
-  active: boolean;
+  UserId: number;
+  CategoryId: number;
+  StatusId: number;
 }
 
 export default Parcel.init(
@@ -30,6 +35,11 @@ export default Parcel.init(
       primaryKey: true,
       autoIncrement: true,
     },
+    track: {
+      type: DataTypes.STRING(12),
+      allowNull: false,
+      unique: true,
+    },
     code: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -37,11 +47,6 @@ export default Parcel.init(
     },
     oldCode: {
       type: DataTypes.STRING,
-    },
-    track: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
     },
     receivedDate: {
       type: DataTypes.DATEONLY,
@@ -51,12 +56,11 @@ export default Parcel.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    print: {
-      type: DataTypes.BOOLEAN,
+    quantity: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: false,
     },
-    status: {
+    print: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
@@ -67,16 +71,56 @@ export default Parcel.init(
     image: {
       type: DataTypes.TEXT,
     },
-    active: {
-      type: DataTypes.BOOLEAN,
+    UserId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: true,
+      unique: false,
+      references: {
+        model: userModel,
+        key: 'id',
+      },
+    },
+    CategoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: categoryModel,
+        key: 'id',
+      },
+    },
+    StatusId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: statusModel,
+        key: 'id',
+      },
     },
   },
   {
-    indexes: [{ unique: true, fields: ['code', 'track'] }],
+    indexes: [{ fields: ['code', 'track'] }],
     sequelize,
     modelName: 'Parcel',
     timestamps: true,
   }
 );
+
+export interface ParcelData {
+  id?: number;
+  track: string;
+  code: string;
+  oldCode: string;
+  receivedDate: Date;
+  detail: string;
+  quantity: number;
+  print: boolean;
+  remark: string;
+  image: string;
+  UserId: number;
+  CategoryId: number;
+  StatusId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  Category: { name: string };
+  Status: { name: string };
+}

@@ -2,6 +2,8 @@ import UserModel from './user.model';
 import CategoryModel from './category.model';
 import StatusModel from './status.model';
 import ParcelModel from './parcel.model';
+import './track.model';
+import './log.model';
 
 UserModel.hasMany(ParcelModel);
 CategoryModel.hasMany(ParcelModel);

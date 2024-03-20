@@ -29,10 +29,10 @@ router.patch(
   [validate(updateUserSchema), verifyToken, isUserActive, isRoleAdmin],
   updateUserHandler
 );
-router.post(
-  '/password/:id',
-  [validate(updateUserPasswordSchema), verifyToken, isUserActive, isRoleAdmin],
-  updateUserPasswordHandler
-);
+// router.post(
+//   '/password/:id',
+//   [validate(updateUserPasswordSchema), verifyToken, isUserActive, isRoleAdmin],
+//   updateUserPasswordHandler
+// );
 
 export default router;

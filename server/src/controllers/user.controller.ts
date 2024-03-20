@@ -2,9 +2,9 @@ import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { omit } from 'lodash';
 import {
-  createUserInput,
-  updateUserInput,
-  updateUserPasswordInput,
+  CreateUserInput,
+  UpdateUserInput,
+  UpdateUserPasswordInput,
 } from '../schemas/user.schema';
 import {
   comparePassword,
@@ -38,7 +38,7 @@ export async function getAllUserHandler(
 }
 
 export async function createUserHandler(
-  req: Request<{}, {}, createUserInput>,
+  req: Request<{}, {}, CreateUserInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -74,7 +74,7 @@ export async function createUserHandler(
 }
 
 export async function updateUserHandler(
-  req: Request<updateUserInput['params'], {}, updateUserInput['body']>,
+  req: Request<UpdateUserInput['params'], {}, UpdateUserInput['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -83,8 +83,8 @@ export async function updateUserHandler(
   try {
     const id = +req.params.id;
     const email = normalizeUnique(req.body.email);
-    const user = await findUserByEmail(email);
-    if (user && user.id !== id)
+    const existingUser = await findUserByEmail(email);
+    if (existingUser && existingUser.id !== id)
       throw newError(
         400,
         'แก้ไขโปรไฟล์ไม่สำเร็จเนื่องจาก E-mail นี้มีอยู่ในระบบ'
@@ -99,12 +99,10 @@ export async function updateUserHandler(
       active: req.body.active,
       remark: req.body.remark || '',
     };
-
     const result = await updateUser(id, payload);
     if (!result[0]) throw newError(400, 'แก้ไขข้อมูลผู้ใช้งานไม่สำเร็จ');
 
-    const updatedUser = { id, ...payload };
-    res.json({ message: 'แก้ไขข้อมูลผู้ใช้งานสำเร็จ', user: updatedUser });
+    res.json({ message: 'แก้ไขข้อมูลผู้ใช้งานสำเร็จ', user: payload });
   } catch (error) {
     next(error);
   }
@@ -112,9 +110,9 @@ export async function updateUserHandler(
 
 export async function updateUserPasswordHandler(
   req: Request<
-    updateUserPasswordInput['params'],
+    UpdateUserPasswordInput['params'],
     {},
-    updateUserPasswordInput['body']
+    UpdateUserPasswordInput['body']
   >,
   res: ExtendedResponse,
   next: NextFunction

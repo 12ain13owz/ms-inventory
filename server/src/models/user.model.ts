@@ -58,7 +58,7 @@ export default User.init(
     },
   },
   {
-    indexes: [{ unique: true, fields: ['email'] }],
+    indexes: [{ fields: ['email'] }],
     sequelize,
     modelName: 'User',
     timestamps: true,

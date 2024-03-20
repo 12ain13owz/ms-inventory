@@ -6,8 +6,8 @@ import {
   updateUserPassword,
 } from '../services/user.service';
 import {
-  updateProfileInput,
-  updatePasswordInput,
+  UpdateProfileInput,
+  UpdatePasswordInput,
 } from '../schemas/profile.schema';
 import {
   newError,
@@ -34,7 +34,7 @@ export async function getProfileHandeler(
 }
 
 export async function updateProfileHandler(
-  req: Request<{}, {}, updateProfileInput>,
+  req: Request<{}, {}, UpdateProfileInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
@@ -66,7 +66,7 @@ export async function updateProfileHandler(
 }
 
 export async function updatePasswordHandler(
-  req: Request<{}, {}, updatePasswordInput>,
+  req: Request<{}, {}, UpdatePasswordInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {

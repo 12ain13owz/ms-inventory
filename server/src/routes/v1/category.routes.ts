@@ -25,7 +25,7 @@ router.post(
   [validate(creatCategorySchema), verifyToken, isUserActive, isRoleAdmin],
   createCategoryHandler
 );
-router.patch(
+router.put(
   '/:id',
   [validate(updateCategorySchema), verifyToken, isUserActive, isRoleAdmin],
   updateCategoryHandler

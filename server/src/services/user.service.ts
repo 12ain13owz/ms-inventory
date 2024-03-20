@@ -1,33 +1,33 @@
-import UserModel, { User } from '../models/user.model';
+import userModel, { User } from '../models/user.model';
 
 export function findAllUser(): Promise<User[]> {
-  return UserModel.findAll({
+  return userModel.findAll({
     attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
   });
 }
 
 export function findUserById(id: number): Promise<User | null> {
-  return UserModel.findByPk(id);
+  return userModel.findByPk(id);
 }
 
 export function findUserByEmail(email: string): Promise<User | null> {
-  return UserModel.findOne({ where: { email } });
+  return userModel.findOne({ where: { email } });
 }
 
 export function createUser(user: User): Promise<User> {
-  return UserModel.create(user.dataValues);
+  return userModel.create(user.dataValues);
 }
 
 export function updateUser(
   id: number,
   user: Partial<User>
 ): Promise<[affectedCount: number]> {
-  return UserModel.update(user, { where: { id } });
+  return userModel.update(user, { where: { id } });
 }
 
 export function updateUserPassword(
   id: number,
   password: string
 ): Promise<[affectedCount: number]> {
-  return UserModel.update({ password }, { where: { id } });
+  return userModel.update({ password }, { where: { id } });
 }

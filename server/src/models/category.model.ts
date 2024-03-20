@@ -38,9 +38,9 @@ export default Category.init(
     },
   },
   {
-    indexes: [{ unique: true, fields: ['name'] }],
+    indexes: [{ fields: ['name'] }],
     sequelize,
-    modelName: 'Cagetory',
+    modelName: 'Category',
     timestamps: true,
   }
 );

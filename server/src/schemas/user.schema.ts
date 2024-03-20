@@ -89,6 +89,6 @@ export const updateUserPasswordSchema = object({
   }),
 });
 
-export type createUserInput = TypeOf<typeof createUserSchema>['body'];
-export type updateUserInput = TypeOf<typeof updateUserSchema>;
-export type updateUserPasswordInput = TypeOf<typeof updateUserPasswordSchema>;
+export type CreateUserInput = TypeOf<typeof createUserSchema>['body'];
+export type UpdateUserInput = TypeOf<typeof updateUserSchema>;
+export type UpdateUserPasswordInput = TypeOf<typeof updateUserPasswordSchema>;

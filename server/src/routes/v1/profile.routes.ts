@@ -14,7 +14,7 @@ import {
 const router = Router();
 
 router.get('/', [verifyToken, isUserActive], getProfileHandeler);
-router.put(
+router.patch(
   '/',
   [validate(updateProfileSchema), verifyToken, isUserActive],
   updateProfileHandler

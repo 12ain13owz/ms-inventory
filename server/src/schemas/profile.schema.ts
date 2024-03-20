@@ -43,5 +43,5 @@ export const updatePasswordSchema = object({
   }),
 });
 
-export type updateProfileInput = TypeOf<typeof updateProfileSchema>['body'];
-export type updatePasswordInput = TypeOf<typeof updatePasswordSchema>['body'];
+export type UpdateProfileInput = TypeOf<typeof updateProfileSchema>['body'];
+export type UpdatePasswordInput = TypeOf<typeof updatePasswordSchema>['body'];

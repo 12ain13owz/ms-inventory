@@ -38,6 +38,6 @@ export const deleteStatusSchema = object({
   }),
 });
 
-export type createStatusInput = TypeOf<typeof creatStatusSchema>['body'];
-export type updateStatusInput = TypeOf<typeof updateStatusSchema>;
-export type deleteStatusInput = TypeOf<typeof deleteStatusSchema>['params'];
+export type CreateStatusInput = TypeOf<typeof creatStatusSchema>['body'];
+export type UpdateStatusInput = TypeOf<typeof updateStatusSchema>;
+export type DeleteStatusInput = TypeOf<typeof deleteStatusSchema>['params'];
