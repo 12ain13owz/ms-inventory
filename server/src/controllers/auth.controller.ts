@@ -6,7 +6,13 @@ import { LoginUserInput } from '../schemas/auth.schema';
 import { findUserByEmail, findUserById } from '../services/user.service';
 import { newError, comparePassword, normalizeUnique } from '../utils/helper';
 import { privateUserFields } from '../models/user.model';
-import { signAccessToken, signRefreshToken, verifyJwt } from '../utils/jwt';
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyAccessToken,
+  // verifyAccessToken,
+  verifyJwt,
+} from '../utils/jwt';
 
 const tokenKey = 'refresh_token';
 const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
@@ -70,33 +76,45 @@ export async function refreshTokenHandler(
   res.locals.func = 'refreshTokenHandler';
 
   try {
-    const token = req.cookies[tokenKey];
-    if (!token)
-      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่', true);
+    const accessToken = (req.headers.authorization || '').replace(
+      /^Bearer\s/,
+      ''
+    );
+    if (!accessToken)
+      throw newError(403, 'ไม่พบ Token กรุณาเข้าสู่ระบบใหม่ (1)', true);
 
-    const decoded = verifyJwt<{ userId: number }>(
-      token,
+    const decodedAccessToken = verifyAccessToken(accessToken);
+    if (decodedAccessToken && decodedAccessToken !== 'jwt expired')
+      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่ (2)', true);
+
+    const refreshToken = req.cookies[tokenKey];
+    if (!refreshToken)
+      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่ (3)', true);
+
+    const decodedRefreshToken = verifyJwt<{ userId: number }>(
+      refreshToken,
       'refreshTokenPublicKey'
     );
-    if (!decoded)
-      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่', true);
+    if (!decodedRefreshToken)
+      throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่ (4)', true);
 
-    const user = await findUserById(decoded.userId);
+    const user = await findUserById(decodedRefreshToken.userId);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
 
-    const accessToken = signAccessToken(user.id!);
-    const refreshToken = signRefreshToken(user.id!);
+    const newAccessToken = signAccessToken(user.id!);
+    const newRefreshToken = signRefreshToken(user.id!);
 
     res.clearCookie(tokenKey);
-    res.cookie(tokenKey, refreshToken, {
+    res.cookie(tokenKey, newRefreshToken, {
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
       sameSite: 'lax',
       secure: config.get<string>('node_env') === 'production',
     });
-    res.json({ accessToken });
+    res.json({ accessToken: newAccessToken });
   } catch (error) {
+    res.clearCookie(tokenKey);
     next(error);
   }
 }

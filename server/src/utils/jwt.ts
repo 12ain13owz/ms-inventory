@@ -68,3 +68,19 @@ export function verifyJwt<T>(
     return null;
   }
 }
+
+export function verifyAccessToken(token: string): string | null {
+  try {
+    const keyName = 'accessTokenPublicKey';
+    const publicKey = config.get<string>(keyName);
+    verify(token, publicKey);
+
+    return null;
+  } catch (error) {
+    const e = error as Error;
+    const errorMessage = e.message === 'jwt expired' ? null : e.message;
+
+    log.error(`verifyAccessToken: ${e.message}`);
+    return errorMessage;
+  }
+}
