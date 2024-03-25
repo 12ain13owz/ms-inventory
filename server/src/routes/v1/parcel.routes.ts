@@ -15,20 +15,27 @@ import {
   updateParcelSchema,
   updateQuantityParcelSchema,
 } from '../../schemas/parcel.schema';
-import { upload } from '../../middlewares/file.middlerware';
+import { reduceQualityImage, upload } from '../../middlewares/file.middlerware';
 
 const router = Router();
 
 router.get('/', [verifyToken, isUserActive], getAllParcelHandler);
 router.post(
   '/',
-  [upload, validate(createParcelSchema), verifyToken, isUserActive],
+  [
+    upload,
+    reduceQualityImage,
+    validate(createParcelSchema),
+    verifyToken,
+    isUserActive,
+  ],
   createParcelHandler
 );
 router.put(
   '/:id',
   [
     upload,
+    reduceQualityImage,
     validate(updateParcelSchema),
     verifyToken,
     isUserActive,

@@ -5,7 +5,6 @@ import { UserService } from './user.service';
 import { Observable, tap } from 'rxjs';
 import { User, UserPassword, UserResponse } from '../../models/user.model';
 import { Message } from '../../../shared/models/response.model';
-import { ValidationService } from '../../../shared/services/validation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,19 +12,12 @@ import { ValidationService } from '../../../shared/services/validation.service';
 export class UserApiService {
   private apiUrl: string = environment.apiUrl + 'user';
 
-  constructor(
-    private http: HttpClient,
-    private userService: UserService,
-    private validationService: ValidationService
-  ) {}
+  constructor(private http: HttpClient, private userService: UserService) {}
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl).pipe(
-      tap((res) => {
-        if (!this.validationService.isEmpty(res))
-          this.userService.setUsers(res);
-      })
-    );
+    return this.http
+      .get<User[]>(this.apiUrl)
+      .pipe(tap((res) => this.userService.setUsers(res)));
   }
 
   createUser(payload: User): Observable<UserResponse> {

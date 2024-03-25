@@ -3,6 +3,7 @@ import express from 'express';
 import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 import healthRoutes from './routes/health';
 import userRoutesV1 from './routes/v1/index';
@@ -24,6 +25,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use('/image', express.static(path.join(__dirname, '../public/images')));
 
 app.use(healthRoutes);
 app.use(userRoutesV1);

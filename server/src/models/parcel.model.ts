@@ -105,7 +105,11 @@ export default Parcel.init(
   }
 );
 
-export interface ParcelData {
+export interface ParcelData
+  extends Model<
+    InferAttributes<ParcelData>,
+    InferCreationAttributes<ParcelData>
+  > {
   id?: number;
   track: string;
   code: string;
@@ -116,11 +120,9 @@ export interface ParcelData {
   print: boolean;
   remark: string;
   image: string;
-  UserId: number;
-  CategoryId: number;
-  StatusId: number;
-  createdAt: Date;
-  updatedAt: Date;
-  Category: { name: string };
-  Status: { name: string };
+  createdAt?: Date;
+  updatedAt?: Date;
+  User?: { firstname: string; lastname: string };
+  Category?: { name: string };
+  Status?: { name: string };
 }

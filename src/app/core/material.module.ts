@@ -19,6 +19,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const matInputFormat: Provider = {
   provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
@@ -45,6 +47,8 @@ const matInputFormat: Provider = {
     MatSortModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatChipsModule,
+    MatTabsModule,
   ],
   providers: [DatePipe, matInputFormat],
 })

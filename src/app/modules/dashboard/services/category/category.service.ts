@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Category } from '../../models/category.model';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { Category } from '../../models/category.model';
 })
 export class CategoryService {
   private categories: Category[] = [];
-  private categories$ = new BehaviorSubject<Category[]>(null);
+  private categories$ = new Subject<Category[]>();
 
   constructor() {}
 

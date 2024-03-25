@@ -1,17 +1,16 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category/category.service';
 import { CategoryApiService } from '../../services/category/category-api.service';
-import {
-  Subscription,
-  delay,
-  delayWhen,
-  interval,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { Subscription, delayWhen, interval, tap } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -23,37 +22,41 @@ import { ValidationService } from '../../../shared/services/validation.service';
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
 })
-export class CategoryComponent implements OnInit, OnDestroy {
+export class CategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscription = new Subscription();
   private categoryService = inject(CategoryService);
   private categoryApiService = inject(CategoryApiService);
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
-  dataSource = new MatTableDataSource<Category>(null);
+  dataSource = new MatTableDataSource<Category>([]);
   pageIndex: number = 1;
 
   ngOnInit(): void {
+    if (this.validationService.isEmpty(this.dataSource.data))
+      this.categoryApiService.getCategories().subscribe();
+
     this.subscription = this.categoryService
       .onCategoriesListener()
       .pipe(
-        switchMap((categories) =>
-          this.validationService.isEmpty(categories)
-            ? this.categoryApiService.getCategories()
-            : of(categories)
-        ),
         tap((categories) => (this.dataSource.data = categories)),
-        delay(10),
         delayWhen(() => (this.paginator ? interval(0) : interval(300)))
       )
       .subscribe(() => {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   ngOnDestroy(): void {

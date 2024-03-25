@@ -1,13 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {
-  Subscription,
-  delay,
-  delayWhen,
-  interval,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { Subscription, delayWhen, interval, tap } from 'rxjs';
 import { StatusService } from '../../services/status/status.service';
 import { StatusApiService } from '../../services/status/status-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,7 +22,7 @@ import { ValidationService } from '../../../shared/services/validation.service';
   templateUrl: './status.component.html',
   styleUrl: './status.component.scss',
 })
-export class StatusComponent implements OnInit, OnDestroy {
+export class StatusComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscription = new Subscription();
   private statusService = inject(StatusService);
   private statusApiService = inject(StatusApiService);
@@ -34,26 +33,31 @@ export class StatusComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
-  dataSource = new MatTableDataSource<Status>(null);
+  dataSource = new MatTableDataSource<Status>([]);
   pageIndex: number = 1;
 
   ngOnInit(): void {
+    this.dataSource.data = this.statusService.getStatuses();
+    if (this.validationService.isEmpty(this.dataSource.data))
+      this.statusApiService.getStatuses().subscribe();
+
     this.subscription = this.statusService
       .onStatusesListener()
       .pipe(
-        switchMap((statuses) =>
-          this.validationService.isEmpty(statuses)
-            ? this.statusApiService.getStatuses()
-            : of(statuses)
-        ),
         tap((statuses) => (this.dataSource.data = statuses)),
-        delay(10),
         delayWhen(() => (this.paginator ? interval(0) : interval(300)))
       )
       .subscribe(() => {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   ngOnDestroy(): void {

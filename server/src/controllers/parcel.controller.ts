@@ -17,7 +17,7 @@ import {
 } from '../schemas/parcel.schema';
 import sequelize from '../utils/sequelize';
 import { createTrack } from '../services/track.service';
-import { newError, privateFields, removeWhitespace } from '../utils/helper';
+import { newError, removeWhitespace } from '../utils/helper';
 import { generateTrack } from '../utils/track';
 import { Parcel, ParcelData } from '../models/parcel.model';
 import { omit } from 'lodash';
@@ -49,8 +49,8 @@ export async function createParcelHandler(
 
   try {
     const code = removeWhitespace(req.body.code);
-    const parcel = await findParcelByCode(code);
-    if (parcel) throw newError(400, 'รหัสพัสดุซ้ำ');
+    const existingParcel = await findParcelByCode(code);
+    if (existingParcel) throw newError(400, 'รหัสพัสดุซ้ำ');
 
     const sequence = await createTrack(t);
     const track = await generateTrack(sequence.dataValues.id!);
@@ -93,7 +93,21 @@ export async function createParcelHandler(
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
 
-    const newParcel = omit(resultParcel.dataValues, privateFields);
+    const excludeParcel = omit(resultParcel.dataValues, [
+      'UserId',
+      'CategoryId',
+      'StatusId',
+    ]);
+
+    const newParcel = {
+      ...excludeParcel,
+      User: {
+        firstname: res.locals.user!.firstname,
+        lastname: res.locals.user!.lastname,
+      },
+      Category: { name: req.body.categoryName },
+      Status: { name: req.body.statusName },
+    };
     const newLog = resultLog.dataValues;
 
     res.json({
@@ -204,8 +218,8 @@ export async function incrementQuantityParcelHandler(
       modifyQuantity: req.body.quantity,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
-      categoryName: parcelData.Category.name,
-      statusName: parcelData.Status.name,
+      categoryName: parcelData.Category!.name,
+      statusName: parcelData.Status!.name,
       remark: parcelData.remark,
       image: parcelData.image,
       printCount: 0,
@@ -259,8 +273,8 @@ export async function decrementQuantityParcelHandler(
       modifyQuantity: req.body.quantity,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
-      categoryName: parcelData.Category.name,
-      statusName: parcelData.Status.name,
+      categoryName: parcelData.Category!.name,
+      statusName: parcelData.Status!.name,
       remark: parcelData.remark,
       image: parcelData.image,
       printCount: 0,

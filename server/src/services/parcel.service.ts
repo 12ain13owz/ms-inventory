@@ -1,27 +1,25 @@
 import { Transaction } from 'sequelize';
-import parcelModel, { Parcel } from '../models/parcel.model';
+import parcelModel, { Parcel, ParcelData } from '../models/parcel.model';
 import categoryModel from '../models/category.model';
 import statusModel from '../models/status.model';
+import userModel from '../models/user.model';
 
-export function findAllParcel() {
-  return parcelModel.findAll();
+export function findAllParcel(): Promise<ParcelData[]> {
+  return parcelModel.findAll<ParcelData>({
+    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
+    include: [
+      { model: userModel, attributes: ['firstname', 'lastname'] },
+      { model: categoryModel, attributes: ['name'] },
+      { model: statusModel, attributes: ['name'] },
+    ],
+  });
 }
 
-export function findParcelById(id: number): Promise<Parcel | null> {
-  return parcelModel.findByPk(id, {
+export function findParcelById(id: number): Promise<ParcelData | null> {
+  return parcelModel.findByPk<ParcelData>(id, {
     include: [
-      {
-        model: categoryModel,
-        attributes: {
-          exclude: ['id', 'active', 'remark', 'createdAt', 'updatedAt'],
-        },
-      },
-      {
-        model: statusModel,
-        attributes: {
-          exclude: ['id', 'active', 'remark', 'createdAt', 'updatedAt'],
-        },
-      },
+      { model: categoryModel, attributes: ['name'] },
+      { model: statusModel, attributes: ['name'] },
     ],
   });
 }

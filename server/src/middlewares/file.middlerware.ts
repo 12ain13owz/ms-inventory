@@ -2,7 +2,8 @@ import { NextFunction, Request } from 'express';
 import multer, { diskStorage } from 'multer';
 import { newError } from '../utils/helper';
 import { ExtendedResponse } from '../types/express';
-import { mkdirSync } from 'fs';
+import { mkdirSync, unlinkSync } from 'fs';
+import sharp from 'sharp';
 
 const MIME_TYPE_MAP: { [key: string]: string } = {
   'image/png': 'png',
@@ -45,3 +46,25 @@ export const setFuncName = (
 };
 
 export const upload = multer({ storage }).single('image');
+
+export async function reduceQualityImage(
+  req: Request<unknown>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'reduceQualityImage';
+  try {
+    if (req.file) {
+      const filePath = req.file.path;
+      const fileName = `resize-${req.file.filename}`;
+      const fileImage = `${req.file.destination}/resize-${fileName}`;
+
+      await sharp(filePath).jpeg({ quality: 80 }).toFile(fileImage);
+      unlinkSync(filePath);
+      req.body.image = fileName;
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}

@@ -14,6 +14,12 @@ export class ScanComponent {
   datePipe = inject(DatePipe);
   receiveDate: Date;
 
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.dateInput.nativeElement.value = '1/1/2567';
+    }, 2000);
+  }
+
   testDate() {
     console.log(this.dateInput.nativeElement.value);
     console.log(this.receiveDate);

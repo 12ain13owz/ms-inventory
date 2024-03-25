@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment.development';
 import { TokenService } from '../../../shared/services/token.service';
@@ -38,10 +38,14 @@ export class AuthApiService {
   }
 
   refreshToken(): Observable<AccessToken> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + this.tokenService.getAccessToken()
+    );
     return this.http.post<AccessToken>(
       `${this.apiUrl}refresh`,
       {},
-      { withCredentials: true }
+      { headers, withCredentials: true }
     );
   }
 }

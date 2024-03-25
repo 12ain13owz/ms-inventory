@@ -1,0 +1,58 @@
+<div
+  style="
+    width: 100dvw;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  "
+>
+  <button
+    type="button"
+    style="
+      background-color: rgb(84, 38, 190);
+      color: white;
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    "
+    (click)="Test()"
+  >
+    Test Switch Map
+  </button>
+
+  <button
+    type="button"
+    style="
+      background-color: rgb(190, 38, 139);
+      color: white;
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    "
+    (click)="TestError()"
+  >
+    Test Switch Map Error
+  </button>
+
+  <button
+    type="button"
+    style="
+      background-color: rgb(190, 73, 38);
+      color: white;
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    "
+    (click)="TestSubscription()"
+  >
+    Test Subscription Error
+  </button>
+</div>

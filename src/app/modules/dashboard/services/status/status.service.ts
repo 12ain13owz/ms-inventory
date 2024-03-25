@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Status } from '../../models/status.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StatusService {
   private statuses: Status[] = [];
-  private statuses$ = new BehaviorSubject<Status[]>(null);
+  private statuses$ = new Subject<Status[]>();
 
   constructor() {}
 

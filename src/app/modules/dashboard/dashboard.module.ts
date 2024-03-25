@@ -17,9 +17,7 @@ import { PasswordComponent } from './components/password/password.component';
 import { CategoryEditComponent } from './components/category/category-edit/category-edit.component';
 import { StatusEditComponent } from './components/status/status-edit/status-edit.component';
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
-import { ParcelListComponent } from './components/parcel/parcel-list/parcel-list.component';
 import { ParcelEditComponent } from './components/parcel/parcel-edit/parcel-edit.component';
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -37,7 +35,6 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
     StatusEditComponent,
     UserEditComponent,
     ParcelComponent,
-    ParcelListComponent,
     ParcelEditComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
