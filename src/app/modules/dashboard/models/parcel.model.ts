@@ -24,6 +24,7 @@ export interface Parcel {
 }
 
 export interface ParcelTable {
+  id: number;
   image: string;
   track: string;
   receivedDate: Date;

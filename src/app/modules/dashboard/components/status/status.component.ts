@@ -6,7 +6,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Subscription, delayWhen, interval, tap } from 'rxjs';
+import { Subscription, defer, filter, interval, of, take } from 'rxjs';
 import { StatusService } from '../../services/status/status.service';
 import { StatusApiService } from '../../services/status/status-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -43,18 +43,18 @@ export class StatusComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscription = this.statusService
       .onStatusesListener()
-      .pipe(
-        tap((statuses) => (this.dataSource.data = statuses)),
-        delayWhen(() => (this.paginator ? interval(0) : interval(300)))
-      )
-      .subscribe(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      .subscribe((statuses) => (this.dataSource.data = statuses));
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    defer(() =>
+      this.paginator && this.sort
+        ? of(null)
+        : interval(100).pipe(
+            filter(() => !!this.paginator && !!this.sort),
+            take(1)
+          )
+    ).subscribe(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });

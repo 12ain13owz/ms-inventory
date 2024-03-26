@@ -6,7 +6,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Subscription, delayWhen, interval, tap } from 'rxjs';
+import { Subscription, defer, filter, interval, of, take } from 'rxjs';
 import { UserService } from '../../services/user/user.service';
 import { UserApiService } from '../../services/user/user-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,18 +54,18 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscription = this.userService
       .onUsersListener()
-      .pipe(
-        tap((users) => (this.dataSource.data = users)),
-        delayWhen(() => (this.paginator ? interval(0) : interval(300)))
-      )
-      .subscribe(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      .subscribe((users) => (this.dataSource.data = users));
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    defer(() =>
+      this.paginator && this.sort
+        ? of(null)
+        : interval(100).pipe(
+            filter(() => !!this.paginator && !!this.sort),
+            take(1)
+          )
+    ).subscribe(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });

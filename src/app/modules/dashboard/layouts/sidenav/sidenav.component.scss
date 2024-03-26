@@ -62,3 +62,25 @@ mat-toolbar {
     }
   }
 }
+
+.link-active {
+  background-color: #673ab7;
+
+  .link-box {
+    color: #fff;
+  }
+}
+
+.line-2 {
+  color: #757575;
+}
+
+:host-context(.dark-theme) {
+  .link-active {
+    background-color: #9c27b0;
+  }
+
+  .line-2 {
+    color: #c7c7c7;
+  }
+}

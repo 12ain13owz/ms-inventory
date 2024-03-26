@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category/category.service';
 import { CategoryApiService } from '../../services/category/category-api.service';
-import { Subscription, delayWhen, interval, tap } from 'rxjs';
+import { Subscription, defer, filter, interval, take, of } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -29,31 +29,32 @@ export class CategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
 
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Category>([]);
   pageIndex: number = 1;
 
   ngOnInit(): void {
+    this.dataSource.data = this.categoryService.getCategories();
     if (this.validationService.isEmpty(this.dataSource.data))
       this.categoryApiService.getCategories().subscribe();
 
     this.subscription = this.categoryService
       .onCategoriesListener()
-      .pipe(
-        tap((categories) => (this.dataSource.data = categories)),
-        delayWhen(() => (this.paginator ? interval(0) : interval(300)))
-      )
-      .subscribe(() => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      .subscribe((categories) => (this.dataSource.data = categories));
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    defer(() =>
+      this.paginator && this.sort
+        ? of(null)
+        : interval(100).pipe(
+            filter(() => !!this.paginator && !!this.sort),
+            take(1)
+          )
+    ).subscribe(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });

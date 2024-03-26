@@ -9,16 +9,17 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  Observable,
   Subscription,
+  defer,
   delay,
-  delayWhen,
   filter,
+  finalize,
   interval,
-  map,
   of,
   switchMap,
   take,
-  tap,
+  timer,
 } from 'rxjs';
 import { ParcelService } from '../../services/parcel/parcel.service';
 import { ParcelApiService } from '../../services/parcel/parcel-api.service';
@@ -29,13 +30,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Parcel, ParcelTable } from '../../models/parcel.model';
 import { environment } from '../../../../../environments/environment.development';
 import { DatePipe } from '@angular/common';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 enum Tap {
   Date,
@@ -54,11 +49,15 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
   private parcelService = inject(ParcelService);
   private parcelApiService = inject(ParcelApiService);
   private validationService = inject(ValidationService);
+  private operation$: Observable<Parcel[] | Parcel>;
+
   datePipe = inject(DatePipe);
   imageUrl: string = environment.imageUrl;
+  isLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
   selectedTap = new FormControl(Tap.Date);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -84,24 +83,28 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.dataSource.data = this.parcelService.getParcelsTable();
-    if (this.validationService.isEmpty(this.dataSource.data))
-      this.parcelApiService.getParcels().subscribe();
+    if (this.validationService.isEmpty(this.dataSource.data)) {
+      const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
+      const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
+      this.parcelApiService.getParcelsByDate(startDate, endDate).subscribe();
+    }
 
     this.subscription = this.parcelService
       .onParcelsListener()
-      .pipe(
-        filter((parcels) => parcels !== null),
-        tap(() => {
-          this.dataSource.data = this.parcelService.getParcelsTable();
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-        })
-      )
-      .subscribe();
+      .subscribe(
+        () => (this.dataSource.data = this.parcelService.getParcelsTable())
+      );
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
+    defer(() =>
+      this.paginator && this.sort
+        ? of(null)
+        : interval(100).pipe(
+            filter(() => !!this.paginator && !!this.sort),
+            take(1)
+          )
+    ).subscribe(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -119,15 +122,39 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['parcel/new']);
   }
 
-  onEdit(id: number): void {
-    this.router.navigate([`parcel/edit/${id}`]);
-  }
-
   onSearch() {
     if (this.selectedTap.value === Tap.Date) {
-      console.log(this.dateRange.value);
+      if (this.dateRange.invalid) return;
+
+      const startDate = this.datePipe.transform(
+        this.dateRange.controls['start'].value,
+        'yyyy-MM-dd'
+      );
+      const endDate = this.datePipe.transform(
+        this.dateRange.controls['end'].value,
+        'yyyy-MM-dd'
+      );
+      this.operation$ = this.parcelApiService.getParcelsByDate(
+        startDate,
+        endDate
+      );
+    } else if (this.selectedTap.value === Tap.Track) {
+      if (!this.track) return;
+      const track = this.track.nativeElement.value.replace(/^\s+|\s+$/gm, '');
+      if (!track) return;
+      this.operation$ = this.parcelApiService.getParcelByTrack(track);
     }
-    this.parcelService.setParcels([]);
+
+    this.isLoading = true;
+    this.operation$.pipe(finalize(() => (this.isLoading = false))).subscribe();
+  }
+
+  onSearchAll() {
+    this.isLoading = true;
+    this.parcelApiService
+      .getParcels()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe();
   }
 
   // onDateFocusOut(dateInput: string, isStartDate: boolean) {

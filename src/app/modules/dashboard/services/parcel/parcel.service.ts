@@ -15,6 +15,13 @@ export class ParcelService {
     return this.parcels$.asObservable();
   }
 
+  setParcel(parcel: Parcel): void {
+    this.parcels = [];
+
+    if (parcel) this.parcels.push(parcel);
+    this.parcels$.next(this.parcels.slice());
+  }
+
   setParcels(parcels: Parcel[]): void {
     this.parcels = parcels;
     this.parcels$.next(this.parcels.slice());
@@ -26,6 +33,7 @@ export class ParcelService {
 
   getParcelsTable(): ParcelTable[] {
     return this.parcels.map((parcel) => ({
+      id: parcel.id,
       image: parcel.image,
       track: parcel.track,
       receivedDate: new Date(parcel.receivedDate),

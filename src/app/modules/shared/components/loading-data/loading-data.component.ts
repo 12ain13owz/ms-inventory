@@ -14,6 +14,7 @@ export class LoadingDataComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private themeService = inject(ThemeService);
   backgroundColor: string = '#EFF1F5';
+  repeatRowList = Array(20).fill(0);
 
   ngOnInit(): void {
     this.subscription = this.themeService
@@ -26,5 +27,9 @@ export class LoadingDataComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onRepeat(no: number) {
+    return Array(no).fill(0);
   }
 }

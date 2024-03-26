@@ -39,7 +39,7 @@
       <mat-card-content>
         <mat-form-field>
           <mat-label>Track</mat-label>
-          <input matInput />
+          <input matInput #track />
           <mat-icon matSuffix fontIcon="search"></mat-icon>
         </mat-form-field>
       </mat-card-content>
@@ -47,14 +47,31 @@
   </mat-tab-group>
 
   <mat-card-actions style="justify-content: space-between">
-    <button type="button" mat-raised-button extended (click)="onSearch()">
+    <button
+      type="button"
+      mat-raised-button
+      extended
+      (click)="onSearch()"
+      [disabled]="isLoading"
+    >
       <mat-icon>search</mat-icon>
       ค้นหา
     </button>
-    <button type="button" mat-raised-button color="primary">
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="onSearchAll()"
+      [disabled]="isLoading"
+    >
       ค้นหาทั้งหมด
     </button>
   </mat-card-actions>
+  <mat-card-footer>
+    @if (isLoading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+  </mat-card-footer>
 </mat-card>
 
 @defer (when dataSource.data.length > 0) {
@@ -69,6 +86,8 @@
       <input matInput (keyup)="applyFilter($event)" />
     </mat-form-field>
 
+    @if(!isLoading) {
+
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="no">
         <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
@@ -78,10 +97,12 @@
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
         <mat-cell *matCellDef="let element" style="padding-block: 8px">
-          <img
-            [defaultImage]="'assets/images/no-image.png'"
-            [lazyLoad]="imageUrl + element.image"
-          />
+          <a [routerLink]="['./edit', element.id]">
+            <img
+              [defaultImage]="'assets/images/no-image.png'"
+              [lazyLoad]="imageUrl + element.image"
+            />
+          </a>
         </mat-cell>
       </ng-container>
 
@@ -136,15 +157,18 @@
       <ng-container matColumnDef="action">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="onEdit(element.id)">
-            <mat-icon color="primary">edit</mat-icon>
-          </button>
+          <a [routerLink]="['./edit', element.id]" mat-icon-button>
+            <mat-icon color="primary">search</mat-icon>
+          </a>
         </mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
+    } @else {
+    <app-loading-data [form]="'list'"></app-loading-data>
+    }
 
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50, 100]"
@@ -153,8 +177,6 @@
     ></mat-paginator>
   </mat-card-content>
 </mat-card>
-
 } @placeholder (minimum 300ms) {
-
-<app-loading-data [form]="'card'"></app-loading-data>
+<app-loading-data [form]="'list'"></app-loading-data>
 }

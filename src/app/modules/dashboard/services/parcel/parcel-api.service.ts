@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, switchMap, tap, timer } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment.development';
 import { ParcelService } from './parcel.service';
-import { ValidationService } from '../../../shared/services/validation.service';
 import {
   Parcel,
   ParcelQuantity,
@@ -19,9 +18,27 @@ export class ParcelApiService {
   constructor(private http: HttpClient, private parcelService: ParcelService) {}
 
   getParcels(): Observable<Parcel[]> {
+    return this.http.get<Parcel[]>(this.apiUrl).pipe(
+      switchMap((res) => timer(500).pipe(map(() => res))),
+      tap((res) => this.parcelService.setParcels(res))
+    );
+  }
+
+  getParcelsByDate(startDate: string, endDate: string): Observable<Parcel[]> {
     return this.http
-      .get<Parcel[]>(this.apiUrl)
-      .pipe(tap((res) => this.parcelService.setParcels(res)));
+      .get<Parcel[]>(`${this.apiUrl}/date/${startDate}/${endDate}`)
+      .pipe(
+        switchMap((res) => timer(500).pipe(map(() => res))),
+        tap((res) => this.parcelService.setParcels(res))
+      );
+  }
+
+  getParcelByTrack(track: string): Observable<Parcel> {
+    return this.http.get<Parcel>(`${this.apiUrl}/track/${track}`).pipe(
+      switchMap((res) => timer(500).pipe(map(() => res))),
+      tap((res) => console.log(res)),
+      tap((res) => this.parcelService.setParcel(res))
+    );
   }
 
   createParcel(payload: Parcel): Observable<ParcelResponse> {

@@ -118,14 +118,6 @@ mat-table {
   width: 100%;
 }
 
-.link-active {
-  background-color: #673ab7 !important;
-
-  .link-box {
-    color: #fff;
-  }
-}
-
 .toggle-on {
   color: #46a24b;
 }
@@ -290,26 +282,10 @@ $dark-mode-text-color: #fffffc;
   }
 }
 
-.line-2 {
-  color: #757575;
-}
-
 .dark-theme {
-  .link-active {
-    background-color: #9c27b0 !important;
-  }
-
-  .bg-color {
-    background-color: #303030 !important;
-  }
-
   .error-box {
     h3 {
       color: #fffffc;
     }
-  }
-
-  .line-2 {
-    color: #c7c7c7;
   }
 }
