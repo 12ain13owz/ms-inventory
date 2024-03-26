@@ -46,6 +46,11 @@ export class CategoryEditComponent implements OnInit {
       this.isEdit = true;
       this.form.setValue({ id: this.data.id, ...this.data });
     }
+
+    this.dialogRef.backdropClick().subscribe(() => {
+      if (this.isEdit) this.editDialogBackdropHandler();
+      else this.newDialogBackdropHandler();
+    });
   }
 
   onSubmit(): void {
@@ -79,8 +84,38 @@ export class CategoryEditComponent implements OnInit {
     this.nameInput.nativeElement.focus();
   }
 
+  newDialogBackdropHandler() {
+    const isChange = this.name.value !== '' || this.remark.value !== '';
+
+    if (isChange) return this.confirmDialogBackdropHandler();
+    this.dialogRef.close();
+  }
+
+  editDialogBackdropHandler() {
+    const isChange =
+      this.name.value !== this.data.name ||
+      this.active.value !== this.data.active ||
+      this.remark.value !== this.data.remark;
+
+    if (isChange) return this.confirmDialogBackdropHandler();
+    this.dialogRef.close();
+  }
+
+  confirmDialogBackdropHandler() {
+    const confirmation = confirm('ต้องการยกเลิกการแก้ไขและออกจากฟอร์มหรือไม่?');
+    if (confirmation) this.dialogRef.close();
+  }
+
   get name() {
     return this.form.controls['name'];
+  }
+
+  get active() {
+    return this.form.controls['active'];
+  }
+
+  get remark() {
+    return this.form.controls['remark'];
   }
 
   private initForm(): void {

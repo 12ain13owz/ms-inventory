@@ -58,6 +58,11 @@ export class UserEditComponent implements OnInit {
       this.form.clearValidators();
       this.form.patchValue(this.data);
     }
+
+    this.dialogRef.backdropClick().subscribe(() => {
+      if (this.isEdit) this.editDialogBackdropHandler();
+      else this.newDialogBackdropHandler();
+    });
   }
 
   onSubmit(): void {
@@ -89,6 +94,38 @@ export class UserEditComponent implements OnInit {
     else this.formdirec.resetForm();
 
     this.emailInput.nativeElement.focus();
+  }
+
+  newDialogBackdropHandler() {
+    const isChange =
+      this.email.value !== '' ||
+      this.password.value !== '' ||
+      this.confirmPassword.value !== '' ||
+      this.firstname.value !== '' ||
+      this.lastname.value !== '' ||
+      this.role.value !== 'user' ||
+      this.remark.value !== '';
+
+    if (isChange) return this.confirmDialogBackdropHandler();
+    this.dialogRef.close();
+  }
+
+  editDialogBackdropHandler() {
+    const isChange =
+      this.email.value !== this.data.email ||
+      this.firstname.value !== this.data.firstname ||
+      this.lastname.value !== this.data.lastname ||
+      this.role.value !== this.data.role ||
+      this.active.value !== this.data.active ||
+      this.remark.value !== this.data.remark;
+
+    if (isChange) return this.confirmDialogBackdropHandler();
+    this.dialogRef.close();
+  }
+
+  confirmDialogBackdropHandler() {
+    const confirmation = confirm('ต้องการยกเลิกการแก้ไขและออกจากฟอร์มหรือไม่?');
+    if (confirmation) this.dialogRef.close();
   }
 
   get email(): FormControl<string> {

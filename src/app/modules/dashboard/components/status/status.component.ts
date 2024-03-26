@@ -78,6 +78,7 @@ export class StatusComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialog.open(StatusEditComponent, {
       data: status,
       width: '500px',
+      disableClose: true,
     });
   }
 

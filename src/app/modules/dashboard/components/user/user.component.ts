@@ -89,6 +89,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialog.open(UserEditComponent, {
       data: user,
       width: '500px',
+      disableClose: true,
     });
   }
 
