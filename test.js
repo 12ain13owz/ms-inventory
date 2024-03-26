@@ -20,7 +20,7 @@ const filteredData = Object.keys(filters).reduce((result, keyName) => {
   });
 }, data);
 
-console.log(filteredData);
+// console.log(filteredData);
 
 // const filters1 = {
 //   category: ["foo2", "bar2", "sad3"],
@@ -68,3 +68,9 @@ console.log(filteredData);
 
 // const filteredData2 = filterData(data, filters2);
 // console.log(filteredData2);
+
+const a = [];
+const b = null;
+
+a.push(b);
+console.log(a);

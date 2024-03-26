@@ -8,7 +8,7 @@
     gap: 10px;
   "
 >
-  <button
+  <!-- <button
     type="button"
     style="
       background-color: rgb(84, 38, 190);
@@ -54,5 +54,46 @@
     (click)="TestSubscription()"
   >
     Test Subscription Error
+  </button> -->
+
+  <button
+    type="button"
+    style="
+      background-color: rgb(190, 73, 38);
+      color: white;
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    "
+    (click)="ButtonTestViewChild()"
+  >
+    Test Subscription Error
   </button>
+
+  <div>
+    <p style="color: white">
+      {{ testViewChild }}
+    </p>
+  </div>
+
+  @if (testViewChild) {
+  <button
+    #btn
+    type="button"
+    style="
+      background-color: rgb(84, 38, 190);
+      color: white;
+      padding: 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    "
+    (click)="Test()"
+  >
+    Test Switch Map
+  </button>
+  }
 </div>

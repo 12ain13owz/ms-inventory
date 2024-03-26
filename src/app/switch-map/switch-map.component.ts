@@ -1,6 +1,19 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
-import { Subject, Subscription, catchError, switchMap, throwError } from 'rxjs';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import {
+  Subject,
+  Subscription,
+  catchError,
+  filter,
+  fromEvent,
+  interval,
+  of,
+  switchMap,
+  take,
+  takeWhile,
+  tap,
+  throwError,
+} from 'rxjs';
 
 @Component({
   selector: 'app-switch-map',
@@ -10,6 +23,8 @@ import { Subject, Subscription, catchError, switchMap, throwError } from 'rxjs';
   styleUrl: './switch-map.component.scss',
 })
 export class SwitchMapComponent {
+  @ViewChild('btn') btn: ElementRef;
+
   url = 'http://localhost:3000/';
   urlError = this.url + 'error';
   http = inject(HttpClient);
@@ -17,12 +32,35 @@ export class SwitchMapComponent {
   subject = new Subject<string>();
   subscription = new Subscription();
 
+  testViewChild = false;
+
   ngOnInit(): void {
     this.subscribeToSubject();
   }
 
+  ngAfterViewInit(): void {
+    let counter = 0;
+
+    interval(500)
+      .pipe(
+        takeWhile(() => {
+          console.log(counter);
+          counter++;
+          return counter <= 10;
+        }),
+        filter(() => this.btn !== undefined),
+        tap(() => console.log(this.btn)),
+        take(1)
+      )
+      .subscribe();
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  ButtonTestViewChild() {
+    this.testViewChild = !this.testViewChild;
   }
 
   Test() {
