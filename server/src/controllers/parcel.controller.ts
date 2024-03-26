@@ -1,4 +1,8 @@
-import { UpdateQuantityParcelInput } from './../schemas/parcel.schema';
+import {
+  UpdateQuantityParcelInput,
+  getParcelByTrackInput,
+  getParcelsByDateInput,
+} from './../schemas/parcel.schema';
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import {
@@ -7,6 +11,8 @@ import {
   findAllParcel,
   findParcelByCode,
   findParcelById,
+  findParcelByTrack,
+  findParcelsByDate,
   updateParcel,
   updateQuantityParcel,
 } from '../services/parcel.service';
@@ -34,6 +40,46 @@ export async function getAllParcelHandler(
   try {
     const payload = await findAllParcel();
     res.json(payload);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getParcelsByDateHandler(
+  req: Request<getParcelsByDateInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getParcelsByDateHandler';
+
+  try {
+    const dateStart = new Date(req.params.dateStart);
+    const dateEnd = new Date(req.params.dateEnd);
+
+    if (isNaN(dateStart.getTime()) || isNaN(dateEnd.getTime()))
+      throw newError(400, 'รูปแบบวันที่ไม่ถูกต้อง');
+
+    dateStart.setHours(0, 0, 0, 0);
+    dateEnd.setHours(23, 59, 59, 999);
+
+    const payload = await findParcelsByDate(dateStart, dateEnd);
+    res.json(payload);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getParcelByTrackHandler(
+  req: Request<getParcelByTrackInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getParcelByTrackHandler';
+
+  try {
+    const track = req.params.track;
+    const payload = await findParcelByTrack(track);
+    res.json(payload?.toJSON());
   } catch (error) {
     next(error);
   }

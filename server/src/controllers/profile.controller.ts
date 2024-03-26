@@ -46,7 +46,7 @@ export async function updateProfileHandler(
     if (user && user.id !== res.locals.userId!)
       throw newError(
         400,
-        'แก้ไขโปรไฟล์ไม่สำเร็จเนื่องจาก E-mail นี้มีอยู่ในระบบ'
+        'แก้ไข E-mail ไม่สำเร็จเนื่องจาก E-mail นี้มีอยู่ในระบบ'
       );
 
     const payload: Partial<User> = {

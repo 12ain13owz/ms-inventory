@@ -10,8 +10,30 @@ const categoryId = 'ไม่พบประเภทพัสดุ';
 const categoryName = 'ไม่พบชื่อของประเภทพัสดุ';
 const statusId = 'ไม่พบสถานะพัสดุ';
 const statusName = 'ไม่พบชื่อของสถานะพัสดุ';
+const dateStart = 'ไม่พบวันที่เริ่มต้นในการค้นหา';
+const dateEnd = 'ไม่พบวันที่สิ้นสุดในการค้นหา';
+const track = 'ไม่พบเลข Track';
 
 const regexId = new RegExp(/^[0-9]\d*$/);
+
+export const getParcelsByDateSchema = object({
+  params: object({
+    dateStart: string({ required_error: dateStart }).min(1, {
+      message: dateStart,
+    }),
+    dateEnd: string({ required_error: dateEnd }).min(1, {
+      message: dateEnd,
+    }),
+  }),
+});
+
+export const getParcelByTrackSchema = object({
+  params: object({
+    track: string({ required_error: track }).min(1, {
+      message: track,
+    }),
+  }),
+});
 
 export const createParcelSchema = object({
   body: object({
@@ -96,6 +118,12 @@ export const deleteParcelSchema = object({
   }),
 });
 
+export type getParcelsByDateInput = TypeOf<
+  typeof getParcelsByDateSchema
+>['params'];
+export type getParcelByTrackInput = TypeOf<
+  typeof getParcelByTrackSchema
+>['params'];
 export type CreateParcelInput = TypeOf<typeof createParcelSchema>['body'];
 export type UpdateParcelInput = TypeOf<typeof updateParcelSchema>;
 export type UpdateQuantityParcelInput = TypeOf<

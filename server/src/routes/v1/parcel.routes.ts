@@ -5,6 +5,8 @@ import {
   decrementQuantityParcelHandler,
   deleteParcelHandler,
   getAllParcelHandler,
+  getParcelByTrackHandler,
+  getParcelsByDateHandler,
   incrementQuantityParcelHandler,
   updateParcelHandler,
 } from '../../controllers/parcel.controller';
@@ -12,6 +14,8 @@ import { validate } from '../../middlewares/validate.middleware';
 import {
   createParcelSchema,
   deleteParcelSchema,
+  getParcelByTrackSchema,
+  getParcelsByDateSchema,
   updateParcelSchema,
   updateQuantityParcelSchema,
 } from '../../schemas/parcel.schema';
@@ -20,6 +24,17 @@ import { reduceQualityImage, upload } from '../../middlewares/file.middlerware';
 const router = Router();
 
 router.get('/', [verifyToken, isUserActive], getAllParcelHandler);
+router.get(
+  '/date/:dateStart/:dateEnd',
+  [validate(getParcelsByDateSchema), verifyToken, isUserActive],
+  getParcelsByDateHandler
+);
+router.get(
+  '/track/:track',
+  [validate(getParcelByTrackSchema), verifyToken, isUserActive],
+  getParcelByTrackHandler
+);
+
 router.post(
   '/',
   [

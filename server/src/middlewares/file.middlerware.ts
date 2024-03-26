@@ -57,7 +57,7 @@ export async function reduceQualityImage(
     if (req.file) {
       const filePath = req.file.path;
       const fileName = `resize-${req.file.filename}`;
-      const fileImage = `${req.file.destination}/resize-${fileName}`;
+      const fileImage = `${req.file.destination}/${fileName}`;
 
       await sharp(filePath).jpeg({ quality: 80 }).toFile(fileImage);
       unlinkSync(filePath);

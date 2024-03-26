@@ -1,4 +1,4 @@
-import { Transaction } from 'sequelize';
+import { Transaction, Op } from 'sequelize';
 import parcelModel, { Parcel, ParcelData } from '../models/parcel.model';
 import categoryModel from '../models/category.model';
 import statusModel from '../models/status.model';
@@ -24,12 +24,35 @@ export function findParcelById(id: number): Promise<ParcelData | null> {
   });
 }
 
+export function findParcelByTrack(track: string): Promise<ParcelData | null> {
+  return parcelModel.findOne<ParcelData>({
+    where: { track },
+    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
+    include: [
+      { model: userModel, attributes: ['firstname', 'lastname'] },
+      { model: categoryModel, attributes: ['name'] },
+      { model: statusModel, attributes: ['name'] },
+    ],
+  });
+}
+
 export function findParcelByCode(code: string): Promise<Parcel | null> {
   return parcelModel.findOne({ where: { code } });
 }
 
-export function findParcelByTrack(track: string): Promise<Parcel | null> {
-  return parcelModel.findOne({ where: { track } });
+export function findParcelsByDate(
+  dateStart: Date,
+  dateEnd: Date
+): Promise<ParcelData[]> {
+  return parcelModel.findAll<ParcelData>({
+    where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
+    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
+    include: [
+      { model: userModel, attributes: ['firstname', 'lastname'] },
+      { model: categoryModel, attributes: ['name'] },
+      { model: statusModel, attributes: ['name'] },
+    ],
+  });
 }
 
 export function createParcel(parcel: Parcel, t: Transaction): Promise<Parcel> {
