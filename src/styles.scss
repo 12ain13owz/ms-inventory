@@ -282,6 +282,47 @@ $dark-mode-text-color: #fffffc;
   }
 }
 
+.blurred-img {
+  img {
+    animation: blurred 1.2s;
+  }
+}
+
+@keyframes blurred {
+  0% {
+    filter: blur(6px);
+  }
+
+  50% {
+    filter: blur(4px);
+  }
+
+  100% {
+    filter: blur(0);
+  }
+}
+
+// .blurred-img::before {
+//   content: "";
+//   position: absolute;
+//   inset: 0;
+//   opacity: 0;
+//   animation: pulse 2.5s infinite;
+//   background-color: #fff;
+// }
+
+// @keyframes pulse {
+//   0% {
+//     opacity: 0;
+//   }
+//   50% {
+//     opacity: 0.1;
+//   }
+//   100% {
+//     opacity: 0;
+//   }
+// }
+
 .dark-theme {
   .error-box {
     h3 {

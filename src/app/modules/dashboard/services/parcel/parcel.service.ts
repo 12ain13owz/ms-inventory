@@ -32,16 +32,34 @@ export class ParcelService {
   }
 
   getParcelsTable(): ParcelTable[] {
-    return this.parcels.map((parcel) => ({
-      id: parcel.id,
-      image: parcel.image,
-      track: parcel.track,
-      receivedDate: new Date(parcel.receivedDate),
-      category: parcel.Category.name,
-      status: parcel.Status.name,
-      detail: parcel.detail,
-      quantity: parcel.quantity,
-    }));
+    return this.parcels
+      .map((parcel) => ({
+        id: parcel.id,
+        image: parcel.image,
+        track: parcel.track,
+        receivedDate: new Date(parcel.receivedDate),
+        category: parcel.Category.name,
+        status: parcel.Status.name,
+        detail: parcel.detail,
+        quantity: parcel.quantity,
+      }))
+      .slice();
+  }
+
+  getParcelByTrackInput(track: string): ParcelTable[] {
+    return this.parcels
+      .filter((parcel) => parcel.track === track)
+      .map((parcel) => ({
+        id: parcel.id,
+        image: parcel.image,
+        track: parcel.track,
+        receivedDate: new Date(parcel.receivedDate),
+        category: parcel.Category.name,
+        status: parcel.Status.name,
+        detail: parcel.detail,
+        quantity: parcel.quantity,
+      }))
+      .slice();
   }
 
   createParcel(parcel: Parcel): void {

@@ -13,3 +13,33 @@ mat-row:hover {
     background-color: #343434;
   }
 }
+
+.filter-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .left {
+    display: flex;
+    gap: 10px;
+  }
+
+  .additional-selection {
+    opacity: 0.75;
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 968px) {
+  .filter-box {
+    flex-wrap: wrap;
+
+    .left {
+      width: 100%;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

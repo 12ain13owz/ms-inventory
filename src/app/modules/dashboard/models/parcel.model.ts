@@ -54,3 +54,14 @@ export interface ParcelQuantity extends Message {
   quantity: number;
   log: Log;
 }
+
+export interface Filter {
+  categories: string[];
+  statuses: string[];
+}
+
+export interface FilterForm
+  extends FormGroup<{
+    category: FormControl<string[]>;
+    status: FormControl<string[]>;
+  }> {}

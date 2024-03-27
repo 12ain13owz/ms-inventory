@@ -12,14 +12,11 @@ import {
   Observable,
   Subscription,
   defer,
-  delay,
   filter,
   finalize,
   interval,
   of,
-  switchMap,
   take,
-  timer,
 } from 'rxjs';
 import { ParcelService } from '../../services/parcel/parcel.service';
 import { ParcelApiService } from '../../services/parcel/parcel-api.service';
@@ -27,10 +24,17 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Parcel, ParcelTable } from '../../models/parcel.model';
+import {
+  Filter,
+  FilterForm,
+  Parcel,
+  ParcelTable,
+} from '../../models/parcel.model';
 import { environment } from '../../../../../environments/environment.development';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { CategoryService } from '../../services/category/category.service';
+import { StatusService } from '../../services/status/status.service';
 
 enum Tap {
   Date,
@@ -48,6 +52,8 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscription = new Subscription();
   private parcelService = inject(ParcelService);
   private parcelApiService = inject(ParcelApiService);
+  private categoryService = inject(CategoryService);
+  private statusService = inject(StatusService);
   private validationService = inject(ValidationService);
   private operation$: Observable<Parcel[] | Parcel>;
 
@@ -58,6 +64,12 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
+
+  filterList: Filter;
+  filters: FilterForm = this.formBuilder.group({
+    category: new FormControl([]),
+    status: new FormControl([]),
+  });
 
   selectedTap = new FormControl(Tap.Date);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -83,6 +95,11 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.dataSource.data = this.parcelService.getParcelsTable();
+    this.filterList = {
+      categories: this.categoryService.getCategoriesName(),
+      statuses: this.statusService.getStatusesName(),
+    };
+
     if (this.validationService.isEmpty(this.dataSource.data)) {
       const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
       const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
@@ -114,6 +131,14 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  get category() {
+    return this.filters.controls['category'];
+  }
+
+  get status() {
+    return this.filters.controls['status'];
+  }
+
   setPageIndex(event: PageEvent): void {
     this.pageIndex = event.pageIndex * event.pageSize + 1;
   }
@@ -140,9 +165,17 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     } else if (this.selectedTap.value === Tap.Track) {
       if (!this.track) return;
+
       const track = this.track.nativeElement.value.replace(/^\s+|\s+$/gm, '');
       if (!track) return;
-      this.operation$ = this.parcelApiService.getParcelByTrack(track);
+
+      const parcel = this.parcelService.getParcelByTrackInput(track);
+      if (this.validationService.isEmpty(parcel))
+        this.operation$ = this.parcelApiService.getParcelByTrack(track);
+      else {
+        this.dataSource.data = parcel;
+        return;
+      }
     }
 
     this.isLoading = true;
@@ -155,6 +188,20 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
       .getParcels()
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe();
+  }
+
+  onFilter() {
+    const parcels = this.parcelService.getParcelsTable();
+    const filters = this.filters.value;
+
+    this.dataSource.data = Object.keys(filters).reduce(
+      (result, keyName) =>
+        result.filter((item) => {
+          if (filters[keyName].length === 0) return result;
+          return filters[keyName].includes(item[keyName]);
+        }),
+      parcels
+    );
   }
 
   // onDateFocusOut(dateInput: string, isStartDate: boolean) {

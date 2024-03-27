@@ -24,6 +24,10 @@ export class StatusService {
     return this.statuses.slice();
   }
 
+  getStatusesName(): string[] {
+    return this.statuses.map((status) => status.name).slice();
+  }
+
   createStatus(status: Status): void {
     this.statuses.push(status);
     this.statuses$.next(this.statuses.slice());

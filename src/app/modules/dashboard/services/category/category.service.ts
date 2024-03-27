@@ -24,6 +24,10 @@ export class CategoryService {
     return this.categories.slice();
   }
 
+  getCategoriesName(): string[] {
+    return this.categories.map((category) => category.name).slice();
+  }
+
   createCategory(category: Category): void {
     this.categories.push(category);
     this.categories$.next(this.categories.slice());

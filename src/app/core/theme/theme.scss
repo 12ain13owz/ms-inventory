@@ -18,6 +18,10 @@ $dark-theme: mat.define-dark-theme(
       primary: mat.define-palette(mat.$purple-palette),
       accent: mat.define-palette(mat.$green-palette),
     ),
+    // color: (
+    //   primary: mat.define-palette(mat.$magenta-palette),
+    //   accent: mat.define-palette(mat.$violet-palette),
+    // ),,
   )
 );
 
