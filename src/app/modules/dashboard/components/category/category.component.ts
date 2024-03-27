@@ -71,6 +71,7 @@ export class CategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   onCreate(): void {
     this.dialog.open(CategoryEditComponent, {
       width: '500px',
+      disableClose: true,
     });
   }
 

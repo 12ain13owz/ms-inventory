@@ -29,19 +29,19 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   isDarkTheme: boolean;
   profile$: Observable<Profile>;
-  title: string;
+  title: string = '';
 
   ngOnInit(): void {
     this.profile$ = this.profileService.onProfileListener();
-    this.title = this.setTitle(this.router.url);
+    // this.title = this.setTitle(this.router.url);
     this.isDarkTheme = this.themeService.getTheme();
 
-    this.subscription = this.router.events
-      .pipe(filter((event: Event) => event instanceof NavigationEnd))
-      .subscribe(
-        (event: NavigationEnd) =>
-          (this.title = this.setTitle(event.urlAfterRedirects))
-      );
+    // this.subscription = this.router.events
+    //   .pipe(filter((event: Event) => event instanceof NavigationEnd))
+    //   .subscribe(
+    //     (event: NavigationEnd) =>
+    //       (this.title = this.setTitle(event.urlAfterRedirects))
+    //   );
   }
 
   ngOnDestroy(): void {

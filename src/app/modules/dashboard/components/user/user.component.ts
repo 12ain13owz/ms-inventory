@@ -82,6 +82,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   onCreate(): void {
     this.dialog.open(UserEditComponent, {
       width: '500px',
+      disableClose: true,
     });
   }
 
