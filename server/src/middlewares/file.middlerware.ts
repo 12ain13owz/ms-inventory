@@ -3,7 +3,7 @@ import multer, { diskStorage } from 'multer';
 import { newError } from '../utils/helper';
 import { ExtendedResponse } from '../types/express';
 import { mkdirSync, unlinkSync } from 'fs';
-import sharp from 'sharp';
+import jimp from 'jimp';
 
 const MIME_TYPE_MAP: { [key: string]: string } = {
   'image/png': 'png',
@@ -13,11 +13,11 @@ const MIME_TYPE_MAP: { [key: string]: string } = {
 
 export const storage = diskStorage({
   destination: (req, file, cb) => {
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    const path = './public/images';
-    let error = null;
-
+    const path = './public/image';
     mkdirSync(path, { recursive: true });
+
+    const isValid = MIME_TYPE_MAP[file.mimetype];
+    let error = null;
     if (!isValid)
       error = newError(400, 'ประเภทของไฟล์ไม่ถูกต้อง (png, jpg, jpeg)');
 
@@ -56,11 +56,17 @@ export async function reduceQualityImage(
   try {
     if (req.file) {
       const filePath = req.file.path;
-      const fileName = `resize-${req.file.filename}`;
+      const fileName = `reduce-${req.file.filename}`;
       const fileImage = `${req.file.destination}/${fileName}`;
 
-      await sharp(filePath).jpeg({ quality: 80 }).toFile(fileImage);
+      res.locals.image = [];
+      res.locals.image.push(filePath);
+      res.locals.image.push(fileImage);
+
+      const file = await jimp.read(filePath);
+      file.quality(80).write(fileImage);
       unlinkSync(filePath);
+
       req.body.image = fileName;
     }
     next();

@@ -6,6 +6,7 @@ interface CustomResponseLocals {
   func: string;
   userId: number;
   user: InferAttributes<User, { omit: never }>;
+  image: string[];
 }
 
 type ExtendedResponse = Response & { locals: Partial<CustomResponseLocals> };

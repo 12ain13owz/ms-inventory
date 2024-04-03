@@ -1,5 +1,6 @@
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
+import { existsSync, unlinkSync } from 'fs';
 import log from '../utils/logger';
 
 interface ResponseError extends Error {
@@ -19,10 +20,16 @@ const errorHandler = async (
     const logout = error.logout || false;
     const func = res.locals.func || 'โunction not found ';
     const url = req.method + req.baseUrl + req.url;
+    const image = res.locals.image || [];
+
+    for (let i = 0; i < image.length; i++) {
+      if (existsSync(image[i])) unlinkSync(image[i]);
+    }
 
     log.error(`${url}, ${func}: ${message}`);
     res.status(status).json({ message, logout });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
