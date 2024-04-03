@@ -5,13 +5,14 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
-  Status,
-  StatusForm,
-  StatusResponse,
-} from '../../../models/status.model';
+  FormBuilder,
+  FormControl,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Status, StatusResponse } from '../../../models/status.model';
 import { StatusApiService } from '../../../services/status/status-api.service';
 import { Message } from '../../../../shared/models/response.model';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
@@ -32,25 +33,25 @@ export class StatusEditComponent implements OnInit {
   private statusApiService = inject(StatusApiService);
   private operation$: Observable<Message | StatusResponse>;
 
-  form: StatusForm;
+  validationField = STATUS.validationField;
+
+  form = this.initForm();
   title: string = 'เพิ่มสถานะพัสดุ';
   isEdit: boolean = false;
   isLoading: boolean = false;
-  validationField = STATUS.validationField;
 
   ngOnInit(): void {
-    this.initForm();
-
     if (this.data) {
       this.title = 'แก้ไขสถานะพัสดุ';
       this.isEdit = true;
       this.form.setValue({ id: this.data.id, ...this.data });
     }
 
-    this.dialogRef.backdropClick().subscribe(() => {
-      if (this.isEdit) this.editDialogBackdropHandler();
-      else this.newDialogBackdropHandler();
-    });
+    this.dialogRef
+      .keydownEvents()
+      .subscribe((event) => event.key === 'Escape' && this.onCloseDialog());
+
+    this.dialogRef.backdropClick().subscribe(() => this.onCloseDialog());
   }
 
   onSubmit(): void {
@@ -84,14 +85,14 @@ export class StatusEditComponent implements OnInit {
     this.nameInput.nativeElement.focus();
   }
 
-  newDialogBackdropHandler() {
+  newDialogBackdropHandler(): void {
     const isChange = this.name.value !== '' || this.remark.value !== '';
 
     if (isChange) return this.confirmDialogBackdropHandler();
     this.dialogRef.close();
   }
 
-  editDialogBackdropHandler() {
+  editDialogBackdropHandler(): void {
     const isChange =
       this.name.value !== this.data.name ||
       this.active.value !== this.data.active ||
@@ -101,25 +102,30 @@ export class StatusEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  confirmDialogBackdropHandler() {
+  confirmDialogBackdropHandler(): void {
     const confirmation = confirm('ต้องการยกเลิกการแก้ไขและออกจากฟอร์มหรือไม่?');
     if (confirmation) this.dialogRef.close();
   }
 
-  get name() {
+  onCloseDialog(): void {
+    if (this.isEdit) this.editDialogBackdropHandler();
+    else this.newDialogBackdropHandler();
+  }
+
+  get name(): FormControl<string> {
     return this.form.controls['name'];
   }
 
-  get active() {
+  get active(): FormControl<boolean> {
     return this.form.controls['active'];
   }
 
-  get remark() {
+  get remark(): FormControl<string> {
     return this.form.controls['remark'];
   }
 
-  private initForm(): void {
-    this.form = this.formBuilder.nonNullable.group({
+  private initForm() {
+    return this.formBuilder.nonNullable.group({
       id: [null],
       name: ['', Validators.required],
       active: [true, Validators.required],

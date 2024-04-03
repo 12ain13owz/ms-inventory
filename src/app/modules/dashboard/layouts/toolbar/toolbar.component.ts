@@ -56,7 +56,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authService.logout().subscribe();
   }
 
-  onSwitchTheme(event: MouseEvent) {
+  onSwitchTheme(event: MouseEvent): void {
     event.stopPropagation();
     this.themeService.setTheme(this.isDarkTheme);
   }

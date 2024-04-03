@@ -11,7 +11,7 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { User, UserForm, UserResponse } from '../../../models/user.model';
+import { User, UserResponse } from '../../../models/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryEditComponent } from '../../category/category-edit/category-edit.component';
 import { UserApiService } from '../../../services/user/user-api.service';
@@ -36,15 +36,16 @@ export class UserEditComponent implements OnInit {
   private validationService = inject(ValidationService);
   private operation$: Observable<Message | UserResponse>;
 
-  form: UserForm;
+  validationField = USER.validationField;
+  patternPassword = USER.patternPassword;
+
+  form = this.initForm();
   title: string = 'เพิ่มผู้ใช้งาน';
   isEdit: boolean = false;
   isLoading: boolean = false;
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
   roleOptions: string[] = ['user', 'admin'];
-  validationField = USER.validationField;
-  patternPassword = USER.patternPassword;
 
   ngOnInit(): void {
     this.initForm();
@@ -59,10 +60,10 @@ export class UserEditComponent implements OnInit {
       this.form.patchValue(this.data);
     }
 
-    this.dialogRef.backdropClick().subscribe(() => {
-      if (this.isEdit) this.editDialogBackdropHandler();
-      else this.newDialogBackdropHandler();
-    });
+    this.dialogRef
+      .keydownEvents()
+      .subscribe((event) => event.key === 'Escape' && this.onCloseDialog());
+    this.dialogRef.backdropClick().subscribe(() => this.onCloseDialog());
   }
 
   onSubmit(): void {
@@ -96,7 +97,7 @@ export class UserEditComponent implements OnInit {
     this.emailInput.nativeElement.focus();
   }
 
-  newDialogBackdropHandler() {
+  newDialogBackdropHandler(): void {
     const isChange =
       this.email.value !== '' ||
       this.password.value !== '' ||
@@ -110,7 +111,7 @@ export class UserEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  editDialogBackdropHandler() {
+  editDialogBackdropHandler(): void {
     const isChange =
       this.email.value !== this.data.email ||
       this.firstname.value !== this.data.firstname ||
@@ -123,9 +124,14 @@ export class UserEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  confirmDialogBackdropHandler() {
+  confirmDialogBackdropHandler(): void {
     const confirmation = confirm('ต้องการยกเลิกการแก้ไขและออกจากฟอร์มหรือไม่?');
     if (confirmation) this.dialogRef.close();
+  }
+
+  onCloseDialog(): void {
+    if (this.isEdit) this.editDialogBackdropHandler();
+    else this.newDialogBackdropHandler();
   }
 
   get email(): FormControl<string> {
@@ -160,8 +166,8 @@ export class UserEditComponent implements OnInit {
     return this.form.controls['remark'];
   }
 
-  private initForm(): void {
-    this.form = this.formBuilder.nonNullable.group(
+  private initForm() {
+    return this.formBuilder.nonNullable.group(
       {
         id: [null],
         email: ['', [Validators.required, Validators.email]],

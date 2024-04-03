@@ -23,11 +23,6 @@ export class ScanComponent {
   datePipe = inject(DatePipe);
   receiveDate: Date;
   form: FormGroup;
-  data = [
-    { id: 1, name: 'CPU' },
-    { id: 2, name: 'Ram' },
-    { id: 3, name: 'Mainboard' },
-  ];
 
   ngOnInit(): void {
     setTimeout(() => {

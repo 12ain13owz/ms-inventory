@@ -6,7 +6,15 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Subscription, defer, filter, interval, of, take } from 'rxjs';
+import {
+  Subscription,
+  defer,
+  filter,
+  finalize,
+  interval,
+  of,
+  take,
+} from 'rxjs';
 import { UserService } from '../../services/user/user.service';
 import { UserApiService } from '../../services/user/user-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,6 +42,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
 
+  profileId = this.profileService.getProfile().id;
   displayedColumns: string[] = [
     'no',
     'email',
@@ -45,12 +54,15 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource<User>([]);
   pageIndex: number = 1;
-  profileId = this.profileService.getProfile().id;
+  isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.dataSource.data = this.userService.getUsers();
     if (this.validationService.isEmpty(this.dataSource.data))
-      this.userApiService.getUsers().subscribe();
+      this.userApiService
+        .getUsers()
+        .pipe(finalize(() => (this.isFirstLoading = true)))
+        .subscribe();
 
     this.subscription = this.userService
       .onUsersListener()

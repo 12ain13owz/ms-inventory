@@ -6,7 +6,15 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Subscription, defer, filter, interval, of, take } from 'rxjs';
+import {
+  Subscription,
+  defer,
+  filter,
+  finalize,
+  interval,
+  of,
+  take,
+} from 'rxjs';
 import { StatusService } from '../../services/status/status.service';
 import { StatusApiService } from '../../services/status/status-api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,11 +43,15 @@ export class StatusComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Status>([]);
   pageIndex: number = 1;
+  isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.dataSource.data = this.statusService.getStatuses();
     if (this.validationService.isEmpty(this.dataSource.data))
-      this.statusApiService.getStatuses().subscribe();
+      this.statusApiService
+        .getStatuses()
+        .pipe(finalize(() => (this.isFirstLoading = true)))
+        .subscribe();
 
     this.subscription = this.statusService
       .onStatusesListener()

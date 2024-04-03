@@ -10,7 +10,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category/category.service';
 import { CategoryApiService } from '../../services/category/category-api.service';
-import { Subscription, defer, filter, interval, take, of } from 'rxjs';
+import {
+  Subscription,
+  defer,
+  filter,
+  interval,
+  take,
+  of,
+  finalize,
+} from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -35,11 +43,15 @@ export class CategoryComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Category>([]);
   pageIndex: number = 1;
+  isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.dataSource.data = this.categoryService.getCategories();
     if (this.validationService.isEmpty(this.dataSource.data))
-      this.categoryApiService.getCategories().subscribe();
+      this.categoryApiService
+        .getCategories()
+        .pipe(finalize(() => (this.isFirstLoading = true)))
+        .subscribe();
 
     this.subscription = this.categoryService
       .onCategoriesListener()

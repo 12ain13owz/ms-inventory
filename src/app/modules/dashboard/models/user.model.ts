@@ -11,19 +11,6 @@ export interface User {
   remark: string;
 }
 
-export interface UserForm
-  extends FormGroup<{
-    id: FormControl<number>;
-    email: FormControl<string>;
-    password: FormControl<string>;
-    confirmPassword: FormControl<string>;
-    firstname: FormControl<string>;
-    lastname: FormControl<string>;
-    role: FormControl<string>;
-    active: FormControl<boolean>;
-    remark: FormControl<string>;
-  }> {}
-
 export interface UserPassword {
   id: number;
   oldPassword: string;

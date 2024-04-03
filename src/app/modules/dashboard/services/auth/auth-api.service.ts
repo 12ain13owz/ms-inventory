@@ -7,6 +7,7 @@ import { AccessToken } from '../../../shared/models/token.model';
 import { Observable, finalize, tap } from 'rxjs';
 import { LoadingScreenService } from '../../../../core/services/loading-screen.service';
 import { ProfileService } from '../profile/profile.service';
+import { Message } from '../../../shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,9 +23,9 @@ export class AuthApiService {
     private profileService: ProfileService
   ) {}
 
-  logout(): Observable<{ message: string }> {
+  logout(): Observable<Message> {
     return this.http
-      .delete<{ message: string }>(`${this.apiUrl}logout`, {
+      .delete<Message>(`${this.apiUrl}logout`, {
         withCredentials: true,
       })
       .pipe(

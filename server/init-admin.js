@@ -57,12 +57,12 @@ const User = sequelize.define(
 );
 
 async function generateUser() {
-  const password = "!Qwerty123";
+  const password = "!Qwer1234";
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
 
   const user = new User({
-    email: "test@t.com",
+    email: "admin@test.com",
     password: hash,
     firstname: "Dryst",
     lastname: "Admin",

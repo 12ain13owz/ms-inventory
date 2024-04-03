@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanActivateChildFn, Router } from '@angular/router';
+import { CanActivateChildFn } from '@angular/router';
 import { map } from 'rxjs';
 import { TokenService } from '../../shared/services/token.service';
 import { ToastNotificationService } from '../../../core/services/toast-notification.service';

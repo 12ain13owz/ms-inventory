@@ -27,7 +27,7 @@ export class ProfileApiService {
   }
 
   updateProfile(payload: Partial<Profile>): Observable<Message> {
-    return this.http.put<Message>(this.apiUrl, payload).pipe(
+    return this.http.patch<Message>(this.apiUrl, payload).pipe(
       tap((res) => {
         this.profileService.updateProfile(payload);
         this.toastService.success('', res.message);

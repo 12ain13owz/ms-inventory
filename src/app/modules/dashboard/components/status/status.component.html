@@ -2,7 +2,7 @@
   <mat-icon>add</mat-icon>
 </button>
 
-@defer (when dataSource.data.length > 0) {
+@defer (when dataSource.data.length > 0 || isFirstLoading) {
 <mat-card class="w-100 mat-elevation-z8">
   <mat-card-header class="mb-16">
     <mat-card-title>รายการประเภทพัสดุ</mat-card-title>

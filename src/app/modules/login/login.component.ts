@@ -45,10 +45,10 @@ export class LoginComponent implements OnInit {
 
   private initForm(): void {
     this.form = new FormGroup({
-      email: new FormControl('test@t.com', {
+      email: new FormControl('admin@test.com', {
         validators: [Validators.required, Validators.email],
       }),
-      password: new FormControl('!Qwerty123', {
+      password: new FormControl('!Qwer1234', {
         validators: [Validators.required],
       }),
     });

@@ -62,9 +62,9 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
   imageUrl: string = environment.imageUrl;
   isLoading: boolean = false;
 
-  @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
   filterList: Filter;
@@ -93,8 +93,8 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     'action',
   ];
   dataSource = new MatTableDataSource<ParcelTable>(null);
-  isData = false;
   pageIndex: number = 1;
+  isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.dataSource.data = this.parcelService.getParcelsTable();
@@ -106,11 +106,11 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.validationService.isEmpty(this.dataSource.data)) {
       const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
       const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
+
       this.parcelApiService
         .getParcelsByDate(startDate, endDate)
-        .subscribe((data) => {
-          if (this.validationService.isEmpty(data)) this.isData = true;
-        });
+        .pipe(finalize(() => (this.isFirstLoading = true)))
+        .subscribe();
     }
 
     this.subscription = this.parcelService

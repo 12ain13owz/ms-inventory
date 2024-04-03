@@ -1,8 +1,8 @@
 import { ProfileApiService } from '../../services/profile/profile-api.service';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ProfileService } from '../../services/profile/profile.service';
-import { Profile, ProfileForm } from '../../models/profile.model';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Profile } from '../../models/profile.model';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Subscription, finalize } from 'rxjs';
 import { PROFILE } from '../../constants/profile.constant';
 
@@ -17,17 +17,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private ProfileApiService = inject(ProfileApiService);
   private formBuilder = inject(FormBuilder);
 
-  form: ProfileForm;
+  validationField = PROFILE.validationField;
+
+  form = this.initForm();
   profile: Profile;
   isLoading: boolean = false;
-  validationField = PROFILE.validationField;
 
   ngOnInit(): void {
     this.subscription = this.profileService
       .onProfileListener()
       .subscribe((profile) => {
         this.profile = profile;
-        this.initForm();
+        this.form.patchValue(this.profile);
       });
   }
 
@@ -46,35 +47,36 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onReset(): void {
-    this.form.reset();
+    this.form.patchValue(this.profile);
   }
 
-  get email() {
+  get email(): FormControl<string> {
     return this.form.controls['email'];
   }
 
-  get firstname() {
+  get firstname(): FormControl<string> {
     return this.form.controls['firstname'];
   }
 
-  get lastname() {
+  get lastname(): FormControl<string> {
     return this.form.controls['lastname'];
   }
 
-  get role() {
+  get role(): FormControl<string> {
     return this.form.controls['role'];
   }
 
-  private initForm(): void {
-    this.form = this.formBuilder.nonNullable.group({
-      email: [this.profile.email, [Validators.required, Validators.email]],
-      firstname: [this.profile.firstname, [Validators.required]],
-      lastname: [this.profile.lastname, [Validators.required]],
-      role: [
-        { value: this.profile.role, disabled: true },
-        [Validators.required],
-      ],
-      remark: [this.profile.remark],
+  get remark(): FormControl<string> {
+    return this.form.controls['remark'];
+  }
+
+  private initForm() {
+    return this.formBuilder.nonNullable.group({
+      email: ['', [Validators.required, Validators.email]],
+      firstname: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      role: [{ value: '', disabled: true }, [Validators.required]],
+      remark: [''],
     });
   }
 }
