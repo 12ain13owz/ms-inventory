@@ -41,15 +41,15 @@ export class ParcelApiService {
     );
   }
 
-  createParcel(payload: Parcel): Observable<ParcelResponse> {
+  createParcel(payload: FormData): Observable<ParcelResponse> {
     return this.http
       .post<ParcelResponse>(this.apiUrl, payload)
       .pipe(tap((res) => this.parcelService.createParcel(res.parcel)));
   }
 
-  updateParcel(id: number, payload: Parcel): Observable<ParcelResponse> {
+  updateParcel(id: number, payload: FormData): Observable<ParcelResponse> {
     return this.http
-      .patch<ParcelResponse>(`${this.apiUrl}/${payload.id}`, payload)
+      .patch<ParcelResponse>(`${this.apiUrl}/${id}`, payload)
       .pipe(tap((res) => this.parcelService.updateParcel(id, res.parcel)));
   }
 

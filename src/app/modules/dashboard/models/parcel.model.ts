@@ -4,7 +4,7 @@ import { Log } from './log.model';
 
 export interface Parcel {
   id?: number;
-  track: string;
+  track?: string;
   code: string;
   oldCode: string;
   receivedDate: Date;
@@ -36,13 +36,17 @@ export interface ParcelTable {
 
 export interface ParcelForm
   extends FormGroup<{
+    id: FormControl<number>;
+    track: FormControl<string>;
     code: FormControl<string>;
     oldCode: FormControl<string>;
     receivedDate: FormControl<Date>;
-    detail: FormControl<string>;
     quantity: FormControl<number>;
+    detail: FormControl<string>;
     remark: FormControl<string>;
-    image: FormControl<File>;
+    category: FormControl<number>;
+    status: FormControl<number>;
+    image: FormControl<string>;
   }> {}
 
 export interface ParcelResponse extends Message {
@@ -65,3 +69,8 @@ export interface FilterForm
     category: FormControl<string[]>;
     status: FormControl<string[]>;
   }> {}
+
+export interface selectChip {
+  category: number;
+  status: number;
+}

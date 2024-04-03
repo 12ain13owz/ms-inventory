@@ -26,48 +26,47 @@ const router = Router();
 router.get('/', [verifyToken, isUserActive], getAllParcelHandler);
 router.get(
   '/date/:dateStart/:dateEnd',
-  [validate(getParcelsByDateSchema), verifyToken, isUserActive],
+  [verifyToken, isUserActive, validate(getParcelsByDateSchema)],
   getParcelsByDateHandler
 );
 router.get(
   '/track/:track',
-  [validate(getParcelByTrackSchema), verifyToken, isUserActive],
+  [verifyToken, isUserActive, validate(getParcelByTrackSchema)],
   getParcelByTrackHandler
 );
 
 router.post(
   '/',
   [
+    verifyToken,
+    isUserActive,
     upload,
     reduceQualityImage,
     validate(createParcelSchema),
-    verifyToken,
-    isUserActive,
   ],
   createParcelHandler
 );
 router.put(
   '/:id',
   [
+    verifyToken,
+    isUserActive,
     upload,
     reduceQualityImage,
     validate(updateParcelSchema),
-    verifyToken,
-    isUserActive,
-    verifyToken,
   ],
   updateParcelHandler
 );
 
 router.patch(
   '/increment/:id',
-  [validate(updateQuantityParcelSchema), verifyToken, isUserActive],
+  [verifyToken, isUserActive, validate(updateQuantityParcelSchema)],
   incrementQuantityParcelHandler
 );
 
 router.patch(
   '/decrement/:id',
-  [validate(updateQuantityParcelSchema), verifyToken, isUserActive],
+  [verifyToken, isUserActive, validate(updateQuantityParcelSchema)],
   decrementQuantityParcelHandler
 );
 

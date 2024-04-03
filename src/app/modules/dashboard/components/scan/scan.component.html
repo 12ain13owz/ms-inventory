@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="mb-16">
   <mat-card-header>
     <mat-card-title>Form</mat-card-title>
     <mat-card-subtitle>User</mat-card-subtitle>
@@ -7,7 +7,7 @@
   <mat-card-content class="box">
     <div class="row">
       <mat-form-field>
-        <mat-label class="label-in">First Name</mat-label>
+        <mat-label>First Name</mat-label>
         <input matInput />
         <mat-icon matSuffix fontIcon="lock"></mat-icon>
       </mat-form-field>
@@ -67,4 +67,30 @@
     <button mat-raised-button color="primary">Submit</button>
     <button mat-button color="warn" (click)="testDate()">Reset</button>
   </mat-card-actions>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="testChip()" #formDirec="ngForm">
+      <mat-chip-listbox formControlName="chip" class="mb-16">
+        @for (value of data; track $index) {
+        <mat-chip-option [value]="value">{{ value.name }} </mat-chip-option>
+        }
+      </mat-chip-listbox>
+
+      @if (form.controls['chip'].errors) {
+      <mat-error> Choose </mat-error>
+      }
+
+      <button type="submit" mat-raised-button>Test Chip</button>
+      <button
+        type="button"
+        mat-raised-button
+        color="warn"
+        (click)="testReset()"
+      >
+        Reset
+      </button>
+    </form>
+  </mat-card-content>
 </mat-card>

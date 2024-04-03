@@ -16,12 +16,12 @@ const router = Router();
 router.get('/', [verifyToken, isUserActive], getProfileHandeler);
 router.patch(
   '/',
-  [validate(updateProfileSchema), verifyToken, isUserActive],
+  [verifyToken, isUserActive, validate(updateProfileSchema)],
   updateProfileHandler
 );
 router.post(
   '/password',
-  [validate(updatePasswordSchema), verifyToken, isUserActive],
+  [verifyToken, isUserActive, validate(updatePasswordSchema)],
   updatePasswordHandler
 );
 

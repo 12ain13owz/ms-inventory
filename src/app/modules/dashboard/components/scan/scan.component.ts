@@ -1,5 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
@@ -10,19 +16,52 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 export class ScanComponent {
   @ViewChild('dateInput') dateInput: ElementRef<HTMLInputElement>;
   @ViewChild('date2') date2: ElementRef<HTMLInputElement>;
+  @ViewChild('formDirec') formDirec: FormGroupDirective;
+
+  private fb = inject(FormBuilder);
 
   datePipe = inject(DatePipe);
   receiveDate: Date;
+  form: FormGroup;
+  data = [
+    { id: 1, name: 'CPU' },
+    { id: 2, name: 'Ram' },
+    { id: 3, name: 'Mainboard' },
+  ];
 
   ngOnInit(): void {
     setTimeout(() => {
       this.dateInput.nativeElement.value = '1/1/2567';
     }, 2000);
+
+    this.form = this.fb.nonNullable.group({
+      chip: this.fb.group({
+        id: [null, [Validators.required]],
+        name: ['', [Validators.required]],
+      }),
+    });
+
+    this.form.controls['chip'].valueChanges.subscribe;
   }
 
   testDate() {
     console.log(this.dateInput.nativeElement.value);
     console.log(this.receiveDate);
+  }
+
+  testChip() {
+    console.log(this.form.controls['chip']);
+
+    if (this.chip.value.id === null) {
+    }
+  }
+
+  testReset() {
+    this.formDirec.resetForm();
+  }
+
+  get chip() {
+    return this.form.controls['chip'];
   }
 
   onDateInput(event: MatDatepickerInputEvent<Date>) {

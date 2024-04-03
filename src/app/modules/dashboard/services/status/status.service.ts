@@ -28,6 +28,13 @@ export class StatusService {
     return this.statuses.map((status) => status.name).slice();
   }
 
+  getActiveStatuses(): { id: number; name: string }[] {
+    return this.statuses
+      .filter((status) => status.active)
+      .map((status) => ({ id: status.id, name: status.name }))
+      .slice();
+  }
+
   createStatus(status: Status): void {
     this.statuses.push(status);
     this.statuses$.next(this.statuses.slice());

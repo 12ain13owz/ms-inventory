@@ -1,10 +1,10 @@
 @defer (when profile) {
-<mat-card class="form-container">
+<mat-card>
   <mat-card-header>
     <mat-card-title>แก้ไขโปรไฟล์</mat-card-title>
   </mat-card-header>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-card-content class="box">
       <mat-form-field>
         <mat-label>E-mail</mat-label>
@@ -20,7 +20,7 @@
 
       <div class="row">
         <mat-form-field>
-          <mat-label class="label-in">First Name</mat-label>
+          <mat-label>First Name</mat-label>
           <input type="text" matInput formControlName="firstname" />
 
           <mat-error>

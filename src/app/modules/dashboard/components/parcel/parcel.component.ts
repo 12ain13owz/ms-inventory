@@ -17,6 +17,7 @@ import {
   interval,
   of,
   take,
+  tap,
 } from 'rxjs';
 import { ParcelService } from '../../services/parcel/parcel.service';
 import { ParcelApiService } from '../../services/parcel/parcel-api.service';
@@ -61,6 +62,7 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
   imageUrl: string = environment.imageUrl;
   isLoading: boolean = false;
 
+  @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
@@ -91,6 +93,7 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     'action',
   ];
   dataSource = new MatTableDataSource<ParcelTable>(null);
+  isData = false;
   pageIndex: number = 1;
 
   ngOnInit(): void {
@@ -103,7 +106,11 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.validationService.isEmpty(this.dataSource.data)) {
       const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
       const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
-      this.parcelApiService.getParcelsByDate(startDate, endDate).subscribe();
+      this.parcelApiService
+        .getParcelsByDate(startDate, endDate)
+        .subscribe((data) => {
+          if (this.validationService.isEmpty(data)) this.isData = true;
+        });
     }
 
     this.subscription = this.parcelService
@@ -143,11 +150,15 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageIndex = event.pageIndex * event.pageSize + 1;
   }
 
-  onCreate() {
+  setFilter(): void {
+    this.filters.setValue({ category: [], status: [] });
+  }
+
+  onCreate(): void {
     this.router.navigate(['parcel/new']);
   }
 
-  onSearch() {
+  onSearch(): void {
     if (this.selectedTap.value === Tap.Date) {
       if (this.dateRange.invalid) return;
 
@@ -179,18 +190,26 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.isLoading = true;
-    this.operation$.pipe(finalize(() => (this.isLoading = false))).subscribe();
-  }
-
-  onSearchAll() {
-    this.isLoading = true;
-    this.parcelApiService
-      .getParcels()
-      .pipe(finalize(() => (this.isLoading = false)))
+    this.operation$
+      .pipe(
+        tap(() => this.onFilter()),
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe();
   }
 
-  onFilter() {
+  onSearchAll(): void {
+    this.isLoading = true;
+    this.parcelApiService
+      .getParcels()
+      .pipe(
+        tap(() => this.setFilter()),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe();
+  }
+
+  onFilter(): void {
     const parcels = this.parcelService.getParcelsTable();
     const filters = this.filters.value;
 
@@ -202,6 +221,13 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
         }),
       parcels
     );
+  }
+
+  onResetFilter(): void {
+    this.filterInput.nativeElement.value = '';
+    this.dataSource.filter = '';
+    this.setFilter();
+    this.onFilter();
   }
 
   // onDateFocusOut(dateInput: string, isStartDate: boolean) {

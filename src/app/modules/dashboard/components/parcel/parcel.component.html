@@ -77,10 +77,13 @@
   </mat-card-footer>
 </mat-card>
 
-@defer (when dataSource.data.length > 0) {
+@defer (when dataSource.data.length > 0 || isData) {
 <mat-card class="w-100 mat-elevation-z8">
-  <mat-card-header class="mb-16">
+  <mat-card-header class="mb-16 d-flex justify-between align-center">
     <mat-card-title>รายการประเภทพัสดุ</mat-card-title>
+    <button type="button" mat-button color="warn" (click)="onResetFilter()">
+      Reset
+    </button>
   </mat-card-header>
 
   <mat-card-content>
@@ -129,7 +132,7 @@
 
       <mat-form-field>
         <mat-label>กรองข้อมูล</mat-label>
-        <input matInput (keyup)="applyFilter($event)" />
+        <input matInput (keyup)="applyFilter($event)" #filterInput />
       </mat-form-field>
     </div>
 

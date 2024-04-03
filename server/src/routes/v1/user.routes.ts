@@ -21,12 +21,12 @@ const router = Router();
 router.get('/', [verifyToken, isUserActive], getAllUserHandler);
 router.post(
   '/',
-  [validate(createUserSchema), verifyToken, isUserActive, isRoleAdmin],
+  [verifyToken, isUserActive, isRoleAdmin, validate(createUserSchema)],
   createUserHandler
 );
 router.patch(
   '/:id',
-  [validate(updateUserSchema), verifyToken, isUserActive, isRoleAdmin],
+  [verifyToken, isUserActive, isRoleAdmin, validate(updateUserSchema)],
   updateUserHandler
 );
 // router.post(

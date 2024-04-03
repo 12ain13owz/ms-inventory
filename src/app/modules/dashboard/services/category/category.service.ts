@@ -28,6 +28,13 @@ export class CategoryService {
     return this.categories.map((category) => category.name).slice();
   }
 
+  getActiveCategories(): { id: number; name: string }[] {
+    return this.categories
+      .filter((category) => category.active)
+      .map((category) => ({ id: category.id, name: category.name }))
+      .slice();
+  }
+
   createCategory(category: Category): void {
     this.categories.push(category);
     this.categories$.next(this.categories.slice());

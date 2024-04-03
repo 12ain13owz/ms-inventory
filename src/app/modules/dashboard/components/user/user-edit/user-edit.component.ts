@@ -26,7 +26,7 @@ import { USER } from '../../../constants/user.constant';
   styleUrl: './user-edit.component.scss',
 })
 export class UserEditComponent implements OnInit {
-  @ViewChild('formDirec') formdirec: FormGroupDirective;
+  @ViewChild('formDirec') formDirec: FormGroupDirective;
   @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
 
   private formBuilder = inject(FormBuilder);
@@ -91,7 +91,7 @@ export class UserEditComponent implements OnInit {
 
   onReset(): void {
     if (this.isEdit) this.form.patchValue(this.data);
-    else this.formdirec.resetForm();
+    else this.formDirec.resetForm();
 
     this.emailInput.nativeElement.focus();
   }
@@ -181,7 +181,7 @@ export class UserEditComponent implements OnInit {
       },
 
       {
-        validators: this.validationService.comparePasswordValidator.bind(this, [
+        validators: this.validationService.comparePassword.bind(this, [
           'password',
           'confirmPassword',
         ]),

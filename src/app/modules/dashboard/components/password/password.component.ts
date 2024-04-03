@@ -78,7 +78,7 @@ export class PasswordComponent implements OnInit {
         confirmPassword: [''],
       },
       {
-        validators: this.validationService.comparePasswordValidator.bind(this, [
+        validators: this.validationService.comparePassword.bind(this, [
           'newPassword',
           'confirmPassword',
         ]),

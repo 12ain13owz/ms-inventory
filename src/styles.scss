@@ -17,10 +17,6 @@ h2 {
   margin-bottom: 0 !important;
 }
 
-.dark-theme {
-  background-color: #303030;
-}
-
 mat-table {
   overflow: auto;
 }
@@ -284,16 +280,16 @@ $dark-mode-text-color: #fffffc;
 
 .blurred-img {
   img {
-    animation: blurred 1.2s;
+    animation: blurred 0.4s;
   }
 }
 
 @keyframes blurred {
   0% {
-    filter: blur(6px);
+    filter: blur(4px);
   }
 
-  50% {
+  70% {
     filter: blur(4px);
   }
 
@@ -302,31 +298,43 @@ $dark-mode-text-color: #fffffc;
   }
 }
 
-// .blurred-img::before {
-//   content: "";
-//   position: absolute;
-//   inset: 0;
-//   opacity: 0;
-//   animation: pulse 2.5s infinite;
-//   background-color: #fff;
-// }
-
-// @keyframes pulse {
-//   0% {
-//     opacity: 0;
-//   }
-//   50% {
-//     opacity: 0.1;
-//   }
-//   100% {
-//     opacity: 0;
-//   }
-// }
+.dropzone {
+  height: 200px !important;
+  background-color: #e9e9e9 !important;
+}
 
 .dark-theme {
+  background-color: #303030;
+
   .error-box {
     h3 {
       color: #fffffc;
     }
   }
+
+  .dropzone {
+    background: #303030 !important;
+    color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.gap-10 {
+  gap: 10px;
 }

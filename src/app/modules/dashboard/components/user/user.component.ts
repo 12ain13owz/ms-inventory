@@ -24,15 +24,15 @@ import { ProfileService } from '../../services/profile/profile.service';
   styleUrl: './user.component.scss',
 })
 export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   private subscription = new Subscription();
   private profileService = inject(ProfileService);
   private userService = inject(UserService);
   private userApiService = inject(UserApiService);
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = [
     'no',

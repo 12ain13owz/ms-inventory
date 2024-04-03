@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { NgxDropzoneModule } from '@todorus/ngx-dropzone';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     MaterialModule,
     SweetAlert2Module,
     LazyLoadImageModule,
+    NgxDropzoneModule,
     NgxMaskDirective,
     NgxMaskPipe,
   ],

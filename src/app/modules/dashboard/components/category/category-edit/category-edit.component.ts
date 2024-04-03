@@ -23,7 +23,7 @@ import { CATEGORY } from '../../../constants/category.constant';
   styleUrl: './category-edit.component.scss',
 })
 export class CategoryEditComponent implements OnInit {
-  @ViewChild('formDirec') formdirec: FormGroupDirective;
+  @ViewChild('formDirec') formDirec: FormGroupDirective;
   @ViewChild('nameInput') nameInput: ElementRef<HTMLInputElement>;
 
   private formBuilder = inject(FormBuilder);
@@ -79,7 +79,7 @@ export class CategoryEditComponent implements OnInit {
 
   onReset(): void {
     if (this.isEdit) this.form.patchValue(this.data);
-    else this.formdirec.resetForm();
+    else this.formDirec.resetForm();
 
     this.nameInput.nativeElement.focus();
   }

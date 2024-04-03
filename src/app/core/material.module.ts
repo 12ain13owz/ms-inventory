@@ -21,11 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
-
-const matInputFormat: Provider = {
-  provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-  useValue: { appearance: 'outline' },
-};
+import { matInputFormat } from './providers/config.provider';
 
 @NgModule({
   exports: [

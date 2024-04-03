@@ -23,14 +23,14 @@ import { ValidationService } from '../../../shared/services/validation.service';
   styleUrl: './status.component.scss',
 })
 export class StatusComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   private subscription = new Subscription();
   private statusService = inject(StatusService);
   private statusApiService = inject(StatusApiService);
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Status>([]);

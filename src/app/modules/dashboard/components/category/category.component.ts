@@ -23,14 +23,14 @@ import { ValidationService } from '../../../shared/services/validation.service';
   styleUrl: './category.component.scss',
 })
 export class CategoryComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
   private subscription = new Subscription();
   private categoryService = inject(CategoryService);
   private categoryApiService = inject(CategoryApiService);
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<Category>([]);

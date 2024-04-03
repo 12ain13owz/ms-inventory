@@ -10,6 +10,9 @@ import { Observable, forkJoin, map, of, tap } from 'rxjs';
 import { ValidationService } from '../shared/services/validation.service';
 import { LoadingScreenService } from '../../core/services/loading-screen.service';
 import { ProfileService } from './services/profile/profile.service';
+import { User } from './models/user.model';
+import { Category } from './models/category.model';
+import { Status } from './models/status.model';
 
 export const dashboardResolver: ResolveFn<boolean> = (route, state) => {
   const profileService = inject(ProfileService);
@@ -26,7 +29,7 @@ export const dashboardResolver: ResolveFn<boolean> = (route, state) => {
   const users = validationService.isEmpty(userService.getUsers());
   const categories = validationService.isEmpty(categoryService.getCategories());
   const statuses = validationService.isEmpty(statusService.getStatuses());
-  const operations$: Observable<any>[] = [];
+  const operations$: Observable<User[] | Category[] | Status[]>[] = [];
 
   if (isAdmin && users) operations$.push(userApiService.getUsers());
   if (categories) operations$.push(categoryApiService.getCategories());

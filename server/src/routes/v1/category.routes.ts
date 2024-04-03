@@ -22,17 +22,17 @@ const router = Router();
 router.get('/', [verifyToken, isUserActive], getAllCategoryHandler);
 router.post(
   '/',
-  [validate(creatCategorySchema), verifyToken, isUserActive, isRoleAdmin],
+  [verifyToken, isUserActive, isRoleAdmin, validate(creatCategorySchema)],
   createCategoryHandler
 );
 router.put(
   '/:id',
-  [validate(updateCategorySchema), verifyToken, isUserActive, isRoleAdmin],
+  [verifyToken, isUserActive, isRoleAdmin, validate(updateCategorySchema)],
   updateCategoryHandler
 );
 router.delete(
   '/:id',
-  [validate(deleteCategorySchema), verifyToken, isUserActive, isRoleAdmin],
+  [verifyToken, isUserActive, isRoleAdmin, validate(deleteCategorySchema)],
   deleteCategoryHandler
 );
 
