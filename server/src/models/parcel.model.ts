@@ -26,6 +26,8 @@ export class Parcel extends Model<
   UserId: number;
   CategoryId: number;
   StatusId: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default Parcel.init(
@@ -96,6 +98,12 @@ export default Parcel.init(
         key: 'id',
       },
     },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+    },
   },
   {
     indexes: [{ fields: ['code', 'track'] }],
@@ -120,9 +128,9 @@ export interface ParcelData
   print: boolean;
   remark: string;
   image: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  User?: { firstname: string; lastname: string };
-  Category?: { name: string };
-  Status?: { name: string };
+  createdAt: Date;
+  updatedAt: Date;
+  User: { firstname: string; lastname: string };
+  Category: { id: number; name: string };
+  Status: { id: number; name: string };
 }

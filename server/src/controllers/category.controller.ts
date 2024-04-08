@@ -12,6 +12,7 @@ import {
   createCategory,
   deleteCategory,
   findAllCategory,
+  findCategoryById,
   findCategoryByName,
   updateCategory,
 } from '../services/category.service';
@@ -24,8 +25,8 @@ export async function getAllCategoryHandler(
   res.locals.func = 'getAllCategoryHandler';
 
   try {
-    const payload = await findAllCategory();
-    res.json(payload);
+    const resCategories = await findAllCategory();
+    res.json(resCategories);
   } catch (error) {
     next(error);
   }
@@ -41,7 +42,7 @@ export async function createCategoryHandler(
   try {
     const name = removeWhitespace(req.body.name);
     const category = await findCategoryByName(name);
-    if (category) throw newError(400, 'ชื่อประเภทอุปกรณ์ซ้ำ');
+    if (category) throw newError(400, `ชื่อประเภทพัสดุ ${name} ซ้ำ'`);
 
     const payload = new Category({
       name: name,
@@ -49,10 +50,10 @@ export async function createCategoryHandler(
       remark: req.body.remark || '',
     });
     const result = await createCategory(payload);
-    const newCagegory = omit(result.dataValues, privateFields);
+    const newCagegory = omit(result.toJSON(), privateFields);
 
     res.json({
-      message: 'เพิ่มประเภทอุปกรณ์สำเร็จ',
+      message: `เพิ่มประเภทพัสดุ ${name} สำเร็จ`,
       category: newCagegory,
     });
   } catch (error) {
@@ -73,7 +74,7 @@ export async function updateCategoryHandler(
     const existingCategory = await findCategoryByName(name);
 
     if (existingCategory && existingCategory.id !== id)
-      throw newError(400, 'ชื่อประเภทอุปกรณ์ซ้ำ');
+      throw newError(400, `ชื่อประเภท ${name} พัสดุซ้ำ`);
 
     const payload: Partial<Category> = {
       name: name,
@@ -81,10 +82,10 @@ export async function updateCategoryHandler(
       remark: req.body.remark || '',
     };
     const result = await updateCategory(id, payload);
-    if (!result[0]) throw newError(400, 'อัพเดทประเภทอุปกรณ์ไม่สำเร็จ');
+    if (!result[0]) throw newError(400, `แก้ไขประเภทพัสดุ ${name} ไม่สำเร็จ`);
 
     res.json({
-      message: 'อัพเดทประเภทอุปกรณ์สำเร็จ',
+      message: `แก้ไขประเภทพัสดุ ${name} สำเร็จ`,
       category: payload,
     });
   } catch (error) {
@@ -100,10 +101,15 @@ export async function deleteCategoryHandler(
   res.locals.func = 'deleteCategoryHandler';
 
   try {
-    const result = await deleteCategory(+req.params.id);
-    if (!result) throw newError(400, 'ลบประเภทอุปกรณ์ไม่สำเร็จ');
+    const id = +req.params.id;
+    const category = await findCategoryById(id);
+    if (!category) throw newError(400, 'ไม่พบประเภทพัสดุ');
 
-    res.json({ message: 'ลบประเภทอุปกรณ์สำเร็จ' });
+    const name = category.toJSON().name;
+    const result = await deleteCategory(id);
+    if (!result) throw newError(400, `ลบประเภทพัสดุ ${name} ไม่สำเร็จ`);
+
+    res.json({ message: `ลบประเภทพัสดุ ${name} สำเร็จ` });
   } catch (error) {
     next(error);
   }

@@ -26,8 +26,8 @@ export async function getProfileHandeler(
   res.locals.func = 'getProfileHandeler';
 
   try {
-    const payload = omit(res.locals.user!, privateUserFields);
-    res.json(payload);
+    const resProfile = omit(res.locals.user!, privateUserFields);
+    res.json(resProfile);
   } catch (error) {
     next(error);
   }
@@ -46,7 +46,7 @@ export async function updateProfileHandler(
     if (user && user.id !== res.locals.userId!)
       throw newError(
         400,
-        'แก้ไข E-mail ไม่สำเร็จเนื่องจาก E-mail นี้มีอยู่ในระบบ'
+        `แก้ไข E-mail ไม่สำเร็จเนื่องจาก ${email} นี้มีอยู่ในระบบ`
       );
 
     const payload: Partial<User> = {
@@ -81,9 +81,9 @@ export async function updatePasswordHandler(
 
     const hash = hashPassword(req.body.newPassword);
     const result = await updateUserPassword(res.locals.userId!, hash);
-    if (!result[0]) throw newError(400, 'อัพเดทรหัสผ่านไม่สำเร็จ');
+    if (!result[0]) throw newError(400, 'แก้ไขรหัสผ่านไม่สำเร็จ');
 
-    res.json({ message: 'อัพเดทรหัสสำเร็จ' });
+    res.json({ message: 'แก้ไขรหัสผ่านสำเร็จ' });
   } catch (error) {
     next(error);
   }

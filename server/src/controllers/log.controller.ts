@@ -10,8 +10,8 @@ export async function getAllLogHandler(
   res.locals.func = 'getAllLogHandler';
 
   try {
-    const payload = await findAllLog();
-    res.json(payload);
+    const resLogs = await findAllLog();
+    res.json(resLogs);
   } catch (error) {
     next(error);
   }

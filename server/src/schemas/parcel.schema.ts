@@ -13,6 +13,7 @@ const statusName = 'ไม่พบชื่อของสถานะพัส
 const dateStart = 'ไม่พบวันที่เริ่มต้นในการค้นหา';
 const dateEnd = 'ไม่พบวันที่สิ้นสุดในการค้นหา';
 const track = 'ไม่พบเลข Track';
+const imageEdit = 'ไม่พบข้อมูล การยืนยันแก้ไขรูปภาพ';
 
 const regexId = new RegExp(/^[0-9]\d*$/);
 
@@ -31,6 +32,14 @@ export const getParcelByTrackSchema = object({
   params: object({
     track: string({ required_error: track }).min(1, {
       message: track,
+    }),
+  }),
+});
+
+export const getParcelByIdSchema = object({
+  params: object({
+    id: string({ required_error: id }).min(1, {
+      message: id,
     }),
   }),
 });
@@ -82,6 +91,9 @@ export const updateParcelSchema = object({
     }),
     remark: string().optional().nullable(),
     image: string().optional().nullable(),
+    imageEdit: string({ required_error: imageEdit }).min(1, {
+      message: imageEdit,
+    }),
     categoryId: string({ required_error: categoryId }).min(1, {
       message: categoryId,
     }),
@@ -104,8 +116,8 @@ export const updateQuantityParcelSchema = object({
       .regex(regexId, { message: id }),
   }),
   body: object({
-    quantity: number({ required_error: quantity }).min(1, {
-      message: quantity,
+    quantity: number({ required_error: reduce }).min(1, {
+      message: reduce,
     }),
   }),
 });
@@ -124,6 +136,7 @@ export type getParcelsByDateInput = TypeOf<
 export type getParcelByTrackInput = TypeOf<
   typeof getParcelByTrackSchema
 >['params'];
+export type getParcelByIdInput = TypeOf<typeof getParcelByIdSchema>['params'];
 export type CreateParcelInput = TypeOf<typeof createParcelSchema>['body'];
 export type UpdateParcelInput = TypeOf<typeof updateParcelSchema>;
 export type UpdateQuantityParcelInput = TypeOf<

@@ -27,6 +27,8 @@ export class Log extends Model<
   printCount: number;
   addParcel: boolean;
   addQuantity: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default Log.init(
@@ -52,6 +54,8 @@ export default Log.init(
     printCount: { type: DataTypes.NUMBER },
     addParcel: { type: DataTypes.BOOLEAN },
     addQuantity: { type: DataTypes.BOOLEAN },
+    createdAt: { type: DataTypes.DATE },
+    updatedAt: { type: DataTypes.DATE },
   },
   {
     indexes: [{ fields: ['code', 'track'] }],

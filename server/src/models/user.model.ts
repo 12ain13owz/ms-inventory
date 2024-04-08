@@ -18,6 +18,8 @@ export class User extends Model<
   role: 'admin' | 'user';
   active: boolean;
   remark: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default User.init(
@@ -55,6 +57,12 @@ export default User.init(
     },
     remark: {
       type: DataTypes.TEXT,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   },
   {

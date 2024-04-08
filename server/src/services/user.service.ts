@@ -15,7 +15,7 @@ export function findUserByEmail(email: string): Promise<User | null> {
 }
 
 export function createUser(user: User): Promise<User> {
-  return userModel.create(user.dataValues);
+  return userModel.create(user.toJSON());
 }
 
 export function updateUser(

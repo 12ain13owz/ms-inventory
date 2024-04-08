@@ -14,6 +14,8 @@ export class Status extends Model<
   name: string;
   remark: string;
   active: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default Status.init(
@@ -36,6 +38,12 @@ export default Status.init(
     remark: {
       type: DataTypes.TEXT,
       defaultValue: '',
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   },
   {

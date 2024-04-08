@@ -14,5 +14,5 @@ export function findLogByTrack(track: string): Promise<Log | null> {
 }
 
 export function createLog(log: Log, t: Transaction): Promise<Log> {
-  return logModel.create(log.dataValues, { transaction: t });
+  return logModel.create(log.toJSON(), { transaction: t });
 }

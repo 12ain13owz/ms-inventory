@@ -10,7 +10,6 @@ import {
   signAccessToken,
   signRefreshToken,
   verifyAccessToken,
-  // verifyAccessToken,
   verifyJwt,
 } from '../utils/jwt';
 
@@ -36,7 +35,7 @@ export async function loginHandler(
 
     const accessToken = signAccessToken(user.id!);
     const refreshToken = signRefreshToken(user.id!);
-    const payload = omit(user.dataValues, privateUserFields);
+    const resUser = omit(user.toJSON(), privateUserFields);
 
     res.clearCookie(tokenKey);
     res.cookie(tokenKey, refreshToken, {
@@ -47,7 +46,7 @@ export async function loginHandler(
       secure: config.get<string>('node_env') === 'production',
     });
 
-    res.json({ accessToken, payload });
+    res.json({ accessToken, resUser });
   } catch (error) {
     next(error);
   }

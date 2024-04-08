@@ -30,8 +30,8 @@ export async function getAllUserHandler(
   res.locals.func = 'getAllUserHandler';
 
   try {
-    const payload = await findAllUser();
-    res.json(payload);
+    const resUsers = await findAllUser();
+    res.json(resUsers);
   } catch (error) {
     next(error);
   }
@@ -62,7 +62,7 @@ export async function createUserHandler(
     });
 
     const result = await createUser(payload);
-    const newUser = omit(result.dataValues, privateUserFields);
+    const newUser = omit(result.toJSON(), privateUserFields);
 
     res.json({
       message: 'เพิ่มผู้ใช้งานสำเร็จ',
@@ -87,7 +87,7 @@ export async function updateUserHandler(
     if (existingUser && existingUser.id !== id)
       throw newError(
         400,
-        'แก้ไขโปรไฟล์ไม่สำเร็จเนื่องจาก E-mail นี้มีอยู่ในระบบ'
+        `แก้ไข E-mail ไม่สำเร็จเนื่องจาก ${email} นี้มีอยู่ในระบบ`
       );
 
     const role = req.body.role as 'admin' | 'user';
@@ -126,15 +126,15 @@ export async function updateUserPasswordHandler(
 
     const compare = comparePassword(
       req.body.oldPassword,
-      user.dataValues.password
+      user.toJSON().password
     );
     if (!compare) throw newError(400, 'รหัสผ่านเก่าไม่ถูกต้อง');
 
     const hash = hashPassword(req.body.newPassword);
     const result = await updateUserPassword(id, hash);
-    if (!result[0]) throw newError(400, 'อัพเดทรหัสผ่านไม่สำเร็จ');
+    if (!result[0]) throw newError(400, 'แก้ไขรหัสผ่านไม่สำเร็จ');
 
-    res.json({ message: 'อัพเดทรหัสสำเร็จ' });
+    res.json({ message: 'แก้ไขรหัสผ่านสำเร็จ' });
   } catch (error) {
     next(error);
   }

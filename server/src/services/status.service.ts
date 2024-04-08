@@ -3,16 +3,25 @@ import statusModel, { Status } from '../models/status.model';
 
 export function findAllStatus() {
   return statusModel.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    ...getStatusQueryOptions(),
   });
 }
 
 export function findStatusByName(name: string): Promise<Status | null> {
-  return statusModel.findOne({ where: { name: { [Op.like]: name } } });
+  return statusModel.findOne({
+    where: { name: { [Op.like]: name } },
+    ...getStatusQueryOptions(),
+  });
+}
+
+export function findStatusById(id: number): Promise<Status | null> {
+  return statusModel.findByPk(id, {
+    ...getStatusQueryOptions(),
+  });
 }
 
 export function createStatus(status: Status): Promise<Status> {
-  return statusModel.create(status.dataValues);
+  return statusModel.create(status.toJSON());
 }
 
 export function updateStatus(
@@ -24,4 +33,10 @@ export function updateStatus(
 
 export function deleteStatus(id: number): Promise<number> {
   return statusModel.destroy({ where: { id } });
+}
+
+function getStatusQueryOptions() {
+  return {
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  };
 }

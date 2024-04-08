@@ -1,5 +1,6 @@
 import {
   UpdateQuantityParcelInput,
+  getParcelByIdInput,
   getParcelByTrackInput,
   getParcelsByDateInput,
 } from './../schemas/parcel.schema';
@@ -38,8 +39,8 @@ export async function getAllParcelHandler(
   res.locals.func = 'getAllPercelHandler';
 
   try {
-    const payload = await findAllParcel();
-    res.json(payload);
+    const resParcels = await findAllParcel();
+    res.json(resParcels);
   } catch (error) {
     next(error);
   }
@@ -62,8 +63,8 @@ export async function getParcelsByDateHandler(
     dateStart.setHours(0, 0, 0, 0);
     dateEnd.setHours(23, 59, 59, 999);
 
-    const payload = await findParcelsByDate(dateStart, dateEnd);
-    res.json(payload);
+    const resParcels = await findParcelsByDate(dateStart, dateEnd);
+    res.json(resParcels);
   } catch (error) {
     next(error);
   }
@@ -78,8 +79,26 @@ export async function getParcelByTrackHandler(
 
   try {
     const track = req.params.track;
-    const payload = await findParcelByTrack(track);
-    res.json(payload?.toJSON());
+    const resParcel = await findParcelByTrack(track);
+
+    res.json(resParcel?.toJSON());
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getParcelByIdHandler(
+  req: Request<getParcelByIdInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getParcelByTrackHandler';
+
+  try {
+    const id = +req.params.id;
+    const resParcel = await findParcelById(id);
+
+    res.json(resParcel?.toJSON());
   } catch (error) {
     next(error);
   }
@@ -96,10 +115,10 @@ export async function createParcelHandler(
   try {
     const code = removeWhitespace(req.body.code);
     const existingParcel = await findParcelByCode(code);
-    if (existingParcel) throw newError(400, 'รหัสพัสดุซ้ำ');
+    if (existingParcel) throw newError(400, `รหัสพัสดุ ${code} ซ้ำ`);
 
     const sequence = await createTrack(t);
-    const track = await generateTrack(sequence.dataValues.id!);
+    const track = await generateTrack(sequence.toJSON().id!);
     const receivedDate = new Date(req.body.receivedDate);
 
     const payloadParcel: Parcel = new Parcel({
@@ -139,27 +158,13 @@ export async function createParcelHandler(
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
 
-    const excludeParcel = omit(resultParcel.dataValues, [
-      'UserId',
-      'CategoryId',
-      'StatusId',
-    ]);
-
-    const newParcel = {
-      ...excludeParcel,
-      User: {
-        firstname: res.locals.user!.firstname,
-        lastname: res.locals.user!.lastname,
-      },
-      Category: { name: req.body.categoryName },
-      Status: { name: req.body.statusName },
-    };
-    const newLog = resultLog.dataValues;
+    const resParcel = await findParcelById(resultParcel.toJSON().id!);
+    const resLog = resultLog.toJSON();
 
     res.json({
-      message: 'เพิ่มพัสดุสำเร็จ',
-      parcel: newParcel,
-      log: newLog,
+      message: `เพิ่ม ${track} พัสดุสำเร็จ`,
+      parcel: resParcel,
+      log: resLog,
     });
   } catch (error) {
     await t.rollback();
@@ -180,10 +185,14 @@ export async function updateParcelHandler(
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
+    const track = parcel.toJSON().track;
     const code = removeWhitespace(req.body.code);
     const existingParcel = await findParcelByCode(code);
     if (existingParcel && existingParcel.id !== id)
-      throw newError(400, 'รหัสพัสดุซ้ำ');
+      throw newError(400, `รหัสพัสดุ ${code} ซ้ำ`);
+
+    const imageEdit = req.body.imageEdit === 'true' ? true : false;
+    const image = imageEdit ? req.body.image : parcel.toJSON().image;
 
     const receivedDate = new Date(req.body.receivedDate);
     const payloadParcel: Partial<Parcel> = {
@@ -192,19 +201,19 @@ export async function updateParcelHandler(
       receivedDate: receivedDate,
       detail: req.body.detail || '',
       remark: req.body.remark || '',
-      image: req.body.image || '',
+      image: image || '',
       UserId: res.locals.userId!,
       CategoryId: +req.body.categoryId,
       StatusId: +req.body.statusId,
     };
 
     const payloadLog: Log = new Log({
-      track: parcel.dataValues.track,
+      track: track,
       code: code,
       oldCode: req.body.oldCode || '',
       receivedDate: receivedDate,
       detail: req.body.detail || '',
-      quantity: parcel.dataValues.quantity,
+      quantity: parcel.toJSON().quantity,
       modifyQuantity: 0,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
@@ -218,16 +227,18 @@ export async function updateParcelHandler(
     });
 
     const resultParcel = await updateParcel(id, payloadParcel, t);
-    if (!resultParcel[0]) throw newError(400, 'อัพเดทพัสดุไม่สำเร็จ');
+    if (!resultParcel[0]) throw newError(400, `แก้ไขพัสดุ ${track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
-    const newLog = resultLog.dataValues;
+
+    const resParcel = omit(payloadParcel, ['UserId', 'CategoryId', 'StatusId']);
+    const resLog = resultLog.toJSON();
 
     res.json({
-      message: 'อัพเดทพัสดุสำเร็จ',
-      parcel: payloadParcel,
-      log: newLog,
+      message: `แก้ไขพัสดุ ${track} สำเร็จ`,
+      parcel: resParcel,
+      log: resLog,
     });
   } catch (error) {
     await t.rollback();
@@ -264,8 +275,8 @@ export async function incrementQuantityParcelHandler(
       modifyQuantity: req.body.quantity,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
-      categoryName: parcelData.Category!.name,
-      statusName: parcelData.Status!.name,
+      categoryName: parcelData.Category.name,
+      statusName: parcelData.Status.name,
       remark: parcelData.remark,
       image: parcelData.image,
       printCount: 0,
@@ -274,13 +285,18 @@ export async function incrementQuantityParcelHandler(
     });
 
     const resultParcel = await updateQuantityParcel(id, quantity, t);
-    if (!resultParcel[0]) throw newError(400, 'เพิ่มสต็อกไม่สำเร็จ');
+    if (!resultParcel[0])
+      throw newError(400, `เพิ่มสต็อก ${parcelData.track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
-    const newLog = resultLog.dataValues;
 
-    res.json({ message: 'เพิ่มสต็อกสำเร็จ', quantity, log: newLog });
+    const resLog = resultLog.toJSON();
+    res.json({
+      message: `เพิ่มสต็อก ${parcelData.track} สำเร็จ`,
+      quantity,
+      log: resLog,
+    });
   } catch (error) {
     await t.rollback();
     next(error);
@@ -303,12 +319,15 @@ export async function decrementQuantityParcelHandler(
     const id = +req.params.id;
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
-    if (parcel.quantity === 0)
-      throw newError(400, 'ไม่สามารถตัดสต็อกได้ เนื่องจากจำนวนของพัสดุเหลือ 0');
-
-    const quantity = Math.max(parcel.quantity - req.body.quantity, 0);
 
     const parcelData: ParcelData = parcel.toJSON();
+    if (parcel.quantity === 0)
+      throw newError(
+        400,
+        `ไม่สามารถตัดสต็อก ${parcelData.track} ได้ เนื่องจากจำนวนของพัสดุเหลือ 0`
+      );
+
+    const quantity = Math.max(parcel.quantity - req.body.quantity, 0);
     const payloadLog: Log = new Log({
       track: parcelData.track,
       code: parcelData.code,
@@ -319,8 +338,8 @@ export async function decrementQuantityParcelHandler(
       modifyQuantity: req.body.quantity,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
-      categoryName: parcelData.Category!.name,
-      statusName: parcelData.Status!.name,
+      categoryName: parcelData.Category.name,
+      statusName: parcelData.Status.name,
       remark: parcelData.remark,
       image: parcelData.image,
       printCount: 0,
@@ -329,13 +348,18 @@ export async function decrementQuantityParcelHandler(
     });
 
     const resultParcel = await updateQuantityParcel(id, quantity, t);
-    if (!resultParcel[0]) throw newError(400, 'ตัดสต็อกไม่สำเร็จ');
+    if (!resultParcel[0])
+      throw newError(400, `ตัดสต็อก ${parcelData.track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
-    const newLog = resultLog.dataValues;
 
-    res.json({ message: 'ตัดสต็อกสำเร็จ', quantity, log: newLog });
+    const resLog = resultLog.toJSON();
+    res.json({
+      message: `ตัดสต็อก ${parcelData.track} สำเร็จ`,
+      quantity,
+      log: resLog,
+    });
   } catch (error) {
     await t.rollback();
     next(error);
@@ -350,10 +374,15 @@ export async function deleteParcelHandler(
   res.locals.func = 'deleteParcelHandler';
 
   try {
-    const result = await deleteParcel(+req.params.id);
-    if (!result) throw newError(400, 'ลบประเภทอุปกรณ์ไม่สำเร็จ');
+    const id = +req.params.id;
+    const parcel = await findParcelById(id);
+    if (!parcel) throw newError(400, 'ไม่พบพัสดุ');
 
-    res.json({ message: 'ลบประเภทอุปกรณ์สำเร็จ' });
+    const track = parcel.toJSON().track;
+    const result = await deleteParcel(id);
+    if (!result) throw newError(400, `ลบ ${track} ไม่สำเร็จ`);
+
+    res.json({ message: `ลบ ${track} สำเร็จ` });
   } catch (error) {
     next(error);
   }

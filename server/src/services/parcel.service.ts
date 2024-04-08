@@ -5,39 +5,27 @@ import statusModel from '../models/status.model';
 import userModel from '../models/user.model';
 
 export function findAllParcel(): Promise<ParcelData[]> {
-  return parcelModel.findAll<ParcelData>({
-    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
-    include: [
-      { model: userModel, attributes: ['firstname', 'lastname'] },
-      { model: categoryModel, attributes: ['name'] },
-      { model: statusModel, attributes: ['name'] },
-    ],
-  });
-}
-
-export function findParcelById(id: number): Promise<ParcelData | null> {
-  return parcelModel.findByPk<ParcelData>(id, {
-    include: [
-      { model: categoryModel, attributes: ['name'] },
-      { model: statusModel, attributes: ['name'] },
-    ],
-  });
+  return parcelModel.findAll<ParcelData>(getParcelQueryOptions());
 }
 
 export function findParcelByTrack(track: string): Promise<ParcelData | null> {
   return parcelModel.findOne<ParcelData>({
     where: { track },
-    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
-    include: [
-      { model: userModel, attributes: ['firstname', 'lastname'] },
-      { model: categoryModel, attributes: ['name'] },
-      { model: statusModel, attributes: ['name'] },
-    ],
+    ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelByCode(code: string): Promise<Parcel | null> {
-  return parcelModel.findOne({ where: { code } });
+export function findParcelById(id: number): Promise<ParcelData | null> {
+  return parcelModel.findByPk(id, {
+    ...getParcelQueryOptions(),
+  });
+}
+
+export function findParcelByCode(code: string): Promise<ParcelData | null> {
+  return parcelModel.findOne({
+    where: { code },
+    ...getParcelQueryOptions(),
+  });
 }
 
 export function findParcelsByDate(
@@ -46,17 +34,12 @@ export function findParcelsByDate(
 ): Promise<ParcelData[]> {
   return parcelModel.findAll<ParcelData>({
     where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
-    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
-    include: [
-      { model: userModel, attributes: ['firstname', 'lastname'] },
-      { model: categoryModel, attributes: ['name'] },
-      { model: statusModel, attributes: ['name'] },
-    ],
+    ...getParcelQueryOptions(),
   });
 }
 
 export function createParcel(parcel: Parcel, t: Transaction): Promise<Parcel> {
-  return parcelModel.create(parcel.dataValues, { transaction: t });
+  return parcelModel.create(parcel.toJSON(), { transaction: t });
 }
 
 export function updateParcel(
@@ -77,4 +60,15 @@ export function updateQuantityParcel(
 
 export function deleteParcel(id: number): Promise<number> {
   return parcelModel.destroy({ where: { id } });
+}
+
+function getParcelQueryOptions() {
+  return {
+    attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
+    include: [
+      { model: userModel, attributes: ['firstname', 'lastname'] },
+      { model: categoryModel, attributes: ['id', 'name'] },
+      { model: statusModel, attributes: ['id', 'name'] },
+    ],
+  };
 }

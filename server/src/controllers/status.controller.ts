@@ -24,8 +24,8 @@ export async function getAllStatusHandler(
   res.locals.func = 'getAllStatusHandler';
 
   try {
-    const payload = await findAllStatus();
-    res.json(payload);
+    const statuses = await findAllStatus();
+    res.json(statuses);
   } catch (error) {
     next(error);
   }
@@ -41,7 +41,7 @@ export async function createStatusHandler(
   try {
     const name = removeWhitespace(req.body.name);
     const status = await findStatusByName(name);
-    if (status) throw newError(400, 'ชื่อสถานะอุปกรณ์ซ้ำ');
+    if (status) throw newError(400, `ชื่อสถานะพัสดุ ${name} ซ้ำ`);
 
     const payload = new Status({
       name: name,
@@ -49,10 +49,10 @@ export async function createStatusHandler(
       remark: req.body.remark || '',
     });
     const result = await createStatus(payload);
-    const newStatus = omit(result.dataValues, privateFields);
+    const newStatus = omit(result.toJSON(), privateFields);
 
     res.json({
-      message: 'เพิ่มสถานะอุปกรณ์สำเร็จ',
+      message: `เพิ่มสถานะพัสดุ ${name} สำเร็จ`,
       status: newStatus,
     });
   } catch (error) {
@@ -73,7 +73,7 @@ export async function updateStatusHandler(
     const existingStatus = await findStatusByName(name);
 
     if (existingStatus && existingStatus.id !== id)
-      throw newError(400, 'ชื่อสถานะอุปกรณ์ซ้ำ');
+      throw newError(400, `ชื่อสถานะพัสดุ ${name} ซ้ำ`);
 
     const payload: Partial<Status> = {
       name: name,
@@ -81,9 +81,9 @@ export async function updateStatusHandler(
       remark: req.body.remark || '',
     };
     const result = await updateStatus(id, payload);
-    if (!result[0]) throw newError(400, 'อัพเดทสถานะอุปกรณ์ไม่สำเร็จ');
+    if (!result[0]) throw newError(400, `แก้ไขสถานะพัสดุ ${name} ไม่สำเร็จ`);
 
-    res.json({ message: 'อัพเดทสถานะอุปกรณ์สำเร็จ', status: payload });
+    res.json({ message: `แก้ไขสถานะพัสดุ ${name} สำเร็จ`, status: payload });
   } catch (error) {
     next(error);
   }
@@ -97,8 +97,11 @@ export async function deleteStatudHandler(
   res.locals.func = 'deleteStatudHandler';
 
   try {
+    const id = +req.params.id;
+    // const status = await find
+
     const result = await deleteStatus(+req.params.id);
-    if (!result) throw newError(400, 'ลบสถานะอุปกรณ์ไม่สำเร็จ');
+    if (!result) throw newError(400, 'ลบสถานะพัสดุไม่สำเร็จ');
 
     res.json({ message: 'ลบสถานะอุปกรณ์สำเร็จ' });
   } catch (error) {

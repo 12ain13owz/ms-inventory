@@ -14,6 +14,8 @@ export class Category extends Model<
   name: string;
   remark: string;
   active: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default Category.init(
@@ -35,6 +37,12 @@ export default Category.init(
     },
     remark: {
       type: DataTypes.TEXT,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
     },
   },
   {

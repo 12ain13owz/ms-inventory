@@ -5,6 +5,7 @@ import {
   decrementQuantityParcelHandler,
   deleteParcelHandler,
   getAllParcelHandler,
+  getParcelByIdHandler,
   getParcelByTrackHandler,
   getParcelsByDateHandler,
   incrementQuantityParcelHandler,
@@ -14,6 +15,7 @@ import { validate } from '../../middlewares/validate.middleware';
 import {
   createParcelSchema,
   deleteParcelSchema,
+  getParcelByIdSchema,
   getParcelByTrackSchema,
   getParcelsByDateSchema,
   updateParcelSchema,
@@ -33,6 +35,11 @@ router.get(
   '/track/:track',
   [verifyToken, isUserActive, validate(getParcelByTrackSchema)],
   getParcelByTrackHandler
+);
+router.get(
+  '/id/:id',
+  [verifyToken, isUserActive, validate(getParcelByIdSchema)],
+  getParcelByIdHandler
 );
 
 router.post(

@@ -3,16 +3,25 @@ import categoryModel, { Category } from '../models/category.model';
 
 export function findAllCategory() {
   return categoryModel.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    ...getCategoryQueryOptions(),
   });
 }
 
 export function findCategoryByName(name: string): Promise<Category | null> {
-  return categoryModel.findOne({ where: { name: { [Op.like]: name } } });
+  return categoryModel.findOne({
+    where: { name: { [Op.like]: name } },
+    ...getCategoryQueryOptions(),
+  });
+}
+
+export function findCategoryById(id: number): Promise<Category | null> {
+  return categoryModel.findByPk(id, {
+    ...getCategoryQueryOptions(),
+  });
 }
 
 export function createCategory(category: Category): Promise<Category> {
-  return categoryModel.create(category.dataValues);
+  return categoryModel.create(category.toJSON());
 }
 
 export function updateCategory(
@@ -24,4 +33,10 @@ export function updateCategory(
 
 export function deleteCategory(id: number): Promise<number> {
   return categoryModel.destroy({ where: { id } });
+}
+
+function getCategoryQueryOptions() {
+  return {
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
+  };
 }

@@ -3,6 +3,7 @@ import multer, { diskStorage } from 'multer';
 import { newError } from '../utils/helper';
 import { ExtendedResponse } from '../types/express';
 import { mkdirSync, unlinkSync } from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 import jimp from 'jimp';
 
 const MIME_TYPE_MAP: { [key: string]: string } = {
@@ -13,7 +14,7 @@ const MIME_TYPE_MAP: { [key: string]: string } = {
 
 export const storage = diskStorage({
   destination: (req, file, cb) => {
-    const path = './public/image';
+    const path = './public/images';
     mkdirSync(path, { recursive: true });
 
     const isValid = MIME_TYPE_MAP[file.mimetype];
@@ -24,13 +25,8 @@ export const storage = diskStorage({
     cb(error, path);
   },
   filename: (req, file, cb) => {
-    const name = file.originalname
-      .toLowerCase()
-      .replace(/\.[^.]+$/, '') // ตัดนามสกุลไฟล์ออก
-      .replace(/\s+/g, '-'); // แทนที่ช่องว่างด้วยขีด
     const ext = MIME_TYPE_MAP[file.mimetype];
-    const fileName = `${name}-${Date.now()}.${ext}`;
-    req.body.image = fileName;
+    const fileName = `${uuidv4()}.${ext}`;
 
     cb(null, fileName);
   },
