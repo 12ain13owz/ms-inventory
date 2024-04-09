@@ -19,7 +19,7 @@ export const PARCEL = {
 
     category: {
       required: 'กรุณาระบุประเภทของพัสดุ',
-      mask: 'กรุณาระบุประเภทของพัสดุ',
+      pattern: 'กรุณาระบุประเภทของพัสดุ',
     },
 
     status: {

@@ -27,17 +27,15 @@ export class PasswordComponent implements OnInit {
 
   patternPassword = PASSWORD.patternPassword;
   validationField = PASSWORD.validationField;
-
-  form = this.initForm();
-  profile: Profile;
   isLoading: boolean = false;
-
   hideOldPassword: boolean = true;
   hideNewPassword: boolean = true;
   hideConfirmPassword: boolean = true;
 
+  form = this.initForm();
+  profile: Profile;
+
   ngOnInit(): void {
-    this.initForm();
     this.profile = this.profileService.getProfile();
   }
 

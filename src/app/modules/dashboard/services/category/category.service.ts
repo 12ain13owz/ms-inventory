@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { Category } from '../../models/category.model';
+import { Category, CategoryTable } from '../../models/category.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,12 @@ export class CategoryService {
 
   getCategories(): Category[] {
     return this.categories.slice();
+  }
+
+  getCategoriesTable(): CategoryTable[] {
+    return this.categories
+      .map((category, i) => ({ no: i + 1, ...category }))
+      .slice();
   }
 
   getCategoriesName(): string[] {

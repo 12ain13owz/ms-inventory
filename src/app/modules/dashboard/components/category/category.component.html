@@ -17,7 +17,7 @@
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="no">
         <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
-        <mat-cell *matCellDef="let i = index"> {{ i + pageIndex }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.no }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="name">
@@ -77,7 +77,6 @@
 
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50, 100]"
-      (page)="setPageIndex($event)"
       showFirstLastButtons
     ></mat-paginator>
   </mat-card-content>

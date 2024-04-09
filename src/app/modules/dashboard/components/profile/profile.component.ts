@@ -18,10 +18,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
 
   validationField = PROFILE.validationField;
+  isLoading: boolean = false;
 
   form = this.initForm();
   profile: Profile;
-  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.subscription = this.profileService

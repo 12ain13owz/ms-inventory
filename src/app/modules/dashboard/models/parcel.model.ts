@@ -1,10 +1,9 @@
-import { FormControl, FormGroup } from '@angular/forms';
 import { Message } from '../../shared/models/response.model';
 import { Log } from './log.model';
 
 export interface Parcel {
-  id?: number;
-  track?: string;
+  id: number;
+  track: string;
   code: string;
   oldCode: string;
   receivedDate: Date;
@@ -13,17 +12,15 @@ export interface Parcel {
   print: boolean;
   remark: string;
   image: string;
-  UserId?: number;
-  CategoryId?: number;
-  StatusId?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-  User?: { firstname: string; lastname: string };
-  Category?: { name: string };
-  Status?: { name: string };
+  createdAt: Date;
+  updatedAt: Date;
+  User: { firstname: string; lastname: string };
+  Category: { id: number; name: string };
+  Status: { id: number; name: string };
 }
 
 export interface ParcelTable {
+  no: number;
   id: number;
   image: string;
   track: string;
@@ -33,21 +30,6 @@ export interface ParcelTable {
   detail: string;
   quantity: number;
 }
-
-export interface ParcelForm
-  extends FormGroup<{
-    id: FormControl<number>;
-    track: FormControl<string>;
-    code: FormControl<string>;
-    oldCode: FormControl<string>;
-    receivedDate: FormControl<Date>;
-    quantity: FormControl<number>;
-    detail: FormControl<string>;
-    remark: FormControl<string>;
-    category: FormControl<number>;
-    status: FormControl<number>;
-    image: FormControl<string>;
-  }> {}
 
 export interface ParcelResponse extends Message {
   parcel: Parcel;
@@ -59,18 +41,7 @@ export interface ParcelQuantity extends Message {
   log: Log;
 }
 
-export interface Filter {
+export interface FilterList {
   categories: string[];
   statuses: string[];
-}
-
-export interface FilterForm
-  extends FormGroup<{
-    category: FormControl<string[]>;
-    status: FormControl<string[]>;
-  }> {}
-
-export interface selectChip {
-  category: number;
-  status: number;
 }

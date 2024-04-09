@@ -33,7 +33,8 @@ export class ParcelService {
 
   getParcelsTable(): ParcelTable[] {
     return this.parcels
-      .map((parcel) => ({
+      .map((parcel, i) => ({
+        no: i + 1,
         id: parcel.id,
         image: parcel.image,
         track: parcel.track,
@@ -46,10 +47,15 @@ export class ParcelService {
       .slice();
   }
 
+  getParcelById(id: number): Parcel {
+    return this.parcels.find((parcel) => parcel.id === id);
+  }
+
   getParcelByTrackInput(track: string): ParcelTable[] {
     return this.parcels
       .filter((parcel) => parcel.track === track)
-      .map((parcel) => ({
+      .map((parcel, i) => ({
+        no: i + 1,
         id: parcel.id,
         image: parcel.image,
         track: parcel.track,

@@ -1,16 +1,40 @@
 @defer (when !isLoading) { @if (!isDataLoadFailed) {
 <mat-card>
+  @defer (when isEdit && !data) {
+  <button mat-flat-button color="warn">ไม่พบข้อมูลพัสดุ</button>
+  } @placeholder {
   <mat-card-header>
-    <mat-card-title>{{ title }}</mat-card-title>
+    <div class="d-flex justify-between w-100">
+      <mat-card-title>{{ title }}</mat-card-title>
+      @defer (when isEdit) {
+      <button
+        type="button"
+        mat-raised-button
+        color="default"
+        (click)="onEdit()"
+      >
+        Edit
+      </button>
+      }
+    </div>
   </mat-card-header>
 
   <form
     class="form-container"
-    [formGroup]="form"
+    [formGroup]="formParcel"
     (ngSubmit)="onSubmit()"
     #formDirec="ngForm"
   >
     <mat-card-content class="box">
+      @if (isEdit && formParcel.disabled) {
+      <div class="blurred-img">
+        <img
+          style="max-height: 200px; max-width: 200px"
+          [defaultImage]="'assets/images/no-image.jpg'"
+          [lazyLoad]="imageUrl + this.formParcel.controls['image'].value"
+        />
+      </div>
+      } @else {
       <ngx-dropzone
         [accept]="'image/jpeg,image/jpg,image/png'"
         [multiple]="false"
@@ -25,16 +49,22 @@
           [removable]="true"
           (removed)="onRemoveImage(f)"
         >
-          <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
         </ngx-dropzone-image-preview>
       </ngx-dropzone>
-
+      }
       <mat-error>
         <app-error-field
-          [control]="imagefile"
+          [control]="image"
           [errorMessage]="validationField.image"
         ></app-error-field>
       </mat-error>
+
+      @if (isEdit) {
+      <mat-form-field>
+        <mat-label>Track</mat-label>
+        <input type="text" matInput [value]="track" disabled />
+      </mat-form-field>
+      }
 
       <div class="row">
         <mat-form-field>
@@ -76,6 +106,7 @@
           <mat-datepicker-toggle
             matIconSuffix
             [for]="picker"
+            [disabled]="formParcel.disabled"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -96,27 +127,16 @@
       <div class="d-flex flex-column">
         <mat-card-title>ประเภท</mat-card-title>
 
-        <mat-chip-listbox
-          #chipCategory
-          [value]="selectDefault.category"
-          [compareWith]="compareChip"
-        >
+        <mat-chip-listbox formControlName="category">
           @for (category of categories; track category) {
           <mat-chip-option
             [value]="category.id"
-            (selectionChange)="selectChip($event, 'category')"
+            (selectionChange)="onSelectChip('category')"
             >{{ category.name }}</mat-chip-option
           >
           }
         </mat-chip-listbox>
 
-        <input
-          type="number"
-          mask="0*"
-          matInput
-          formControlName="category"
-          class="hidden-input"
-        />
         <mat-error>
           <app-error-field
             [control]="category"
@@ -128,28 +148,17 @@
       <div class="d-flex flex-column">
         <mat-card-title>สถานะ</mat-card-title>
 
-        <mat-chip-listbox
-          #chipStatus
-          [value]="selectDefault.status"
-          [compareWith]="compareChip"
-        >
+        <mat-chip-listbox formControlName="status">
           @for (status of statuses; track status) {
           <mat-chip-option
             [value]="status.id"
-            (selectionChange)="selectChip($event, 'status')"
+            (selectionChange)="onSelectChip('status')"
           >
             {{ status.name }}
           </mat-chip-option>
           }
         </mat-chip-listbox>
 
-        <input
-          type="number"
-          mask="0*"
-          matInput
-          formControlName="status"
-          class="hidden-input"
-        />
         <mat-error>
           <app-error-field
             [control]="status"
@@ -176,6 +185,7 @@
       </mat-form-field>
     </mat-card-content>
 
+    @if (this.formParcel.enabled) {
     <mat-divider></mat-divider>
     <mat-card-actions class="gap-10">
       <button type="submit" mat-raised-button color="primary">Submit</button>
@@ -183,18 +193,19 @@
         Reset
       </button>
     </mat-card-actions>
+    }
     <mat-card-footer>
       @if (isLoading) {
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       }
     </mat-card-footer>
   </form>
+  }
 </mat-card>
 } @else {
-<button mat-flat-button color="warn">
+<button mat-flat-button color="warn" class="w-100">
   ไม่พบข้อมูลประเภทหรือสถานะของพัสดุ กรุณาติดต่อ Admin ให้เพิ่มข้อมูล
 </button>
-
 } } @placeholder (minimum 300ms) {
 <app-loading-data [form]="'card'"></app-loading-data>
 }

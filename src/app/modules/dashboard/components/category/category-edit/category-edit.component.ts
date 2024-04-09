@@ -17,6 +17,7 @@ import { Category, CategoryResponse } from '../../../models/category.model';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { Message } from '../../../../shared/models/response.model';
 import { CATEGORY } from '../../../constants/category.constant';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 @Component({
   selector: 'app-category-edit',
@@ -27,17 +28,19 @@ export class CategoryEditComponent implements OnInit {
   @ViewChild('formDirec') formDirec: FormGroupDirective;
   @ViewChild('nameInput') nameInput: ElementRef<HTMLInputElement>;
 
+  private data: Category = inject(MAT_DIALOG_DATA);
   private formBuilder = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<CategoryEditComponent>);
-  private data: Category = inject(MAT_DIALOG_DATA);
   private categoryApiService = inject(CategoryApiService);
+  private toastService = inject(ToastNotificationService);
   private operation$: Observable<Message | CategoryResponse>;
 
   validationField = CATEGORY.validationField;
-  form = this.initForm();
   title: string = 'เพิ่มประเภทพัสดุ';
   isEdit: boolean = false;
   isLoading: boolean = false;
+
+  form = this.initForm();
 
   ngOnInit(): void {
     if (this.data) {
@@ -71,9 +74,11 @@ export class CategoryEditComponent implements OnInit {
         }),
         finalize(() => (this.isLoading = false))
       )
-      .subscribe(() => {
+      .subscribe((res) => {
         if (this.isEdit) this.dialogRef.close();
         else this.onReset();
+
+        this.toastService.success('Success', res.message);
       });
   }
 

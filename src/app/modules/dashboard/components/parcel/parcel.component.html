@@ -88,7 +88,7 @@
 
   <mat-card-content>
     <div class="filter-box">
-      <div class="left" [formGroup]="filters">
+      <div class="left" [formGroup]="form">
         <mat-form-field>
           <mat-label>ประเภท</mat-label>
           <mat-select formControlName="category" multiple>
@@ -137,11 +137,10 @@
     </div>
 
     @if(!isLoading) {
-
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="no">
         <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
-        <mat-cell *matCellDef="let i = index"> {{ i + pageIndex }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.no }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="image">
@@ -168,7 +167,7 @@
           >วันที่รับพัสดุ</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.receivedDate | date : "dd/MM/YYYY" }}
+          {{ element.receivedDate | thaiYear }}
         </mat-cell>
       </ng-container>
 
@@ -222,7 +221,6 @@
 
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50, 100]"
-      (page)="setPageIndex($event)"
       showFirstLastButtons
     ></mat-paginator>
   </mat-card-content>

@@ -36,9 +36,16 @@ export class ParcelApiService {
   getParcelByTrack(track: string): Observable<Parcel> {
     return this.http.get<Parcel>(`${this.apiUrl}/track/${track}`).pipe(
       switchMap((res) => timer(500).pipe(map(() => res))),
-      tap((res) => console.log(res)),
       tap((res) => this.parcelService.setParcel(res))
     );
+  }
+
+  downloadImage(url: string): Observable<Blob> {
+    return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
+  }
+
+  getParcelById(id: number): Observable<Parcel> {
+    return this.http.get<Parcel>(`${this.apiUrl}/id/${id}`);
   }
 
   createParcel(payload: FormData): Observable<ParcelResponse> {
@@ -49,7 +56,7 @@ export class ParcelApiService {
 
   updateParcel(id: number, payload: FormData): Observable<ParcelResponse> {
     return this.http
-      .patch<ParcelResponse>(`${this.apiUrl}/${id}`, payload)
+      .put<ParcelResponse>(`${this.apiUrl}/${id}`, payload)
       .pipe(tap((res) => this.parcelService.updateParcel(id, res.parcel)));
   }
 

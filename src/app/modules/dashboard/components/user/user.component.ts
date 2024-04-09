@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {
   Subscription,
   defer,
@@ -21,7 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { User } from '../../models/user.model';
+import { User, UserTable } from '../../models/user.model';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ProfileService } from '../../services/profile/profile.service';
@@ -31,7 +24,7 @@ import { ProfileService } from '../../services/profile/profile.service';
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
-export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
+export class UserComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -52,43 +45,20 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     'remark',
     'action',
   ];
-  dataSource = new MatTableDataSource<User>([]);
-  pageIndex: number = 1;
+  dataSource = new MatTableDataSource<UserTable>([]);
   isFirstLoading: boolean = false;
 
   ngOnInit(): void {
-    this.dataSource.data = this.userService.getUsers();
-    if (this.validationService.isEmpty(this.dataSource.data))
-      this.userApiService
-        .getUsers()
-        .pipe(finalize(() => (this.isFirstLoading = true)))
-        .subscribe();
-
+    this.initDataSource();
     this.subscription = this.userService
       .onUsersListener()
-      .subscribe((users) => (this.dataSource.data = users));
-  }
-
-  ngAfterViewInit(): void {
-    defer(() =>
-      this.paginator && this.sort
-        ? of(null)
-        : interval(100).pipe(
-            filter(() => !!this.paginator && !!this.sort),
-            take(1)
-          )
-    ).subscribe(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+      .subscribe(
+        () => (this.dataSource.data = this.userService.getUsersTable())
+      );
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  setPageIndex(event: PageEvent): void {
-    this.pageIndex = event.pageIndex * event.pageSize + 1;
   }
 
   onCreate(): void {
@@ -109,5 +79,27 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  private initDataSource(): void {
+    this.dataSource.data = this.userService.getUsersTable();
+
+    if (this.validationService.isEmpty(this.dataSource.data))
+      this.userApiService
+        .getUsers()
+        .pipe(finalize(() => (this.isFirstLoading = true)))
+        .subscribe();
+
+    defer(() =>
+      this.paginator && this.sort
+        ? of(null)
+        : interval(300).pipe(
+            filter(() => !!this.paginator && !!this.sort),
+            take(1)
+          )
+    ).subscribe(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 }

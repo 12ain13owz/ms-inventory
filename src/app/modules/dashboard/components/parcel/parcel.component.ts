@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -25,12 +24,7 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  Filter,
-  FilterForm,
-  Parcel,
-  ParcelTable,
-} from '../../models/parcel.model';
+import { FilterList, Parcel, ParcelTable } from '../../models/parcel.model';
 import { environment } from '../../../../../environments/environment.development';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -47,7 +41,7 @@ enum Tap {
   templateUrl: './parcel.component.html',
   styleUrl: './parcel.component.scss',
 })
-export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ParcelComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   private subscription = new Subscription();
@@ -60,19 +54,16 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   datePipe = inject(DatePipe);
   imageUrl: string = environment.imageUrl;
-  isLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
-  filterList: Filter;
-  filters: FilterForm = this.formBuilder.group({
-    category: new FormControl([]),
-    status: new FormControl([]),
-  });
+  filterList: FilterList;
+  form = this.initForm();
 
+  isLoading: boolean = false;
   selectedTap = new FormControl(Tap.Date);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   endDate = new Date();
@@ -92,45 +83,14 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     'quantity',
     'action',
   ];
-  dataSource = new MatTableDataSource<ParcelTable>(null);
-  pageIndex: number = 1;
+  dataSource = new MatTableDataSource<ParcelTable>([]);
   isFirstLoading: boolean = false;
 
   ngOnInit(): void {
-    this.dataSource.data = this.parcelService.getParcelsTable();
-    this.filterList = {
-      categories: this.categoryService.getCategoriesName(),
-      statuses: this.statusService.getStatusesName(),
-    };
-
-    if (this.validationService.isEmpty(this.dataSource.data)) {
-      const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
-      const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
-
-      this.parcelApiService
-        .getParcelsByDate(startDate, endDate)
-        .pipe(finalize(() => (this.isFirstLoading = true)))
-        .subscribe();
-    }
-
-    this.subscription = this.parcelService
-      .onParcelsListener()
-      .subscribe(
-        () => (this.dataSource.data = this.parcelService.getParcelsTable())
-      );
-  }
-
-  ngAfterViewInit(): void {
-    defer(() =>
-      this.paginator && this.sort
-        ? of(null)
-        : interval(100).pipe(
-            filter(() => !!this.paginator && !!this.sort),
-            take(1)
-          )
-    ).subscribe(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.initDataSource();
+    this.subscription = this.parcelService.onParcelsListener().subscribe(() => {
+      this.dataSource.data = this.parcelService.getParcelsTable();
+      this.initPaginatorAndSort();
     });
   }
 
@@ -138,24 +98,12 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get category() {
-    return this.filters.controls['category'];
-  }
-
-  get status() {
-    return this.filters.controls['status'];
-  }
-
-  setPageIndex(event: PageEvent): void {
-    this.pageIndex = event.pageIndex * event.pageSize + 1;
+  onCreate(): void {
+    this.router.navigate(['parcel/new']);
   }
 
   setFilter(): void {
-    this.filters.setValue({ category: [], status: [] });
-  }
-
-  onCreate(): void {
-    this.router.navigate(['parcel/new']);
+    this.form.setValue({ category: [], status: [] });
   }
 
   onSearch(): void {
@@ -211,16 +159,18 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onFilter(): void {
     const parcels = this.parcelService.getParcelsTable();
-    const filters = this.filters.value;
+    const filters = this.form.value;
 
-    this.dataSource.data = Object.keys(filters).reduce(
-      (result, keyName) =>
-        result.filter((item) => {
-          if (filters[keyName].length === 0) return result;
-          return filters[keyName].includes(item[keyName]);
-        }),
-      parcels
-    );
+    this.dataSource.data = Object.keys(filters)
+      .reduce(
+        (result, keyName) =>
+          result.filter((item) => {
+            if (filters[keyName].length === 0) return result;
+            return filters[keyName].includes(item[keyName]);
+          }),
+        parcels
+      )
+      .map((parcel, i) => ({ ...parcel, no: i + 1 }));
   }
 
   onResetFilter(): void {
@@ -230,28 +180,64 @@ export class ParcelComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onFilter();
   }
 
-  // onDateFocusOut(dateInput: string, isStartDate: boolean) {
-  //   const dateParts = dateInput.split('/');
-  //   const date = +dateParts[0];
-  //   const month = +dateParts[1] - 1;
-  //   const year = +dateParts[2] - 543;
-  //   const newDate = new Date(year, month, date);
-
-  //   if (isNaN(newDate.getTime())) return;
-  //   if (isStartDate)
-  //     this.dateRange.patchValue({
-  //       start: newDate,
-  //       end: this.dateRange.value.end,
-  //     });
-  //   else
-  //     this.dateRange.patchValue({
-  //       start: this.dateRange.value.start,
-  //       end: newDate,
-  //     });
-  // }
-
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  get category(): FormControl<string[]> {
+    return this.form.controls['category'];
+  }
+
+  get status(): FormControl<string[]> {
+    return this.form.controls['status'];
+  }
+
+  private initForm() {
+    return this.formBuilder.group({
+      category: this.formBuilder.control<string[]>([]),
+      status: this.formBuilder.control<string[]>([]),
+    });
+  }
+
+  private initDataSource(): void {
+    this.dataSource.data = this.parcelService.getParcelsTable();
+    this.filterList = {
+      categories: this.categoryService.getCategoriesName(),
+      statuses: this.statusService.getStatusesName(),
+    };
+
+    if (this.validationService.isEmpty(this.dataSource.data)) {
+      const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
+      const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
+
+      this.parcelApiService
+        .getParcelsByDate(startDate, endDate)
+        .pipe(finalize(() => (this.isFirstLoading = true)))
+        .subscribe();
+
+      return;
+    }
+
+    this.initPaginatorAndSort();
+  }
+
+  private initPaginatorAndSort(): void {
+    defer(() =>
+      this.paginator && this.sort
+        ? of(null)
+        : interval(300).pipe(
+            filter(() => !!this.paginator && !!this.sort),
+            take(1)
+          )
+    ).subscribe(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sort.sort({
+        id: 'track',
+        start: 'desc',
+        disableClear: true,
+      });
+    });
   }
 }

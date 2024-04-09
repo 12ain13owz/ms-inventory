@@ -19,6 +19,7 @@ import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { Message } from '../../../../shared/models/response.model';
 import { ValidationService } from '../../../../shared/services/validation.service';
 import { USER } from '../../../constants/user.constant';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -34,22 +35,21 @@ export class UserEditComponent implements OnInit {
   private data: User = inject(MAT_DIALOG_DATA);
   private userApiService = inject(UserApiService);
   private validationService = inject(ValidationService);
+  private toastService = inject(ToastNotificationService);
   private operation$: Observable<Message | UserResponse>;
 
   validationField = USER.validationField;
   patternPassword = USER.patternPassword;
-
-  form = this.initForm();
+  roleOptions: string[] = ['user', 'admin'];
   title: string = 'เพิ่มผู้ใช้งาน';
   isEdit: boolean = false;
   isLoading: boolean = false;
   hidePassword: boolean = true;
   hideConfirmPassword: boolean = true;
-  roleOptions: string[] = ['user', 'admin'];
+
+  form = this.initForm();
 
   ngOnInit(): void {
-    this.initForm();
-
     if (this.data) {
       this.title = 'แก้ไขผู้ใข้งาน';
       this.isEdit = true;
@@ -84,9 +84,11 @@ export class UserEditComponent implements OnInit {
         }),
         finalize(() => (this.isLoading = false))
       )
-      .subscribe(() => {
+      .subscribe((res) => {
         if (this.isEdit) this.dialogRef.close();
         else this.onReset();
+
+        this.toastService.success('Success', res.message);
       });
   }
 

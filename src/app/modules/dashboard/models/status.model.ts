@@ -7,6 +7,10 @@ export interface Status {
   remark: string;
 }
 
+export interface StatusTable extends Status {
+  no: number;
+}
+
 export interface StatusResponse extends Message {
   status: Status;
 }

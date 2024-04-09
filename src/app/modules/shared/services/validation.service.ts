@@ -35,6 +35,7 @@ export class ValidationService {
 
   oneOf(allowedValues: any[]): ValidatorFn {
     return (control: FormControl): ValidationErrors | null => {
+      if (!allowedValues) return null;
       if (!control.value || allowedValues.includes(control.value)) return null;
       else return { oneOf: true };
     };

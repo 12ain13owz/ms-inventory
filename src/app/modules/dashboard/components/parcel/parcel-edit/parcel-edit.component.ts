@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
   inject,
+  viewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -14,26 +15,32 @@ import {
 } from '@angular/forms';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
-import {
-  Parcel,
-  ParcelForm,
-  ParcelResponse,
-  selectChip,
-} from '../../../models/parcel.model';
+import { Parcel, ParcelResponse } from '../../../models/parcel.model';
 import { ValidationService } from '../../../../shared/services/validation.service';
-import { Observable, catchError, finalize, forkJoin, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  defer,
+  filter,
+  finalize,
+  forkJoin,
+  interval,
+  of,
+  take,
+  throwError,
+} from 'rxjs';
 import { CategoryApiService } from '../../../services/category/category-api.service';
 import { StatusApiService } from '../../../services/status/status-api.service';
 import { NgxDropzoneChangeEvent } from '@todorus/ngx-dropzone';
 import { DatePipe } from '@angular/common';
 import { PARCEL } from '../../../constants/parcel.constant';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
-import {
-  MatChipListbox,
-  MatChipSelectionChange,
-} from '@angular/material/chips';
 import { Category } from '../../../models/category.model';
 import { Status } from '../../../models/status.model';
+import { ActivatedRoute } from '@angular/router';
+import { ParcelService } from '../../../services/parcel/parcel.service';
+import { environment } from '../../../../../../environments/environment.development';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 @Component({
   selector: 'app-parcel-edit',
@@ -44,51 +51,53 @@ export class ParcelEditComponent implements OnInit {
   @ViewChild('formDirec') formdirec: FormGroupDirective;
   @ViewChild('codeInput') codeInput: ElementRef<HTMLInputElement>;
   @ViewChild('dateInput') dateInput: ElementRef<HTMLInputElement>;
-  @ViewChild('chipCategory') chipCategory: MatChipListbox;
-  @ViewChild('chipStatus') chipStatus: MatChipListbox;
 
+  private route = inject(ActivatedRoute);
   private formBuilder = inject(FormBuilder);
+  private parcelService = inject(ParcelService);
   private parcelApiService = inject(ParcelApiService);
   private categoryService = inject(CategoryService);
   private categoryApiService = inject(CategoryApiService);
   private statusService = inject(StatusService);
   private statusApiService = inject(StatusApiService);
   private validationService = inject(ValidationService);
+  private toastService = inject(ToastNotificationService);
   private datePipe = inject(DatePipe);
-  private data: Parcel;
   private operation$: Observable<ParcelResponse>;
 
+  imageUrl: string = environment.imageUrl;
+  validationField = PARCEL.validationField;
+  id: number = +this.route.snapshot.params['id'];
   files: File[] = [];
   title: string = 'เพิ่มพัสดุ';
+  isImageEdit: boolean = false;
   isEdit: boolean = false;
   isLoading: boolean = false;
   isDataLoadFailed: boolean = false;
-  id: number;
-  selectDefault: selectChip = { category: null, status: null };
-
-  form: ParcelForm;
-  imagefile = new FormControl(null, {
-    validators: [Validators.required],
-    asyncValidators: [this.validationService.mimeType()],
-  });
   categories: { id: number; name: string }[] = [];
   statuses: { id: number; name: string }[] = [];
-  validationField = PARCEL.validationField;
+
+  formParcel = this.initFormParcel();
+  formImage = this.initFormImage();
+  data: Parcel;
+  track: string;
 
   ngOnInit(): void {
-    this.initForm();
-    this.setValue();
-
     this.categories = this.categoryService.getActiveCategories();
     this.statuses = this.statusService.getActiveStatuses();
-    this.onLoadCategoryAndStatus();
+
+    if (this.id) {
+      this.isEdit = true;
+      this.title = 'แก้ไขพัสดุ';
+      this.data = this.parcelService.getParcelById(this.id);
+      this.formParcel.disable();
+    }
+
+    this.initializeData();
   }
 
   onSubmit(): void {
-    console.log(this.category);
-
-    if (this.form.invalid || this.imagefile.hasError('mimeType')) return;
-    if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
+    if (this.formParcel.invalid || this.image.hasError('mimeType')) return;
 
     const receivedDate = this.datePipe.transform(
       this.receivedDate.value,
@@ -108,11 +117,12 @@ export class ParcelEditComponent implements OnInit {
     payload.append('detail', this.detail.value);
     payload.append('quantity', this.quantity.value.toString());
     payload.append('remark', this.remark.value);
-    payload.append('image', this.imagefile.value);
+    payload.append('image', this.image.value);
     payload.append('categoryId', this.category.value.toString());
     payload.append('categoryName', categoryName);
     payload.append('statusId', this.status.value.toString());
     payload.append('statusName', statusName);
+    if (this.isEdit) payload.append('imageEdit', this.isImageEdit.toString());
 
     this.isLoading = true;
     this.operation$ = this.isEdit
@@ -121,108 +131,117 @@ export class ParcelEditComponent implements OnInit {
 
     this.operation$
       .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe(() => this.onReset());
+      .subscribe((res) => {
+        this.toastService.success('Success', res.message);
+        if (!this.isEdit) this.onReset();
+      });
   }
 
   onReset(): void {
-    // if (this.isEdit) this.form.patchValue(this.data);
-    // else this.formdirec.resetForm();
+    if (this.isEdit) {
+      this.setParcelFormData(this.data);
+      this.isImageEdit = false;
+      return;
+    } else this.formdirec.resetForm();
 
     this.files.length = 0;
-    this.chipCategory.value = null;
-    this.chipStatus.value = null;
+    this.formImage.reset();
     this.formdirec.resetForm();
+    this.category.markAsUntouched();
+    this.status.markAsUntouched();
     this.codeInput.nativeElement.focus();
+  }
+
+  onEdit(): void {
+    this.formParcel.enable();
+    this.quantity.disable();
   }
 
   onSelectImage(event: NgxDropzoneChangeEvent): void {
     this.files.length = 0;
     this.files.push(...event.addedFiles);
-    this.imagefile.patchValue(this.files[0]);
+
+    this.image.setValue(this.files[0]);
+    this.image.markAsTouched();
+
+    if (this.isEdit) this.isImageEdit = true;
   }
 
-  onRemoveImage(file: File) {
+  onRemoveImage(file: File): void {
     this.files.splice(this.files.indexOf(file), 1);
-    this.imagefile.patchValue(null);
+    this.image.patchValue(null);
+
+    if (this.isEdit) this.isImageEdit = true;
   }
 
-  onDatePicker(event: MatDatepickerInputEvent<Date>) {
+  onDatePicker(event: MatDatepickerInputEvent<Date>): void {
     const day = event.value.getDate();
-    const month = event.value.getMonth() + 1;
+    const month = event.value.getMonth();
     const year = event.value.getFullYear();
     const date = new Date(year, month, day);
 
-    this.dateInput.nativeElement.value = `${day}/${month}/${year + 543}`;
+    this.dateInput.nativeElement.value = `${day}/${month + 1}/${year + 543}`;
     this.receivedDate.setValue(date);
   }
 
-  onDateInput() {
+  onDateInput(): void {
     const [day, month, year] = this.dateInput.nativeElement.value.split('/');
     const date = new Date(+year - 543, +month - 1, +day);
 
     this.receivedDate.setValue(date);
   }
 
-  compareChip(chip1: number, chip2: number): boolean {
-    return chip1 === chip2;
+  onSelectChip(keyName: string): void {
+    this[keyName].markAsTouched();
   }
 
-  selectChip(chip: MatChipSelectionChange, keyName: string): void {
-    if (chip.selected)
-      return this.form.controls[keyName].patchValue(chip.source.value);
-
-    this.form.controls[keyName].patchValue(null);
-    this.form.controls[keyName].markAsTouched();
+  get code(): FormControl<string> {
+    return this.formParcel.controls['code'];
   }
 
-  get code() {
-    return this.form.controls['code'];
+  get oldCode(): FormControl<string> {
+    return this.formParcel.controls['oldCode'];
   }
 
-  get oldCode() {
-    return this.form.controls['oldCode'];
+  get receivedDate(): FormControl<Date> {
+    return this.formParcel.controls['receivedDate'];
   }
 
-  get receivedDate() {
-    return this.form.controls['receivedDate'];
+  get quantity(): FormControl<number> {
+    return this.formParcel.controls['quantity'];
   }
 
-  get quantity() {
-    return this.form.controls['quantity'];
+  get detail(): FormControl<string> {
+    return this.formParcel.controls['detail'];
   }
 
-  get detail() {
-    return this.form.controls['detail'];
+  get remark(): FormControl<string> {
+    return this.formParcel.controls['remark'];
   }
 
-  get remark() {
-    return this.form.controls['remark'];
+  get category(): FormControl<number> {
+    return this.formParcel.controls['category'];
   }
 
-  get category() {
-    return this.form.controls['category'];
+  get status(): FormControl<number> {
+    return this.formParcel.controls['status'];
   }
 
-  get status() {
-    return this.form.controls['status'];
+  get image(): FormControl<File> {
+    return this.formImage;
   }
 
-  get image() {
-    return this.form.controls['image'];
-  }
-
-  private onLoadCategoryAndStatus(): void {
-    const operations$: Observable<Category[] | Status[]>[] = [];
+  private initializeData(): void {
+    const operation$: Observable<Category[] | Status[]>[] = [];
 
     if (this.validationService.isEmpty(this.categories))
-      operations$.push(this.categoryApiService.getCategories());
-
+      operation$.push(this.categoryApiService.getCategories());
     if (this.validationService.isEmpty(this.statuses))
-      operations$.push(this.statusApiService.getStatuses());
+      operation$.push(this.statusApiService.getStatuses());
 
-    if (!this.validationService.isEmpty(operations$)) {
+    if (!this.validationService.isEmpty(operation$)) {
       this.isLoading = true;
-      forkJoin(operations$)
+      forkJoin(operation$)
         .pipe(
           catchError((error) => {
             this.isDataLoadFailed = true;
@@ -240,45 +259,86 @@ export class ParcelEditComponent implements OnInit {
           this.statuses = this.statusService.getActiveStatuses();
         });
     }
+
+    if (!this.isEdit) return;
+    if (this.data) {
+      this.setParcelFormData(this.data);
+      return;
+    }
+
+    this.isLoading = true;
+    this.parcelApiService
+      .getParcelById(this.id)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((res) => {
+        if (res) {
+          this.data = res;
+          this.setParcelFormData(res);
+        }
+      });
   }
 
-  private initForm(): void {
-    this.form = this.formBuilder.nonNullable.group({
-      id: [null],
-      track: [null],
+  private setParcelFormData(data: Parcel): void {
+    if (data.image) {
+      const downloadImageUrl = this.imageUrl + data.image;
+      this.parcelApiService
+        .downloadImage(downloadImageUrl)
+        .subscribe((blob) => {
+          const file = new File([blob], data.image, { type: blob.type });
+          this.files.push(file);
+        });
+    }
+
+    defer(() =>
+      this.dateInput
+        ? of(null)
+        : interval(100).pipe(
+            filter(() => !!this.dateInput),
+            take(1)
+          )
+    ).subscribe(() => {
+      this.formParcel.patchValue({
+        code: data.code,
+        oldCode: data.oldCode,
+        receivedDate: new Date(data.receivedDate),
+        quantity: data.quantity,
+        detail: data.detail,
+        remark: data.remark,
+        category: data.Category.id,
+        status: data.Status.id,
+        image: data.image,
+      });
+
+      const receivedDateInput = new Date(data.receivedDate);
+      receivedDateInput.setFullYear(receivedDateInput.getFullYear() + 543);
+      const datePipe = this.datePipe.transform(receivedDateInput, 'd/M/yyyy');
+
+      this.dateInput.nativeElement.value = datePipe;
+      this.track = data.track;
+    });
+  }
+
+  private initFormParcel() {
+    return this.formBuilder.nonNullable.group({
       code: ['', [Validators.required]],
       oldCode: [''],
-      receivedDate: [
-        { value: null },
-        [Validators.required, this.validationService.isDate()],
-      ],
-      quantity: [{ value: null }, [Validators.required]],
+      receivedDate: this.formBuilder.control<Date>(null, [
+        Validators.required,
+        this.validationService.isDate(),
+      ]),
+      quantity: this.formBuilder.control<number>(null, [Validators.required]),
       detail: ['', [Validators.required]],
       remark: [''],
-      category: [{ value: null }, [Validators.required]],
-      status: [{ value: null }, [Validators.required]],
+      category: this.formBuilder.control<number>(null, [Validators.required]),
+      status: this.formBuilder.control<number>(null, [Validators.required]),
       image: [''],
     });
-
-    this.imagefile.markAsTouched();
   }
 
-  private setValue() {
-    this.form.setValue({
-      id: null,
-      track: null,
-      code: 'MS-52147',
-      oldCode: '',
-      receivedDate: new Date(),
-      quantity: 40,
-      detail: 'test',
-      remark: 'remark test',
-      category: 1,
-      status: 2,
-      image: '',
+  private initFormImage() {
+    return this.formBuilder.control<File>(null, {
+      validators: [Validators.required],
+      asyncValidators: [this.validationService.mimeType()],
     });
-
-    this.selectDefault.category = this.category.value;
-    this.selectDefault.status = this.status.value;
   }
 }

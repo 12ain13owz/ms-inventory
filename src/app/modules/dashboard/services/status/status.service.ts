@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Status } from '../../models/status.model';
+import { Status, StatusTable } from '../../models/status.model';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -22,6 +22,10 @@ export class StatusService {
 
   getStatuses(): Status[] {
     return this.statuses.slice();
+  }
+
+  getStatusesTable(): StatusTable[] {
+    return this.statuses.map((status, i) => ({ no: i + 1, ...status })).slice();
   }
 
   getStatusesName(): string[] {

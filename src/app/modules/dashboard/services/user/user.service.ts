@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { User } from '../../models/user.model';
+import { User, UserTable } from '../../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +22,10 @@ export class UserService {
 
   getUsers(): User[] {
     return this.users.slice();
+  }
+
+  getUsersTable(): UserTable[] {
+    return this.users.map((user, i) => ({ no: i + 1, ...user })).slice();
   }
 
   createUser(user: User): void {

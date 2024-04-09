@@ -17,6 +17,7 @@ import { StatusApiService } from '../../../services/status/status-api.service';
 import { Message } from '../../../../shared/models/response.model';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { STATUS } from '../../../constants/status.constant';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 @Component({
   selector: 'app-status-edit',
@@ -31,14 +32,15 @@ export class StatusEditComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<StatusEditComponent>);
   private data: Status = inject(MAT_DIALOG_DATA);
   private statusApiService = inject(StatusApiService);
+  private toastService = inject(ToastNotificationService);
   private operation$: Observable<Message | StatusResponse>;
 
   validationField = STATUS.validationField;
-
-  form = this.initForm();
   title: string = 'เพิ่มสถานะพัสดุ';
   isEdit: boolean = false;
   isLoading: boolean = false;
+
+  form = this.initForm();
 
   ngOnInit(): void {
     if (this.data) {
@@ -72,9 +74,11 @@ export class StatusEditComponent implements OnInit {
         }),
         finalize(() => (this.isLoading = false))
       )
-      .subscribe(() => {
+      .subscribe((res) => {
         if (this.isEdit) this.dialogRef.close();
         else this.onReset();
+
+        this.toastService.success('Success', res.message);
       });
   }
 

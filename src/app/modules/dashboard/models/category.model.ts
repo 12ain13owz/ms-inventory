@@ -7,6 +7,10 @@ export interface Category {
   remark: string;
 }
 
+export interface CategoryTable extends Category {
+  no: number;
+}
+
 export interface CategoryResponse extends Message {
   category: Category;
 }
