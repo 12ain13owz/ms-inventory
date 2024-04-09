@@ -46,7 +46,7 @@ export class StatusEditComponent implements OnInit {
     if (this.data) {
       this.title = 'แก้ไขสถานะพัสดุ';
       this.isEdit = true;
-      this.form.setValue({ id: this.data.id, ...this.data });
+      this.form.patchValue(this.data);
     }
 
     this.dialogRef

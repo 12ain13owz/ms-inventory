@@ -46,7 +46,7 @@ export class CategoryEditComponent implements OnInit {
     if (this.data) {
       this.title = 'แก้ไขประเภทพัสดุ';
       this.isEdit = true;
-      this.form.setValue({ id: this.data.id, ...this.data });
+      this.form.patchValue(this.data);
     }
 
     this.dialogRef
