@@ -120,6 +120,7 @@ export async function createParcelHandler(
     const sequence = await createTrack(t);
     const track = await generateTrack(sequence.toJSON().id!);
     const receivedDate = new Date(req.body.receivedDate);
+    const image = req.body.image === 'null' ? null : req.body.image;
 
     const payloadParcel: Parcel = new Parcel({
       track: track,
@@ -130,7 +131,7 @@ export async function createParcelHandler(
       quantity: +req.body.quantity || 0,
       print: false,
       remark: req.body.remark || '',
-      image: req.body.image || '',
+      image: image || '',
       UserId: res.locals.userId!,
       CategoryId: +req.body.categoryId,
       StatusId: +req.body.statusId,
@@ -148,7 +149,7 @@ export async function createParcelHandler(
       categoryName: req.body.categoryName || '',
       statusName: req.body.statusName || '',
       remark: req.body.remark || '',
-      image: req.body.image || '',
+      image: image || '',
       printCount: 0,
       addParcel: true,
       addQuantity: true,
@@ -192,9 +193,10 @@ export async function updateParcelHandler(
       throw newError(400, `รหัสพัสดุ ${code} ซ้ำ`);
 
     const imageEdit = req.body.imageEdit === 'true' ? true : false;
-    const image = imageEdit ? req.body.image : parcel.toJSON().image;
-
+    const file = req.body.image === 'null' ? null : req.body.image;
+    const image = imageEdit ? file : parcel.toJSON().image;
     const receivedDate = new Date(req.body.receivedDate);
+
     const payloadParcel: Partial<Parcel> = {
       code: code,
       oldCode: req.body.oldCode || '',
@@ -220,7 +222,7 @@ export async function updateParcelHandler(
       categoryName: req.body.categoryName || '',
       statusName: req.body.statusName || '',
       remark: req.body.remark || '',
-      image: req.body.image || '',
+      image: image || '',
       printCount: 0,
       addParcel: false,
       addQuantity: false,

@@ -65,7 +65,7 @@ export async function createUserHandler(
     const newUser = omit(result.toJSON(), privateUserFields);
 
     res.json({
-      message: 'เพิ่มผู้ใช้งานสำเร็จ',
+      message: `เพิ่มผู้ใช้งาน ${email} สำเร็จ`,
       user: newUser,
     });
   } catch (error) {
@@ -102,7 +102,10 @@ export async function updateUserHandler(
     const result = await updateUser(id, payload);
     if (!result[0]) throw newError(400, 'แก้ไขข้อมูลผู้ใช้งานไม่สำเร็จ');
 
-    res.json({ message: 'แก้ไขข้อมูลผู้ใช้งานสำเร็จ', user: payload });
+    res.json({
+      message: `แก้ไขข้อมูลผู้ใช้งาน ${email} สำเร็จ`,
+      user: payload,
+    });
   } catch (error) {
     next(error);
   }
