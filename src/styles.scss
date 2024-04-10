@@ -299,6 +299,11 @@ $dark-mode-text-color: #fffffc;
   img {
     animation: blurred 0.4s;
   }
+
+  .size {
+    height: 200px;
+    width: 200px;
+  }
 }
 
 @keyframes blurred {
@@ -332,6 +337,10 @@ $dark-mode-text-color: #fffffc;
   flex-direction: column;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .justify-between {
   justify-content: space-between;
 }
@@ -342,4 +351,9 @@ $dark-mode-text-color: #fffffc;
 
 .gap-10 {
   gap: 10px;
+}
+
+.hidden-input {
+  position: absolute;
+  visibility: hidden;
 }

@@ -105,7 +105,7 @@ export async function deleteCategoryHandler(
     const category = await findCategoryById(id);
     if (!category) throw newError(400, 'ไม่พบประเภทพัสดุ');
 
-    const name = category.toJSON().name;
+    const name = category.name;
     const result = await deleteCategory(id);
     if (!result) throw newError(400, `ลบประเภทพัสดุ ${name} ไม่สำเร็จ`);
 

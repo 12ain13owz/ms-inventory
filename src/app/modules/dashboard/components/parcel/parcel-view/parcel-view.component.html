@@ -1,0 +1,90 @@
+@if (!isEdit && !isQuantitiy) { @defer (when !isLoading) { @if (isParcel) {
+<mat-card>
+  <mat-card-header class="justify-between align-center mb-16">
+    <mat-card-title>{{ title }}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="blurred-img">
+      <img
+        class="size"
+        [defaultImage]="'assets/images/no-image.jpg'"
+        [lazyLoad]="imageUrl + parcel.image"
+      />
+    </div>
+
+    <mat-list>
+      <mat-list-item>
+        <span matListItemTitle>Track</span>
+        <span matListItemLine>{{ parcel.track }}</span>
+      </mat-list-item>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>รหัส</span>
+          <span matListItemLine>{{ parcel.code }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>รหัสเดิม</span>
+          <span matListItemLine>{{ isEmpty(parcel.oldCode) }}</span>
+        </mat-list-item>
+      </div>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>วันที่รับพัสดุ</span>
+          <span matListItemLine>{{ parcel.receivedDate | thaiYear }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>จำนวน</span>
+          <span matListItemLine>{{ parcel.quantity }}</span>
+        </mat-list-item>
+      </div>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>ประเภท</span>
+          <span matListItemLine>{{ parcel.Category.name }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>สถานะ</span>
+          <span matListItemLine>{{ parcel.Status.name }}</span>
+        </mat-list-item>
+      </div>
+
+      <mat-list-item>
+        <span matListItemTitle>รายละเอียด</span>
+        <span matListItemLine>{{ parcel.detail }}</span>
+      </mat-list-item>
+
+      <mat-list-item>
+        <span matListItemTitle>หมายเหตุ</span>
+        <span matListItemLine>{{ parcel.remark }}</span>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+
+  <mat-card-actions class="gap-10">
+    <button type="button" mat-raised-button color="primary" (click)="onEdit()">
+      แก้ไข
+    </button>
+    <button type="button" mat-raised-button (click)="onQuantity()">
+      เพิ่มสต็อก
+    </button>
+  </mat-card-actions>
+</mat-card>
+} @else {
+<button class="w-100" mat-flat-button color="warn">ไม่พบข้อมูลพัสดุ</button>
+} } @placeholder (minimum 300ms) {
+<app-loading-data [form]="'card'"></app-loading-data>
+} } @else if (isEdit) {
+<app-parcel-edit
+  [parcelInput]="parcel"
+  (isEdit)="onEditSuccess($event)"
+></app-parcel-edit>
+} @else if (isQuantitiy) {
+<app-parcel-quantity></app-parcel-quantity>
+}

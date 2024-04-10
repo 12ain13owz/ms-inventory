@@ -35,11 +35,6 @@
         ></app-error-field>
       </mat-error>
 
-      <mat-form-field>
-        <mat-label>Track</mat-label>
-        <input type="text" matInput [value]="track" disabled />
-      </mat-form-field>
-
       <div class="row">
         <mat-form-field>
           <mat-label>รหัส</mat-label>
@@ -80,6 +75,7 @@
           <mat-datepicker-toggle
             matIconSuffix
             [for]="picker"
+            [disabled]="formParcel.disabled"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>

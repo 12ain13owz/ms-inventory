@@ -1,52 +1,31 @@
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { CategoryService } from '../../../services/category/category.service';
-import { StatusService } from '../../../services/status/status.service';
-import { Parcel } from '../../../models/parcel.model';
-import { ValidationService } from '../../../../shared/services/validation.service';
-import {
-  Observable,
-  catchError,
-  defer,
-  filter,
-  finalize,
-  forkJoin,
-  interval,
-  of,
-  take,
-  throwError,
-} from 'rxjs';
-import { CategoryApiService } from '../../../services/category/category-api.service';
-import { StatusApiService } from '../../../services/status/status-api.service';
-import { NgxDropzoneChangeEvent } from '@todorus/ngx-dropzone';
-import { DatePipe } from '@angular/common';
-import { PARCEL } from '../../../constants/parcel.constant';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
+import { CategoryService } from '../../../services/category/category.service';
+import { CategoryApiService } from '../../../services/category/category-api.service';
+import { StatusService } from '../../../services/status/status.service';
+import { StatusApiService } from '../../../services/status/status-api.service';
+import { ValidationService } from '../../../../shared/services/validation.service';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
+import { DatePipe } from '@angular/common';
+import { Observable, catchError, finalize, forkJoin, throwError } from 'rxjs';
+import { PARCEL } from '../../../constants/parcel.constant';
+import { NgxDropzoneChangeEvent } from '@todorus/ngx-dropzone';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Category } from '../../../models/category.model';
 import { Status } from '../../../models/status.model';
-import { environment } from '../../../../../../environments/environment.development';
-import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 @Component({
-  selector: 'app-parcel-edit',
-  templateUrl: './parcel-edit.component.html',
-  styleUrl: './parcel-edit.component.scss',
+  selector: 'app-parcel-new',
+  templateUrl: './parcel-new.component.html',
+  styleUrl: './parcel-new.component.scss',
 })
-export class ParcelEditComponent implements OnInit {
+export class ParcelNewComponent {
   @ViewChild('formDirec') fromDirec: FormGroupDirective;
   @ViewChild('codeInput') codeInput: ElementRef<HTMLInputElement>;
   @ViewChild('dateInput') dateInput: ElementRef<HTMLInputElement>;
@@ -61,14 +40,9 @@ export class ParcelEditComponent implements OnInit {
   private toastService = inject(ToastNotificationService);
   private datePipe = inject(DatePipe);
 
-  parcelInput = input<Parcel>();
-  isEdit = output<Parcel>();
-
-  imageUrl: string = environment.imageUrl;
   validationField = PARCEL.validationField;
   files: File[] = [];
-  title: string = 'แก้ไขพัสดุ';
-  isImageEdit: boolean = false;
+  title: string = 'เพิ่มพัสดุ';
   isLoading: boolean = false;
   isDataLoadFailed: boolean = false;
   categories: { id: number; name: string }[] = [];
@@ -76,14 +50,11 @@ export class ParcelEditComponent implements OnInit {
 
   formParcel = this.initFormParcel();
   formImage = this.initFormImage();
-  track: string;
-  parcel: Parcel;
 
   ngOnInit(): void {
-    this.parcel = this.parcelInput();
-
     this.categories = this.categoryService.getActiveCategories();
     this.statuses = this.statusService.getActiveStatuses();
+
     this.initializeData();
   }
 
@@ -109,28 +80,26 @@ export class ParcelEditComponent implements OnInit {
     payload.append('quantity', this.quantity.value.toString());
     payload.append('remark', this.remark.value);
     payload.append('image', this.image.value);
-    payload.append('imageEdit', this.isImageEdit.toString());
     payload.append('categoryId', this.category.value.toString());
     payload.append('categoryName', categoryName);
     payload.append('statusId', this.status.value.toString());
     payload.append('statusName', statusName);
 
-    this.isLoading = true;
     this.parcelApiService
-      .updateParcel(this.parcel.id, payload)
+      .createParcel(payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
-        this.parcel = res.parcel;
         this.toastService.success('Success', res.message);
-        this.isEdit.emit(res.parcel);
+        this.onReset();
       });
   }
 
   onReset(): void {
     this.files.length = 0;
-    this.isImageEdit = false;
     this.formImage.reset();
-    this.setParcelFormData(this.parcel);
+    this.fromDirec.resetForm();
+    this.category.markAsUntouched();
+    this.status.markAsUntouched();
     this.codeInput.nativeElement.focus();
   }
 
@@ -140,13 +109,11 @@ export class ParcelEditComponent implements OnInit {
 
     this.image.setValue(this.files[0]);
     this.image.markAsTouched();
-    this.isImageEdit = true;
   }
 
   onRemoveImage(file: File): void {
     this.files.splice(this.files.indexOf(file), 1);
     this.image.patchValue(null);
-    this.isImageEdit = true;
   }
 
   onDatePicker(event: MatDatepickerInputEvent<Date>): void {
@@ -234,48 +201,6 @@ export class ParcelEditComponent implements OnInit {
           this.statuses = this.statusService.getActiveStatuses();
         });
     }
-
-    this.setParcelFormData(this.parcel);
-  }
-
-  private setParcelFormData(parcel: Parcel): void {
-    if (parcel.image) {
-      const downloadImageUrl = this.imageUrl + parcel.image;
-      this.parcelApiService
-        .downloadImage(downloadImageUrl)
-        .subscribe((blob) => {
-          const file = new File([blob], parcel.image, { type: blob.type });
-          this.files.push(file);
-        });
-    }
-
-    defer(() =>
-      this.dateInput
-        ? of(null)
-        : interval(100).pipe(
-            filter(() => !!this.dateInput),
-            take(1)
-          )
-    ).subscribe(() => {
-      this.formParcel.patchValue({
-        code: parcel.code,
-        oldCode: parcel.oldCode,
-        receivedDate: new Date(parcel.receivedDate),
-        quantity: parcel.quantity,
-        detail: parcel.detail,
-        remark: parcel.remark,
-        category: parcel.Category.id,
-        status: parcel.Status.id,
-        image: parcel.image,
-      });
-
-      const receivedDateInput = new Date(parcel.receivedDate);
-      receivedDateInput.setFullYear(receivedDateInput.getFullYear() + 543);
-      const datePipe = this.datePipe.transform(receivedDateInput, 'd/M/yyyy');
-
-      this.dateInput.nativeElement.value = datePipe;
-      this.track = parcel.track;
-    });
   }
 
   private initFormParcel() {
@@ -286,10 +211,7 @@ export class ParcelEditComponent implements OnInit {
         Validators.required,
         this.validationService.isDate(),
       ]),
-      quantity: this.formBuilder.control<number>(
-        { value: null, disabled: true },
-        [Validators.required]
-      ),
+      quantity: this.formBuilder.control<number>(null, [Validators.required]),
       detail: ['', [Validators.required]],
       remark: [''],
       category: this.formBuilder.control<number>(null, [Validators.required]),

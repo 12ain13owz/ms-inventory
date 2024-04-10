@@ -118,7 +118,7 @@ export async function createParcelHandler(
     if (existingParcel) throw newError(400, `รหัสพัสดุ ${code} ซ้ำ`);
 
     const sequence = await createTrack(t);
-    const track = await generateTrack(sequence.toJSON().id!);
+    const track = await generateTrack(sequence.id);
     const receivedDate = new Date(req.body.receivedDate);
     const image = req.body.image === 'null' ? null : req.body.image;
 
@@ -159,7 +159,7 @@ export async function createParcelHandler(
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
 
-    const resParcel = await findParcelById(resultParcel.toJSON().id!);
+    const resParcel = await findParcelById(resultParcel.id);
     const resLog = resultLog.toJSON();
 
     res.json({
@@ -186,7 +186,7 @@ export async function updateParcelHandler(
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
-    const track = parcel.toJSON().track;
+    const track = parcel.track;
     const code = removeWhitespace(req.body.code);
     const existingParcel = await findParcelByCode(code);
     if (existingParcel && existingParcel.id !== id)
@@ -194,7 +194,7 @@ export async function updateParcelHandler(
 
     const imageEdit = req.body.imageEdit === 'true' ? true : false;
     const file = req.body.image === 'null' ? null : req.body.image;
-    const image = imageEdit ? file : parcel.toJSON().image;
+    const image = imageEdit ? file : parcel.image;
     const receivedDate = new Date(req.body.receivedDate);
 
     const payloadParcel: Partial<Parcel> = {
@@ -215,7 +215,7 @@ export async function updateParcelHandler(
       oldCode: req.body.oldCode || '',
       receivedDate: receivedDate,
       detail: req.body.detail || '',
-      quantity: parcel.toJSON().quantity,
+      quantity: parcel.quantity,
       modifyQuantity: 0,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
@@ -234,7 +234,7 @@ export async function updateParcelHandler(
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
 
-    const resParcel = omit(payloadParcel, ['UserId', 'CategoryId', 'StatusId']);
+    const resParcel = await findParcelById(id);
     const resLog = resultLog.toJSON();
 
     res.json({
@@ -308,7 +308,7 @@ export async function incrementQuantityParcelHandler(
       throw newError(400, `เพิ่มสต็อก ${parcelData.track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
-    // await t.commit();
+    await t.commit();
 
     const resLog = resultLog.toJSON();
     res.json({
@@ -414,7 +414,7 @@ export async function deleteParcelHandler(
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(400, 'ไม่พบพัสดุ');
 
-    const track = parcel.toJSON().track;
+    const track = parcel.track;
     const result = await deleteParcel(id);
     if (!result) throw newError(400, `ลบ ${track} ไม่สำเร็จ`);
 

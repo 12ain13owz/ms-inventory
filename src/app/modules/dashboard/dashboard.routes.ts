@@ -13,7 +13,11 @@ import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { PasswordComponent } from './components/password/password.component';
 import { dashboardResolver } from './dashboard.resolver';
-import { ParcelEditComponent } from './components/parcel/parcel-edit/parcel-edit.component';
+
+import { ParcelNewComponent } from './components/parcel/parcel-new/parcel-new.component';
+
+import { ParcelListComponent } from './components/parcel/parcel-list/parcel-list.component';
+import { ParcelViewComponent } from './components/parcel/parcel-view/parcel-view.component';
 
 export const routes: Routes = [
   {
@@ -24,10 +28,15 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },
       { path: 'scan', component: ScanComponent },
-      { path: 'parcel', component: ParcelComponent },
-      { path: 'parcel/new', component: ParcelEditComponent },
-      { path: 'parcel/edit/:id', component: ParcelEditComponent },
-
+      {
+        path: 'parcel',
+        component: ParcelComponent,
+        children: [
+          { path: '', component: ParcelListComponent },
+          { path: 'new', component: ParcelNewComponent },
+          { path: 'view/:id', component: ParcelViewComponent },
+        ],
+      },
       { path: 'log', component: LogComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'password', component: PasswordComponent },

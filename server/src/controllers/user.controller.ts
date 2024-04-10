@@ -127,10 +127,7 @@ export async function updateUserPasswordHandler(
     const user = await findUserById(id);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ');
 
-    const compare = comparePassword(
-      req.body.oldPassword,
-      user.toJSON().password
-    );
+    const compare = comparePassword(req.body.oldPassword, user.password);
     if (!compare) throw newError(400, 'รหัสผ่านเก่าไม่ถูกต้อง');
 
     const hash = hashPassword(req.body.newPassword);
