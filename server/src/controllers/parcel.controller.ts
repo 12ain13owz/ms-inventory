@@ -266,7 +266,24 @@ export async function incrementQuantityParcelHandler(
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
     const quantity = parcel.quantity + req.body.quantity;
-    const parcelData: ParcelData = parcel.toJSON();
+    const parcelData: ParcelData = {
+      id: parcel.id,
+      track: parcel.track,
+      code: parcel.code,
+      oldCode: parcel.oldCode,
+      receivedDate: parcel.receivedDate,
+      detail: parcel.detail,
+      quantity: parcel.quantity,
+      print: parcel.print,
+      remark: parcel.remark,
+      image: parcel.image,
+      createdAt: parcel.createdAt,
+      updatedAt: parcel.updatedAt,
+      User: parcel.User.toJSON(),
+      Category: parcel.Category.toJSON(),
+      Status: parcel.Status.toJSON(),
+    };
+
     const payloadLog: Log = new Log({
       track: parcelData.track,
       code: parcelData.code,
@@ -291,7 +308,7 @@ export async function incrementQuantityParcelHandler(
       throw newError(400, `เพิ่มสต็อก ${parcelData.track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
-    await t.commit();
+    // await t.commit();
 
     const resLog = resultLog.toJSON();
     res.json({
@@ -322,14 +339,31 @@ export async function decrementQuantityParcelHandler(
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
-    const parcelData: ParcelData = parcel.toJSON();
-    if (parcel.quantity === 0)
+    const parcelData: ParcelData = {
+      id: parcel.id,
+      track: parcel.track,
+      code: parcel.code,
+      oldCode: parcel.oldCode,
+      receivedDate: parcel.receivedDate,
+      detail: parcel.detail,
+      quantity: parcel.quantity,
+      print: parcel.print,
+      remark: parcel.remark,
+      image: parcel.image,
+      createdAt: parcel.createdAt,
+      updatedAt: parcel.updatedAt,
+      User: parcel.User.toJSON(),
+      Category: parcel.Category.toJSON(),
+      Status: parcel.Status.toJSON(),
+    };
+
+    if (parcelData.quantity === 0)
       throw newError(
         400,
         `ไม่สามารถตัดสต็อก ${parcelData.track} ได้ เนื่องจากจำนวนของพัสดุเหลือ 0`
       );
 
-    const quantity = Math.max(parcel.quantity - req.body.quantity, 0);
+    const quantity = Math.max(parcelData.quantity - req.body.quantity, 0);
     const payloadLog: Log = new Log({
       track: parcelData.track,
       code: parcelData.code,

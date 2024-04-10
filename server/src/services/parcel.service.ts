@@ -1,38 +1,35 @@
 import { Transaction, Op } from 'sequelize';
 import parcelModel, { Parcel, ParcelData } from '../models/parcel.model';
-import categoryModel from '../models/category.model';
-import statusModel from '../models/status.model';
-import userModel from '../models/user.model';
+import { Category } from '../models/category.model';
+import { Status } from '../models/status.model';
+import { User } from '../models/user.model';
 
-export function findAllParcel(): Promise<ParcelData[]> {
-  return parcelModel.findAll<ParcelData>(getParcelQueryOptions());
+export function findAllParcel() {
+  return parcelModel.findAll(getParcelQueryOptions());
 }
 
-export function findParcelByTrack(track: string): Promise<ParcelData | null> {
-  return parcelModel.findOne<ParcelData>({
+export function findParcelByTrack(track: string) {
+  return parcelModel.findOne({
     where: { track },
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelById(id: number): Promise<ParcelData | null> {
+export function findParcelById(id: number) {
   return parcelModel.findByPk(id, {
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelByCode(code: string): Promise<ParcelData | null> {
+export function findParcelByCode(code: string) {
   return parcelModel.findOne({
     where: { code },
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelsByDate(
-  dateStart: Date,
-  dateEnd: Date
-): Promise<ParcelData[]> {
-  return parcelModel.findAll<ParcelData>({
+export function findParcelsByDate(dateStart: Date, dateEnd: Date) {
+  return parcelModel.findAll({
     where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
     ...getParcelQueryOptions(),
   });
@@ -66,9 +63,9 @@ function getParcelQueryOptions() {
   return {
     attributes: { exclude: ['UserId', 'CategoryId', 'StatusId'] },
     include: [
-      { model: userModel, attributes: ['firstname', 'lastname'] },
-      { model: categoryModel, attributes: ['id', 'name'] },
-      { model: statusModel, attributes: ['id', 'name'] },
+      { model: User, attributes: ['firstname', 'lastname'] },
+      { model: Category, attributes: ['id', 'name'] },
+      { model: Status, attributes: ['id', 'name'] },
     ],
   };
 }

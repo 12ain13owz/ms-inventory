@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -10,7 +11,7 @@ export class Track extends Model<
   InferAttributes<Track>,
   InferCreationAttributes<Track>
 > {
-  id?: number;
+  id: CreationOptional<number>;
 }
 
 export default Track.init(

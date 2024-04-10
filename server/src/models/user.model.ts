@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -10,7 +11,7 @@ export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  id?: number;
+  id: CreationOptional<number>;
   email: string;
   password: string;
   firstname: string;
@@ -18,8 +19,8 @@ export class User extends Model<
   role: 'admin' | 'user';
   active: boolean;
   remark: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: CreationOptional<Date>;
+  updatedAt: CreationOptional<Date>;
 }
 
 export default User.init(

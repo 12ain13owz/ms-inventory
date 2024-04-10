@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -10,12 +11,12 @@ export class Status extends Model<
   InferAttributes<Status>,
   InferCreationAttributes<Status>
 > {
-  id?: number;
+  id: CreationOptional<number>;
   name: string;
   remark: string;
   active: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: CreationOptional<Date>;
+  updatedAt: CreationOptional<Date>;
 }
 
 export default Status.init(

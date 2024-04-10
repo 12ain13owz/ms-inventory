@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -10,7 +11,7 @@ export class Log extends Model<
   InferAttributes<Log>,
   InferCreationAttributes<Log>
 > {
-  id?: number;
+  id: CreationOptional<number>;
   track: string;
   code: string;
   oldCode: string;
@@ -27,8 +28,8 @@ export class Log extends Model<
   printCount: number;
   addParcel: boolean;
   addQuantity: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: CreationOptional<Date>;
+  updatedAt: CreationOptional<Date>;
 }
 
 export default Log.init(

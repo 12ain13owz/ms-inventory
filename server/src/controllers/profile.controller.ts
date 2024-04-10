@@ -26,7 +26,7 @@ export async function getProfileHandeler(
   res.locals.func = 'getProfileHandeler';
 
   try {
-    const resProfile = omit(res.locals.user!, privateUserFields);
+    const resProfile = omit(res.locals.user, privateUserFields);
     res.json(resProfile);
   } catch (error) {
     next(error);
@@ -43,7 +43,7 @@ export async function updateProfileHandler(
   try {
     const email = normalizeUnique(req.body.email);
     const user = await findUserByEmail(email);
-    if (user && user.id !== res.locals.userId!)
+    if (user && user.id !== res.locals.userId)
       throw newError(
         400,
         `แก้ไข E-mail ไม่สำเร็จเนื่องจาก ${email} นี้มีอยู่ในระบบ`

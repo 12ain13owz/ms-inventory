@@ -33,8 +33,8 @@ export async function loginHandler(
     if (!user.active)
       throw newError(401, 'E-mail นี้ไม่ได้รับอนุญาติให้ใช้งาน');
 
-    const accessToken = signAccessToken(user.id!);
-    const refreshToken = signRefreshToken(user.id!);
+    const accessToken = signAccessToken(user.id);
+    const refreshToken = signRefreshToken(user.id);
     const resUser = omit(user.toJSON(), privateUserFields);
 
     res.clearCookie(tokenKey);
@@ -100,8 +100,8 @@ export async function refreshTokenHandler(
     const user = await findUserById(decodedRefreshToken.userId);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
 
-    const newAccessToken = signAccessToken(user.id!);
-    const newRefreshToken = signRefreshToken(user.id!);
+    const newAccessToken = signAccessToken(user.id);
+    const newRefreshToken = signRefreshToken(user.id);
 
     res.clearCookie(tokenKey);
     res.cookie(tokenKey, newRefreshToken, {

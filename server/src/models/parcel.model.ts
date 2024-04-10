@@ -1,19 +1,24 @@
 import {
+  CreationOptional,
   DataTypes,
+  ForeignKey,
+  HasManyGetAssociationsMixin,
+  HasManyHasAssociationMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
 } from 'sequelize';
 import sequelize from '../utils/sequelize';
-import userModel from './user.model';
-import categoryModel from './category.model';
-import statusModel from './status.model';
+import { User } from './user.model';
+import { Category } from './category.model';
+import { Status } from './status.model';
 
 export class Parcel extends Model<
   InferAttributes<Parcel>,
   InferCreationAttributes<Parcel>
 > {
-  id?: number;
+  id: CreationOptional<number>;
   track: string;
   code: string;
   oldCode: string;
@@ -23,11 +28,14 @@ export class Parcel extends Model<
   print: boolean;
   remark: string;
   image: string;
-  UserId: number;
-  CategoryId: number;
-  StatusId: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  UserId: ForeignKey<User['id']>;
+  CategoryId: ForeignKey<Category['id']>;
+  StatusId: ForeignKey<Status['id']>;
+  createdAt: CreationOptional<Date>;
+  updatedAt: CreationOptional<Date>;
+  User: NonAttribute<User>;
+  Category: NonAttribute<Category>;
+  Status: NonAttribute<Status>;
 }
 
 export default Parcel.init(
@@ -73,31 +81,6 @@ export default Parcel.init(
     image: {
       type: DataTypes.TEXT,
     },
-    UserId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: false,
-      references: {
-        model: userModel,
-        key: 'id',
-      },
-    },
-    CategoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: categoryModel,
-        key: 'id',
-      },
-    },
-    StatusId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: statusModel,
-        key: 'id',
-      },
-    },
     createdAt: {
       type: DataTypes.DATE,
     },
@@ -113,12 +96,8 @@ export default Parcel.init(
   }
 );
 
-export interface ParcelData
-  extends Model<
-    InferAttributes<ParcelData>,
-    InferCreationAttributes<ParcelData>
-  > {
-  id?: number;
+export interface ParcelData {
+  id: number;
   track: string;
   code: string;
   oldCode: string;
