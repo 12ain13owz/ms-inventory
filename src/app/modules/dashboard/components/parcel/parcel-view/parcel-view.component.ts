@@ -20,9 +20,8 @@ export class ParcelViewComponent implements OnInit {
 
   title: string = 'รายละเอียด';
   isEdit: boolean = false;
-  isQuantitiy: boolean = false;
+  isStock: boolean = false;
   isLoading: boolean = false;
-  isParcel: boolean = true;
   id: number = +this.route.snapshot.params['id'];
   parcel: Parcel = this.parcelService.getParcelById(this.id);
 
@@ -32,10 +31,7 @@ export class ParcelViewComponent implements OnInit {
       this.parcelApiService
         .getParcelById(this.id)
         .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe((res) => {
-          if (res) this.parcel = res;
-          else this.isParcel = false;
-        });
+        .subscribe((res) => res && (this.parcel = res));
     }
   }
 
@@ -49,11 +45,16 @@ export class ParcelViewComponent implements OnInit {
   }
 
   onQuantity() {
-    this.isQuantitiy = true;
+    this.isStock = true;
   }
 
   onEditSuccess(parcel: Parcel) {
     this.isEdit = false;
+    this.parcel = parcel;
+  }
+
+  onAddStockSuccess(parcel: Parcel) {
+    this.isStock = false;
     this.parcel = parcel;
   }
 }

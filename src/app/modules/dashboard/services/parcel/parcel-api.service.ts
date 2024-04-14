@@ -40,10 +40,6 @@ export class ParcelApiService {
     );
   }
 
-  downloadImage(url: string): Observable<Blob> {
-    return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
-  }
-
   getParcelById(id: number): Observable<Parcel> {
     return this.http.get<Parcel>(`${this.apiUrl}/id/${id}`);
   }
@@ -64,7 +60,6 @@ export class ParcelApiService {
     return this.http
       .patch<ParcelQuantity>(`${this.apiUrl}/increment/${id}`, { stock })
       .pipe(
-        switchMap((res) => timer(300).pipe(map(() => res))),
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
       );
   }
@@ -76,5 +71,9 @@ export class ParcelApiService {
         switchMap((res) => timer(300).pipe(map(() => res))),
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
       );
+  }
+
+  downloadImage(url: string): Observable<Blob> {
+    return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
   }
 }

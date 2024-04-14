@@ -64,8 +64,8 @@ export class ParcelEditComponent implements OnInit {
   parcelInput = input<Parcel>();
   isEdit = output<Parcel>();
 
-  imageUrl: string = environment.imageUrl;
   validationField = PARCEL.validationField;
+  imageUrl: string = environment.imageUrl;
   files: File[] = [];
   title: string = 'แก้ไขพัสดุ';
   isImageEdit: boolean = false;

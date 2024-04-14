@@ -1,6 +1,6 @@
-@if (!isEdit && !isQuantitiy) { @defer (when !isLoading) { @if (isParcel) {
+@if (!isEdit && !isStock) { @defer (when !isLoading) { @if (parcel) {
 <mat-card>
-  <mat-card-header class="justify-between align-center mb-16">
+  <mat-card-header class="mb-16">
     <mat-card-title>{{ title }}</mat-card-title>
   </mat-card-header>
 
@@ -85,6 +85,9 @@
   [parcelInput]="parcel"
   (isEdit)="onEditSuccess($event)"
 ></app-parcel-edit>
-} @else if (isQuantitiy) {
-<app-parcel-quantity></app-parcel-quantity>
+} @else if (isStock) {
+<app-parcel-add-stock
+  [parcelInput]="parcel"
+  (isAddStock)="onAddStockSuccess($event)"
+></app-parcel-add-stock>
 }

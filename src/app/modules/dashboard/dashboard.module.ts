@@ -19,9 +19,9 @@ import { StatusEditComponent } from './components/status/status-edit/status-edit
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 import { ParcelEditComponent } from './components/parcel/parcel-edit/parcel-edit.component';
 import { ParcelNewComponent } from './components/parcel/parcel-new/parcel-new.component';
-import { ParcelQuantityComponent } from './components/parcel/parcel-quantity/parcel-quantity.component';
 import { ParcelListComponent } from './components/parcel/parcel-list/parcel-list.component';
 import { ParcelViewComponent } from './components/parcel/parcel-view/parcel-view.component';
+import { ParcelAddStockComponent } from './components/parcel/parcel-add-stock/parcel-add-stock.component';
 
 @NgModule({
   declarations: [
@@ -39,11 +39,11 @@ import { ParcelViewComponent } from './components/parcel/parcel-view/parcel-view
     StatusEditComponent,
     UserEditComponent,
     ParcelComponent,
-    ParcelEditComponent,
-    ParcelNewComponent,
-    ParcelQuantityComponent,
     ParcelListComponent,
     ParcelViewComponent,
+    ParcelNewComponent,
+    ParcelEditComponent,
+    ParcelAddStockComponent,
   ],
   imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
 })
