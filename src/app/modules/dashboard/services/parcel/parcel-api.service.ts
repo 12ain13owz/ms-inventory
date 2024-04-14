@@ -19,7 +19,7 @@ export class ParcelApiService {
 
   getParcels(): Observable<Parcel[]> {
     return this.http.get<Parcel[]>(this.apiUrl).pipe(
-      switchMap((res) => timer(500).pipe(map(() => res))),
+      switchMap((res) => timer(200).pipe(map(() => res))),
       tap((res) => this.parcelService.setParcels(res))
     );
   }
@@ -28,14 +28,14 @@ export class ParcelApiService {
     return this.http
       .get<Parcel[]>(`${this.apiUrl}/date/${startDate}/${endDate}`)
       .pipe(
-        switchMap((res) => timer(500).pipe(map(() => res))),
+        switchMap((res) => timer(200).pipe(map(() => res))),
         tap((res) => this.parcelService.setParcels(res))
       );
   }
 
   getParcelByTrack(track: string): Observable<Parcel> {
     return this.http.get<Parcel>(`${this.apiUrl}/track/${track}`).pipe(
-      switchMap((res) => timer(500).pipe(map(() => res))),
+      switchMap((res) => timer(200).pipe(map(() => res))),
       tap((res) => this.parcelService.setParcel(res))
     );
   }
@@ -60,18 +60,20 @@ export class ParcelApiService {
       .pipe(tap((res) => this.parcelService.updateParcel(id, res.parcel)));
   }
 
-  incrementParcel(id: number, quantity: number): Observable<ParcelQuantity> {
+  incrementParcel(id: number, stock: number): Observable<ParcelQuantity> {
     return this.http
-      .patch<ParcelQuantity>(`${this.apiUrl}/increment/${id}`, { quantity })
+      .patch<ParcelQuantity>(`${this.apiUrl}/increment/${id}`, { stock })
       .pipe(
+        switchMap((res) => timer(300).pipe(map(() => res))),
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
       );
   }
 
-  decrementParcel(id: number, quantity: number): Observable<ParcelQuantity> {
+  decrementParcel(id: number, stock: number): Observable<ParcelQuantity> {
     return this.http
-      .patch<ParcelQuantity>(`${this.apiUrl}/decrement/${id}`, { quantity })
+      .patch<ParcelQuantity>(`${this.apiUrl}/decrement/${id}`, { stock })
       .pipe(
+        switchMap((res) => timer(300).pipe(map(() => res))),
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
       );
   }

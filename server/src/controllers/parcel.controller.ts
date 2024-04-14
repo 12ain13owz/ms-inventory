@@ -27,7 +27,6 @@ import { createTrack } from '../services/track.service';
 import { newError, removeWhitespace } from '../utils/helper';
 import { generateTrack } from '../utils/track';
 import { Parcel, ParcelData } from '../models/parcel.model';
-import { omit } from 'lodash';
 import { Log } from '../models/log.model';
 import { createLog } from '../services/log.service';
 
@@ -265,7 +264,7 @@ export async function incrementQuantityParcelHandler(
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
-    const quantity = parcel.quantity + req.body.quantity;
+    const quantity = parcel.quantity + req.body.stock;
     const parcelData: ParcelData = {
       id: parcel.id,
       track: parcel.track,
@@ -291,7 +290,7 @@ export async function incrementQuantityParcelHandler(
       receivedDate: parcelData.receivedDate,
       detail: parcelData.detail,
       quantity: quantity,
-      modifyQuantity: req.body.quantity,
+      modifyQuantity: req.body.stock,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
       categoryName: parcelData.Category.name,
@@ -313,7 +312,8 @@ export async function incrementQuantityParcelHandler(
     const resLog = resultLog.toJSON();
     res.json({
       message: `เพิ่มสต็อก ${parcelData.track} สำเร็จ`,
-      quantity,
+      id: id,
+      quantity: quantity,
       log: resLog,
     });
   } catch (error) {
@@ -360,10 +360,10 @@ export async function decrementQuantityParcelHandler(
     if (parcelData.quantity === 0)
       throw newError(
         400,
-        `ไม่สามารถตัดสต็อก ${parcelData.track} ได้ เนื่องจากจำนวนของพัสดุเหลือ 0`
+        `ไม่สามารถตัดสต็อก ${parcelData.track} ได้เนื่องจากจำนวนของพัสดุเหลือ 0`
       );
 
-    const quantity = Math.max(parcelData.quantity - req.body.quantity, 0);
+    const quantity = Math.max(parcelData.quantity - req.body.stock, 0);
     const payloadLog: Log = new Log({
       track: parcelData.track,
       code: parcelData.code,
@@ -371,7 +371,7 @@ export async function decrementQuantityParcelHandler(
       receivedDate: parcelData.receivedDate,
       detail: parcelData.detail,
       quantity: quantity,
-      modifyQuantity: req.body.quantity,
+      modifyQuantity: req.body.stock,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
       categoryName: parcelData.Category.name,
@@ -391,9 +391,11 @@ export async function decrementQuantityParcelHandler(
     await t.commit();
 
     const resLog = resultLog.toJSON();
+
     res.json({
       message: `ตัดสต็อก ${parcelData.track} สำเร็จ`,
-      quantity,
+      id: id,
+      quantity: quantity,
       log: resLog,
     });
   } catch (error) {

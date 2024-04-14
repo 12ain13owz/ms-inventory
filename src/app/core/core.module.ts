@@ -7,6 +7,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxDropzoneModule } from '@todorus/ngx-dropzone';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { NgxDropzoneModule } from '@todorus/ngx-dropzone';
     NgxDropzoneModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    ZXingScannerModule,
   ],
   providers: [provideNgxMask()],
 })

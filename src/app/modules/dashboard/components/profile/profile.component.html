@@ -64,8 +64,21 @@
 
     <mat-divider></mat-divider>
     <mat-card-actions style="gap: 10px">
-      <button type="submit" mat-raised-button color="primary">Submit</button>
-      <button type="button" mat-button color="warn" (click)="onReset()">
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="isLoading"
+      >
+        Submit
+      </button>
+      <button
+        type="button"
+        mat-button
+        color="warn"
+        (click)="onReset()"
+        [disabled]="isLoading"
+      >
         Reset
       </button>
     </mat-card-actions>

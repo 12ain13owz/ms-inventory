@@ -22,6 +22,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { matInputFormat } from './providers/config.provider';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   exports: [
@@ -45,6 +46,7 @@ import { matInputFormat } from './providers/config.provider';
     MatDatepickerModule,
     MatChipsModule,
     MatTabsModule,
+    MatRippleModule,
   ],
   providers: [DatePipe, matInputFormat],
 })

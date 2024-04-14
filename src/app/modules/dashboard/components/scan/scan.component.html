@@ -1,0 +1,164 @@
+<mat-card class="mat-elevation-z8 mb-20">
+  <mat-tab-group dynamicHeight (selectedIndexChange)="onTapChange($event)">
+    <mat-tab label="เครื่องสแกน">
+      <mat-card-content>
+        <form
+          class="search-box"
+          [formGroup]="form"
+          (ngSubmit)="onSearchParcel()"
+        >
+          <div class="search-input-box">
+            <input
+              type="text"
+              class="w-100"
+              placeholder="ค้นหา Track"
+              formControlName="track"
+              #trackInput
+            />
+
+            @if (track.value) {
+            <button
+              type="button"
+              class="close"
+              matSuffix
+              mat-icon-button
+              (click)="clearTrackInput()"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+          </div>
+          <button type="submit" matRipple [disabled]="isLoading">ค้นหา</button>
+        </form>
+      </mat-card-content>
+    </mat-tab>
+
+    @if (!platform.isBrowser) {
+    <mat-tab label="กล้อง">
+      <mat-card-content>
+        <div class="d-flex gap-10">
+          <button type="button" mat-button (click)="onStartCamera()">
+            Start
+          </button>
+          <button
+            type="button"
+            mat-button
+            (click)="onStopCamera()"
+            color="accent"
+          >
+            Stop
+          </button>
+        </div>
+
+        <zxing-scanner
+          [formats]="allowedFormats"
+          [enable]="isCamera"
+          (scanSuccess)="onScanSuccess($event)"
+          (scanError)="onScanError()"
+        ></zxing-scanner>
+      </mat-card-content>
+    </mat-tab>
+    }
+  </mat-tab-group>
+
+  <mat-card-footer>
+    @if (isLoading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+  </mat-card-footer>
+</mat-card>
+
+<mat-card class="mat-elevation-z8 mb-20">
+  <mat-card-header class="mb-16 d-flex justify-between align-center">
+    <mat-card-title>รายการตัดสต็อกพัสดุ</mat-card-title>
+    <button type="button" mat-button color="warn" (click)="onResetParcel()">
+      Reset
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="image">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
+        <mat-cell *matCellDef="let element" style="padding-block: 8px">
+          <a [routerLink]="['../parcel/view', element.id]" class="blurred-img">
+            <img
+              [defaultImage]="'assets/images/no-image.jpg'"
+              [lazyLoad]="imageUrl + element.image"
+            />
+          </a>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="track">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >Track</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element"> {{ element.track }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >จำนวน</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element"> {{ element.quantity }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="stock">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >ตัดสต็อก</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          <div class="d-flex align-center">
+            <button mat-icon-button (click)="incrementStock(element.id)">
+              <mat-icon color="accent">add</mat-icon>
+            </button>
+
+            <mat-form-field class="stock-field">
+              <input
+                type="number"
+                matInput
+                [value]="element.stock"
+                (blur)="onBlurStock($event, element.id)"
+              />
+            </mat-form-field>
+
+            <button mat-icon-button (click)="decrementStock(element.id)">
+              <mat-icon color="accent">remove</mat-icon>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="onDeleteParcel(element.id)">
+            <mat-icon color="warn">close</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </mat-card-content>
+</mat-card>
+
+<button
+  type="button"
+  mat-raised-button
+  color="primary"
+  [swal]="confirmStock"
+  (confirm)="onSubmit()"
+  [disabled]="isLoading"
+>
+  ตัดสต็อก
+</button>
+
+<swal
+  #confirmStock
+  title="ยืนยันการตัดสต็อก"
+  icon="question"
+  [showCancelButton]="true"
+></swal>

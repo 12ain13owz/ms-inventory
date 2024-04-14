@@ -3,7 +3,7 @@
 </button>
 
 @defer (when dataSource.data.length > 0 || isFirstLoading) {
-<mat-card class="w-100 mat-elevation-z8">
+<mat-card class="mat-elevation-z8">
   <mat-card-header class="mb-16">
     <mat-card-title>รายการ ประเภทพัสดุ</mat-card-title>
   </mat-card-header>
@@ -64,7 +64,7 @@
 
           <swal
             #deleteSwal
-            title="Delete {{ element.name }}?"
+            title="ยืนยันการลบ {{ element.name }}?"
             icon="error"
             [showCancelButton]="true"
           ></swal>

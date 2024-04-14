@@ -1,0 +1,20 @@
+.mat-column-no {
+  flex: 0 0 50px;
+}
+
+.mat-column-name {
+  min-width: 120px;
+}
+
+.mat-column-active {
+  flex: 0 0 70px;
+}
+
+.mat-column-remark {
+  min-width: 70px;
+}
+
+.mat-column-action {
+  flex: 0 0 120px;
+  justify-content: center;
+}

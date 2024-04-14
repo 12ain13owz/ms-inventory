@@ -37,6 +37,7 @@ export interface ParcelResponse extends Message {
 }
 
 export interface ParcelQuantity extends Message {
+  id: number;
   quantity: number;
   log: Log;
 }
@@ -44,4 +45,12 @@ export interface ParcelQuantity extends Message {
 export interface FilterList {
   categories: string[];
   statuses: string[];
+}
+
+export interface ParcelScan {
+  id: number;
+  image: string;
+  track: string;
+  quantity: number;
+  stock: number;
 }

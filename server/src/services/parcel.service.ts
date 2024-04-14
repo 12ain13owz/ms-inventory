@@ -1,11 +1,19 @@
 import { Transaction, Op } from 'sequelize';
-import parcelModel, { Parcel, ParcelData } from '../models/parcel.model';
+import parcelModel, { Parcel } from '../models/parcel.model';
 import { Category } from '../models/category.model';
 import { Status } from '../models/status.model';
 import { User } from '../models/user.model';
 
 export function findAllParcel() {
   return parcelModel.findAll(getParcelQueryOptions());
+}
+
+export function findLimitParcel() {
+  return parcelModel.findAll({
+    limit: 10,
+    order: [['createdAt', 'DESC']],
+    ...getParcelQueryOptions(),
+  });
 }
 
 export function findParcelByTrack(track: string) {

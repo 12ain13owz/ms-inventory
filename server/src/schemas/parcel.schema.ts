@@ -116,7 +116,7 @@ export const updateQuantityParcelSchema = object({
       .regex(regexId, { message: id }),
   }),
   body: object({
-    quantity: number({ required_error: reduce }).min(1, {
+    stock: number({ required_error: reduce }).min(1, {
       message: reduce,
     }),
   }),

@@ -4,13 +4,30 @@
 @import "ngx-toastr/toastr";
 @import "@sweetalert2/theme-dark/dark.scss";
 
+$h1-text-color: #ea4235;
+$normal-text-color: #202020;
+$dark-mode-text-color: #fffffc;
+
 html,
 body {
   height: 100%;
 }
 
 html {
-  background-color: #f1f4f7;
+  background-color: #fafafa;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", "Prompt", sans-serif;
+}
+
+h2 {
+  margin-bottom: 0 !important;
+}
+
+mat-table {
+  overflow: auto;
 }
 
 .dark-theme {
@@ -27,76 +44,6 @@ html {
     color: #fff !important;
     border-color: rgba(255, 255, 255, 0.5);
   }
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", "Prompt", sans-serif;
-}
-
-h2 {
-  margin-bottom: 0 !important;
-}
-
-mat-table {
-  overflow: auto;
-}
-
-.mat-column-no {
-  flex: 0 0 50px;
-}
-
-.mat-column-image {
-  flex: 0 0 120px;
-}
-
-.mat-column-track {
-  flex: 0 0 140px;
-}
-
-.mat-column-receivedDate {
-  flex: 0 0 120px;
-}
-
-.mat-column-category {
-  flex: 0 0 100px;
-}
-
-.mat-column-status {
-  flex: 0 0 100px;
-}
-
-.mat-column-quantity {
-  flex: 0 0 70px;
-}
-
-.mat-column-detail {
-  min-width: 150px;
-}
-
-.mat-column-email {
-  min-width: 120px;
-}
-
-.mat-column-name {
-  min-width: 120px;
-}
-
-.mat-column-role {
-  flex: 0 0 70px;
-}
-
-.mat-column-remark {
-  min-width: 70px;
-}
-
-.mat-column-active {
-  flex: 0 0 70px;
-}
-
-.mat-column-action {
-  flex: 0 0 120px;
-  justify-content: center;
 }
 
 .form-container {
@@ -140,10 +87,6 @@ mat-table {
 }
 
 @media (max-width: 600px) {
-  .mat-column-image {
-    flex: 0 0 100px;
-  }
-
   .form-container {
     .row {
       flex-direction: column;
@@ -261,10 +204,6 @@ mat-table {
     stroke: pink;
   }
 }
-
-$h1-text-color: #ea4235;
-$normal-text-color: #202020;
-$dark-mode-text-color: #fffffc;
 
 .error-box {
   display: flex;
