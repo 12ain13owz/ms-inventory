@@ -240,6 +240,10 @@ mat-table {
   }
 }
 
+.blur {
+  filter: blur(10px);
+}
+
 .blurred-img {
   img {
     animation: blurred 0.4s;

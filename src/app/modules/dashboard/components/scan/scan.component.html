@@ -33,12 +33,12 @@
       </mat-card-content>
     </mat-tab>
 
-    @if (!platform.isBrowser) {
+    <!-- @if (!platform.isBrowser) { -->
     <mat-tab label="กล้อง">
       <mat-card-content>
         <div class="d-flex gap-10">
           <button type="button" mat-button (click)="onStartCamera()">
-            Start
+            เริ่ม
           </button>
           <button
             type="button"
@@ -46,19 +46,25 @@
             (click)="onStopCamera()"
             color="accent"
           >
-            Stop
+            หยุด
           </button>
         </div>
 
-        <zxing-scanner
-          [formats]="allowedFormats"
-          [enable]="isCamera"
-          (scanSuccess)="onScanSuccess($event)"
-          (scanError)="onScanError()"
-        ></zxing-scanner>
+        @if (isCamera) {
+        <div [ngClass]="{ blur: isScan }">
+          <zxing-scanner
+            [formats]="allowedFormats"
+            [enable]="isCamera"
+            (scanSuccess)="onScanSuccess($event)"
+            (scanError)="onScanError()"
+          ></zxing-scanner>
+        </div>
+        } @else {
+        <img class="image-camera" src="assets/images/camera-default.png" />
+        }
       </mat-card-content>
     </mat-tab>
-    }
+    <!-- } -->
   </mat-tab-group>
 
   <mat-card-footer>

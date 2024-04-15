@@ -5,6 +5,7 @@ import {
   decrementQuantityParcelHandler,
   deleteParcelHandler,
   getAllParcelHandler,
+  getInitialParcelsHandler,
   getParcelByIdHandler,
   getParcelByTrackHandler,
   getParcelsByDateHandler,
@@ -26,6 +27,7 @@ import { reduceQualityImage, upload } from '../../middlewares/file.middlerware';
 const router = Router();
 
 router.get('/', [verifyToken, isUserActive], getAllParcelHandler);
+router.get('/init', [verifyToken, isUserActive], getInitialParcelsHandler);
 router.get(
   '/date/:dateStart/:dateEnd',
   [verifyToken, isUserActive, validate(getParcelsByDateSchema)],

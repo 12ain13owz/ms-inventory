@@ -8,9 +8,9 @@ export function findAllParcel() {
   return parcelModel.findAll(getParcelQueryOptions());
 }
 
-export function findLimitParcel() {
+export function findLimitParcel(limit: number) {
   return parcelModel.findAll({
-    limit: 10,
+    limit: limit,
     order: [['createdAt', 'DESC']],
     ...getParcelQueryOptions(),
   });

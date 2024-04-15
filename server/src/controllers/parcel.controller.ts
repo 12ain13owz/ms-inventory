@@ -10,6 +10,7 @@ import {
   createParcel,
   deleteParcel,
   findAllParcel,
+  findLimitParcel,
   findParcelByCode,
   findParcelById,
   findParcelByTrack,
@@ -39,6 +40,23 @@ export async function getAllParcelHandler(
 
   try {
     const resParcels = await findAllParcel();
+    res.json(resParcels);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getInitialParcelsHandler(
+  req: Request,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getInitialParcelsHandler';
+
+  try {
+    const parcels = await findLimitParcel(30);
+    const resParcels = parcels.sort((a, b) => a.id - b.id);
+
     res.json(resParcels);
   } catch (error) {
     next(error);

@@ -75,6 +75,7 @@ export class ScanComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<ParcelScan>([]);
   isLoading: boolean = false;
   isCamera: boolean = false;
+  isScan: boolean = false;
   parcel$ = new Subject();
 
   ngOnInit(): void {
@@ -120,13 +121,15 @@ export class ScanComponent implements OnInit, AfterViewInit {
   }
 
   onScanSuccess(track: string): void {
+    if (this.isScan == true) return;
+
+    this.isScan = true;
     this.onGetParcelByTrack(track);
     this.toastService.info('Scan', `${track} สำเร็จ`);
-    this.isCamera = false;
 
     setTimeout(() => {
-      this.isCamera = true;
-    }, 500);
+      this.isScan = false;
+    }, 1000);
   }
 
   onScanError(): void {
@@ -134,7 +137,7 @@ export class ScanComponent implements OnInit, AfterViewInit {
   }
 
   onTapChange(indexTap: number): void {
-    if (this.platform.isBrowser) return;
+    // if (this.platform.isBrowser) return;
 
     if (indexTap === Tap.Camera) this.isCamera = true;
     else this.isCamera = false;

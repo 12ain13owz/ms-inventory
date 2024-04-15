@@ -149,7 +149,7 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   onSearchAll(): void {
     this.isLoading = true;
     this.parcelApiService
-      .getParcels()
+      .getAllParcels()
       .pipe(
         tap(() => this.setFilter()),
         finalize(() => (this.isLoading = false))
@@ -209,11 +209,8 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     };
 
     if (this.validationService.isEmpty(this.dataSource.data)) {
-      const startDate = this.datePipe.transform(this.startDate, 'yyyy-MM-dd');
-      const endDate = this.datePipe.transform(this.endDate, 'yyyy-MM-dd');
-
       this.parcelApiService
-        .getParcelsByDate(startDate, endDate)
+        .getInitialParcels()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

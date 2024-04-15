@@ -17,8 +17,15 @@ export class ParcelApiService {
 
   constructor(private http: HttpClient, private parcelService: ParcelService) {}
 
-  getParcels(): Observable<Parcel[]> {
+  getAllParcels(): Observable<Parcel[]> {
     return this.http.get<Parcel[]>(this.apiUrl).pipe(
+      switchMap((res) => timer(200).pipe(map(() => res))),
+      tap((res) => this.parcelService.setParcels(res))
+    );
+  }
+
+  getInitialParcels(): Observable<Parcel[]> {
+    return this.http.get<Parcel[]>(`${this.apiUrl}/init`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
       tap((res) => this.parcelService.setParcels(res))
     );

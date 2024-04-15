@@ -3,30 +3,6 @@ img {
   height: 100px;
 }
 
-// .box-search {
-//   position: relative;
-
-//   input {
-//     width: 100%;
-//     padding: 12px 20px;
-//     outline: none;
-//     color: #303030;
-//     font-size: 16px;
-//     font-weight: 700;
-//     background-color: #f1f4f7;
-//     border: none;
-//     border-radius: 1.25rem;
-//     box-sizing: border-box;
-//   }
-
-//   .close {
-//     position: absolute;
-//     top: -3px;
-//     right: 5px;
-//     color: #6c757d;
-//   }
-// }
-
 :host-context(.dark-theme) {
   .search-box {
     input {
@@ -101,4 +77,9 @@ img {
 .stock-field {
   margin-top: 20px;
   width: 80px;
+}
+
+.image-camera {
+  width: 200px;
+  height: 200px;
 }
