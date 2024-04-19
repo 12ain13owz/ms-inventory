@@ -2,16 +2,17 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
   inject,
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Parcel, ParcelQuantity, ParcelScan } from '../../models/parcel.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { ParcelQuantityResponse, ParcelScan } from '../../models/parcel.model';
 import {
   Observable,
-  Subject,
+  Subscription,
   catchError,
   concatMap,
   finalize,
@@ -19,8 +20,6 @@ import {
   of,
   tap,
 } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { environment } from '../../../../../environments/environment.development';
 import { ScanService } from '../../services/scan/scan.service';
 import { ScanApiService } from '../../services/scan/scan-api.service';
@@ -29,6 +28,8 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ParcelApiService } from '../../services/parcel/parcel-api.service';
 import { BarcodeFormat } from '@zxing/library';
 import { Platform } from '@angular/cdk/platform';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 enum Tap {
   Search,
@@ -39,13 +40,8 @@ enum Tap {
   templateUrl: './scan.component.html',
   styleUrl: './scan.component.scss',
 })
-export class ScanComponent implements OnInit, AfterViewInit {
-  @ViewChild('trackInput', { static: true })
-  trackInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatTable) table: MatTable<Parcel>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
+export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
+  private subscription = new Subscription();
   private formBuilder = inject(FormBuilder);
   private scanService = inject(ScanService);
   private scanApiService = inject(ScanApiService);
@@ -53,6 +49,11 @@ export class ScanComponent implements OnInit, AfterViewInit {
   private toastService = inject(ToastNotificationService);
   private validationService = inject(ValidationService);
   platform = inject(Platform);
+
+  @ViewChild('trackInput', { static: true })
+  trackInput: ElementRef<HTMLInputElement>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   selectedTap = new FormControl(Tap.Search);
   imageUrl: string = environment.imageUrl;
@@ -62,7 +63,6 @@ export class ScanComponent implements OnInit, AfterViewInit {
     BarcodeFormat.QR_CODE,
     BarcodeFormat.CODE_39,
     BarcodeFormat.CODE_128,
-    BarcodeFormat.ITF,
   ];
 
   displayedColumns: string[] = [
@@ -76,24 +76,31 @@ export class ScanComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   isCamera: boolean = false;
   isScan: boolean = false;
-  parcel$ = new Subject();
 
   ngOnInit(): void {
     this.dataSource.data = this.scanService.getParcels();
-    this.scanService.onParcelsListener().subscribe((parcelsScan) => {
-      this.dataSource.data = parcelsScan;
-    });
+    this.subscription = this.scanService
+      .onParcelsListener()
+      .subscribe((parcelsScan) => (this.dataSource.data = parcelsScan));
   }
 
   ngAfterViewInit(): void {
-    this.trackInput.nativeElement.focus();
+    if (!this.platform.ANDROID && !this.platform.IOS)
+      this.trackInput.nativeElement.focus();
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onSubmit(): void {
     const parcels = this.scanService.getParcels();
     if (this.validationService.isEmpty(parcels)) return;
 
-    const operations$: Observable<ParcelQuantity>[] = [];
+    const operations$: Observable<ParcelQuantityResponse>[] = [];
     this.isLoading = true;
 
     for (const parcel of parcels) {
@@ -129,7 +136,7 @@ export class ScanComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       this.isScan = false;
-    }, 1000);
+    }, 2000);
   }
 
   onScanError(): void {
@@ -137,7 +144,7 @@ export class ScanComponent implements OnInit, AfterViewInit {
   }
 
   onTapChange(indexTap: number): void {
-    // if (this.platform.isBrowser) return;
+    if (!this.platform.ANDROID && !this.platform.IOS) return;
 
     if (indexTap === Tap.Camera) this.isCamera = true;
     else this.isCamera = false;

@@ -3,32 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-
+    <title>Product Animation</title>
     <style>
-      .d-flex {
-        display: flex;
-        flex-direction: column;
+      .product {
+        width: 100px;
+        height: 100px;
+        background-color: blue;
+        color: white;
+        text-align: center;
+        line-height: 100px;
+        cursor: pointer;
       }
 
-      .d-flex button {
-        flex-grow: 0;
-        flex-shrink: 0;
-        flex-basis: auto;
+      .cart {
+        width: 50px;
+        height: 50px;
+        background-color: green;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      h2 {
+        margin: 0;
+        padding: 0;
       }
     </style>
   </head>
   <body>
-    <div class="d-flex">
-      <button style="background-color: black">1</button>
-      <button style="background-color: red">2</button>
-      <button style="background-color: blue">3</button>
+    <div style="display: flex; align-items: center; justify-content: center">
+      <h2>555</h2>
+      <button>TEst</button>
     </div>
+
+    <div class="product" onclick="addToCart(event)">Product Name</div>
+
+    <div id="cart" class="cart"></div>
+
+    <script>
+      function addToCart(event) {
+        const product = event.target;
+        const cart = document.getElementById("cart");
+        const productClone = product.cloneNode(true);
+
+        document.body.appendChild(productClone);
+
+        const productRect = product.getBoundingClientRect();
+        const cartRect = cart.getBoundingClientRect();
+
+        const translateX = cartRect.left - productRect.left;
+        const translateY = cartRect.top - productRect.top;
+
+        productClone.style.position = "fixed";
+        productClone.style.left = productRect.left + "px";
+        productClone.style.top = productRect.top + "px";
+        productClone.style.transition = "transform 0.5s ease-in-out";
+
+        setTimeout(() => {
+          productClone.style.transform = `translate(${translateX}px, ${translateY}px)`;
+          productClone.style.opacity = "0";
+        }, 100);
+
+        setTimeout(() => {
+          productClone.remove();
+          updateCart(); // เพิ่มสินค้าลงในตะกร้า
+        }, 600);
+      }
+
+      function updateCart() {
+        // อัปเดตข้อมูลในตะกร้า
+      }
+    </script>
   </body>
 </html>
-
-<script>
-  top.document.getElementById();
-  parent.document.getElementById();
-  document.getElementById();
-</script>

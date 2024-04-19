@@ -23,6 +23,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { matInputFormat } from './providers/config.provider';
 import { MatRippleModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   exports: [
@@ -47,6 +49,8 @@ import { MatRippleModule } from '@angular/material/core';
     MatChipsModule,
     MatTabsModule,
     MatRippleModule,
+    MatCheckboxModule,
+    MatBadgeModule,
   ],
   providers: [DatePipe, matInputFormat],
 })

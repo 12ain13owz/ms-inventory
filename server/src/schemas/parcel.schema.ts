@@ -14,6 +14,7 @@ const dateStart = 'ไม่พบวันที่เริ่มต้นใ�
 const dateEnd = 'ไม่พบวันที่สิ้นสุดในการค้นหา';
 const track = 'ไม่พบเลข Track';
 const imageEdit = 'ไม่พบข้อมูล การยืนยันแก้ไขรูปภาพ';
+const printCount = 'ไม่พบจำนวนที่ต้องการปริ้น';
 
 const regexId = new RegExp(/^[0-9]\d*$/);
 
@@ -122,6 +123,20 @@ export const updateQuantityParcelSchema = object({
   }),
 });
 
+export const updatePrintParcelSchema = object({
+  params: object({
+    id: string({ required_error: id })
+      .min(1, { message: id })
+      .regex(regexId, { message: id }),
+  }),
+  body: object({
+    printCount: number({ required_error: printCount }).min(1, {
+      message: printCount,
+    }),
+    detailLog: string().optional().nullable(),
+  }),
+});
+
 export const deleteParcelSchema = object({
   params: object({
     id: string({ required_error: id })
@@ -142,4 +157,5 @@ export type UpdateParcelInput = TypeOf<typeof updateParcelSchema>;
 export type UpdateQuantityParcelInput = TypeOf<
   typeof updateQuantityParcelSchema
 >;
+export type UpdatePrintParcelInput = TypeOf<typeof updatePrintParcelSchema>;
 export type DeleteParcelInput = TypeOf<typeof deleteParcelSchema>['params'];

@@ -48,7 +48,7 @@ export default Status.init(
     },
   },
   {
-    indexes: [{ fields: ['name'] }],
+    indexes: [{ unique: true, fields: ['name'] }],
     sequelize,
     modelName: 'Status',
     timestamps: true,

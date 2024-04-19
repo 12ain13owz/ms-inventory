@@ -1,4 +1,6 @@
 import config from 'config';
+import https from 'https';
+import fs from 'fs';
 import express from 'express';
 import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
@@ -12,13 +14,20 @@ import errorHandler from './middlewares/error-handler.middleware';
 import log from './utils/logger';
 import { databaseConnect } from './utils/connect';
 
-const app = express();
-const port = config.get<number>('port');
+const https_options = {
+  key: fs.readFileSync(path.join('D:/Project/certificates/ssl_private.key')),
+  cert: fs.readFileSync(path.join('D:/Project/certificates/ssl.crt')),
+};
+
 const corsOptions: CorsOptions = {
-  origin: 'http://localhost:4200',
+  origin: ['https://localhost:4200', 'https://192.168.1.46:4200'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+const app = express();
+const port = config.get<number>('port');
+const server = https.createServer(https_options, app);
 
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
@@ -31,7 +40,7 @@ app.use(healthRoutes);
 app.use(userRoutesV1);
 app.use(errorHandler);
 
-app.listen(port, async () => {
+server.listen(port, async () => {
   await databaseConnect();
   log.info(`Server listening on port ${port}`);
 });

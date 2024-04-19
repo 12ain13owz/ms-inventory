@@ -1,0 +1,25 @@
+img {
+  width: 100px;
+  height: 100px;
+}
+
+.printCount-field {
+  margin-top: 20px;
+  width: 80px;
+}
+
+.mat-column-image {
+  flex: 0 0 120px;
+}
+
+.mat-column-track {
+  flex: 0 0 140px;
+}
+
+.mat-column-quantity {
+  flex: 0 0 70px;
+}
+
+.mat-column-printCount {
+  min-width: 200px;
+}

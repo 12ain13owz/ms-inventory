@@ -25,9 +25,12 @@ export class Log extends Model<
   statusName: string;
   remark: string;
   image: string;
+  newParcel: boolean;
+  increaseQuantity: boolean;
+  decreaseQuantity: boolean;
+  print: boolean;
   printCount: number;
-  addParcel: boolean;
-  addQuantity: boolean;
+  detailLog: string;
   createdAt: CreationOptional<Date>;
   updatedAt: CreationOptional<Date>;
 }
@@ -52,14 +55,17 @@ export default Log.init(
     statusName: { type: DataTypes.TEXT },
     remark: { type: DataTypes.STRING },
     image: { type: DataTypes.STRING },
+    newParcel: { type: DataTypes.BOOLEAN },
+    increaseQuantity: { type: DataTypes.BOOLEAN },
+    decreaseQuantity: { type: DataTypes.BOOLEAN },
+    print: { type: DataTypes.BOOLEAN },
     printCount: { type: DataTypes.NUMBER },
-    addParcel: { type: DataTypes.BOOLEAN },
-    addQuantity: { type: DataTypes.BOOLEAN },
+    detailLog: { type: DataTypes.STRING },
     createdAt: { type: DataTypes.DATE },
     updatedAt: { type: DataTypes.DATE },
   },
   {
-    indexes: [{ fields: ['code', 'track'] }],
+    indexes: [{ fields: ['track'] }],
     sequelize,
     modelName: 'Log',
     timestamps: true,

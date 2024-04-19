@@ -1,71 +1,59 @@
 import { Injectable } from '@angular/core';
-import { Parcel, ParcelScan } from '../../models/parcel.model';
+import { ParcelPrint } from '../../models/parcel.model';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ScanService {
-  private parcels: ParcelScan[] = [];
-  private parcels$ = new Subject<ParcelScan[]>();
+export class PrintService {
+  private parcels: ParcelPrint[] = [];
+  private parcels$ = new Subject<ParcelPrint[]>();
 
   constructor() {}
 
-  onParcelsListener(): Observable<ParcelScan[]> {
+  onParcelsListener(): Observable<ParcelPrint[]> {
     return this.parcels$.asObservable();
   }
 
-  getParcels(): ParcelScan[] {
+  getParcels(): ParcelPrint[] {
     return this.parcels.slice();
   }
 
-  getParcelById(id: number): ParcelScan {
+  getParcelById(id: number): ParcelPrint {
     return this.parcels.find((parcel) => parcel.id === id);
   }
 
-  getParcelByTrack(track: string): ParcelScan {
-    return this.parcels.find((parcel) => parcel.track === track);
-  }
-
-  createParcelScan(parcel: Parcel): void {
-    const parcelScan: ParcelScan = {
-      id: parcel.id,
-      image: parcel.image,
-      track: parcel.track,
-      quantity: parcel.quantity,
-      stock: 1,
-    };
-
-    this.parcels.unshift(parcelScan);
+  createParcel(parcel: ParcelPrint): void {
+    this.parcels.push(parcel);
     this.parcels$.next(this.parcels.slice());
   }
 
-  updateStockParcel(id: number, stock: number): void {
+  updatPrintCountParcel(id: number, stock: number): void {
     const index = this.parcels.findIndex((parcel) => parcel.id === id);
 
     if (index !== -1) {
-      this.parcels[index].stock = stock;
+      this.parcels[index].printCount = stock;
       this.parcels$.next(this.parcels.slice());
     }
   }
 
-  incrementStockParcel(id: number): void {
+  incrementPrintCount(id: number): void {
     const index = this.parcels.findIndex((parcel) => parcel.id === id);
 
     if (index === -1) return;
-    if (this.parcels[index].stock >= this.parcels[index].quantity) return;
+    if (this.parcels[index].printCount >= this.parcels[index].quantity) return;
 
-    this.parcels[index].stock += 1;
+    this.parcels[index].printCount += 1;
     this.parcels$.next(this.parcels.slice());
   }
 
-  decrementStockParcel(id: number): void {
+  decrementPrintCount(id: number): void {
     const index = this.parcels.findIndex((parcel) => parcel.id === id);
 
     if (index === -1) return;
-    if (this.parcels[index].stock <= 1) return;
+    if (this.parcels[index].printCount <= 1) return;
 
-    this.parcels[index].stock -= 1;
+    this.parcels[index].printCount -= 1;
     this.parcels$.next(this.parcels.slice());
   }
 

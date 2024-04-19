@@ -47,7 +47,7 @@ export default Category.init(
     },
   },
   {
-    indexes: [{ fields: ['name'] }],
+    indexes: [{ unique: true, fields: ['name'] }],
     sequelize,
     modelName: 'Category',
     timestamps: true,

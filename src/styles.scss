@@ -24,6 +24,7 @@ body {
 
 h2 {
   margin-bottom: 0 !important;
+  padding-bottom: 15px !important;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -49,6 +50,10 @@ mat-table {
     background: #303030 !important;
     color: #fff !important;
     border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .btn-close {
+    color: rgba(255, 255, 255, 0.6);
   }
 }
 
@@ -290,6 +295,10 @@ mat-table {
   flex-direction: row;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .justify-between {
   justify-content: space-between;
 }
@@ -305,4 +314,12 @@ mat-table {
 .hidden-input {
   position: absolute;
   visibility: hidden;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.btn-close {
+  margin-right: 8px;
 }

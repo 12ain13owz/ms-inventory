@@ -19,6 +19,11 @@ export interface Parcel {
   Status: { id: number; name: string };
 }
 
+export interface FilterList {
+  categories: string[];
+  statuses: string[];
+}
+
 export interface ParcelTable {
   no: number;
   id: number;
@@ -29,22 +34,7 @@ export interface ParcelTable {
   status: string;
   detail: string;
   quantity: number;
-}
-
-export interface ParcelResponse extends Message {
-  parcel: Parcel;
-  log: Log;
-}
-
-export interface ParcelQuantity extends Message {
-  id: number;
-  quantity: number;
-  log: Log;
-}
-
-export interface FilterList {
-  categories: string[];
-  statuses: string[];
+  print: boolean;
 }
 
 export interface ParcelScan {
@@ -53,4 +43,36 @@ export interface ParcelScan {
   track: string;
   quantity: number;
   stock: number;
+}
+
+export interface ParcelPrint {
+  id: number;
+  image: string;
+  track: string;
+  quantity: number;
+  print: boolean;
+  printCount: number;
+  fileUrl?: string;
+}
+
+export interface ParcelPrintPayload {
+  printCount: number;
+  detailLog: string;
+}
+
+export interface ParcelResponse extends Message {
+  parcel: Parcel;
+  log: Log;
+}
+
+export interface ParcelQuantityResponse extends Message {
+  id: number;
+  quantity: number;
+  log: Log;
+}
+
+export interface ParcelPrintResponse extends Message {
+  id: number;
+  print: boolean;
+  log: Log;
 }

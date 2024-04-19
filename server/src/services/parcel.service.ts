@@ -16,15 +16,15 @@ export function findLimitParcel(limit: number) {
   });
 }
 
-export function findParcelByTrack(track: string) {
-  return parcelModel.findOne({
-    where: { track },
+export function findParcelById(id: number) {
+  return parcelModel.findByPk(id, {
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelById(id: number) {
-  return parcelModel.findByPk(id, {
+export function findParcelByTrack(track: string) {
+  return parcelModel.findOne({
+    where: { track },
     ...getParcelQueryOptions(),
   });
 }
@@ -61,6 +61,10 @@ export function updateQuantityParcel(
   t: Transaction
 ): Promise<[affectedCount: number]> {
   return parcelModel.update({ quantity }, { where: { id }, transaction: t });
+}
+
+export function updatePrintParcel(id: number, t: Transaction) {
+  return parcelModel.update({ print: true }, { where: { id }, transaction: t });
 }
 
 export function deleteParcel(id: number): Promise<number> {

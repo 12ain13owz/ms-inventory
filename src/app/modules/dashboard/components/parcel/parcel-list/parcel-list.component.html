@@ -136,8 +136,45 @@
       </mat-form-field>
     </div>
 
+    <div class="d-flex align-center gap-10">
+      <mat-slide-toggle
+        [(ngModel)]="isSelected"
+        (click)="isSelectPrint()"
+      ></mat-slide-toggle>
+      <button
+        type="button"
+        mat-button
+        color="accent"
+        (click)="addToPrint()"
+        [disabled]="!isSelected"
+      >
+        เพิ่มพัสดุสำหรับปริ้น
+      </button>
+    </div>
+
     @if(!isLoading) {
     <mat-table [dataSource]="dataSource" matSort>
+      @if (isSelected) {
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef class="p-0">
+          <mat-checkbox
+            (change)="$event ? toggleAllRows() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" class="p-0">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+      }
+
       <ng-container matColumnDef="no">
         <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{ element.no }} </mat-cell>

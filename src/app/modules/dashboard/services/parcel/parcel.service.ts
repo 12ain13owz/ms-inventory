@@ -43,6 +43,7 @@ export class ParcelService {
         status: parcel.Status.name,
         detail: parcel.detail,
         quantity: parcel.quantity,
+        print: parcel.print,
       }))
       .slice();
   }
@@ -64,6 +65,7 @@ export class ParcelService {
         status: parcel.Status.name,
         detail: parcel.detail,
         quantity: parcel.quantity,
+        print: parcel.print,
       }))
       .slice();
   }
@@ -87,6 +89,15 @@ export class ParcelService {
 
     if (index !== -1) {
       this.parcels[index].quantity = quantity;
+      this.parcels$.next(this.parcels.slice());
+    }
+  }
+
+  updatePrintParcel(id: number, print: boolean): void {
+    const index = this.parcels.findIndex((parcel) => parcel.id === id);
+
+    if (index !== -1) {
+      this.parcels[index].print = print;
       this.parcels$.next(this.parcels.slice());
     }
   }

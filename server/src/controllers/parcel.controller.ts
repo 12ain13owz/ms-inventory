@@ -1,4 +1,5 @@
 import {
+  UpdatePrintParcelInput,
   UpdateQuantityParcelInput,
   getParcelByIdInput,
   getParcelByTrackInput,
@@ -16,6 +17,7 @@ import {
   findParcelByTrack,
   findParcelsByDate,
   updateParcel,
+  updatePrintParcel,
   updateQuantityParcel,
 } from '../services/parcel.service';
 import {
@@ -167,9 +169,12 @@ export async function createParcelHandler(
       statusName: req.body.statusName || '',
       remark: req.body.remark || '',
       image: image || '',
+      newParcel: true,
+      increaseQuantity: false,
+      decreaseQuantity: false,
+      print: false,
       printCount: 0,
-      addParcel: true,
-      addQuantity: true,
+      detailLog: 'สร้างพัสดุ',
     });
 
     const resultParcel = await createParcel(payloadParcel, t);
@@ -240,9 +245,12 @@ export async function updateParcelHandler(
       statusName: req.body.statusName || '',
       remark: req.body.remark || '',
       image: image || '',
+      newParcel: false,
+      increaseQuantity: false,
+      decreaseQuantity: false,
+      print: false,
       printCount: 0,
-      addParcel: false,
-      addQuantity: false,
+      detailLog: 'แก้ไขพัสดุ',
     });
 
     const resultParcel = await updateParcel(id, payloadParcel, t);
@@ -283,53 +291,38 @@ export async function incrementQuantityParcelHandler(
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
     const quantity = parcel.quantity + req.body.stock;
-    const parcelData: ParcelData = {
-      id: parcel.id,
+    const payloadLog: Log = new Log({
       track: parcel.track,
       code: parcel.code,
       oldCode: parcel.oldCode,
       receivedDate: parcel.receivedDate,
       detail: parcel.detail,
-      quantity: parcel.quantity,
-      print: parcel.print,
-      remark: parcel.remark,
-      image: parcel.image,
-      createdAt: parcel.createdAt,
-      updatedAt: parcel.updatedAt,
-      User: parcel.User.toJSON(),
-      Category: parcel.Category.toJSON(),
-      Status: parcel.Status.toJSON(),
-    };
-
-    const payloadLog: Log = new Log({
-      track: parcelData.track,
-      code: parcelData.code,
-      oldCode: parcelData.oldCode,
-      receivedDate: parcelData.receivedDate,
-      detail: parcelData.detail,
       quantity: quantity,
       modifyQuantity: req.body.stock,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
-      categoryName: parcelData.Category.name,
-      statusName: parcelData.Status.name,
-      remark: parcelData.remark,
-      image: parcelData.image,
+      categoryName: parcel.Category.name,
+      statusName: parcel.Status.name,
+      remark: parcel.remark,
+      image: parcel.image,
+      newParcel: false,
+      increaseQuantity: true,
+      decreaseQuantity: false,
+      print: false,
       printCount: 0,
-      addParcel: false,
-      addQuantity: true,
+      detailLog: 'เพิ่มสต็อก',
     });
 
     const resultParcel = await updateQuantityParcel(id, quantity, t);
     if (!resultParcel[0])
-      throw newError(400, `เพิ่มสต็อก ${parcelData.track} ไม่สำเร็จ`);
+      throw newError(400, `เพิ่มสต็อก ${parcel.track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
 
     const resLog = resultLog.toJSON();
     res.json({
-      message: `เพิ่มสต็อก ${parcelData.track} สำเร็จ`,
+      message: `เพิ่มสต็อก ${parcel.track} สำเร็จ`,
       id: id,
       quantity: quantity,
       log: resLog,
@@ -357,53 +350,38 @@ export async function decrementQuantityParcelHandler(
     const parcel = await findParcelById(id);
     if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
 
-    const parcelData: ParcelData = {
-      id: parcel.id,
+    if (parcel.quantity === 0)
+      throw newError(
+        400,
+        `ไม่สามารถตัดสต็อก ${parcel.track} ได้เนื่องจากจำนวนของพัสดุเหลือ 0`
+      );
+
+    const quantity = Math.max(parcel.quantity - req.body.stock, 0);
+    const payloadLog: Log = new Log({
       track: parcel.track,
       code: parcel.code,
       oldCode: parcel.oldCode,
       receivedDate: parcel.receivedDate,
       detail: parcel.detail,
-      quantity: parcel.quantity,
-      print: parcel.print,
-      remark: parcel.remark,
-      image: parcel.image,
-      createdAt: parcel.createdAt,
-      updatedAt: parcel.updatedAt,
-      User: parcel.User.toJSON(),
-      Category: parcel.Category.toJSON(),
-      Status: parcel.Status.toJSON(),
-    };
-
-    if (parcelData.quantity === 0)
-      throw newError(
-        400,
-        `ไม่สามารถตัดสต็อก ${parcelData.track} ได้เนื่องจากจำนวนของพัสดุเหลือ 0`
-      );
-
-    const quantity = Math.max(parcelData.quantity - req.body.stock, 0);
-    const payloadLog: Log = new Log({
-      track: parcelData.track,
-      code: parcelData.code,
-      oldCode: parcelData.oldCode,
-      receivedDate: parcelData.receivedDate,
-      detail: parcelData.detail,
       quantity: quantity,
       modifyQuantity: req.body.stock,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
-      categoryName: parcelData.Category.name,
-      statusName: parcelData.Status.name,
-      remark: parcelData.remark,
-      image: parcelData.image,
+      categoryName: parcel.Category.name,
+      statusName: parcel.Status.name,
+      remark: parcel.remark,
+      image: parcel.image,
+      newParcel: false,
+      increaseQuantity: false,
+      decreaseQuantity: true,
+      print: false,
       printCount: 0,
-      addParcel: false,
-      addQuantity: false,
+      detailLog: 'ตัดสต็อก',
     });
 
     const resultParcel = await updateQuantityParcel(id, quantity, t);
     if (!resultParcel[0])
-      throw newError(400, `ตัดสต็อก ${parcelData.track} ไม่สำเร็จ`);
+      throw newError(400, `ตัดสต็อก ${parcel.track} ไม่สำเร็จ`);
 
     const resultLog = await createLog(payloadLog, t);
     await t.commit();
@@ -411,9 +389,68 @@ export async function decrementQuantityParcelHandler(
     const resLog = resultLog.toJSON();
 
     res.json({
-      message: `ตัดสต็อก ${parcelData.track} สำเร็จ`,
+      message: `ตัดสต็อก ${parcel.track} สำเร็จ`,
       id: id,
       quantity: quantity,
+      log: resLog,
+    });
+  } catch (error) {
+    await t.rollback();
+    next(error);
+  }
+}
+
+export async function updatePrintParcelHandler(
+  req: Request<
+    UpdatePrintParcelInput['params'],
+    {},
+    UpdatePrintParcelInput['body']
+  >,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'updatePrintParcelHandler';
+  const t = await sequelize.transaction();
+
+  try {
+    const id = +req.params.id;
+    const parcel = await findParcelById(id);
+    if (!parcel) throw newError(404, 'ไม่พบพัสดุ');
+
+    const payloadLog: Log = new Log({
+      track: parcel.track,
+      code: parcel.code,
+      oldCode: parcel.oldCode,
+      receivedDate: parcel.receivedDate,
+      detail: parcel.detail,
+      quantity: parcel.quantity,
+      modifyQuantity: 0,
+      firstname: res.locals.user!.firstname,
+      lastname: res.locals.user!.lastname,
+      categoryName: parcel.Category.name,
+      statusName: parcel.Status.name,
+      remark: parcel.remark,
+      image: parcel.image,
+      newParcel: false,
+      increaseQuantity: false,
+      decreaseQuantity: true,
+      print: true,
+      printCount: req.body.printCount,
+      detailLog: req.body.detailLog || '',
+    });
+
+    if (!parcel.print) {
+      const resultParcel = await updatePrintParcel(id, t);
+      if (!resultParcel[0])
+        throw newError(400, `แก้ไขข้อมูลปริ้น ${parcel.track} ไม่สำเร็จ`);
+    }
+    const resultLog = await createLog(payloadLog, t);
+    await t.commit();
+
+    const resLog = resultLog.toJSON();
+    res.json({
+      message: `ปริ้น ${parcel.track} สำเร็จ`,
+      id: id,
       log: resLog,
     });
   } catch (error) {

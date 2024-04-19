@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Observable,
   Subscription,
@@ -24,12 +24,19 @@ import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
 import { ValidationService } from '../../../../shared/services/validation.service';
-import { FilterList, Parcel, ParcelTable } from '../../../models/parcel.model';
+import {
+  FilterList,
+  Parcel,
+  ParcelPrint,
+  ParcelTable,
+} from '../../../models/parcel.model';
 import { DatePipe } from '@angular/common';
 import { environment } from '../../../../../../environments/environment.development';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
+import { PrintService } from '../../../services/print/print.service';
 
 enum Tap {
   Date,
@@ -41,6 +48,7 @@ enum Tap {
   styleUrl: './parcel-list.component.scss',
 })
 export class ParcelListComponent implements OnInit, OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   private subscription = new Subscription();
@@ -49,6 +57,7 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   private categoryService = inject(CategoryService);
   private statusService = inject(StatusService);
   private validationService = inject(ValidationService);
+  private printService = inject(PrintService);
   private operation$: Observable<Parcel[] | Parcel>;
 
   datePipe = inject(DatePipe);
@@ -63,6 +72,8 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   form = this.initForm();
 
   isLoading: boolean = false;
+  isSelected: boolean = false;
+  isPrint: boolean = false;
   selectedTap = new FormControl(Tap.Date);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   endDate = new Date();
@@ -83,6 +94,7 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     'action',
   ];
   dataSource = new MatTableDataSource<ParcelTable>([]);
+  selection = new SelectionModel<ParcelTable>(true, []);
   isFirstLoading: boolean = false;
 
   ngOnInit(): void {
@@ -92,6 +104,9 @@ export class ParcelListComponent implements OnInit, OnDestroy {
       this.dataSource.data = this.parcelService.getParcelsTable();
       this.initPaginatorAndSort();
     });
+
+    if (this.activatedRoute.snapshot.queryParams['isPrint'] === 'true')
+      this.isPrint = true;
   }
 
   ngOnDestroy(): void {
@@ -185,6 +200,41 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  isAllSelected(): boolean {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  toggleAllRows(): void {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+
+  isSelectPrint() {
+    if (this.isSelected) this.displayedColumns.unshift('select');
+    else this.displayedColumns.shift();
+  }
+
+  addToPrint(): void {
+    const parcels = this.selection.selected
+      .filter((parcel) => !this.printService.getParcelById(parcel.id))
+      .map((parcel) => ({
+        id: parcel.id,
+        image: parcel.image,
+        track: parcel.track,
+        quantity: parcel.quantity,
+        print: parcel.print,
+        printCount: parcel.quantity,
+      }));
+
+    for (const parcel of parcels) this.printService.createParcel(parcel);
+  }
+
   get category(): FormControl<string[]> {
     return this.form.controls['category'];
   }
@@ -236,6 +286,11 @@ export class ParcelListComponent implements OnInit, OnDestroy {
         start: 'desc',
         disableClear: true,
       });
+
+      if (this.isPrint) {
+        this.isSelected = this.isPrint;
+        this.isSelectPrint();
+      }
     });
   }
 }

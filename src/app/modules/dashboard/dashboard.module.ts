@@ -22,6 +22,11 @@ import { ParcelNewComponent } from './components/parcel/parcel-new/parcel-new.co
 import { ParcelListComponent } from './components/parcel/parcel-list/parcel-list.component';
 import { ParcelViewComponent } from './components/parcel/parcel-view/parcel-view.component';
 import { ParcelAddStockComponent } from './components/parcel/parcel-add-stock/parcel-add-stock.component';
+import { NgxBarcode6Module } from 'ngx-barcode6';
+import { PrintComponent } from './components/print/print.component';
+import { PrintListComponent } from './components/print/print-list/print-list.component';
+import { PrintBarcodeComponent } from './components/print/print-barcode/print-barcode.component';
+import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrcode.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +49,17 @@ import { ParcelAddStockComponent } from './components/parcel/parcel-add-stock/pa
     ParcelNewComponent,
     ParcelEditComponent,
     ParcelAddStockComponent,
+    PrintComponent,
+    PrintListComponent,
+    PrintBarcodeComponent,
+    PrintQrcodeComponent,
   ],
-  imports: [DashboardRoutingModule, CoreModule, SharedModule, FormsModule],
+  imports: [
+    DashboardRoutingModule,
+    CoreModule,
+    SharedModule,
+    FormsModule,
+    NgxBarcode6Module,
+  ],
 })
 export class DashboardModule {}

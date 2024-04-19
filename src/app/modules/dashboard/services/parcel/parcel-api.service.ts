@@ -5,7 +5,9 @@ import { environment } from '../../../../../environments/environment.development
 import { ParcelService } from './parcel.service';
 import {
   Parcel,
-  ParcelQuantity,
+  ParcelPrint,
+  ParcelPrintPayload,
+  ParcelQuantityResponse,
   ParcelResponse,
 } from '../../models/parcel.model';
 
@@ -63,21 +65,37 @@ export class ParcelApiService {
       .pipe(tap((res) => this.parcelService.updateParcel(id, res.parcel)));
   }
 
-  incrementParcel(id: number, stock: number): Observable<ParcelQuantity> {
+  incrementParcel(
+    id: number,
+    stock: number
+  ): Observable<ParcelQuantityResponse> {
     return this.http
-      .patch<ParcelQuantity>(`${this.apiUrl}/increment/${id}`, { stock })
+      .patch<ParcelQuantityResponse>(`${this.apiUrl}/increment/${id}`, {
+        stock,
+      })
       .pipe(
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
       );
   }
 
-  decrementParcel(id: number, stock: number): Observable<ParcelQuantity> {
+  decrementParcel(
+    id: number,
+    stock: number
+  ): Observable<ParcelQuantityResponse> {
     return this.http
-      .patch<ParcelQuantity>(`${this.apiUrl}/decrement/${id}`, { stock })
+      .patch<ParcelQuantityResponse>(`${this.apiUrl}/decrement/${id}`, {
+        stock,
+      })
       .pipe(
         switchMap((res) => timer(300).pipe(map(() => res))),
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
       );
+  }
+
+  updatePrintParcel(id: number, payload: ParcelPrintPayload) {
+    return this.http
+      .patch<ParcelPrint>(`${this.apiUrl}/print/${id}`, payload)
+      .pipe(tap((res) => this.parcelService.updatePrintParcel(id, res.print)));
   }
 
   downloadImage(url: string): Observable<Blob> {

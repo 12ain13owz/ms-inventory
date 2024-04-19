@@ -29,13 +29,16 @@ img {
 }
 
 .mat-column-stock {
-  min-width: 220px;
+  flex: 0 0 180px;
+}
+
+.mat-column-action {
+  flex: 0 0 60px;
 }
 
 .search-box {
   display: flex;
   max-width: 850px;
-  // margin: 0 auto;
 
   input {
     padding: 12px 20px;
@@ -82,4 +85,11 @@ img {
 .image-camera {
   width: 200px;
   height: 200px;
+}
+
+.image-box {
+  display: inline-block;
+  padding-inline: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
 }

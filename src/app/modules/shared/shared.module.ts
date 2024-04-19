@@ -5,6 +5,7 @@ import { ValidationPipe } from './pipes/validation.pipe';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LoadingDataComponent } from './components/loading-data/loading-data.component';
 import { ThaiYearPipe } from './pipes/thai-year.pipe';
+import { ToArrayPipe } from './pipes/to-array.pipe';
 
 @NgModule({
   declarations: [
@@ -12,8 +13,14 @@ import { ThaiYearPipe } from './pipes/thai-year.pipe';
     ValidationPipe,
     LoadingDataComponent,
     ThaiYearPipe,
+    ToArrayPipe,
   ],
   imports: [CoreModule, NgxSkeletonLoaderModule],
-  exports: [ErrorFieldComponent, LoadingDataComponent, ThaiYearPipe],
+  exports: [
+    ErrorFieldComponent,
+    LoadingDataComponent,
+    ThaiYearPipe,
+    ToArrayPipe,
+  ],
 })
 export class SharedModule {}

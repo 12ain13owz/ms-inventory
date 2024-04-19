@@ -87,7 +87,11 @@ export default Parcel.init(
     },
   },
   {
-    indexes: [{ fields: ['code', 'track'] }],
+    indexes: [
+      { unique: true, fields: ['track'] },
+      { unique: true, fields: ['code'] },
+      { fields: ['createdAt'] },
+    ],
     sequelize,
     modelName: 'Parcel',
     timestamps: true,

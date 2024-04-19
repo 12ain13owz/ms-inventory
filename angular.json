@@ -92,7 +92,12 @@
               "buildTarget": "msbsru-stock-it:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "ssl": true,
+            "sslKey": "d:\\Project\\certificates\\ssl_private.key",
+            "sslCert": "d:\\Project\\certificates\\ssl.crt"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

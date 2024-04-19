@@ -13,9 +13,12 @@ export interface Log {
   statusName: string;
   remark: string;
   image: string;
+  newParcel: boolean;
+  increaseQuantity: boolean;
+  decreaseQuantity: boolean;
+  print: boolean;
   printCount: number;
-  addParcel: boolean;
-  addQuantity: boolean;
+  detailLog: string;
   updatedAt: string;
   createdAt: string;
 }

@@ -1,0 +1,46 @@
+@if (parcels.length <= 0) {
+<button mat-flat-button color="warn" class="w-100">
+  ไม่พบข้อมูลสำหรับปริ้นบาร์โค้ด
+</button>
+} @else {
+<mat-card>
+  <mat-card-content class="mb-16">
+    <button
+      class="mb-20"
+      mat-flat-button
+      color="primary"
+      [disabled]="isLoading"
+      (click)="onClickDownload()"
+    >
+      Donwload บาร์โค้ด
+    </button>
+
+    <h3>ประมวลผล {{ this.percentComplete.toFixed(2) }}%</h3>
+  </mat-card-content>
+
+  <mat-card-footer>
+    @if (isLoading) {
+    <mat-progress-bar
+      mode="buffer"
+      color="accent"
+      [value]="percentComplete"
+    ></mat-progress-bar>
+    }
+  </mat-card-footer>
+</mat-card>
+}
+
+<div style="visibility: hidden">
+  @for (parcel of parcels; track $index) {
+  <ngx-barcode6
+    [bc-format]="'CODE39'"
+    [bc-value]="parcel.track"
+    [bc-display-value]="true"
+    #svgElement
+  >
+  </ngx-barcode6>
+  }
+
+  <canvas #canvasElement></canvas>
+  <a [download]="fileName" #downloadElement></a>
+</div>

@@ -11,6 +11,7 @@ import {
   getParcelsByDateHandler,
   incrementQuantityParcelHandler,
   updateParcelHandler,
+  updatePrintParcelHandler,
 } from '../../controllers/parcel.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import {
@@ -20,6 +21,7 @@ import {
   getParcelByTrackSchema,
   getParcelsByDateSchema,
   updateParcelSchema,
+  updatePrintParcelSchema,
   updateQuantityParcelSchema,
 } from '../../schemas/parcel.schema';
 import { reduceQualityImage, upload } from '../../middlewares/file.middlerware';
@@ -77,6 +79,12 @@ router.patch(
   '/decrement/:id',
   [verifyToken, isUserActive, validate(updateQuantityParcelSchema)],
   decrementQuantityParcelHandler
+);
+
+router.patch(
+  '/print/:id',
+  [verifyToken, isUserActive, validate(updatePrintParcelSchema)],
+  updatePrintParcelHandler
 );
 
 // router.delete(

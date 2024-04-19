@@ -1,4 +1,14 @@
-<h2 mat-dialog-title>{{ title }}</h2>
+<div class="d-flex justify-between align-center">
+  <h2 mat-dialog-title>{{ title }}</h2>
+  <button
+    mat-icon-button
+    class="btn-close"
+    tabindex="-1"
+    (click)="onCloseDialog()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
 <form [formGroup]="form" (ngSubmit)="onSubmit()" #formDirec="ngForm">
   <mat-divider></mat-divider>
   <mat-dialog-content class="form-container">
@@ -106,33 +116,11 @@
         <input type="text" matInput formControlName="remark" />
       </mat-form-field>
 
-      <div class="row-active">
+      <div class="d-flex gap-10">
         <mat-slide-toggle formControlName="active"></mat-slide-toggle>
         <span>เปิดใช้งาน</span>
       </div>
     </div>
-
-    <!-- <div class="box">
-      <mat-form-field>
-        <mat-label>ชื่อ</mat-label>
-        <input type="text" matInput formControlName="name" #name />
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>สถานที่ตั้ง/จัดเก็บ</mat-label>
-        <input type="text" matInput formControlName="place" />
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>หมายเหตุ</mat-label>
-        <input type="text" matInput formControlName="remark" />
-      </mat-form-field>
-    </div>
-
-    <div class="row">
-      <mat-slide-toggle formControlName="active"></mat-slide-toggle>
-      <span>เปิดใช้งาน</span>
-    </div> -->
   </mat-dialog-content>
   <mat-dialog-actions>
     <button type="submit" mat-raised-button color="primary">Submit</button>

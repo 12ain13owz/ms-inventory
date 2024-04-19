@@ -7,15 +7,15 @@ export function findAllCategory() {
   });
 }
 
-export function findCategoryByName(name: string): Promise<Category | null> {
-  return categoryModel.findOne({
-    where: { name: { [Op.like]: name } },
+export function findCategoryById(id: number): Promise<Category | null> {
+  return categoryModel.findByPk(id, {
     ...getCategoryQueryOptions(),
   });
 }
 
-export function findCategoryById(id: number): Promise<Category | null> {
-  return categoryModel.findByPk(id, {
+export function findCategoryByName(name: string): Promise<Category | null> {
+  return categoryModel.findOne({
+    where: { name: { [Op.like]: name } },
     ...getCategoryQueryOptions(),
   });
 }

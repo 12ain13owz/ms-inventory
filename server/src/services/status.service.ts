@@ -7,15 +7,15 @@ export function findAllStatus() {
   });
 }
 
-export function findStatusByName(name: string): Promise<Status | null> {
-  return statusModel.findOne({
-    where: { name: { [Op.like]: name } },
+export function findStatusById(id: number): Promise<Status | null> {
+  return statusModel.findByPk(id, {
     ...getStatusQueryOptions(),
   });
 }
 
-export function findStatusById(id: number): Promise<Status | null> {
-  return statusModel.findByPk(id, {
+export function findStatusByName(name: string): Promise<Status | null> {
+  return statusModel.findOne({
+    where: { name: { [Op.like]: name } },
     ...getStatusQueryOptions(),
   });
 }

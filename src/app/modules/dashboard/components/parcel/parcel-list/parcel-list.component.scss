@@ -1,5 +1,9 @@
+.mat-column-select {
+  flex: 0 0 60px;
+}
+
 .mat-column-no {
-  flex: 0 0 50px;
+  flex: 0 0 70px;
 }
 
 .mat-column-image {
@@ -77,11 +81,5 @@ mat-row:hover {
     mat-form-field {
       width: 100%;
     }
-  }
-}
-
-@media (max-width: 600px) {
-  .mat-column-image {
-    flex: 0 0 100px;
   }
 }

@@ -6,8 +6,7 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import { Event, NavigationEnd, Router } from '@angular/router';
-import { Observable, Subscription, filter } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Profile } from '../../models/profile.model';
 import { ProfileService } from '../../services/profile/profile.service';
 import { AuthApiService } from '../../services/auth/auth-api.service';
@@ -22,7 +21,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Output() menuToggle = new EventEmitter();
 
   private subscription = new Subscription();
-  private router = inject(Router);
   private profileService = inject(ProfileService);
   private authService = inject(AuthApiService);
   private themeService = inject(ThemeService);
@@ -33,15 +31,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.profile$ = this.profileService.onProfileListener();
-    // this.title = this.setTitle(this.router.url);
     this.isDarkTheme = this.themeService.getTheme();
-
-    // this.subscription = this.router.events
-    //   .pipe(filter((event: Event) => event instanceof NavigationEnd))
-    //   .subscribe(
-    //     (event: NavigationEnd) =>
-    //       (this.title = this.setTitle(event.urlAfterRedirects))
-    //   );
   }
 
   ngOnDestroy(): void {
@@ -59,9 +49,5 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   onSwitchTheme(event: MouseEvent): void {
     event.stopPropagation();
     this.themeService.setTheme(this.isDarkTheme);
-  }
-
-  private setTitle(url: string): string {
-    return url.split('/').pop();
   }
 }
