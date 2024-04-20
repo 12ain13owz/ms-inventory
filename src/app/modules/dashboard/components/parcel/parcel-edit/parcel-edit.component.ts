@@ -129,9 +129,9 @@ export class ParcelEditComponent implements OnInit {
   onReset(): void {
     this.files.length = 0;
     this.isImageEdit = false;
+    this.codeInput.nativeElement.focus();
     this.formImage.reset();
     this.setParcelFormData(this.parcel);
-    this.codeInput.nativeElement.focus();
   }
 
   onSelectImage(event: NgxDropzoneChangeEvent): void {

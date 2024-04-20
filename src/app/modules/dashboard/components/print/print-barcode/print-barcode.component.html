@@ -15,7 +15,9 @@
       Donwload บาร์โค้ด
     </button>
 
+    @if (isLoading) {
     <h3>ประมวลผล {{ this.percentComplete.toFixed(2) }}%</h3>
+    }
   </mat-card-content>
 
   <mat-card-footer>
@@ -30,7 +32,7 @@
 </mat-card>
 }
 
-<div style="visibility: hidden">
+<div class="visibility-hidden">
   @for (parcel of parcels; track $index) {
   <ngx-barcode6
     [bc-format]="'CODE39'"

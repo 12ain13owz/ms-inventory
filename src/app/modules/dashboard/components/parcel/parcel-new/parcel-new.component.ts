@@ -96,11 +96,11 @@ export class ParcelNewComponent {
 
   onReset(): void {
     this.files.length = 0;
+    this.codeInput.nativeElement.focus();
     this.formImage.reset();
     this.fromDirec.resetForm();
     this.category.markAsUntouched();
     this.status.markAsUntouched();
-    this.codeInput.nativeElement.focus();
   }
 
   onSelectImage(event: NgxDropzoneChangeEvent): void {

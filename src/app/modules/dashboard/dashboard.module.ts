@@ -27,6 +27,7 @@ import { PrintComponent } from './components/print/print.component';
 import { PrintListComponent } from './components/print/print-list/print-list.component';
 import { PrintBarcodeComponent } from './components/print/print-barcode/print-barcode.component';
 import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrcode.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrco
     SharedModule,
     FormsModule,
     NgxBarcode6Module,
+    QRCodeModule,
   ],
 })
 export class DashboardModule {}

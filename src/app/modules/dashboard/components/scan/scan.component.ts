@@ -15,9 +15,13 @@ import {
   Subscription,
   catchError,
   concatMap,
+  defer,
+  filter,
   finalize,
   from,
+  interval,
   of,
+  take,
   tap,
 } from 'rxjs';
 import { environment } from '../../../../../environments/environment.development';
@@ -26,14 +30,20 @@ import { ScanApiService } from '../../services/scan/scan-api.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ParcelApiService } from '../../services/parcel/parcel-api.service';
-import { BarcodeFormat } from '@zxing/library';
 import { Platform } from '@angular/cdk/platform';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Html5QrcodeResult, Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 
 enum Tap {
   Search,
   Camera,
+}
+
+enum ScanType {
+  QRcode,
+  Barcode,
 }
 @Component({
   selector: 'app-scan',
@@ -54,16 +64,12 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   trackInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('qrBox') qrBox: ElementRef<HTMLDivElement>;
+  qrRender: HTMLElement;
 
   selectedTap = new FormControl(Tap.Search);
   imageUrl: string = environment.imageUrl;
   form = this.initForm();
-
-  allowedFormats = [
-    BarcodeFormat.QR_CODE,
-    BarcodeFormat.CODE_39,
-    BarcodeFormat.CODE_128,
-  ];
 
   displayedColumns: string[] = [
     'image',
@@ -74,8 +80,10 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource<ParcelScan>([]);
   isLoading: boolean = false;
-  isCamera: boolean = false;
-  isScan: boolean = false;
+  isScanning: boolean = false;
+  isScanType: number = 0;
+  scanSize = { width: 0, height: 0 };
+  html5QrcodeScanner: Html5QrcodeScanner = null;
 
   ngOnInit(): void {
     this.dataSource.data = this.scanService.getParcels();
@@ -127,38 +135,75 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onGetParcelByTrack(track);
   }
 
-  onScanSuccess(track: string): void {
-    if (this.isScan == true) return;
+  onTapChange(indexTap: number): void {
+    if (!this.platform.ANDROID && !this.platform.IOS) return;
+    if (indexTap !== Tap.Camera) {
+      if (this.qrRender) this.qrRender.remove();
+      if (this.html5QrcodeScanner) this.html5QrcodeScanner.clear();
+      return;
+    }
 
-    this.isScan = true;
-    this.onGetParcelByTrack(track);
-    this.toastService.info('Scan', `${track} สำเร็จ`);
+    defer(() =>
+      this.qrBox
+        ? of(null)
+        : interval(300).pipe(
+            filter(() => !!this.qrBox),
+            take(1)
+          )
+    ).subscribe(() => this.onStartCamera());
+  }
+
+  onStartCamera(): void {
+    this.isScanning = true;
+    if (ScanType.Barcode === this.isScanType)
+      this.scanSize = { width: 300, height: 100 };
+    else this.scanSize = { width: 250, height: 250 };
+
+    const id = 'qrReader';
+    this.qrRender = document.getElementById('div');
+    if (!this.qrRender) {
+      this.qrRender = document.createElement('div');
+      this.qrRender.id = id;
+      this.qrRender.className = 'w-100';
+      this.qrBox.nativeElement.appendChild(this.qrRender);
+    }
 
     setTimeout(() => {
-      this.isScan = false;
-    }, 2000);
+      this.html5QrcodeScanner = new Html5QrcodeScanner(
+        id,
+        { fps: 10, qrbox: this.scanSize },
+        false
+      );
+
+      this.html5QrcodeScanner.render(
+        (decodedText: string, decodedResult: Html5QrcodeResult) =>
+          this.onScanSuccess(decodedText),
+        (errorMessage: string, error: Html5QrcodeError) => null
+      );
+    }, 500);
+
+    setTimeout(() => {
+      this.isScanning = false;
+    }, 700);
+  }
+
+  onScanSuccess(track: string): void {
+    if (this.isScanning == true) return;
+
+    this.isScanning = true;
+    this.onGetParcelByTrack(track);
+
+    setTimeout(() => {
+      this.isScanning = false;
+    }, 1500);
   }
 
   onScanError(): void {
     this.toastService.error('Error', 'Scan ไม่สำเร็จกรุณาลองใหม่');
   }
 
-  onTapChange(indexTap: number): void {
-    if (!this.platform.ANDROID && !this.platform.IOS) return;
-
-    if (indexTap === Tap.Camera) this.isCamera = true;
-    else this.isCamera = false;
-  }
-
-  onStartCamera(): void {
-    this.isCamera = true;
-  }
-
-  onStopCamera(): void {
-    this.isCamera = false;
-  }
-
   onGetParcelByTrack(track: string): void {
+    console.log('onGetParcelByTrack', track);
     const parcel = this.scanService.getParcelByTrack(track);
 
     if (parcel) {
@@ -174,7 +219,8 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
         if (res) {
           this.scanService.createParcelScan(res);
           this.track.setValue('');
-        } else this.toastService.error('404', `${track} ไม่พบข้อมูลพัสดุ`);
+        } else
+          this.toastService.warning('Warning', `${track} ไม่พบข้อมูลพัสดุ`);
       });
   }
 

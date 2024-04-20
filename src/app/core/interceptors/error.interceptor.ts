@@ -24,7 +24,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           : error.error.message || 'Unknown Error!';
 
       const title = status === 0 ? '500' : status.toString();
-      toastr.error(title, message);
+      toastr.error('Error', message);
 
       if (logout) authService.logout().subscribe();
       if (status === 0)

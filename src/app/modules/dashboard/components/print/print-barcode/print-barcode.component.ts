@@ -32,7 +32,6 @@ import jsPDF from 'jspdf';
   styleUrl: './print-barcode.component.scss',
 })
 export class PrintBarcodeComponent implements OnInit, OnDestroy {
-  @ViewChild('content') content: ElementRef<HTMLDivElement>;
   @ViewChild('svgElement') svgElement: ElementRef<SVGElement>;
   @ViewChild('canvasElement') canvasElement: ElementRef<HTMLCanvasElement>;
   @ViewChild('downloadElement') downloadElement: ElementRef<HTMLLinkElement>;
@@ -44,9 +43,9 @@ export class PrintBarcodeComponent implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
   isProcess: boolean = true;
+  percentComplete: number = 0;
   isSvgtoBase64: boolean = false;
   parcels: ParcelPrint[] = [];
-  percentComplete: number = 0;
   fileUrl: string;
   fileName: string = 'barcode.pdf';
 
