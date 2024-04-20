@@ -72,7 +72,7 @@ export class PrintQrcodeComponent implements OnInit, OnDestroy {
     this.downloadElement.nativeElement.click();
   }
 
-  initPrintQRcode(): void {
+  private initPrintQRcode(): void {
     const canvas = document.querySelectorAll('canvas');
     for (let i = 0; i < canvas.length; i++) {
       this.parcels[i].fileUrl = canvas[i].toDataURL();
@@ -109,7 +109,7 @@ export class PrintQrcodeComponent implements OnInit, OnDestroy {
         concatMap((parcel) => {
           const payload = {
             printCount: parcel.printCount,
-            detailLog: 'ปริ้นบาร์โค้ด',
+            detailLog: 'ปริ้นคิวอาร์โค้ด',
           };
           this.parcelApiService
             .updatePrintParcel(parcel.id, payload)
