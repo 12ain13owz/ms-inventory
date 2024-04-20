@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import statusModel, { Status } from '../models/status.model';
 
-export function findAllStatus() {
+export function findAllStatus(): Promise<Status[]> {
   return statusModel.findAll({
     ...getStatusQueryOptions(),
   });

@@ -1,16 +1,25 @@
-import { Transaction } from 'sequelize';
+import { Transaction, Op } from 'sequelize';
 import logModel, { Log } from '../models/log.model';
 
-export function findAllLog() {
+export function findAllLog(): Promise<Log[]> {
   return logModel.findAll();
 }
 
-export function findLogByCode(code: string): Promise<Log | null> {
-  return logModel.findOne({ where: { code } });
+export function findLimitLog(limit: number): Promise<Log[]> {
+  return logModel.findAll({
+    limit: limit,
+    order: [['createdAt', 'DESC']],
+  });
 }
 
-export function findLogByTrack(track: string): Promise<Log | null> {
-  return logModel.findOne({ where: { track } });
+export function findLogByTrack(track: string): Promise<Log[]> {
+  return logModel.findAll({ where: { track } });
+}
+
+export function findLogByDate(dateStart: Date, dateEnd: Date) {
+  return logModel.findAll({
+    where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
+  });
 }
 
 export function createLog(log: Log, t: Transaction): Promise<Log> {

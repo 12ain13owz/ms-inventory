@@ -4,7 +4,7 @@ import { Category } from '../models/category.model';
 import { Status } from '../models/status.model';
 import { User } from '../models/user.model';
 
-export function findAllParcel() {
+export function findAllParcel(): Promise<Parcel[]> {
   return parcelModel.findAll(getParcelQueryOptions());
 }
 
@@ -36,7 +36,7 @@ export function findParcelByCode(code: string) {
   });
 }
 
-export function findParcelsByDate(dateStart: Date, dateEnd: Date) {
+export function findParcelByDate(dateStart: Date, dateEnd: Date) {
   return parcelModel.findAll({
     where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
     ...getParcelQueryOptions(),

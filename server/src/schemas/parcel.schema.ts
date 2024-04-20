@@ -18,7 +18,7 @@ const printCount = 'ไม่พบจำนวนที่ต้องการ
 
 const regexId = new RegExp(/^[0-9]\d*$/);
 
-export const getParcelsByDateSchema = object({
+export const getParcelByDateSchema = object({
   params: object({
     dateStart: string({ required_error: dateStart }).min(1, {
       message: dateStart,
@@ -145,8 +145,8 @@ export const deleteParcelSchema = object({
   }),
 });
 
-export type getParcelsByDateInput = TypeOf<
-  typeof getParcelsByDateSchema
+export type getParcelByDateInput = TypeOf<
+  typeof getParcelByDateSchema
 >['params'];
 export type getParcelByTrackInput = TypeOf<
   typeof getParcelByTrackSchema

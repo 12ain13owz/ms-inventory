@@ -65,7 +65,7 @@ export default Log.init(
     updatedAt: { type: DataTypes.DATE },
   },
   {
-    indexes: [{ fields: ['track'] }],
+    indexes: [{ fields: ['track'] }, { fields: ['createdAt'] }],
     sequelize,
     modelName: 'Log',
     timestamps: true,

@@ -8,7 +8,7 @@ import {
   getInitialParcelsHandler,
   getParcelByIdHandler,
   getParcelByTrackHandler,
-  getParcelsByDateHandler,
+  getParcelByDateHandler,
   incrementQuantityParcelHandler,
   updateParcelHandler,
   updatePrintParcelHandler,
@@ -19,7 +19,7 @@ import {
   deleteParcelSchema,
   getParcelByIdSchema,
   getParcelByTrackSchema,
-  getParcelsByDateSchema,
+  getParcelByDateSchema,
   updateParcelSchema,
   updatePrintParcelSchema,
   updateQuantityParcelSchema,
@@ -32,8 +32,8 @@ router.get('/', [verifyToken, isUserActive], getAllParcelHandler);
 router.get('/init', [verifyToken, isUserActive], getInitialParcelsHandler);
 router.get(
   '/date/:dateStart/:dateEnd',
-  [verifyToken, isUserActive, validate(getParcelsByDateSchema)],
-  getParcelsByDateHandler
+  [verifyToken, isUserActive, validate(getParcelByDateSchema)],
+  getParcelByDateHandler
 );
 router.get(
   '/track/:track',

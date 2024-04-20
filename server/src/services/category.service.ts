@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import categoryModel, { Category } from '../models/category.model';
 
-export function findAllCategory() {
+export function findAllCategory(): Promise<Category[]> {
   return categoryModel.findAll({
     ...getCategoryQueryOptions(),
   });

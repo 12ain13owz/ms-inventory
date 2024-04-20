@@ -3,7 +3,7 @@ import {
   UpdateQuantityParcelInput,
   getParcelByIdInput,
   getParcelByTrackInput,
-  getParcelsByDateInput,
+  getParcelByDateInput,
 } from './../schemas/parcel.schema';
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
@@ -15,7 +15,7 @@ import {
   findParcelByCode,
   findParcelById,
   findParcelByTrack,
-  findParcelsByDate,
+  findParcelByDate,
   updateParcel,
   updatePrintParcel,
   updateQuantityParcel,
@@ -29,7 +29,7 @@ import sequelize from '../utils/sequelize';
 import { createTrack } from '../services/track.service';
 import { newError, removeWhitespace } from '../utils/helper';
 import { generateTrack } from '../utils/track';
-import { Parcel, ParcelData } from '../models/parcel.model';
+import { Parcel } from '../models/parcel.model';
 import { Log } from '../models/log.model';
 import { createLog } from '../services/log.service';
 
@@ -65,12 +65,12 @@ export async function getInitialParcelsHandler(
   }
 }
 
-export async function getParcelsByDateHandler(
-  req: Request<getParcelsByDateInput>,
+export async function getParcelByDateHandler(
+  req: Request<getParcelByDateInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getParcelsByDateHandler';
+  res.locals.func = 'getParcelByDateHandler';
 
   try {
     const dateStart = new Date(req.params.dateStart);
@@ -82,7 +82,7 @@ export async function getParcelsByDateHandler(
     dateStart.setHours(0, 0, 0, 0);
     dateEnd.setHours(23, 59, 59, 999);
 
-    const resParcels = await findParcelsByDate(dateStart, dateEnd);
+    const resParcels = await findParcelByDate(dateStart, dateEnd);
     res.json(resParcels);
   } catch (error) {
     next(error);

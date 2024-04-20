@@ -97,21 +97,3 @@ export default Parcel.init(
     timestamps: true,
   }
 );
-
-export interface ParcelData {
-  id: number;
-  track: string;
-  code: string;
-  oldCode: string;
-  receivedDate: Date;
-  detail: string;
-  quantity: number;
-  print: boolean;
-  remark: string;
-  image: string;
-  createdAt: Date;
-  updatedAt: Date;
-  User: { firstname: string; lastname: string };
-  Category: { id: number; name: string };
-  Status: { id: number; name: string };
-}

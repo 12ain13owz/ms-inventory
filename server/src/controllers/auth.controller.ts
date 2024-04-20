@@ -14,7 +14,6 @@ import {
 } from '../utils/jwt';
 
 const tokenKey = 'refresh_token';
-const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
 export async function loginHandler(
   req: Request<{}, {}, LoginUserInput>,
@@ -36,14 +35,16 @@ export async function loginHandler(
     const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
     const resUser = omit(user.toJSON(), privateUserFields);
+    const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
     res.clearCookie(tokenKey);
     res.cookie(tokenKey, refreshToken, {
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: 'lax',
-      secure: config.get<string>('node_env') === 'production',
+      sameSite: 'none',
+      // secure: config.get<string>('node_env') === 'production',
+      secure: true,
     });
 
     res.json({ accessToken, resUser });
@@ -73,7 +74,6 @@ export async function refreshTokenHandler(
   next: NextFunction
 ) {
   res.locals.func = 'refreshTokenHandler';
-
   try {
     const accessToken = (req.headers.authorization || '').replace(
       /^Bearer\s/,
@@ -102,14 +102,16 @@ export async function refreshTokenHandler(
 
     const newAccessToken = signAccessToken(user.id);
     const newRefreshToken = signRefreshToken(user.id);
+    const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
     res.clearCookie(tokenKey);
     res.cookie(tokenKey, newRefreshToken, {
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: 'lax',
-      secure: config.get<string>('node_env') === 'production',
+      sameSite: 'none',
+      // secure: config.get<string>('node_env') === 'production',
+      secure: true,
     });
     res.json({ accessToken: newAccessToken });
   } catch (error) {
