@@ -23,6 +23,7 @@ import {
   of,
   take,
   tap,
+  timer,
 } from 'rxjs';
 import { environment } from '../../../../../environments/environment.development';
 import { ScanService } from '../../services/scan/scan.service';
@@ -168,23 +169,23 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
       this.qrBox.nativeElement.appendChild(this.qrRender);
     }
 
-    setTimeout(() => {
-      this.html5QrcodeScanner = new Html5QrcodeScanner(
-        id,
-        { fps: 10, qrbox: this.scanSize },
-        false
-      );
+    timer(500)
+      .pipe(
+        finalize(() => timer(300).subscribe(() => (this.isScanning = false)))
+      )
+      .subscribe(() => {
+        this.html5QrcodeScanner = new Html5QrcodeScanner(
+          id,
+          { fps: 10, qrbox: this.scanSize },
+          false
+        );
 
-      this.html5QrcodeScanner.render(
-        (decodedText: string, decodedResult: Html5QrcodeResult) =>
-          this.onScanSuccess(decodedText),
-        (errorMessage: string, error: Html5QrcodeError) => null
-      );
-    }, 500);
-
-    setTimeout(() => {
-      this.isScanning = false;
-    }, 700);
+        this.html5QrcodeScanner.render(
+          (decodedText: string, decodedResult: Html5QrcodeResult) =>
+            this.onScanSuccess(decodedText),
+          (errorMessage: string, error: Html5QrcodeError) => null
+        );
+      });
   }
 
   onScanSuccess(track: string): void {
@@ -193,17 +194,10 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isScanning = true;
     this.onGetParcelByTrack(track);
 
-    setTimeout(() => {
-      this.isScanning = false;
-    }, 1500);
-  }
-
-  onScanError(): void {
-    this.toastService.error('Error', 'Scan ไม่สำเร็จกรุณาลองใหม่');
+    timer(1500).subscribe(() => (this.isScanning = false));
   }
 
   onGetParcelByTrack(track: string): void {
-    console.log('onGetParcelByTrack', track);
     const parcel = this.scanService.getParcelByTrack(track);
 
     if (parcel) {
@@ -219,8 +213,7 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
         if (res) {
           this.scanService.createParcelScan(res);
           this.track.setValue('');
-        } else
-          this.toastService.warning('Warning', `${track} ไม่พบข้อมูลพัสดุ`);
+        } else this.toastService.warning('', `${track} ไม่พบข้อมูลพัสดุ`);
       });
   }
 

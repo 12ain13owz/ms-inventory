@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Parcel } from '../../../models/parcel.model';
+import { Parcel, ParcelPrint } from '../../../models/parcel.model';
 import { ActivatedRoute } from '@angular/router';
 import { ParcelService } from '../../../services/parcel/parcel.service';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
 import { finalize } from 'rxjs';
 import { environment } from '../../../../../../environments/environment.development';
+import { PrintService } from '../../../services/print/print.service';
 
 @Component({
   selector: 'app-parcel-view',
@@ -15,6 +16,7 @@ export class ParcelViewComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private parcelService = inject(ParcelService);
   private parcelApiService = inject(ParcelApiService);
+  private printService = inject(PrintService);
 
   imageUrl: string = environment.imageUrl;
 
@@ -56,5 +58,19 @@ export class ParcelViewComponent implements OnInit {
   onAddStockSuccess(parcel: Parcel) {
     this.isStock = false;
     this.parcel = parcel;
+  }
+
+  onPrint(): void {
+    if (this.printService.getParcelById(this.id)) return;
+
+    const parcel: ParcelPrint = {
+      id: this.parcel.id,
+      image: this.parcel.image,
+      track: this.parcel.track,
+      quantity: this.parcel.quantity,
+      print: this.parcel.print,
+      printCount: this.parcel.quantity,
+    };
+    this.printService.createParcel(parcel);
   }
 }

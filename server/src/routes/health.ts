@@ -4,9 +4,7 @@ import { newError } from '../utils/helper';
 const router = Router();
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  setTimeout(() => {
-    res.sendStatus(200);
-  }, 5000);
+  res.sendStatus(200);
 });
 
 router.get('/error', (req: Request, res: Response, next: NextFunction) => {

@@ -28,7 +28,11 @@
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
         <mat-cell *matCellDef="let element" style="padding-block: 8px">
-          <a [routerLink]="['../parcel/view', element.id]" class="blurred-img">
+          <a
+            [routerLink]="['../parcel/view', element.id]"
+            class="blurred-img"
+            tabindex="-1"
+          >
             <img
               [defaultImage]="'assets/images/no-image.jpg'"
               [lazyLoad]="imageUrl + element.image"
@@ -57,7 +61,11 @@
         >
         <mat-cell *matCellDef="let element" class="p-0">
           <div class="d-flex align-center">
-            <button mat-icon-button (click)="incrementPrintCount(element.id)">
+            <button
+              mat-icon-button
+              (click)="incrementPrintCount(element.id)"
+              tabindex="-1"
+            >
               <mat-icon color="accent">add</mat-icon>
             </button>
 
@@ -70,7 +78,11 @@
               />
             </mat-form-field>
 
-            <button mat-icon-button (click)="decrementPrintCount(element.id)">
+            <button
+              mat-icon-button
+              (click)="decrementPrintCount(element.id)"
+              tabindex="-1"
+            >
               <mat-icon color="accent">remove</mat-icon>
             </button>
           </div>
@@ -80,7 +92,11 @@
       <ng-container matColumnDef="action">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let element" class="p-0">
-          <button mat-icon-button (click)="onDeleteParcel(element.id)">
+          <button
+            mat-icon-button
+            (click)="onDeleteParcel(element.id)"
+            tabindex="-1"
+          >
             <mat-icon color="warn">close</mat-icon>
           </button>
         </mat-cell>
