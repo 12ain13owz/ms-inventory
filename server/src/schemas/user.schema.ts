@@ -1,4 +1,4 @@
-import { TypeOf, boolean, number, object, string } from 'zod';
+import { TypeOf, boolean, object, string } from 'zod';
 
 const id = 'ไม่พบข้อมูลผู้ใช้ในระบบ';
 const email = 'ไม่พบข้อมูล E-mail';

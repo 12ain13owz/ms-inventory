@@ -7,6 +7,7 @@ import {
   createStatus,
   deleteStatus,
   findAllStatus,
+  findStatusById,
   findStatusByName,
   updateStatus,
 } from '../services/status.service';
@@ -89,21 +90,23 @@ export async function updateStatusHandler(
   }
 }
 
-export async function deleteStatudHandler(
+export async function deleteStatusHandler(
   req: Request<DeleteStatusInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'deleteStatudHandler';
+  res.locals.func = 'deleteStatusHandler';
 
   try {
     const id = +req.params.id;
-    // const status = await find
+    const status = await findStatusById(id);
+    if (!status) throw newError(400, 'ไม่พบสถานะพัสดุ');
 
+    const name = status.name;
     const result = await deleteStatus(+req.params.id);
-    if (!result) throw newError(400, 'ลบสถานะพัสดุไม่สำเร็จ');
+    if (!result) throw newError(400, `ลบสถานะพัสดุ ${name} ไม่สำเร็จ`);
 
-    res.json({ message: 'ลบสถานะอุปกรณ์สำเร็จ' });
+    res.json({ message: `ลบสถานะพัสดุ ${name} สำเร็จ` });
   } catch (error) {
     next(error);
   }

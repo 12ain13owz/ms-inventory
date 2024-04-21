@@ -1,18 +1,28 @@
-# Nodejs Express Typescript
+# Project MS-Stock-IT
 
-## Install Dependencies
+## Setup Application
+
+- Install Dependencies
 
 ```
 npm i
 ```
 
-- create .env file
+- run init-database.bat
+- config .env file
 
 ```
 PORT=<PORT>
+NODE_ENV="development"
+
+ACCESS_TOKEN_PRIVATE_KEY=<Private Key>
+ACCESS_TOKEN_PUBLIC_KEY=<Public Key>
+
+REFRESH_PRIVATE_KEY=<Refresh Private Key>
+REFRESH_PUBLIC_KEY=<Refresh Public Key>
 ```
 
-## Run
+## Run Application
 
 ```
 npm run dev
@@ -20,26 +30,16 @@ npm run dev
 
 ---
 
-### Dev Dependencies
+### Dev Dependencies Overview
 
 ```
-npm i -D @types/express @types/lodash @types/morgan @types/node pino-pretty tsx typescript
+npm i -D @types/bcrypt @types/config @types/cookie-parser @types/express @types/jsonwebtoken @types/lodash @types/morgan @types/multer @types/node @types/uuid pino-pretty ts-node tsx typescript
 ```
 
-### Dependencies
+### Dependencies Overview
 
 ```
-npm i dayjs express lodash morgan pino
+npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lodash morgan multer pino sequelize sqlite3 uuid zod
 ```
 
-### Options
-
-- generate keys `(Key Size: 2048 bit)`: https://travistidwell.com/jsencrypt/demo/
-
-```
-ACCESS_TOKEN_PRIVATE_KEY=<Private Key>
-ACCESS_TOKEN_PUBLIC_KEY=<Public Key>
-
-REFRESH_PRIVATE_KEY=<Refresh Private Key>
-REFRESH_PUBLIC_KEY=<Refresh Public Key>
-```
+- generate keys rsa `(Key Size: 2048 bit)`: https://travistidwell.com/jsencrypt/demo/

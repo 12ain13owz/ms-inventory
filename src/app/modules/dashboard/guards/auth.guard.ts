@@ -20,7 +20,7 @@ export const authGuard: CanActivateChildFn = (childRoute, state) => {
 
   if (accessToken && profile) return true;
   if (!accessToken || accessToken === 'undefined') {
-    toastService.error('404', 'ไม่พบ Token! กรุณาเข้าสู่ระบบ');
+    toastService.error('Error', 'ไม่พบ Token! กรุณาเข้าสู่ระบบ');
     return authService.logout().pipe(map(() => false));
   }
 

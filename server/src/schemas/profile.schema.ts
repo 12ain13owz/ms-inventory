@@ -1,6 +1,5 @@
 import { TypeOf, object, string } from 'zod';
 
-const id = 'ไม่พบข้อมูลผู้ใช้ในระบบ';
 const email = 'ไม่พบข้อมูล E-mail';
 const emailInvalid = 'รูปแบบ E-mail ไม่ถูกต้อง';
 const firstname = 'ไม่พบข้อมูลชื่อผู้ใช้งาน';

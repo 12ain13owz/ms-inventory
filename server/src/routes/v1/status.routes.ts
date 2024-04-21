@@ -13,7 +13,7 @@ import {
 
 import {
   createStatusHandler,
-  deleteStatudHandler,
+  deleteStatusHandler,
   getAllStatusHandler,
   updateStatusHandler,
 } from '../../controllers/status.controller';
@@ -34,7 +34,7 @@ router.put(
 router.delete(
   '/:id',
   [verifyToken, isUserActive, isRoleAdmin, validate(deleteCategorySchema)],
-  deleteStatudHandler
+  deleteStatusHandler
 );
 
 export default router;

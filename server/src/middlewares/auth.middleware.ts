@@ -1,6 +1,5 @@
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
-import { LoginUserInput } from '../schemas/auth.schema';
 import { newError } from '../utils/helper';
 import { verifyJwt } from '../utils/jwt';
 import { findUserById } from '../services/user.service';
@@ -66,31 +65,6 @@ export async function isRoleAdmin(
   try {
     if (res.locals.user!.role !== 'admin')
       throw newError(401, 'บัญชีนี้ไม่ได้รับอนุญาติให้ใช้งาน');
-
-    next();
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function verifyReceptcha(
-  req: Request<{}, {}, LoginUserInput>,
-  res: ExtendedResponse,
-  next: NextFunction
-) {
-  res.locals.func = 'verifyReceptcha';
-  try {
-    // const receptchaUrl = config.recaptchaUrl;
-    // const payload = {
-    //   secret: config.recaptcha.siteKey,
-    //   response: req.body.receptchaToken,
-    // };
-    // const response = await fetch(receptchaUrl, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(payload),
-    // }).then((data) => data.json());
-    // console.log(response);
 
     next();
   } catch (error) {
