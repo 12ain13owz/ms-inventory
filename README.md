@@ -1,4 +1,16 @@
-# MsbsruStockIt
+# Project MS-Stock-IT
+
+## Setup Application
+
+- Install Dependencies
+
+cd <project_name>
+
+```
+npm install
+```
+
+---
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.1.
 

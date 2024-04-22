@@ -20,6 +20,8 @@ import { PrintComponent } from './components/print/print.component';
 import { PrintListComponent } from './components/print/print-list/print-list.component';
 import { PrintBarcodeComponent } from './components/print/print-barcode/print-barcode.component';
 import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrcode.component';
+import { LogListComponent } from './components/log/log-list/log-list.component';
+import { LogViewComponent } from './components/log/log-view/log-view.component';
 
 export const routes: Routes = [
   {
@@ -49,7 +51,14 @@ export const routes: Routes = [
         ],
       },
 
-      { path: 'log', component: LogComponent },
+      {
+        path: 'log',
+        component: LogComponent,
+        children: [
+          { path: '', component: LogListComponent },
+          { path: 'view/:id', component: LogViewComponent },
+        ],
+      },
       { path: 'profile', component: ProfileComponent },
       { path: 'password', component: PasswordComponent },
       {

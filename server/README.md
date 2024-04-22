@@ -1,11 +1,13 @@
 # Project MS-Stock-IT
 
-## Setup Application
+## Getting started
 
 - Install Dependencies
 
+cd <project_name>\server
+
 ```
-npm i
+npm install
 ```
 
 - run init-database.bat
@@ -29,6 +31,8 @@ npm run dev
 ```
 
 ---
+
+### Version NodeJS v20.10.0
 
 ### Dev Dependencies Overview
 

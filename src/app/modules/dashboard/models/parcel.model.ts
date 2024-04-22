@@ -19,7 +19,7 @@ export interface Parcel {
   Status: { id: number; name: string };
 }
 
-export interface FilterList {
+export interface FilterParcel {
   categories: string[];
   statuses: string[];
 }

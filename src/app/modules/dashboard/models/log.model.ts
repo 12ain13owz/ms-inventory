@@ -14,11 +14,21 @@ export interface Log {
   remark: string;
   image: string;
   newParcel: boolean;
+  editParcel: boolean;
   increaseQuantity: boolean;
   decreaseQuantity: boolean;
   print: boolean;
   printCount: number;
   detailLog: string;
-  updatedAt: string;
   createdAt: string;
+}
+
+export interface LogTable extends Log {
+  no: number;
+}
+
+export interface FilterLog {
+  parcelStatus: string[];
+  categories: string[];
+  statuses: string[];
 }

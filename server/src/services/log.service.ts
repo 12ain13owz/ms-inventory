@@ -22,6 +22,10 @@ export function findLogByDate(dateStart: Date, dateEnd: Date) {
   });
 }
 
+export function findLogById(id: number): Promise<Log | null> {
+  return logModel.findByPk(id);
+}
+
 export function createLog(log: Log, t: Transaction): Promise<Log> {
   return logModel.create(log.toJSON(), { transaction: t });
 }

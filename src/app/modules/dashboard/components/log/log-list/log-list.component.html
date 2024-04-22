@@ -1,7 +1,3 @@
-<button mat-fab color="primary" class="mb-20" (click)="onCreate()">
-  <mat-icon>add</mat-icon>
-</button>
-
 <mat-card class="mb-20 mat-elevation-z8">
   <mat-tab-group
     mat-stretch-tabs="false"
@@ -89,8 +85,8 @@
   </mat-card-header>
 
   <mat-card-content>
-    <div class="filter-box">
-      <div class="left" [formGroup]="form">
+    <div class="filter-box" [formGroup]="form">
+      <div class="left">
         <mat-form-field>
           <mat-label>ประเภท</mat-label>
           <mat-select formControlName="category" multiple>
@@ -103,7 +99,7 @@
               </span>
               }
             </mat-select-trigger>
-            @for (category of filterParcel.categories; track category) {
+            @for (category of filterLog.categories; track category) {
             <mat-option [value]="category" (click)="onFilter()">{{
               category
             }}</mat-option>
@@ -123,7 +119,7 @@
               </span>
               }
             </mat-select-trigger>
-            @for (status of filterParcel.statuses; track status) {
+            @for (status of filterLog.statuses; track status) {
             <mat-option [value]="status" (click)="onFilter()">{{
               status
             }}</mat-option>
@@ -132,51 +128,36 @@
         </mat-form-field>
       </div>
 
-      <mat-form-field>
-        <mat-label>กรองข้อมูล</mat-label>
-        <input matInput (keyup)="applyFilter($event)" #filterInput />
-      </mat-form-field>
-    </div>
+      <div class="left">
+        <mat-form-field>
+          <mat-label>จัดการพัสดุ</mat-label>
+          <mat-select formControlName="parcelStatus" multiple>
+            <mat-select-trigger>
+              {{parcelStatus.value?.[0] || ''}}
+              @if ((parcelStatus.value?.length || 0) > 1) {
+              <span class="additional-selection">
+                (+{{ (parcelStatus.value?.length || 0) - 1 }}
+                อื่น ๆ )
+              </span>
+              }
+            </mat-select-trigger>
+            @for (parcelStatus of filterLog.parcelStatus; track parcelStatus) {
+            <mat-option [value]="parcelStatus" (click)="onFilter()">{{
+              parcelStatus
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
 
-    <div class="d-flex align-center gap-10">
-      <mat-slide-toggle
-        [(ngModel)]="isSelected"
-        (click)="isSelectPrint()"
-      ></mat-slide-toggle>
-      <button
-        type="button"
-        mat-button
-        color="accent"
-        (click)="addToPrint()"
-        [disabled]="!isSelected"
-      >
-        เพิ่มพัสดุสำหรับปริ้น
-      </button>
+        <mat-form-field>
+          <mat-label>กรองข้อมูล</mat-label>
+          <input matInput (keyup)="applyFilter($event)" #filterInput />
+        </mat-form-field>
+      </div>
     </div>
 
     @if(!isLoading) {
     <mat-table [dataSource]="dataSource" matSort>
-      @if (isSelected) {
-      <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef class="p-0">
-          <mat-checkbox
-            (change)="$event ? toggleAllRows() : null"
-            [checked]="selection.hasValue() && isAllSelected()"
-            [indeterminate]="selection.hasValue() && !isAllSelected()"
-          >
-          </mat-checkbox>
-        </mat-header-cell>
-        <mat-cell *matCellDef="let row" class="p-0">
-          <mat-checkbox
-            (click)="$event.stopPropagation()"
-            (change)="$event ? selection.toggle(row) : null"
-            [checked]="selection.isSelected(row)"
-          >
-          </mat-checkbox>
-        </mat-cell>
-      </ng-container>
-      }
-
       <ng-container matColumnDef="no">
         <mat-header-cell *matHeaderCellDef mat-sort-header>No.</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{ element.no }} </mat-cell>
@@ -215,16 +196,15 @@
           >ประเภท</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.category }}
+          {{ element.categoryName }}
         </mat-cell>
       </ng-container>
-
       <ng-container matColumnDef="status">
         <mat-header-cell *matHeaderCellDef mat-sort-header
           >สถานะ</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.status }}
+          {{ element.statusName }}
         </mat-cell>
       </ng-container>
 
@@ -235,15 +215,57 @@
         <mat-cell *matCellDef="let element"> {{ element.detail }} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="quantity">
+      <ng-container matColumnDef="modifyQuantity">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >จำนวน</mat-header-cell
+          >เข้า / ออก</mat-header-cell
         >
-        <mat-cell *matCellDef="let element"> {{ element.quantity }} </mat-cell>
+        <mat-cell *matCellDef="let element">
+          @if (element.decreaseQuantity) { - }
+          {{ element.modifyQuantity }}
+        </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="printCount">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >ปริ้น</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.printCount }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="detailLog">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >รายละเอียด</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.detailLog }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef mat-sort-header
+          >วันที่สร้าง Log</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.createdAt | date : "medium" }}
+        </mat-cell>
+      </ng-container>
+
+      <div *matCellDef="let element">
+        {{ element.track }}
+      </div>
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [ngClass]="{
+          newParcel: row.newParcel,
+          increaseQuantity: row.increaseQuantity,
+          decreaseQuantity: row.decreaseQuantity,
+          print: row.print
+        }"
+      ></mat-row>
     </mat-table>
     } @else {
     <app-loading-data [form]="'list'"></app-loading-data>

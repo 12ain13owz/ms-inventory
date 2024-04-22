@@ -4,11 +4,13 @@ import {
   getAllLogHandler,
   getInitialLogHandler,
   getLogByDateHandler,
-  getLoglByTrackHandler,
+  getLogByIdHandler,
+  getLogByTrackHandler,
 } from '../../controllers/log.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import {
   getLogByDateSchema,
+  getLogByIdSchema,
   getLogByTrackSchema,
 } from '../../schemas/log.schema';
 
@@ -23,7 +25,13 @@ router.get(
 router.get(
   '/track/:track',
   [verifyToken, isUserActive, validate(getLogByTrackSchema)],
-  getLoglByTrackHandler
+  getLogByTrackHandler
+);
+
+router.get(
+  '/:id',
+  [verifyToken, isUserActive, validate(getLogByIdSchema)],
+  getLogByIdHandler
 );
 
 export default router;

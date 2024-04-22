@@ -28,8 +28,11 @@ export class StatusService {
     return this.statuses.map((status, i) => ({ no: i + 1, ...status })).slice();
   }
 
-  getStatusesName(): string[] {
-    return this.statuses.map((status) => status.name).slice();
+  getActiveStatusesName(): string[] {
+    return this.statuses
+      .filter((status) => status.active)
+      .map((status) => status.name)
+      .slice();
   }
 
   getActiveStatuses(): { id: number; name: string }[] {

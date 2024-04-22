@@ -1,5 +1,6 @@
-.mat-column-select {
-  flex: 0 0 60px;
+img {
+  width: 100px;
+  height: 100px;
 }
 
 .mat-column-no {
@@ -14,10 +15,6 @@
   flex: 0 0 140px;
 }
 
-.mat-column-receivedDate {
-  flex: 0 0 120px;
-}
-
 .mat-column-category {
   flex: 0 0 100px;
 }
@@ -26,28 +23,20 @@
   flex: 0 0 100px;
 }
 
-.mat-column-quantity {
-  flex: 0 0 70px;
+.mat-column-modifyQuantity {
+  flex: 0 0 120px;
 }
 
-.mat-column-detail {
+.mat-column-printCount {
+  flex: 0 0 80px;
+}
+
+.mat-column-detailLog {
+  flex: 0 0 120px;
+}
+
+.mat-column-createdAt {
   min-width: 150px;
-}
-
-img {
-  width: 100px;
-  height: 100px;
-}
-
-mat-row:hover {
-  background-color: #f5f5f5;
-  transition: 0.2s;
-}
-
-:host-context(.dark-theme) {
-  mat-row:hover {
-    background-color: #343434;
-  }
 }
 
 .filter-box {
@@ -78,4 +67,24 @@ mat-row:hover {
       width: 100%;
     }
   }
+}
+
+.newParcel {
+  color: #a438b6;
+}
+
+.editParcel {
+  color: #a438b6;
+}
+
+.increaseQuantity {
+  color: #46a14a;
+}
+
+.decreaseQuantity {
+  color: #f55246;
+}
+
+.print {
+  color: #f5b907;
 }

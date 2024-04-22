@@ -4,9 +4,14 @@ import {
   findAllLog,
   findLimitLog,
   findLogByDate,
+  findLogById,
   findLogByTrack,
 } from '../services/log.service';
-import { getLogByDateInput, getLogByTrackInput } from '../schemas/log.schema';
+import {
+  getLogByDateInput,
+  getLogByIdInput,
+  getLogByTrackInput,
+} from '../schemas/log.schema';
 import { newError } from '../utils/helper';
 
 export async function getAllLogHandler(
@@ -65,18 +70,35 @@ export async function getLogByDateHandler(
   }
 }
 
-export async function getLoglByTrackHandler(
+export async function getLogByTrackHandler(
   req: Request<getLogByTrackInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getLoglByTrackHandler';
+  res.locals.func = 'getLogByTrackHandler';
 
   try {
     const track = req.params.track;
     const resLogs = await findLogByTrack(track);
 
     res.json(resLogs);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getLogByIdHandler(
+  req: Request<getLogByIdInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getLogByIdHandler';
+
+  try {
+    const id = +req.params.id;
+    const resLog = await findLogById(id);
+
+    res.json(resLog);
   } catch (error) {
     next(error);
   }

@@ -46,7 +46,7 @@ export class ParcelViewComponent implements OnInit {
     this.isEdit = true;
   }
 
-  onQuantity() {
+  onAddQuantity() {
     this.isStock = true;
   }
 

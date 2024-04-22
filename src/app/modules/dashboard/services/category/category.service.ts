@@ -30,8 +30,11 @@ export class CategoryService {
       .slice();
   }
 
-  getCategoriesName(): string[] {
-    return this.categories.map((category) => category.name).slice();
+  getActiveCategoriesName(): string[] {
+    return this.categories
+      .filter((category) => category.active)
+      .map((category) => category.name)
+      .slice();
   }
 
   getActiveCategories(): { id: number; name: string }[] {

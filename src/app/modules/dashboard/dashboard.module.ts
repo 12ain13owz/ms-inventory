@@ -28,6 +28,8 @@ import { PrintListComponent } from './components/print/print-list/print-list.com
 import { PrintBarcodeComponent } from './components/print/print-barcode/print-barcode.component';
 import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrcode.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { LogListComponent } from './components/log/log-list/log-list.component';
+import { LogViewComponent } from './components/log/log-view/log-view.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     PrintListComponent,
     PrintBarcodeComponent,
     PrintQrcodeComponent,
+    LogListComponent,
+    LogViewComponent,
   ],
   imports: [
     DashboardRoutingModule,

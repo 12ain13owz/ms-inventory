@@ -1,0 +1,119 @@
+@defer (when !isLoading) { @if (log) {
+<mat-card
+  [ngClass]="{
+    'shadow-newParcel': log.newParcel,
+    'shadow-increaseQuantity': log.increaseQuantity,
+    'shadow-decreaseQuantity': log.decreaseQuantity,
+    'shadow-print': log.print
+  }"
+>
+  <mat-card-header class="mb-16">
+    <mat-card-title
+      [ngClass]="{
+        newParcel: log.newParcel,
+        increaseQuantity: log.increaseQuantity,
+        decreaseQuantity: log.decreaseQuantity,
+        print: log.print
+      }"
+      >{{ title }}</mat-card-title
+    >
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="blurred-img">
+      <img
+        class="size"
+        [defaultImage]="'assets/images/no-image.jpg'"
+        [lazyLoad]="imageUrl + log.image"
+      />
+    </div>
+
+    <mat-list>
+      <div class="m-left-0" mat-subheader>รายละเอียดประวัติ</div>
+      <mat-divider></mat-divider>
+      <mat-list-item>
+        <span matListItemTitle>วันที่สร้าง Log</span>
+        <span matListItemLine>{{ log.createdAt | date : "medium" }}</span>
+      </mat-list-item>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>ชื่อ - สกุล</span>
+          <span matListItemLine>{{ log.firstname }} {{ log.lastname }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>รายละเอียด</span>
+          <span matListItemLine>{{ log.detailLog }}</span>
+        </mat-list-item>
+      </div>
+
+      <mat-list-item>
+        <span matListItemTitle>พัสดุเข้า / ออก</span>
+        <span matListItemLine
+          >@if(log.decreaseQuantity){-}{{ log.modifyQuantity }}</span
+        >
+      </mat-list-item>
+    </mat-list>
+
+    <mat-list>
+      <div style="margin-left: 0" mat-subheader>รายละเอียดพัสดุ</div>
+      <mat-divider></mat-divider>
+      <mat-list-item>
+        <span matListItemTitle>Track</span>
+        <span matListItemLine>{{ log.track }}</span>
+      </mat-list-item>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>รหัส</span>
+          <span matListItemLine>{{ log.code }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>รหัสเดิม</span>
+          <span matListItemLine>{{ isEmpty(log.oldCode) }}</span>
+        </mat-list-item>
+      </div>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>วันที่รับพัสดุ</span>
+          <span matListItemLine>{{ log.receivedDate | thaiYear }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>จำนวน</span>
+          <span matListItemLine>{{ log.quantity }}</span>
+        </mat-list-item>
+      </div>
+
+      <div class="d-flex flex-row">
+        <mat-list-item>
+          <span matListItemTitle>ประเภท</span>
+          <span matListItemLine>{{ log.categoryName }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>สถานะ</span>
+          <span matListItemLine>{{ log.statusName }}</span>
+        </mat-list-item>
+      </div>
+
+      <mat-list-item>
+        <span matListItemTitle>รายละเอียด</span>
+        <span matListItemLine>{{ log.detail }}</span>
+      </mat-list-item>
+
+      <mat-list-item>
+        <span matListItemTitle>หมายเหตุ</span>
+        <span matListItemLine>{{ isEmpty(log.remark) }}</span>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+} @else {
+<button class="w-100" mat-flat-button color="warn">ไม่พบข้อมูลพัสดุ</button>
+} } @placeholder (minimum 300ms) {
+<app-loading-data [form]="'card'"></app-loading-data>
+}

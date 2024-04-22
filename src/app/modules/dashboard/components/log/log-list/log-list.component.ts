@@ -7,7 +7,6 @@ import {
   inject,
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   Observable,
   Subscription,
@@ -19,45 +18,36 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { ParcelService } from '../../../services/parcel/parcel.service';
-import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
-import { CategoryService } from '../../../services/category/category.service';
-import { StatusService } from '../../../services/status/status.service';
-import { ValidationService } from '../../../../shared/services/validation.service';
-import {
-  FilterParcel,
-  Parcel,
-  ParcelTable,
-} from '../../../models/parcel.model';
+import { LogService } from '../../../services/log/log.service';
 import { DatePipe } from '@angular/common';
 import { environment } from '../../../../../../environments/environment.development';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { PrintService } from '../../../services/print/print.service';
+import { FilterLog, Log, LogTable } from '../../../models/log.model';
+import { ValidationService } from '../../../../shared/services/validation.service';
+import { LogApiService } from '../../../services/log/log-api.service';
+import { CategoryService } from '../../../services/category/category.service';
+import { StatusService } from '../../../services/status/status.service';
 
 enum Tap {
   Date,
   Track,
 }
 @Component({
-  selector: 'app-parcel-list',
-  templateUrl: './parcel-list.component.html',
-  styleUrl: './parcel-list.component.scss',
+  selector: 'app-log-list',
+  templateUrl: './log-list.component.html',
+  styleUrl: './log-list.component.scss',
 })
-export class ParcelListComponent implements OnInit, OnDestroy {
-  private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
-  private formBuilder = inject(FormBuilder);
+export class LogListComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
-  private parcelService = inject(ParcelService);
-  private parcelApiService = inject(ParcelApiService);
+  private formBuilder = inject(FormBuilder);
   private categoryService = inject(CategoryService);
   private statusService = inject(StatusService);
+  private logService = inject(LogService);
+  private logApiService = inject(LogApiService);
   private validationService = inject(ValidationService);
-  private printService = inject(PrintService);
-  private operation$: Observable<Parcel[] | Parcel>;
+  private operation$: Observable<Log[]>;
 
   datePipe = inject(DatePipe);
   imageUrl: string = environment.imageUrl;
@@ -67,15 +57,20 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
-  filterParcel: FilterParcel = {
+  filterLog: FilterLog = {
+    parcelStatus: [
+      'เพิ่มพัสดุ',
+      'แก้ไขพัสดุ',
+      'เพิ่มสต็อก',
+      'ตัดสต็อก',
+      'ปริ้น',
+    ],
     categories: this.categoryService.getActiveCategoriesName(),
     statuses: this.statusService.getActiveStatusesName(),
   };
   form = this.initForm();
 
   isLoading: boolean = false;
-  isSelected: boolean = false;
-  isPrint: boolean = false;
   selectedTap = new FormControl(Tap.Date);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   endDate = new Date();
@@ -88,34 +83,27 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     'no',
     'image',
     'track',
-    'receivedDate',
     'category',
     'status',
-    'quantity',
-    'detail',
+    'modifyQuantity',
+    'printCount',
+    'detailLog',
+    'createdAt',
   ];
-  dataSource = new MatTableDataSource<ParcelTable>([]);
-  selection = new SelectionModel<ParcelTable>(true, []);
+  dataSource = new MatTableDataSource<LogTable>([]);
   isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.initDataSource();
 
-    this.subscription = this.parcelService.onParcelsListener().subscribe(() => {
-      this.dataSource.data = this.parcelService.getParcelsTable();
+    this.subscription = this.logService.onLogsListener().subscribe(() => {
+      this.dataSource.data = this.logService.getLogsTable();
       this.initPaginatorAndSort();
     });
-
-    if (this.activatedRoute.snapshot.queryParams['isPrint'] === 'true')
-      this.isPrint = true;
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  onCreate(): void {
-    this.router.navigate(['parcel/new']);
   }
 
   onSearch(): void {
@@ -130,21 +118,18 @@ export class ParcelListComponent implements OnInit, OnDestroy {
         this.dateRange.controls['end'].value,
         'yyyy-MM-dd'
       );
-      this.operation$ = this.parcelApiService.getParcelsByDate(
-        startDate,
-        endDate
-      );
+      this.operation$ = this.logApiService.getLogsByDate(startDate, endDate);
     } else if (this.selectedTap.value === Tap.Track) {
       if (!this.track) return;
 
       const track = this.track.nativeElement.value.replace(/^\s+|\s+$/gm, '');
       if (!track) return;
 
-      const parcel = this.parcelService.getParcelByTrackInput(track);
-      if (this.validationService.isEmpty(parcel))
-        this.operation$ = this.parcelApiService.getParcelByTrack(track);
+      const logs = this.logService.getLogsByTrackInput(track);
+      if (this.validationService.isEmpty(logs))
+        this.operation$ = this.logApiService.getLogsByTrack(track);
       else {
-        this.dataSource.data = parcel;
+        this.dataSource.data = logs;
         return;
       }
     }
@@ -160,8 +145,8 @@ export class ParcelListComponent implements OnInit, OnDestroy {
 
   onSearchAll(): void {
     this.isLoading = true;
-    this.parcelApiService
-      .getAllParcels()
+    this.logApiService
+      .getAllLogs()
       .pipe(
         tap(() => this.setFilter()),
         finalize(() => (this.isLoading = false))
@@ -170,23 +155,49 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   }
 
   setFilter(): void {
-    this.form.setValue({ category: [], status: [] });
+    this.form.setValue({ parcelStatus: [], category: [], status: [] });
   }
 
   onFilter(): void {
-    const parcels = this.parcelService.getParcelsTable();
-    const filters = this.form.value;
+    const logs = this.logService.getLogs();
+    const filters = {
+      categoryName: this.category.value,
+      statusName: this.status.value,
+    };
 
-    this.dataSource.data = Object.keys(filters)
-      .reduce(
-        (result, keyName) =>
-          result.filter((item) => {
-            if (filters[keyName].length === 0) return result;
-            return filters[keyName].includes(item[keyName]);
-          }),
-        parcels
+    const logFilter = Object.keys(filters).reduce(
+      (result, keyName) =>
+        result.filter((log) => {
+          if (filters[keyName].length === 0) return result;
+          return filters[keyName].includes(log[keyName]);
+        }),
+      logs
+    );
+
+    if (this.validationService.isEmpty(this.parcelStatus.value)) {
+      this.dataSource.data = logFilter.map((log, i) => ({
+        ...log,
+        no: i + 1,
+      }));
+      return;
+    }
+
+    const newParcel = this.parcelStatus.value.includes('เพิ่มพัสดุ');
+    const editParcel = this.parcelStatus.value.includes('แก้ไขพัสดุ');
+    const increaseQuantity = this.parcelStatus.value.includes('เพิ่มสต็อก');
+    const decreaseQuantity = this.parcelStatus.value.includes('ตัดสต็อก');
+    const print = this.parcelStatus.value.includes('ปริ้น');
+
+    this.dataSource.data = logFilter
+      .filter(
+        (log) =>
+          (log.newParcel && newParcel) ||
+          (log.editParcel && editParcel) ||
+          (log.increaseQuantity && increaseQuantity) ||
+          (log.decreaseQuantity && decreaseQuantity) ||
+          (log.print && print)
       )
-      .map((parcel, i) => ({ ...parcel, no: i + 1 }));
+      .map((log, i) => ({ ...log, no: i + 1 }));
   }
 
   onResetFilter(): void {
@@ -201,39 +212,8 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  toggleAllRows(): void {
-    if (this.isAllSelected()) {
-      this.selection.clear();
-      return;
-    }
-
-    this.selection.select(...this.dataSource.data);
-  }
-
-  isSelectPrint() {
-    if (this.isSelected) this.displayedColumns.unshift('select');
-    else this.displayedColumns.shift();
-  }
-
-  addToPrint(): void {
-    const parcels = this.selection.selected
-      .filter((parcel) => !this.printService.getParcelById(parcel.id))
-      .map((parcel) => ({
-        id: parcel.id,
-        image: parcel.image,
-        track: parcel.track,
-        quantity: parcel.quantity,
-        print: parcel.print,
-        printCount: parcel.quantity,
-      }));
-
-    for (const parcel of parcels) this.printService.createParcel(parcel);
+  get parcelStatus(): FormControl<string[]> {
+    return this.form.controls['parcelStatus'];
   }
 
   get category(): FormControl<string[]> {
@@ -246,16 +226,17 @@ export class ParcelListComponent implements OnInit, OnDestroy {
 
   private initForm() {
     return this.formBuilder.group({
+      parcelStatus: this.formBuilder.control<string[]>([]),
       category: this.formBuilder.control<string[]>([]),
       status: this.formBuilder.control<string[]>([]),
     });
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.parcelService.getParcelsTable();
+    this.dataSource.data = this.logService.getLogsTable();
     if (this.validationService.isEmpty(this.dataSource.data)) {
-      this.parcelApiService
-        .getInitialParcels()
+      this.logApiService
+        .getInitialLogs()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 
@@ -277,15 +258,10 @@ export class ParcelListComponent implements OnInit, OnDestroy {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.dataSource.sort.sort({
-        id: 'track',
+        id: 'createdAt',
         start: 'desc',
         disableClear: true,
       });
-
-      if (this.isPrint) {
-        this.isSelected = this.isPrint;
-        this.isSelectPrint();
-      }
     });
   }
 }

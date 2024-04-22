@@ -7,9 +7,11 @@ import {
   Parcel,
   ParcelPrint,
   ParcelPrintPayload,
+  ParcelPrintResponse,
   ParcelQuantityResponse,
   ParcelResponse,
 } from '../../models/parcel.model';
+import { LogService } from '../log/log.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +19,11 @@ import {
 export class ParcelApiService {
   private apiUrl: string = environment.apiUrl + 'parcel';
 
-  constructor(private http: HttpClient, private parcelService: ParcelService) {}
+  constructor(
+    private http: HttpClient,
+    private parcelService: ParcelService,
+    private logService: LogService
+  ) {}
 
   getAllParcels(): Observable<Parcel[]> {
     return this.http.get<Parcel[]>(this.apiUrl).pipe(
@@ -54,15 +60,17 @@ export class ParcelApiService {
   }
 
   createParcel(payload: FormData): Observable<ParcelResponse> {
-    return this.http
-      .post<ParcelResponse>(this.apiUrl, payload)
-      .pipe(tap((res) => this.parcelService.createParcel(res.parcel)));
+    return this.http.post<ParcelResponse>(this.apiUrl, payload).pipe(
+      tap((res) => this.parcelService.createParcel(res.parcel)),
+      tap((res) => this.logService.createLog(res.log))
+    );
   }
 
   updateParcel(id: number, payload: FormData): Observable<ParcelResponse> {
-    return this.http
-      .put<ParcelResponse>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.parcelService.updateParcel(id, res.parcel)));
+    return this.http.put<ParcelResponse>(`${this.apiUrl}/${id}`, payload).pipe(
+      tap((res) => this.parcelService.updateParcel(id, res.parcel)),
+      tap((res) => this.logService.createLog(res.log))
+    );
   }
 
   incrementParcel(
@@ -74,7 +82,8 @@ export class ParcelApiService {
         stock,
       })
       .pipe(
-        tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
+        tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity)),
+        tap((res) => this.logService.createLog(res.log))
       );
   }
 
@@ -88,14 +97,18 @@ export class ParcelApiService {
       })
       .pipe(
         switchMap((res) => timer(300).pipe(map(() => res))),
-        tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity))
+        tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity)),
+        tap((res) => this.logService.createLog(res.log))
       );
   }
 
   updatePrintParcel(id: number, payload: ParcelPrintPayload) {
     return this.http
-      .patch<ParcelPrint>(`${this.apiUrl}/print/${id}`, payload)
-      .pipe(tap((res) => this.parcelService.updatePrintParcel(id, res.print)));
+      .patch<ParcelPrintResponse>(`${this.apiUrl}/print/${id}`, payload)
+      .pipe(
+        tap((res) => this.parcelService.updatePrintParcel(id, res.print)),
+        tap((res) => this.logService.createLog(res.log))
+      );
   }
 
   downloadImage(url: string): Observable<Blob> {

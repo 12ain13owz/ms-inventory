@@ -1,5 +1,5 @@
 @if (!isEdit && !isStock) { @defer (when !isLoading) { @if (parcel) {
-<mat-card>
+<mat-card class="mat-elevation-z8">
   <mat-card-header class="mb-16">
     <mat-card-title>{{ title }}</mat-card-title>
   </mat-card-header>
@@ -68,10 +68,13 @@
   </mat-card-content>
 
   <mat-card-actions class="gap-10">
-    <button type="button" mat-raised-button color="primary" (click)="onEdit()">
-      แก้ไข
-    </button>
-    <button type="button" mat-raised-button (click)="onQuantity()">
+    <button type="button" mat-raised-button (click)="onEdit()">แก้ไข</button>
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      (click)="onAddQuantity()"
+    >
       เพิ่มสต็อก
     </button>
 

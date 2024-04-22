@@ -1,0 +1,39 @@
+mat-list-item {
+  padding: 0;
+}
+
+.m-left-0 {
+  margin-left: 0;
+}
+
+.newParcel {
+  color: rgb(164, 56, 182);
+}
+
+.increaseQuantity {
+  color: rgb(70, 161, 74);
+}
+
+.decreaseQuantity {
+  color: rgb(245, 82, 70);
+}
+
+.print {
+  color: rgb(245, 185, 7);
+}
+
+.shadow-newParcel {
+  box-shadow: rgba(164, 56, 182, 0.2) 0px 7px 29px 0px;
+}
+
+.shadow-increaseQuantity {
+  box-shadow: rgba(70, 161, 74, 0.2) 0px 7px 29px 0px;
+}
+
+.shadow-decreaseQuantity {
+  box-shadow: rgba(245, 82, 70, 0.2) 0px 7px 29px 0px;
+}
+
+.shadow-print {
+  box-shadow: rgba(245, 185, 7, 0.2) 0px 7px 29px 0px;
+}
