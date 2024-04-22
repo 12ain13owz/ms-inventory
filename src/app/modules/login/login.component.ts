@@ -1,27 +1,39 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { Subscription, finalize } from 'rxjs';
 import { LoginService } from './services/login.service';
-import { LoginForm, LoginRequest } from './models/login.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoginRequest } from './models/login.model';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { LOGIN } from './constants/login,constant';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  private subscription = new Subscription();
+  private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   private loginService = inject(LoginService);
+  private recaptchaV3Service = inject(ReCaptchaV3Service);
 
   validationField = LOGIN.validationField;
-  form: LoginForm;
   isLoading: boolean = false;
   hidePassword: boolean = true;
+  form = this.initForm();
 
   ngOnInit(): void {
     this.initForm();
+
+    this.subscription = this.recaptchaV3Service
+      .execute('importantAction')
+      .subscribe((token) => this.recaptcha.setValue(token));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onSubmit(): void {
@@ -43,14 +55,15 @@ export class LoginComponent implements OnInit {
     return this.form.controls['password'];
   }
 
-  private initForm(): void {
-    this.form = new FormGroup({
-      email: new FormControl('admin@test.com', {
-        validators: [Validators.required, Validators.email],
-      }),
-      password: new FormControl('!Qwer1234', {
-        validators: [Validators.required],
-      }),
+  get recaptcha(): FormControl<string> {
+    return this.form.controls['recaptcha'];
+  }
+
+  private initForm() {
+    return this.formBuilder.group({
+      email: ['admin@test.com', [Validators.required, Validators.email]],
+      password: ['!Qwer1234', [Validators.required]],
+      recaptcha: ['', [Validators.required]],
     });
   }
 }

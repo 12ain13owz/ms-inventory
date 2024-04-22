@@ -11,6 +11,10 @@ interface AppConfig {
   port: number;
   node_env: string;
   database: DatabaseConfig;
+  recaptcha: {
+    siteKey: string;
+    secretKey: string;
+  };
   accessTokenPrivateKey: string;
   accessTokenPublicKey: string;
   refreshTokenPrivateKey: string;
@@ -23,6 +27,10 @@ const config: AppConfig = {
   database: {
     dialect: 'sqlite',
     storage: './database/ms_stock.sqlite',
+  },
+  recaptcha: {
+    siteKey: process.env.RECAPTCHA_SITE_KEY || '',
+    secretKey: process.env.RECAPTCHA_SECRET_KEY || '',
   },
   accessTokenPrivateKey: process.env.ACCESS_TOKEN_PRIVATE_KEY || '',
   accessTokenPublicKey: process.env.ACCESS_TOKEN_PUBLIC_KEY || '',

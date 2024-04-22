@@ -1,13 +1,45 @@
+import config from 'config';
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { newError } from '../utils/helper';
 import { verifyJwt } from '../utils/jwt';
 import { findUserById } from '../services/user.service';
+import { LoginUserInput } from '../schemas/auth.schema';
 
 interface decodeUser {
   userId: number;
   iat: number;
   exp: number;
+}
+
+export async function verifyRecaptcha(
+  req: Request<{}, {}, LoginUserInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'verifyRecaptcha';
+
+  try {
+    const secretKey = config.get<string>('recaptcha.secretKey');
+    const recaptcha = req.body.recaptcha;
+    const url = 'https://www.google.com/recaptcha/api/siteverify';
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        secret: secretKey,
+        response: recaptcha,
+        remoteip: req.ip,
+      }),
+    });
+
+    if (response.status !== 200)
+      throw newError(response.status, 'การตรวจสอบ reCAPTCHA ไม่สำเร็จ');
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 }
 
 export async function verifyToken(

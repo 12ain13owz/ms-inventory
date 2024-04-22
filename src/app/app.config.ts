@@ -36,21 +36,3 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(JwtModule.forRoot({ config: jwtConfig })),
   ],
 };
-
-// export function loadCrucialData() {
-//   return function () {
-//     return delay(500);
-//   };
-// }
-
-// export function delay(delay: number) {
-//   return function () {
-//     return new Promise(function (resolve) {
-//       setTimeout(resolve, delay);
-//     });
-//   };
-// }
-
-// const providerSplashScreen: Provider = [
-//   { provide: APP_INITIALIZER, multi: true, useFactory: loadCrucialData() },
-// ];

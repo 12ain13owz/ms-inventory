@@ -6,10 +6,15 @@ import {
 } from '../../controllers/auth.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import { LoginUserSchema } from '../../schemas/auth.schema';
+import { verifyRecaptcha } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post('/login', [validate(LoginUserSchema)], loginHandler);
+router.post(
+  '/login',
+  [validate(LoginUserSchema), verifyRecaptcha],
+  loginHandler
+);
 router.delete('/logout', logoutHandler);
 router.post('/refresh', refreshTokenHandler);
 
