@@ -1,7 +1,7 @@
 @defer (when !isLoading) { @if (log) {
 <mat-card
   [ngClass]="{
-    'shadow-newParcel': log.newParcel,
+    'shadow-editParcel': log.editParcel,
     'shadow-increaseQuantity': log.increaseQuantity,
     'shadow-decreaseQuantity': log.decreaseQuantity,
     'shadow-print': log.print
@@ -10,7 +10,7 @@
   <mat-card-header class="mb-16">
     <mat-card-title
       [ngClass]="{
-        newParcel: log.newParcel,
+        editParcel: log.editParcel,
         increaseQuantity: log.increaseQuantity,
         decreaseQuantity: log.decreaseQuantity,
         print: log.print
@@ -50,9 +50,9 @@
 
       <mat-list-item>
         <span matListItemTitle>พัสดุเข้า / ออก</span>
-        <span matListItemLine
-          >@if(log.decreaseQuantity){-}{{ log.modifyQuantity }}</span
-        >
+        <span matListItemLine>{{
+          displayModifyQuantity(log.modifyQuantity)
+        }}</span>
       </mat-list-item>
     </mat-list>
 

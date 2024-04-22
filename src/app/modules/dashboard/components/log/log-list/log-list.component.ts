@@ -125,13 +125,7 @@ export class LogListComponent implements OnInit, OnDestroy {
       const track = this.track.nativeElement.value.replace(/^\s+|\s+$/gm, '');
       if (!track) return;
 
-      const logs = this.logService.getLogsByTrackInput(track);
-      if (this.validationService.isEmpty(logs))
-        this.operation$ = this.logApiService.getLogsByTrack(track);
-      else {
-        this.dataSource.data = logs;
-        return;
-      }
+      this.operation$ = this.logApiService.getLogsByTrack(track);
     }
 
     this.isLoading = true;
