@@ -40,7 +40,7 @@ export class LogViewComponent implements OnInit {
 
   displayModifyQuantity(modifyQuantity: number): string {
     if (modifyQuantity === 0) return '-';
-    if (modifyQuantity < 0) return '-' + modifyQuantity.toString();
+    if (this.log.decreaseQuantity) return '- ' + modifyQuantity.toString();
 
     return modifyQuantity.toString();
   }

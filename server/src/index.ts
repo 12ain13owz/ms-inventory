@@ -1,28 +1,22 @@
 import config from 'config';
-import https from 'https';
-import fs from 'fs';
 import express from 'express';
 import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 
 import healthRoutes from './routes/health';
 import userRoutesV1 from './routes/v1/index';
 import errorHandler from './middlewares/error-handler.middleware';
 
-import log from './utils/logger';
 import { databaseConnect } from './utils/connect';
+import log from './utils/logger';
 import socket from './socket';
 
-const httpsOptions = {
-  key: fs.readFileSync(path.join('D:/Project/certificates/ssl_private.key')),
-  cert: fs.readFileSync(path.join('D:/Project/certificates/ssl.crt')),
-};
-
 const corsOptions: CorsOptions = {
-  origin: ['https://localhost:4200', 'https://192.168.1.46:4200'],
+  origin: ['http://localhost:4200', 'http://192.168.1.46:4200'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
@@ -32,9 +26,9 @@ const socketOptions = {
 };
 
 const app = express();
-const port = config.get<number>('port');
-const server = https.createServer(httpsOptions, app);
+const server = createServer(app);
 const io = new Server(server, socketOptions);
+const port = config.get<number>('port');
 
 socket(io);
 app.use(cors(corsOptions));
@@ -50,5 +44,5 @@ app.use(errorHandler);
 
 server.listen(port, async () => {
   await databaseConnect();
-  log.info(`Server listening on port ${port}`);
+  log.info(`Server listening at http://localhost:${port}`);
 });

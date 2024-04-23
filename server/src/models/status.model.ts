@@ -38,7 +38,6 @@ export default Status.init(
     },
     remark: {
       type: DataTypes.TEXT,
-      defaultValue: '',
     },
     createdAt: {
       type: DataTypes.DATE,

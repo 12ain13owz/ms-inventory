@@ -43,8 +43,7 @@ export async function loginHandler(
       expires: expiresCookie,
       httpOnly: true,
       sameSite: 'none',
-      // secure: config.get<string>('node_env') === 'production',
-      secure: true,
+      secure: config.get<string>('node_env') === 'production',
     });
 
     res.json({ accessToken, resUser });
@@ -110,8 +109,7 @@ export async function refreshTokenHandler(
       expires: expiresCookie,
       httpOnly: true,
       sameSite: 'none',
-      // secure: config.get<string>('node_env') === 'production',
-      secure: true,
+      secure: config.get<string>('node_env') === 'production',
     });
     res.json({ accessToken: newAccessToken });
   } catch (error) {

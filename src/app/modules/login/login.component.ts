@@ -61,8 +61,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private initForm() {
     return this.formBuilder.group({
-      email: ['admin@test.com', [Validators.required, Validators.email]],
-      password: ['!Qwer1234', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
       recaptcha: ['', [Validators.required]],
     });
   }
