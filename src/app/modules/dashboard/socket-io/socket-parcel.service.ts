@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { SocketIoService } from './socket-io.service';
 import { ParcelService } from '../services/parcel/parcel.service';
 import { Socket } from 'socket.io-client';
 import { Parcel } from '../models/parcel.model';
@@ -10,11 +9,10 @@ import { Parcel } from '../models/parcel.model';
 export class SocketParcelService {
   socketIO: Socket;
 
-  constructor(
-    private socketIoService: SocketIoService,
-    private parcelService: ParcelService
-  ) {
-    this.socketIO = this.socketIoService.socketListener;
+  constructor(private parcelService: ParcelService) {}
+
+  initializeSocketIO(socketIO: Socket) {
+    this.socketIO = socketIO;
     if (!this.socketIO) return;
 
     this.socketIO.on('parcel:create', (parcel: Parcel) => {

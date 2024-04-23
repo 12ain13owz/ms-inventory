@@ -4,7 +4,6 @@ import log from './logger';
 
 export async function databaseConnect(): Promise<void> {
   try {
-    await sequelize.sync();
     await sequelize.authenticate();
 
     log.info('Connected to Database successfully');
