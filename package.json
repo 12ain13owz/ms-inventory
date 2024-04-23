@@ -1,6 +1,6 @@
 {
-  "name": "msbsru-stock-it",
-  "version": "0.0.0",
+  "name": "angular-msbsru-stock-it",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
