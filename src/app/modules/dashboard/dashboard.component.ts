@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay, withLatestFrom } from 'rxjs/operators';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NavigationEnd, Router } from '@angular/router';
+import { SocketIoService } from './socket-io/socket-io.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +17,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private router = inject(Router);
   private breakpointObserver = inject(BreakpointObserver);
+  private socketIoService = inject(SocketIoService);
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
@@ -33,6 +35,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe(() => this.sidenav.close());
+
+    this.socketIoService.setupSocketConnection();
   }
 
   ngOnDestroy(): void {

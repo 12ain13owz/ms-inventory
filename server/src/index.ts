@@ -6,6 +6,7 @@ import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import { Server } from 'socket.io';
 
 import healthRoutes from './routes/health';
 import userRoutesV1 from './routes/v1/index';
@@ -13,8 +14,9 @@ import errorHandler from './middlewares/error-handler.middleware';
 
 import log from './utils/logger';
 import { databaseConnect } from './utils/connect';
+import socket from './socket';
 
-const https_options = {
+const httpsOptions = {
   key: fs.readFileSync(path.join('D:/Project/certificates/ssl_private.key')),
   cert: fs.readFileSync(path.join('D:/Project/certificates/ssl.crt')),
 };
@@ -25,10 +27,16 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 
+const socketOptions = {
+  cors: { origin: corsOptions.origin },
+};
+
 const app = express();
 const port = config.get<number>('port');
-const server = https.createServer(https_options, app);
+const server = https.createServer(httpsOptions, app);
+const io = new Server(server, socketOptions);
 
+socket(io);
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(cookieParser());

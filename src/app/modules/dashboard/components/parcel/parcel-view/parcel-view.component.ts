@@ -1,9 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Parcel, ParcelPrint } from '../../../models/parcel.model';
 import { ActivatedRoute } from '@angular/router';
 import { ParcelService } from '../../../services/parcel/parcel.service';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
-import { finalize } from 'rxjs';
+import { Subscription, finalize } from 'rxjs';
 import { environment } from '../../../../../../environments/environment.development';
 import { PrintService } from '../../../services/print/print.service';
 
@@ -12,7 +12,8 @@ import { PrintService } from '../../../services/print/print.service';
   templateUrl: './parcel-view.component.html',
   styleUrl: './parcel-view.component.scss',
 })
-export class ParcelViewComponent implements OnInit {
+export class ParcelViewComponent implements OnInit, OnDestroy {
+  private subscription = new Subscription();
   private route = inject(ActivatedRoute);
   private parcelService = inject(ParcelService);
   private parcelApiService = inject(ParcelApiService);
@@ -35,6 +36,16 @@ export class ParcelViewComponent implements OnInit {
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res) => res && (this.parcel = res));
     }
+
+    this.subscription = this.parcelService
+      .onParcelsListener()
+      .subscribe(
+        () => (this.parcel = this.parcelService.getParcelById(this.id))
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   isEmpty(value: any): string | any {

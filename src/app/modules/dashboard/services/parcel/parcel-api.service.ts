@@ -12,6 +12,8 @@ import {
   ParcelResponse,
 } from '../../models/parcel.model';
 import { LogService } from '../log/log.service';
+import { SocketParcelService } from '../../socket-io/socket-parcel.service';
+import { SocketLogService } from '../../socket-io/socket-log.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,9 @@ export class ParcelApiService {
   constructor(
     private http: HttpClient,
     private parcelService: ParcelService,
-    private logService: LogService
+    private socketParcelService: SocketParcelService,
+    private logService: LogService,
+    private socketLogService: SocketLogService
   ) {}
 
   getAllParcels(): Observable<Parcel[]> {
@@ -62,14 +66,18 @@ export class ParcelApiService {
   createParcel(payload: FormData): Observable<ParcelResponse> {
     return this.http.post<ParcelResponse>(this.apiUrl, payload).pipe(
       tap((res) => this.parcelService.createParcel(res.parcel)),
-      tap((res) => this.logService.createLog(res.log))
+      tap((res) => this.socketParcelService.createParcel(res.parcel)),
+      tap((res) => this.logService.createLog(res.log)),
+      tap((res) => this.socketLogService.createLog(res.log))
     );
   }
 
   updateParcel(id: number, payload: FormData): Observable<ParcelResponse> {
     return this.http.put<ParcelResponse>(`${this.apiUrl}/${id}`, payload).pipe(
       tap((res) => this.parcelService.updateParcel(id, res.parcel)),
-      tap((res) => this.logService.createLog(res.log))
+      tap((res) => this.socketParcelService.updateParcel(id, res.parcel)),
+      tap((res) => this.logService.createLog(res.log)),
+      tap((res) => this.socketLogService.createLog(res.log))
     );
   }
 
@@ -83,7 +91,11 @@ export class ParcelApiService {
       })
       .pipe(
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity)),
-        tap((res) => this.logService.createLog(res.log))
+        tap((res) =>
+          this.socketParcelService.modifyQuantityParcel(id, res.quantity)
+        ),
+        tap((res) => this.logService.createLog(res.log)),
+        tap((res) => this.socketLogService.createLog(res.log))
       );
   }
 
@@ -98,7 +110,11 @@ export class ParcelApiService {
       .pipe(
         switchMap((res) => timer(300).pipe(map(() => res))),
         tap((res) => this.parcelService.modifyQuantityParcel(id, res.quantity)),
-        tap((res) => this.logService.createLog(res.log))
+        tap((res) =>
+          this.socketParcelService.modifyQuantityParcel(id, res.quantity)
+        ),
+        tap((res) => this.logService.createLog(res.log)),
+        tap((res) => this.socketLogService.createLog(res.log))
       );
   }
 
@@ -107,7 +123,9 @@ export class ParcelApiService {
       .patch<ParcelPrintResponse>(`${this.apiUrl}/print/${id}`, payload)
       .pipe(
         tap((res) => this.parcelService.updatePrintParcel(id, res.print)),
-        tap((res) => this.logService.createLog(res.log))
+        tap((res) => this.socketParcelService.updatePrintParcel(id, res.print)),
+        tap((res) => this.logService.createLog(res.log)),
+        tap((res) => this.socketLogService.createLog(res.log))
       );
   }
 

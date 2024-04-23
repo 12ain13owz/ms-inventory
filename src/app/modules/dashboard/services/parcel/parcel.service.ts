@@ -88,7 +88,7 @@ export class ParcelService {
     const index = this.parcels.findIndex((parcel) => parcel.id === id);
 
     if (index !== -1) {
-      this.parcels[index].quantity = quantity;
+      this.parcels[index] = { ...this.parcels[index], quantity: quantity };
       this.parcels$.next(this.parcels.slice());
     }
   }
@@ -97,7 +97,7 @@ export class ParcelService {
     const index = this.parcels.findIndex((parcel) => parcel.id === id);
 
     if (index !== -1) {
-      this.parcels[index].print = print;
+      this.parcels[index] = { ...this.parcels[index], print: print };
       this.parcels$.next(this.parcels.slice());
     }
   }
