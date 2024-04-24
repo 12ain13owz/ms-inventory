@@ -47,3 +47,7 @@ npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lo
 ```
 
 - generate keys rsa `(Key Size: 2048 bit)`: https://travistidwell.com/jsencrypt/demo/
+
+### Link
+
+https://ms-stock-it.web.app/
