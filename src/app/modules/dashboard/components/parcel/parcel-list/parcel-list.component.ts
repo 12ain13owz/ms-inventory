@@ -30,7 +30,7 @@ import {
   ParcelTable,
 } from '../../../models/parcel.model';
 import { DatePipe } from '@angular/common';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';

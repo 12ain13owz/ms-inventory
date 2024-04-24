@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { LoadingScreenService } from '../../services/loading-screen.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { catchError, delay, finalize, retry, throwError } from 'rxjs';
 import { ToastNotificationService } from '../../services/toast-notification.service';
 

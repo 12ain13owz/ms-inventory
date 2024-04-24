@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ParcelService } from '../../../services/parcel/parcel.service';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
 import { Subscription, finalize } from 'rxjs';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { PrintService } from '../../../services/print/print.service';
 
 @Component({

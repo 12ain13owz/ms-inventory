@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { LoginRequest, LoginResponse } from '../models/login.model';
 import { ProfileService } from '../../dashboard/services/profile/profile.service';
 import { TokenService } from '../../shared/services/token.service';

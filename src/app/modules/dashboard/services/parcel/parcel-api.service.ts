@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, map, switchMap, tap, timer } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../../environments/environment.development';
+import { environment } from '../../../../../environments/environment';
 import { ParcelService } from './parcel.service';
 import {
   Parcel,

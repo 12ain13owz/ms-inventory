@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LogService } from '../../../services/log/log.service';
 import { LogApiService } from '../../../services/log/log-api.service';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { Log } from '../../../models/log.model';
 import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';

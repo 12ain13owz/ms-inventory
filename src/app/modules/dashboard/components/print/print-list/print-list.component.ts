@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { PrintService } from '../../../services/print/print.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { MatTableDataSource } from '@angular/material/table';
 import { ParcelPrint } from '../../../models/parcel.model';
 

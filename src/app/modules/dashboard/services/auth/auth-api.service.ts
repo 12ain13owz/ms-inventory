@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../../environments/environment.development';
+import { environment } from '../../../../../environments/environment';
 import { TokenService } from '../../../shared/services/token.service';
 import { Router } from '@angular/router';
 import { AccessToken } from '../../../shared/models/token.model';

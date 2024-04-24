@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../../environments/environment.development';
+import { environment } from '../../../../../environments/environment';
 import { Message } from './../../../shared/models/response.model';
 import { Category, CategoryResponse } from '../../models/category.model';
 import { CategoryService } from './category.service';

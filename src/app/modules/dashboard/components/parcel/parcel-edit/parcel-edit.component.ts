@@ -38,7 +38,7 @@ import { PARCEL } from '../../../constants/parcel.constant';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
 import { Category } from '../../../models/category.model';
 import { Status } from '../../../models/status.model';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
 @Component({

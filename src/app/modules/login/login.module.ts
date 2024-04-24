@@ -3,7 +3,7 @@ import { LoginComponent } from './login.component';
 import { LoginRoutingModule } from './login.routes';
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../shared/shared.module';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from 'ng-recaptcha';
 
 const siteKey = environment.recaptcha.siteKey;

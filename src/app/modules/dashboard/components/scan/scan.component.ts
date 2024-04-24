@@ -25,7 +25,7 @@ import {
   tap,
   timer,
 } from 'rxjs';
-import { environment } from '../../../../../environments/environment.development';
+import { environment } from '../../../../../environments/environment';
 import { ScanService } from '../../services/scan/scan.service';
 import { ScanApiService } from '../../services/scan/scan-api.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';

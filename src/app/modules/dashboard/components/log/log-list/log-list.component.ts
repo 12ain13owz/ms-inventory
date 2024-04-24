@@ -20,7 +20,7 @@ import {
 } from 'rxjs';
 import { LogService } from '../../../services/log/log.service';
 import { DatePipe } from '@angular/common';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';

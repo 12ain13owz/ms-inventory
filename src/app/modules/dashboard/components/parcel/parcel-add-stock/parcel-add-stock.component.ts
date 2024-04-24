@@ -13,7 +13,7 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { environment } from '../../../../../../environments/environment.development';
+import { environment } from '../../../../../../environments/environment';
 import { PARCEL } from '../../../constants/parcel.constant';
 import { Parcel } from '../../../models/parcel.model';
 import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
