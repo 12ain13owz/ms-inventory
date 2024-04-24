@@ -16,10 +16,14 @@ import log from './utils/logger';
 import socket from './socket';
 
 const corsOptions: CorsOptions = {
-  origin: ['http://localhost:4200', 'http://192.168.1.46:4200'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+const node_env = config.get('node_env');
+if (node_env === 'production')
+  corsOptions.origin = ['https://ms-stock-it.web.app'];
+else corsOptions.origin = ['http://localhost:4200', 'http://192.168.1.46:4200'];
 
 const socketOptions = {
   cors: { origin: corsOptions.origin },
