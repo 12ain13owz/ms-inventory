@@ -26,8 +26,8 @@ export class SocketIoService {
     this.socketLogService.initializeSocketIO(this.socketIO);
   }
 
-  get socketListener(): Socket {
-    if (this.socketIO) return this.socketIO;
-    return null;
+  disconnect() {
+    if (!this.socketIO) return;
+    this.socketIO.close();
   }
 }
