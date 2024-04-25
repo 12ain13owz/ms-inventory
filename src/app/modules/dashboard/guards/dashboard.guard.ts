@@ -5,10 +5,10 @@ import { TokenService } from '../../shared/services/token.service';
 import { ToastNotificationService } from '../../../core/services/toast-notification.service';
 import { ProfileService } from '../services/profile/profile.service';
 import { ProfileApiService } from '../services/profile/profile-api.service';
-import { AuthApiService } from '../services/auth/auth-api.service';
+import { AuthApiService } from '../../auth/services/auth-api.service';
 import { LoadingScreenService } from '../../../core/services/loading-screen.service';
 
-export const authGuard: CanActivateChildFn = (childRoute, state) => {
+export const dashboardGuard: CanActivateChildFn = (childRoute, state) => {
   const loadingScreenService = inject(LoadingScreenService);
   const tokenService = inject(TokenService);
   const toastService = inject(ToastNotificationService);
@@ -19,10 +19,8 @@ export const authGuard: CanActivateChildFn = (childRoute, state) => {
   const accessToken = tokenService.getAccessToken();
 
   if (accessToken && profile) return true;
-  if (!accessToken || accessToken === 'undefined') {
-    toastService.error('Error', 'ไม่พบ Token! กรุณาเข้าสู่ระบบ');
+  if (!accessToken || accessToken === 'undefined')
     return authService.logout().pipe(map(() => false));
-  }
 
   loadingScreenService.setIsLoading(true);
   if (!profile)

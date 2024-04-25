@@ -10,6 +10,14 @@ interface AppConfig {
   port: number;
   node_env: string;
   database: DatabaseConfig;
+  smtp: {
+    host: string;
+    port: number;
+    secure: boolean;
+    service: string;
+    user: string;
+    pass: string;
+  };
   recaptcha: {
     siteKey: string;
     secretKey: string;
@@ -26,6 +34,14 @@ const config: AppConfig = {
   database: {
     dialect: 'sqlite',
     storage: './database/ms_stock.sqlite',
+  },
+  smtp: {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    service: 'gmail',
+    user: process.env.USER_MAIL || '',
+    pass: process.env.PASS_MAIL || '',
   },
   recaptcha: {
     siteKey: process.env.RECAPTCHA_SITE_KEY || '',

@@ -1,10 +1,14 @@
+import config from 'config';
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { omit } from 'lodash';
+import { readFileSync } from 'fs';
+import path from 'path';
 import {
   CreateUserInput,
+  ForgotPasswordInput,
+  ResetPasswordInput,
   UpdateUserInput,
-  UpdateUserPasswordInput,
 } from '../schemas/user.schema';
 import {
   comparePassword,
@@ -17,10 +21,12 @@ import {
   findAllUser,
   findUserByEmail,
   findUserById,
+  resetUserPassword,
   updateUser,
-  updateUserPassword,
 } from '../services/user.service';
 import { User, privateUserFields } from '../models/user.model';
+import { v4 as uuidv4 } from 'uuid';
+import { sendEmail } from '../utils/mailer';
 
 export async function getAllUserHandler(
   req: Request,
@@ -47,7 +53,7 @@ export async function createUserHandler(
   try {
     const email = normalizeUnique(req.body.email);
     const user = await findUserByEmail(email);
-    if (user) throw newError(400, 'E-mail นี้มีอยู่ในระบบ');
+    if (user) throw newError(400, `E-mail: ${email} นี้มีอยู่ในระบบ`);
 
     const password = hashPassword(req.body.password);
     const role = req.body.role as 'admin' | 'user';
@@ -111,30 +117,85 @@ export async function updateUserHandler(
   }
 }
 
-export async function updateUserPasswordHandler(
-  req: Request<
-    UpdateUserPasswordInput['params'],
-    {},
-    UpdateUserPasswordInput['body']
-  >,
+export async function forgotPasswordHandler(
+  req: Request<{}, {}, ForgotPasswordInput>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateUserPasswordHandler';
+  res.locals.func = 'forgotPasswordHandler';
+
+  try {
+    const email = normalizeUnique(req.body.email);
+    const user = await findUserByEmail(email);
+    if (!user) throw newError(404, 'ไม่พบ E-mail');
+
+    const createdAt = new Date();
+    const passwordResetCode = uuidv4().substring(0, 8);
+    const from = config.get<string>('smtp.user');
+
+    user.passwordResetCode = passwordResetCode;
+    user.passwordExpired = new Date(createdAt.getTime() + 1000 * 60 * 60 * 1);
+
+    const pathTemplate = path.join(__dirname, '../utils/email-template.html');
+    const emailTemplate = readFileSync(pathTemplate, 'utf8');
+    const html = emailTemplate.replace(
+      '{{ passwordResetCode }}',
+      passwordResetCode
+    );
+
+    const payload = {
+      from: from,
+      to: email,
+      subject: 'ระบบคลังพัสดุ เปลี่ยนรหัสผ่าน',
+      html: html,
+    };
+
+    await user.save();
+    const result = await sendEmail(payload);
+    if (!result)
+      throw newError(503, `ส่งรหัสยืนยัน E-mail: ${email} ไม่สำเร็จ`);
+
+    res.json({ message: `ส่งรหัสยืนยัน E-mail: ${email} สำเร็จ`, id: user.id });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function resetPasswordHandler(
+  req: Request<ResetPasswordInput['params'], {}, ResetPasswordInput['body']>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'resetPasswordHandler';
 
   try {
     const id = +req.params.id;
+    const passwordResetCode = req.body.passwordResetCode;
     const user = await findUserById(id);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ');
+    if (!user.passwordResetCode)
+      throw newError(
+        400,
+        'ไม่สามารถเปลี่ยนรหัสผ่านได้ กรุณาส่ง E-mail เพื่อขอเปลี่ยนรหัส'
+      );
+    if (user.passwordResetCode !== passwordResetCode)
+      throw newError(404, 'รหัสยืนยันไม่ถูกต้อง กรุณาตรวจสอบ');
 
-    const compare = comparePassword(req.body.oldPassword, user.password);
-    if (!compare) throw newError(400, 'รหัสผ่านเก่าไม่ถูกต้อง');
+    const createdAt = new Date().getTime();
+    const passwordExpired = user.passwordExpired!.getTime();
+
+    if (createdAt > passwordExpired) {
+      user.passwordResetCode = null;
+      user.passwordExpired = null;
+      await user.save();
+      throw newError(400, 'รหัสยืนยันหมดอายุ');
+    }
 
     const hash = hashPassword(req.body.newPassword);
-    const result = await updateUserPassword(id, hash);
-    if (!result[0]) throw newError(400, 'แก้ไขรหัสผ่านไม่สำเร็จ');
+    const result = await resetUserPassword(id, hash);
+    if (!result[0]) throw newError(400, 'เปลี่ยนรหัสผ่านไม่สำเร็จ');
 
-    res.json({ message: 'แก้ไขรหัสผ่านสำเร็จ' });
+    res.json({ message: 'เปลี่ยนรหัสผ่านสำเร็จ' });
   } catch (error) {
     next(error);
   }

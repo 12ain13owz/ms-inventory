@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, finalize } from 'rxjs';
-import { LoginService } from './services/login.service';
-import { LoginRequest } from './models/login.model';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { LOGIN } from './constants/login,constant';
+import { AuthApiService } from '../../services/auth-api.service';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { LOGIN } from '../../constants/login.constant';
+import { LoginRequest } from '../../models/login.model';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
-  private loginService = inject(LoginService);
+  private authApiService = inject(AuthApiService);
   private recaptchaV3Service = inject(ReCaptchaV3Service);
 
   validationField = LOGIN.validationField;
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     const payload: LoginRequest = { ...this.form.getRawValue() };
     this.isLoading = true;
-    this.loginService
+    this.authApiService
       .login(payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => this.router.navigate(['/']));

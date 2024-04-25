@@ -25,15 +25,21 @@ export async function loginHandler(
   try {
     const email = normalizeUnique(req.body.email);
     const user = await findUserByEmail(email);
-    if (!user) throw newError(404, 'ไม่พบ E-mail');
+    if (!user) throw newError(404, `ไม่พบ E-mail: ${email}`);
 
     const isValidPassword = comparePassword(req.body.password, user.password);
     if (!isValidPassword) throw newError(401, 'E-mail หรือ Password ไม่ตรงกัน');
     if (!user.active)
-      throw newError(401, 'E-mail นี้ไม่ได้รับอนุญาติให้ใช้งาน');
+      throw newError(401, `E-mail: ${email} นี้ไม่ได้รับอนุญาติให้ใช้งาน`);
 
     const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
+
+    console.log(accessToken, refreshToken);
+
+    if (!accessToken || !refreshToken)
+      throw newError(503, 'ระบบไม่สามารถยืนยันตัวตนได้ กรุณาติดต่อ Admin');
+
     const resUser = omit(user.toJSON(), privateUserFields);
     const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
@@ -101,8 +107,11 @@ export async function refreshTokenHandler(
 
     const newAccessToken = signAccessToken(user.id);
     const newRefreshToken = signRefreshToken(user.id);
-    const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
 
+    if (!newAccessToken || !newRefreshToken)
+      throw newError(503, 'ระบบไม่สามารถยืนยันตัวตนได้ กรุณาติดต่อ Admin');
+
+    const expiresCookie = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // milliseconds * seconds * minutes * hours * days
     res.clearCookie(tokenKey);
     res.cookie(tokenKey, newRefreshToken, {
       path: '/',

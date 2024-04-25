@@ -1,14 +1,16 @@
 import { Router } from 'express';
 import {
   createUserHandler,
+  forgotPasswordHandler,
   getAllUserHandler,
+  resetPasswordHandler,
   updateUserHandler,
-  updateUserPasswordHandler,
 } from '../../controllers/user.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import {
   createUserSchema,
-  updateUserPasswordSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
   updateUserSchema,
 } from '../../schemas/user.schema';
 import {
@@ -29,10 +31,15 @@ router.patch(
   [verifyToken, isUserActive, isRoleAdmin, validate(updateUserSchema)],
   updateUserHandler
 );
-// router.post(
-//   '/password/:id',
-//   [validate(updateUserPasswordSchema), verifyToken, isUserActive, isRoleAdmin],
-//   updateUserPasswordHandler
-// );
+router.post(
+  '/forgotpassword',
+  [validate(forgotPasswordSchema)],
+  forgotPasswordHandler
+);
+router.post(
+  '/resetpassword/:id',
+  [validate(resetPasswordSchema)],
+  resetPasswordHandler
+);
 
 export default router;

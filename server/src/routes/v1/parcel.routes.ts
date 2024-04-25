@@ -45,7 +45,6 @@ router.get(
   [verifyToken, isUserActive, validate(getParcelByIdSchema)],
   getParcelByIdHandler
 );
-
 router.post(
   '/',
   [
@@ -68,19 +67,16 @@ router.put(
   ],
   updateParcelHandler
 );
-
 router.patch(
   '/increment/:id',
   [verifyToken, isUserActive, validate(updateQuantityParcelSchema)],
   incrementQuantityParcelHandler
 );
-
 router.patch(
   '/decrement/:id',
   [verifyToken, isUserActive, validate(updateQuantityParcelSchema)],
   decrementQuantityParcelHandler
 );
-
 router.patch(
   '/print/:id',
   [verifyToken, isUserActive, validate(updatePrintParcelSchema)],

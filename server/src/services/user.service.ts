@@ -31,3 +31,13 @@ export function updateUserPassword(
 ): Promise<[affectedCount: number]> {
   return userModel.update({ password }, { where: { id } });
 }
+
+export function resetUserPassword(
+  id: number,
+  password: string
+): Promise<[affectedCount: number]> {
+  return userModel.update(
+    { password: password, passwordResetCode: null, passwordExpired: null },
+    { where: { id } }
+  );
+}

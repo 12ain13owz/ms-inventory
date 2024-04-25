@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError, of } from 'rxjs';
 import { ToastNotificationService } from '../services/toast-notification.service';
-import { AuthApiService } from '../../modules/dashboard/services/auth/auth-api.service';
+import { AuthApiService } from '../../modules/auth/services/auth-api.service';
 import { LoadingScreenService } from '../services/loading-screen.service';
 import { Router } from '@angular/router';
 
@@ -14,6 +14,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
+      console.log(error);
       loadingScreenService.setIsLoading(false);
 
       const logout = error.error.logout || false;

@@ -27,7 +27,6 @@ router.get(
   [verifyToken, isUserActive, validate(getLogByTrackSchema)],
   getLogByTrackHandler
 );
-
 router.get(
   '/:id',
   [verifyToken, isUserActive, validate(getLogByIdSchema)],

@@ -1,7 +1,3 @@
-<div class="view">
-  <div class="rgba-stylish-strong"></div>
-</div>
-
 <div class="login-wrapper">
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dark-theme">
     @if (isLoading) {
@@ -44,12 +40,12 @@
       </mat-error>
     </mat-form-field>
 
-    <button type="submit" [disabled]="isLoading">
-      <span class="text">Log in</span>
+    <button type="submit" matRipple [disabled]="isLoading">
+      <span class="text">เข้าสู่ระบบ</span>
     </button>
 
     <div class="forgot-password">
-      <a>Forgot your password?</a>
+      <a routerLink="./forgot-password">ลืมรหัสผ่าน ?</a>
     </div>
   </form>
 </div>

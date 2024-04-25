@@ -10,11 +10,10 @@ export const routes: Routes = [
         (m) => m.DashboardModule
       ),
   },
-
   {
     path: 'login',
     loadChildren: () =>
-      import('./modules/login/login.module').then((m) => m.LoginModule),
+      import('./modules/auth/auth.module').then((m) => m.AuthModule),
   },
 
   { path: 'error', component: ServerErrorComponent },

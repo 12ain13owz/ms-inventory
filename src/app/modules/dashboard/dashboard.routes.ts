@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
-import { authGuard } from './guards/auth.guard';
+import { dashboardGuard } from './guards/dashboard.guard';
 import { adminGuard } from './guards/admin.guard';
 
 import { ScanComponent } from './components/scan/scan.component';
@@ -27,7 +27,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    canActivateChild: [authGuard],
+    canActivateChild: [dashboardGuard],
     resolve: [dashboardResolver],
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },

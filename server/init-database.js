@@ -24,6 +24,8 @@ const User = sequelize.define(
     role: { type: DataTypes.ENUM("admin", "user"), allowNull: false },
     active: { type: DataTypes.BOOLEAN, allowNull: false },
     remark: { type: DataTypes.TEXT },
+    passwordResetCode: { type: DataTypes.STRING },
+    passwordExpired: { type: DataTypes.DATE },
     createdAt: { type: DataTypes.DATE },
     updatedAt: { type: DataTypes.DATE },
   },

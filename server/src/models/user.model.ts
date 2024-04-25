@@ -19,6 +19,8 @@ export class User extends Model<
   role: 'admin' | 'user';
   active: boolean;
   remark: string;
+  passwordResetCode: CreationOptional<string | null>;
+  passwordExpired: CreationOptional<Date | null>;
   createdAt: CreationOptional<Date>;
   updatedAt: CreationOptional<Date>;
 }
@@ -58,6 +60,12 @@ export default User.init(
     },
     remark: {
       type: DataTypes.TEXT,
+    },
+    passwordResetCode: {
+      type: DataTypes.STRING,
+    },
+    passwordExpired: {
+      type: DataTypes.DATE,
     },
     createdAt: {
       type: DataTypes.DATE,

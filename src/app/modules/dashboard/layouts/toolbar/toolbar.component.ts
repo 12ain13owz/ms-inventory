@@ -9,7 +9,7 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { Profile } from '../../models/profile.model';
 import { ProfileService } from '../../services/profile/profile.service';
-import { AuthApiService } from '../../services/auth/auth-api.service';
+import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { ThemeService } from '../../../shared/services/theme.service';
 
 @Component({

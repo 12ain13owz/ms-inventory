@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -24,6 +23,7 @@ import { matInputFormat } from './providers/config.provider';
 import { MatRippleModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   exports: [
@@ -50,7 +50,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatRippleModule,
     MatCheckboxModule,
     MatBadgeModule,
+    MatStepperModule,
   ],
-  providers: [DatePipe, matInputFormat],
+  providers: [matInputFormat],
 })
 export class MaterialModule {}

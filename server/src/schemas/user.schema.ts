@@ -15,6 +15,7 @@ const confirmPassword = 'ไม่พบข้อมูลยืนยันร�
 const regexInValid =
   'รูปแบบรหัสผ่านไม่ถูกต้อง! ต้องมีตัวเล็ก, ตัวใหญ่, ตัวเลข, อักษรพิเศษ และไม่ต่ำกว่า 8 ตัวอักษร';
 const comparePassword = 'รหัสผ่านไม่ตรงกัน';
+const passwordResetCode = 'ไม่พบรหัสยืนยัน';
 
 const regexPassword = new RegExp(
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/
@@ -89,6 +90,34 @@ export const updateUserPasswordSchema = object({
   }),
 });
 
+export const forgotPasswordSchema = object({
+  body: object({
+    email: string({ required_error: email }).email(emailInvalid),
+  }),
+});
+
+export const resetPasswordSchema = object({
+  params: object({
+    id: string({ required_error: id })
+      .min(1, { message: id })
+      .regex(regexId, { message: id }),
+  }),
+  body: object({
+    passwordResetCode: string({ required_error: passwordResetCode }).min(1, {
+      message: passwordResetCode,
+    }),
+    newPassword: string({ required_error: newPassword }).regex(regexPassword, {
+      message: regexInValid,
+    }),
+    confirmPassword: string({ required_error: confirmPassword }),
+  }).refine((data) => data.newPassword === data.confirmPassword, {
+    message: comparePassword,
+    path: ['confirmPassword'],
+  }),
+});
+
 export type CreateUserInput = TypeOf<typeof createUserSchema>['body'];
 export type UpdateUserInput = TypeOf<typeof updateUserSchema>;
 export type UpdateUserPasswordInput = TypeOf<typeof updateUserPasswordSchema>;
+export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>['body'];
+export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
