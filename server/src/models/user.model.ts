@@ -82,4 +82,10 @@ export default User.init(
   }
 );
 
-export const privateUserFields = ['password', 'createdAt', 'updatedAt'];
+export const privateUserFields = [
+  'password',
+  'passwordResetCode',
+  'passwordExpired',
+  'createdAt',
+  'updatedAt',
+];
