@@ -14,7 +14,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      console.log(error);
       loadingScreenService.setIsLoading(false);
 
       const logout = error.error.logout || false;

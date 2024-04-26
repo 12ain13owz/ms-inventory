@@ -35,8 +35,6 @@ export async function loginHandler(
     const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
 
-    console.log(accessToken, refreshToken);
-
     if (!accessToken || !refreshToken)
       throw newError(503, 'ระบบไม่สามารถยืนยันตัวตนได้ กรุณาติดต่อ Admin');
 
