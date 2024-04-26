@@ -163,6 +163,9 @@ Parcel.belongsTo(Status);
 const envContent = `
 PORT="3000"
 NODE_ENV="development"
+USER_MAIL="your_email@gmail.com"
+PASS_MAIL="your_app_passwords"
+
 RECAPTCHA_SITE_KEY="your_recaptcha_site_key"
 RECAPTCHA_SECRET_KEY="your_recaptcha_secret_key"
 
