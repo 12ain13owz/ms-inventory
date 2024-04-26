@@ -136,7 +136,10 @@ export async function forgotPasswordHandler(
     user.passwordResetCode = passwordResetCode;
     user.passwordExpired = new Date(createdAt.getTime() + 1000 * 60 * 60 * 1);
 
-    const pathTemplate = path.join(__dirname, '../utils/email-template.html');
+    const pathTemplate = path.join(
+      __dirname,
+      '../templates/email-template.html'
+    );
     const emailTemplate = readFileSync(pathTemplate, 'utf8');
     const html = emailTemplate.replace(
       '{{ passwordResetCode }}',
