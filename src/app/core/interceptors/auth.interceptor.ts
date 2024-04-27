@@ -23,10 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authRequest).pipe(
     catchError((error: HttpErrorResponse) => {
-      let expired = null;
-
-      if (jwtHelper.tokenGetter.length !== 0)
-        expired = jwtHelper.isTokenExpired();
+      const expired = jwtHelper.isTokenExpired();
 
       if (expired && error.status === 401) {
         isRefreshToken = true;

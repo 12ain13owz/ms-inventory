@@ -14,6 +14,7 @@ import {
 } from '../utils/jwt';
 
 const tokenKey = 'refresh_token';
+const isProduction = config.get<string>('node_env') === 'production';
 
 export async function loginHandler(
   req: Request<{}, {}, LoginUserInput>,
@@ -46,8 +47,8 @@ export async function loginHandler(
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: 'none',
-      secure: config.get<string>('node_env') === 'production',
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
     });
 
     res.json({ accessToken, resUser });
@@ -115,8 +116,8 @@ export async function refreshTokenHandler(
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: 'none',
-      secure: config.get<string>('node_env') === 'production',
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
     });
     res.json({ accessToken: newAccessToken });
   } catch (error) {
