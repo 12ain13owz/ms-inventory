@@ -70,6 +70,8 @@
             matInput
             [matDatepicker]="picker"
             (dateInput)="onDatePicker($event)"
+            [(ngModel)]="hiddenDateInput"
+            [ngModelOptions]="{ standalone: true }"
           />
           <mat-hint align="end">วัน/เดือน/พ.ศ. (5/9/2560)</mat-hint>
           <mat-datepicker-toggle

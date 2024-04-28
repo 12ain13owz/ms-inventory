@@ -16,7 +16,10 @@ import { DatePipe } from '@angular/common';
 import { Observable, catchError, finalize, forkJoin, throwError } from 'rxjs';
 import { PARCEL } from '../../../constants/parcel.constant';
 import { NgxDropzoneChangeEvent } from '@todorus/ngx-dropzone';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import {
+  MatDatepicker,
+  MatDatepickerInputEvent,
+} from '@angular/material/datepicker';
 import { Category } from '../../../models/category.model';
 import { Status } from '../../../models/status.model';
 
@@ -29,6 +32,7 @@ export class ParcelNewComponent {
   @ViewChild('formDirec') fromDirec: FormGroupDirective;
   @ViewChild('codeInput') codeInput: ElementRef<HTMLInputElement>;
   @ViewChild('dateInput') dateInput: ElementRef<HTMLInputElement>;
+  @ViewChild('picker') picker: MatDatepicker<Date>;
 
   private formBuilder = inject(FormBuilder);
   private parcelApiService = inject(ParcelApiService);
@@ -47,6 +51,7 @@ export class ParcelNewComponent {
   isDataLoadFailed: boolean = false;
   categories: { id: number; name: string }[] = [];
   statuses: { id: number; name: string }[] = [];
+  hiddenDateInput: string = '';
 
   formParcel = this.initFormParcel();
   formImage = this.initFormImage();
@@ -96,6 +101,7 @@ export class ParcelNewComponent {
 
   onReset(): void {
     this.files.length = 0;
+    this.hiddenDateInput = '';
     this.codeInput.nativeElement.focus();
     this.formImage.reset();
     this.fromDirec.resetForm();

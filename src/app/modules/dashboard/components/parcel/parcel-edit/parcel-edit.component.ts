@@ -73,6 +73,7 @@ export class ParcelEditComponent implements OnInit {
   isDataLoadFailed: boolean = false;
   categories: { id: number; name: string }[] = [];
   statuses: { id: number; name: string }[] = [];
+  hiddenDateInput: string = '';
 
   formParcel = this.initFormParcel();
   formImage = this.initFormImage();
@@ -129,6 +130,7 @@ export class ParcelEditComponent implements OnInit {
   onReset(): void {
     this.files.length = 0;
     this.isImageEdit = false;
+    this.hiddenDateInput = '';
     this.codeInput.nativeElement.focus();
     this.formImage.reset();
     this.setParcelFormData(this.parcel);
