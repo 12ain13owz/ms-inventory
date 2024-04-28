@@ -63,7 +63,7 @@ export async function createUserHandler(
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       role: role,
-      active: true,
+      active: req.body.active,
       remark: req.body.remark || '',
     });
 
