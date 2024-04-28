@@ -813,6 +813,34 @@
 					"response": []
 				},
 				{
+					"name": "Get Parcel By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}parcel/code/ms-1451",
+							"host": [
+								"{{host}}parcel"
+							],
+							"path": [
+								"code",
+								"ms-1451"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create Parcel",
 					"event": [
 						{
@@ -1255,6 +1283,34 @@
 							"path": [
 								"track",
 								"MSBSRU-00016"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Logs By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}log/code/52-21-09020821-00161-0023",
+							"host": [
+								"{{host}}log"
+							],
+							"path": [
+								"code",
+								"52-21-09020821-00161-0023"
 							]
 						}
 					},
