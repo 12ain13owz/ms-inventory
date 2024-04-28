@@ -6,7 +6,7 @@
   >
     <mat-tab label="วันที่">
       <mat-card-content>
-        <mat-form-field>
+        <mat-form-field class="w-100">
           <mat-label>จาก - ถึง</mat-label>
           <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange">
             <input
@@ -32,10 +32,24 @@
       </mat-card-content>
     </mat-tab>
 
+    <mat-tab label="รหัส">
+      <mat-card-content>
+        <form (ngSubmit)="onSearch()">
+          <mat-form-field class="w-100">
+            <mat-label>รหัส</mat-label>
+            <input matInput #code />
+            <button type="submit" matSuffix mat-icon-button>
+              <mat-icon matSuffix fontIcon="search"></mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+    </mat-tab>
+
     <mat-tab label="Track">
       <mat-card-content>
         <form (ngSubmit)="onSearch()">
-          <mat-form-field>
+          <mat-form-field class="w-100">
             <mat-label>Track</mat-label>
             <input matInput #track />
             <button type="submit" matSuffix mat-icon-button>

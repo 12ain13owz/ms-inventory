@@ -22,6 +22,10 @@ export function findLogByDate(dateStart: Date, dateEnd: Date) {
   });
 }
 
+export function findLogByCode(code: string): Promise<Log[]> {
+  return logModel.findAll({ where: { code } });
+}
+
 export function findLogById(id: number): Promise<Log | null> {
   return logModel.findByPk(id);
 }

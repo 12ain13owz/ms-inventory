@@ -4,6 +4,7 @@ import {
   getParcelByIdInput,
   getParcelByTrackInput,
   getParcelByDateInput,
+  getParcelByCodeInput,
 } from './../schemas/parcel.schema';
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
@@ -111,13 +112,30 @@ export async function getParcelByIdHandler(
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getParcelByTrackHandler';
+  res.locals.func = 'getParcelByIdHandler';
 
   try {
     const id = +req.params.id;
     const resParcel = await findParcelById(id);
 
     res.json(resParcel?.toJSON());
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getParcelByCodeHandler(
+  req: Request<getParcelByCodeInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getParcelByCodeHandler';
+
+  try {
+    const code = removeWhitespace(req.params.code);
+    const resParcels = await findParcelByCode(code);
+
+    res.json(resParcels);
   } catch (error) {
     next(error);
   }
@@ -133,9 +151,6 @@ export async function createParcelHandler(
 
   try {
     const code = removeWhitespace(req.body.code);
-    const existingParcel = await findParcelByCode(code);
-    if (existingParcel) throw newError(400, `รหัสพัสดุ ${code} ซ้ำ`);
-
     const sequence = await createTrack(t);
     const track = await generateTrack(sequence.id);
     const receivedDate = new Date(req.body.receivedDate);
@@ -211,10 +226,6 @@ export async function updateParcelHandler(
 
     const track = parcel.track;
     const code = removeWhitespace(req.body.code);
-    const existingParcel = await findParcelByCode(code);
-    if (existingParcel && existingParcel.id !== id)
-      throw newError(400, `รหัสพัสดุ ${code} ซ้ำ`);
-
     const imageEdit = req.body.imageEdit === 'true' ? true : false;
     const file = req.body.image === 'null' ? null : req.body.image;
     const image = imageEdit ? file : parcel.image;

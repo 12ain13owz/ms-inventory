@@ -32,6 +32,7 @@ import { StatusService } from '../../../services/status/status.service';
 
 enum Tap {
   Date,
+  Code,
   Track,
 }
 @Component({
@@ -55,6 +56,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
+  @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
   filterLog: FilterLog = {
@@ -119,6 +121,13 @@ export class LogListComponent implements OnInit, OnDestroy {
         'yyyy-MM-dd'
       );
       this.operation$ = this.logApiService.getLogsByDate(startDate, endDate);
+    } else if (this.selectedTap.value === Tap.Code) {
+      if (!this.code) return;
+
+      const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
+      if (!code) return;
+
+      this.operation$ = this.logApiService.getLogsByCode(code);
     } else if (this.selectedTap.value === Tap.Track) {
       if (!this.track) return;
 

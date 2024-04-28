@@ -12,6 +12,7 @@ import {
   incrementQuantityParcelHandler,
   updateParcelHandler,
   updatePrintParcelHandler,
+  getParcelByCodeHandler,
 } from '../../controllers/parcel.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import {
@@ -23,6 +24,7 @@ import {
   updateParcelSchema,
   updatePrintParcelSchema,
   updateQuantityParcelSchema,
+  getParcelByCodeSchema,
 } from '../../schemas/parcel.schema';
 import { reduceQualityImage, upload } from '../../middlewares/file.middlerware';
 
@@ -44,6 +46,11 @@ router.get(
   '/id/:id',
   [verifyToken, isUserActive, validate(getParcelByIdSchema)],
   getParcelByIdHandler
+);
+router.get(
+  '/code/:code',
+  [verifyToken, isUserActive, validate(getParcelByCodeSchema)],
+  getParcelByCodeHandler
 );
 router.post(
   '/',

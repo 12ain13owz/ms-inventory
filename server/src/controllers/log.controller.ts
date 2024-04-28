@@ -3,16 +3,18 @@ import { ExtendedResponse } from '../types/express';
 import {
   findAllLog,
   findLimitLog,
+  findLogByCode,
   findLogByDate,
   findLogById,
   findLogByTrack,
 } from '../services/log.service';
 import {
+  getLogByCodeInput,
   getLogByDateInput,
   getLogByIdInput,
   getLogByTrackInput,
 } from '../schemas/log.schema';
-import { newError } from '../utils/helper';
+import { newError, removeWhitespace } from '../utils/helper';
 
 export async function getAllLogHandler(
   req: Request,
@@ -78,8 +80,25 @@ export async function getLogByTrackHandler(
   res.locals.func = 'getLogByTrackHandler';
 
   try {
-    const track = req.params.track;
+    const track = removeWhitespace(req.params.track);
     const resLogs = await findLogByTrack(track);
+
+    res.json(resLogs);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getLogByCodeHandler(
+  req: Request<getLogByCodeInput>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'getLogByCodeHandler';
+
+  try {
+    const code = removeWhitespace(req.params.code);
+    const resLogs = await findLogByCode(code);
 
     res.json(resLogs);
   } catch (error) {

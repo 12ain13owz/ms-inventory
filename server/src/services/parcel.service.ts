@@ -8,7 +8,7 @@ export function findAllParcel(): Promise<Parcel[]> {
   return parcelModel.findAll(getParcelQueryOptions());
 }
 
-export function findLimitParcel(limit: number) {
+export function findLimitParcel(limit: number): Promise<Parcel[]> {
   return parcelModel.findAll({
     limit: limit,
     order: [['createdAt', 'DESC']],
@@ -16,27 +16,30 @@ export function findLimitParcel(limit: number) {
   });
 }
 
-export function findParcelById(id: number) {
+export function findParcelById(id: number): Promise<Parcel | null> {
   return parcelModel.findByPk(id, {
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelByTrack(track: string) {
+export function findParcelByTrack(track: string): Promise<Parcel | null> {
   return parcelModel.findOne({
     where: { track },
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelByCode(code: string) {
-  return parcelModel.findOne({
+export function findParcelByCode(code: string): Promise<Parcel[]> {
+  return parcelModel.findAll({
     where: { code },
     ...getParcelQueryOptions(),
   });
 }
 
-export function findParcelByDate(dateStart: Date, dateEnd: Date) {
+export function findParcelByDate(
+  dateStart: Date,
+  dateEnd: Date
+): Promise<Parcel[]> {
   return parcelModel.findAll({
     where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
     ...getParcelQueryOptions(),

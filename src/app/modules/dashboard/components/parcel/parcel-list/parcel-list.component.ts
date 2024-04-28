@@ -39,6 +39,7 @@ import { PrintService } from '../../../services/print/print.service';
 
 enum Tap {
   Date,
+  Code,
   Track,
 }
 @Component({
@@ -65,6 +66,7 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
+  @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
   @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
   filterParcel: FilterParcel = {
@@ -134,6 +136,13 @@ export class ParcelListComponent implements OnInit, OnDestroy {
         startDate,
         endDate
       );
+    } else if (this.selectedTap.value === Tap.Code) {
+      if (!this.code) return;
+
+      const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
+      if (!code) return;
+
+      this.operation$ = this.parcelApiService.getParcelsByCode(code);
     } else if (this.selectedTap.value === Tap.Track) {
       if (!this.track) return;
 

@@ -51,7 +51,6 @@ export default Parcel.init(
     code: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     oldCode: {
       type: DataTypes.STRING,
@@ -89,7 +88,7 @@ export default Parcel.init(
   {
     indexes: [
       { unique: true, fields: ['track'] },
-      { unique: true, fields: ['code'] },
+      { fields: ['code'] },
       { fields: ['createdAt'] },
     ],
     sequelize,

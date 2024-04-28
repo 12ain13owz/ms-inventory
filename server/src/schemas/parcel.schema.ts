@@ -1,7 +1,7 @@
 import { number, object, string, TypeOf } from 'zod';
 
-const id = 'ไม่พบข้อมูลรหัสพัสดุ';
-const code = 'ไม่พบข้อมูลรหัสพัสดุ';
+const id = 'ไม่พบรหัสพัสดุ';
+const code = 'ไม่พบรหัสพัสดุ';
 const receivedDate = 'ไม่พบวันที่ได้รับพัสดุ';
 const detail = 'ไม่พบรายละเอียดพัสดุ';
 const quantity = 'ไม่พบจำนวนของพัสดุ';
@@ -41,6 +41,14 @@ export const getParcelByIdSchema = object({
   params: object({
     id: string({ required_error: id }).min(1, {
       message: id,
+    }),
+  }),
+});
+
+export const getParcelByCodeSchema = object({
+  params: object({
+    code: string({ required_error: code }).min(1, {
+      message: code,
     }),
   }),
 });
@@ -152,6 +160,9 @@ export type getParcelByTrackInput = TypeOf<
   typeof getParcelByTrackSchema
 >['params'];
 export type getParcelByIdInput = TypeOf<typeof getParcelByIdSchema>['params'];
+export type getParcelByCodeInput = TypeOf<
+  typeof getParcelByCodeSchema
+>['params'];
 export type CreateParcelInput = TypeOf<typeof createParcelSchema>['body'];
 export type UpdateParcelInput = TypeOf<typeof updateParcelSchema>;
 export type UpdateQuantityParcelInput = TypeOf<

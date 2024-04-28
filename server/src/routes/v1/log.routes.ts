@@ -3,12 +3,14 @@ import { isUserActive, verifyToken } from '../../middlewares/auth.middleware';
 import {
   getAllLogHandler,
   getInitialLogHandler,
+  getLogByCodeHandler,
   getLogByDateHandler,
   getLogByIdHandler,
   getLogByTrackHandler,
 } from '../../controllers/log.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import {
+  getLogByCodeSchema,
   getLogByDateSchema,
   getLogByIdSchema,
   getLogByTrackSchema,
@@ -26,6 +28,11 @@ router.get(
   '/track/:track',
   [verifyToken, isUserActive, validate(getLogByTrackSchema)],
   getLogByTrackHandler
+);
+router.get(
+  '/code/:code',
+  [verifyToken, isUserActive, validate(getLogByCodeSchema)],
+  getLogByCodeHandler
 );
 router.get(
   '/:id',

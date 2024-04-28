@@ -43,6 +43,13 @@ export class LogApiService {
     );
   }
 
+  getLogsByCode(code: string): Observable<Log[]> {
+    return this.http.get<Log[]>(`${this.apiUrl}/code/${code}`).pipe(
+      switchMap((res) => timer(200).pipe(map(() => res))),
+      tap((res) => this.logService.setLogs(res))
+    );
+  }
+
   getLogById(id: number): Observable<Log> {
     return this.http.get<Log>(`${this.apiUrl}/${id}`);
   }

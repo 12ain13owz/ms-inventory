@@ -63,6 +63,13 @@ export class ParcelApiService {
     return this.http.get<Parcel>(`${this.apiUrl}/id/${id}`);
   }
 
+  getParcelsByCode(code: string): Observable<Parcel[]> {
+    return this.http.get<Parcel[]>(`${this.apiUrl}/code/${code}`).pipe(
+      switchMap((res) => timer(200).pipe(map(() => res))),
+      tap((res) => this.parcelService.setParcels(res))
+    );
+  }
+
   createParcel(payload: FormData): Observable<ParcelResponse> {
     return this.http.post<ParcelResponse>(this.apiUrl, payload).pipe(
       tap((res) => this.parcelService.createParcel(res.parcel)),
