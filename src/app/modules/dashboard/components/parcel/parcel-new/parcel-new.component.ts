@@ -90,6 +90,7 @@ export class ParcelNewComponent {
     payload.append('statusId', this.status.value.toString());
     payload.append('statusName', statusName);
 
+    this.isLoading = true;
     this.parcelApiService
       .createParcel(payload)
       .pipe(finalize(() => (this.isLoading = false)))
