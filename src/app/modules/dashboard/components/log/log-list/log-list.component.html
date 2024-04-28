@@ -253,7 +253,18 @@
           >รายละเอียด</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.detailLog }}
+          <span
+            class="detail-log"
+            [ngClass]="{
+              newParcel: element.newParcel,
+              editParcel: element.editParcel,
+              increaseQuantity: element.increaseQuantity,
+              decreaseQuantity: element.decreaseQuantity,
+              print: element.print
+            }"
+          >
+            {{ element.detailLog }}
+          </span>
         </mat-cell>
       </ng-container>
 
@@ -271,15 +282,7 @@
       </div>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        [ngClass]="{
-          editParcel: row.editParcel,
-          increaseQuantity: row.increaseQuantity,
-          decreaseQuantity: row.decreaseQuantity,
-          print: row.print
-        }"
-      ></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
     } @else {
     <app-loading-data [form]="'list'"></app-loading-data>

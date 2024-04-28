@@ -32,7 +32,7 @@ img {
 }
 
 .mat-column-detailLog {
-  flex: 0 0 120px;
+  flex: 0 0 140px;
 }
 
 .mat-column-createdAt {
@@ -69,18 +69,33 @@ img {
   }
 }
 
+.detail-log {
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.newParcel {
+  background-color: #a438b6;
+  color: #f3c0fb;
+}
+
 .editParcel {
-  color: #a438b6;
+  background-color: #d0e1fd;
+  color: #295bac;
 }
 
 .increaseQuantity {
-  color: #46a14a;
+  background-color: #caf1d8;
+  color: #188a42;
 }
 
 .decreaseQuantity {
-  color: #f55246;
+  background-color: #ffd0ce;
+  color: #b32b23;
 }
 
 .print {
-  color: #f5b907;
+  background-color: #ffd155;
+  color: #666610;
 }

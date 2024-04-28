@@ -1,6 +1,7 @@
 @defer (when !isLoading) { @if (log) {
 <mat-card
   [ngClass]="{
+    'shadow-newParcel': log.newParcel,
     'shadow-editParcel': log.editParcel,
     'shadow-increaseQuantity': log.increaseQuantity,
     'shadow-decreaseQuantity': log.decreaseQuantity,
@@ -10,6 +11,7 @@
   <mat-card-header class="mb-16">
     <mat-card-title
       [ngClass]="{
+        newParcel: log.newParcel,
         editParcel: log.editParcel,
         increaseQuantity: log.increaseQuantity,
         decreaseQuantity: log.decreaseQuantity,

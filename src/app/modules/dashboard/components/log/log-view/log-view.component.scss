@@ -6,8 +6,12 @@ mat-list-item {
   margin-left: 0;
 }
 
-.editParcel {
+.newParcel {
   color: rgb(164, 56, 182);
+}
+
+.editParcel {
+  color: rgb(208, 225, 253);
 }
 
 .increaseQuantity {
@@ -22,8 +26,12 @@ mat-list-item {
   color: rgb(245, 185, 7);
 }
 
-.shadow-editParcel {
+.shadow-newParcel {
   box-shadow: rgba(164, 56, 182, 0.2) 0px 7px 29px 0px;
+}
+
+.shadow-editParcel {
+  box-shadow: rgba(208, 225, 253, 0.2) 0px 7px 29px 0px;
 }
 
 .shadow-increaseQuantity {
