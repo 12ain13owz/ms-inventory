@@ -24,6 +24,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   exports: [
@@ -51,6 +52,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatCheckboxModule,
     MatBadgeModule,
     MatStepperModule,
+    MatSnackBarModule,
   ],
   providers: [matInputFormat],
 })

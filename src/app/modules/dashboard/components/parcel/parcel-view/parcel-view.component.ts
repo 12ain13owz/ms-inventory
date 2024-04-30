@@ -6,6 +6,7 @@ import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
 import { Subscription, finalize } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { PrintService } from '../../../services/print/print.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-parcel-view',
@@ -18,6 +19,7 @@ export class ParcelViewComponent implements OnInit, OnDestroy {
   private parcelService = inject(ParcelService);
   private parcelApiService = inject(ParcelApiService);
   private printService = inject(PrintService);
+  private snackBar = inject(MatSnackBar);
 
   imageUrl: string = environment.imageUrl;
 
@@ -72,6 +74,11 @@ export class ParcelViewComponent implements OnInit, OnDestroy {
   }
 
   onPrint(): void {
+    this.snackBar.open('เพิ่มพัสดุไปยังหน้าปริ้น', 'x', {
+      duration: 2500,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
     if (this.printService.getParcelById(this.id)) return;
 
     const parcel: ParcelPrint = {
