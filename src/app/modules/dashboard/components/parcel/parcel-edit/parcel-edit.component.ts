@@ -156,7 +156,11 @@ export class ParcelEditComponent implements OnInit {
     this.receivedDate.setValue(date);
     if (this.receivedDate.errors)
       this.dateInput.setErrors(this.receivedDate.errors);
-    if (!this.receivedDate.errors) this.dateInput.setErrors(null);
+
+    if (!this.receivedDate.errors) {
+      this.dateInput.setErrors(null);
+      this.convertCEtoBE(date);
+    }
   }
 
   onDatePicker(matDate: MatDatepickerInputEvent<Date>): void {
@@ -166,6 +170,21 @@ export class ParcelEditComponent implements OnInit {
 
     const date = `${d}/${m}/${+y + 543}`;
     this.dateInput.setValue(date);
+  }
+
+  convertCEtoBE(date: Date) {
+    const [d, m, y] = this.datePipe.transform(date, 'd/M/yyyy').split('/');
+    const currentYear = new Date().getFullYear();
+    const yearBE = +y + 543;
+    const dateCE = new Date(yearBE, +m - 1, +d);
+
+    if (yearBE <= currentYear) {
+      const [d, m, y] = this.datePipe.transform(dateCE, 'd/M/yyyy').split('/');
+      const date = `${d}/${m}/${+y + 543}`;
+
+      this.receivedDate.setValue(dateCE);
+      this.dateInput.setValue(date);
+    }
   }
 
   onSelectChip(keyName: string): void {
