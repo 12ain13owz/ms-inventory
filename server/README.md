@@ -14,14 +14,19 @@ npm install
 - config .env file
 
 ```
-PORT=<PORT>
+PORT="3000"
 NODE_ENV="development"
+USER_MAIL="your_email@gmail.com"
+PASS_MAIL="your_app_passwords"
 
-ACCESS_TOKEN_PRIVATE_KEY=<Private Key>
-ACCESS_TOKEN_PUBLIC_KEY=<Public Key>
+RECAPTCHA_SITE_KEY="your_recaptcha_site_key"
+RECAPTCHA_SECRET_KEY="your_recaptcha_secret_key"
 
-REFRESH_PRIVATE_KEY=<Refresh Private Key>
-REFRESH_PUBLIC_KEY=<Refresh Public Key>
+ACCESS_TOKEN_PRIVATE_KEY="your_access_token_private_key"
+ACCESS_TOKEN_PUBLIC_KEY="your_access_token_public_key"
+
+REFRESH_TOKEN_PRIVATE_KEY="your_refresh_token_private_key"
+REFRESH_TOKEN_PUBLIC_KEY="your_refresh_token_public_key"
 ```
 
 ## Run Application
@@ -37,13 +42,13 @@ npm run dev
 ### Dev Dependencies Overview
 
 ```
-npm i -D @types/bcrypt @types/config @types/cookie-parser @types/express @types/jsonwebtoken @types/lodash @types/morgan @types/multer @types/node @types/uuid pino-pretty ts-node tsx typescript
+npm i -D @types/bcrypt @types/config @types/cookie-parser @types/express @types/jsonwebtoken @types/lodash @types/morgan @types/multer @types/node @types/nodemailer @types/uuid pino-pretty ts-node tsx typescript
 ```
 
 ### Dependencies Overview
 
 ```
-npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lodash morgan multer pino sequelize sqlite3 uuid zod
+npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lodash morgan multer nodemailer pino pm2 sequelize sqlite3 uuid zod
 ```
 
 - generate keys rsa `(Key Size: 2048 bit)`: https://travistidwell.com/jsencrypt/demo/
