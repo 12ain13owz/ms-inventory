@@ -36,6 +36,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { PrintService } from '../../../services/print/print.service';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { Platform } from '@angular/cdk/platform';
 
 enum Tap {
   Date,
@@ -59,6 +65,8 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   private validationService = inject(ValidationService);
   private printService = inject(PrintService);
   private operation$: Observable<Parcel[] | Parcel>;
+  private snackBar = inject(MatSnackBar);
+  private platfrom = inject(Platform);
 
   datePipe = inject(DatePipe);
   imageUrl: string = environment.imageUrl;
@@ -231,6 +239,20 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   }
 
   addToPrint(): void {
+    let horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+    let verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
+    if (this.platfrom.ANDROID || this.platfrom.IOS) {
+      horizontalPosition = 'center';
+      verticalPosition = 'top';
+    }
+
+    this.snackBar.open('เพิ่มพัสดุไปยังหน้าปริ้น', 'ปิด', {
+      duration: 2500,
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
+    });
+
     const parcels = this.selection.selected
       .filter((parcel) => !this.printService.getParcelById(parcel.id))
       .map((parcel) => ({

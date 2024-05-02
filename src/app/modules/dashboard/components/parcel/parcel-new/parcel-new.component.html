@@ -38,7 +38,7 @@
       <div class="row">
         <mat-form-field>
           <mat-label>รหัส</mat-label>
-          <input type="text" matInput formControlName="code" #codeInput />
+          <input type="text" matInput formControlName="code" #codeEl />
 
           <mat-error>
             <app-error-field
@@ -58,20 +58,18 @@
         <mat-form-field>
           <mat-label>วันที่รับพัสดุ</mat-label>
           <input
-            type="text"
             matInput
             mask="d0/M0/0000"
             (input)="onDateInput()"
-            formControlName="receivedDate"
-            #dateInput
+            formControlName="dateInput"
+            #dateEl
           />
           <input
             class="hidden-input"
             matInput
             [matDatepicker]="picker"
             (dateInput)="onDatePicker($event)"
-            [(ngModel)]="hiddenDateInput"
-            [ngModelOptions]="{ standalone: true }"
+            formControlName="receivedDate"
           />
           <mat-hint align="end">วัน/เดือน/พ.ศ. (5/9/2560)</mat-hint>
           <mat-datepicker-toggle

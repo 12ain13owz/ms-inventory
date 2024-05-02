@@ -30,8 +30,8 @@ import { Status } from '../../../models/status.model';
 })
 export class ParcelNewComponent {
   @ViewChild('formDirec') fromDirec: FormGroupDirective;
-  @ViewChild('codeInput') codeInput: ElementRef<HTMLInputElement>;
-  @ViewChild('dateInput') dateInput: ElementRef<HTMLInputElement>;
+  @ViewChild('codeEl') codeEl: ElementRef<HTMLInputElement>;
+  @ViewChild('dateEl') dateEl: ElementRef<HTMLInputElement>;
   @ViewChild('picker') picker: MatDatepicker<Date>;
 
   private formBuilder = inject(FormBuilder);
@@ -51,7 +51,6 @@ export class ParcelNewComponent {
   isDataLoadFailed: boolean = false;
   categories: { id: number; name: string }[] = [];
   statuses: { id: number; name: string }[] = [];
-  hiddenDateInput: string = '';
 
   formParcel = this.initFormParcel();
   formImage = this.initFormImage();
@@ -102,8 +101,7 @@ export class ParcelNewComponent {
 
   onReset(): void {
     this.files.length = 0;
-    this.hiddenDateInput = '';
-    this.codeInput.nativeElement.focus();
+    this.codeEl.nativeElement.focus();
     this.formImage.reset();
     this.fromDirec.resetForm();
     this.category.markAsUntouched();
@@ -123,21 +121,42 @@ export class ParcelNewComponent {
     this.image.patchValue(null);
   }
 
-  onDatePicker(event: MatDatepickerInputEvent<Date>): void {
-    const day = event.value.getDate();
-    const month = event.value.getMonth();
-    const year = event.value.getFullYear();
-    const date = new Date(year, month, day);
+  onDateInput(): void {
+    const [d, m, y] = this.dateEl.nativeElement.value.split('/');
+    const date = new Date(+y - 543, +m - 1, +d);
 
-    this.dateInput.nativeElement.value = `${day}/${month + 1}/${year + 543}`;
     this.receivedDate.setValue(date);
+    if (this.receivedDate.errors)
+      this.dateInput.setErrors(this.receivedDate.errors);
+
+    if (!this.receivedDate.errors) {
+      this.dateInput.setErrors(null);
+      this.convertCEtoBE(date);
+    }
   }
 
-  onDateInput(): void {
-    const [day, month, year] = this.dateInput.nativeElement.value.split('/');
-    const date = new Date(+year - 543, +month - 1, +day);
+  onDatePicker(matDate: MatDatepickerInputEvent<Date>): void {
+    const [d, m, y] = this.datePipe
+      .transform(matDate.value, 'd/M/yyyy')
+      .split('/');
 
-    this.receivedDate.setValue(date);
+    const date = `${d}/${m}/${+y + 543}`;
+    this.dateInput.setValue(date);
+  }
+
+  convertCEtoBE(date: Date) {
+    const [d, m, y] = this.datePipe.transform(date, 'd/M/yyyy').split('/');
+    const currentYear = new Date().getFullYear();
+    const yearBE = +y + 543;
+    const dateCE = new Date(yearBE, +m - 1, +d);
+
+    if (yearBE <= currentYear) {
+      const [d, m, y] = this.datePipe.transform(dateCE, 'd/M/yyyy').split('/');
+      const date = `${d}/${m}/${+y + 543}`;
+
+      this.receivedDate.setValue(dateCE);
+      this.dateInput.setValue(date);
+    }
   }
 
   onSelectChip(keyName: string): void {
@@ -150,6 +169,10 @@ export class ParcelNewComponent {
 
   get oldCode(): FormControl<string> {
     return this.formParcel.controls['oldCode'];
+  }
+
+  get dateInput(): FormControl<string> {
+    return this.formParcel.controls['dateInput'];
   }
 
   get receivedDate(): FormControl<Date> {
@@ -214,6 +237,7 @@ export class ParcelNewComponent {
     return this.formBuilder.nonNullable.group({
       code: ['', [Validators.required]],
       oldCode: [''],
+      dateInput: [''],
       receivedDate: this.formBuilder.control<Date>(null, [
         Validators.required,
         this.validationService.isDate(),

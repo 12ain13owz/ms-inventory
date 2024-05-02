@@ -6,7 +6,12 @@ import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
 import { Subscription, finalize } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { PrintService } from '../../../services/print/print.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { Platform } from '@angular/cdk/platform';
 
 @Component({
   selector: 'app-parcel-view',
@@ -20,6 +25,7 @@ export class ParcelViewComponent implements OnInit, OnDestroy {
   private parcelApiService = inject(ParcelApiService);
   private printService = inject(PrintService);
   private snackBar = inject(MatSnackBar);
+  private platfrom = inject(Platform);
 
   imageUrl: string = environment.imageUrl;
 
@@ -74,10 +80,18 @@ export class ParcelViewComponent implements OnInit, OnDestroy {
   }
 
   onPrint(): void {
-    this.snackBar.open('เพิ่มพัสดุไปยังหน้าปริ้น', 'x', {
+    let horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+    let verticalPosition: MatSnackBarVerticalPosition = 'bottom';
+
+    if (this.platfrom.ANDROID || this.platfrom.IOS) {
+      horizontalPosition = 'center';
+      verticalPosition = 'top';
+    }
+
+    this.snackBar.open('เพิ่มพัสดุไปยังหน้าปริ้น', 'ปิด', {
       duration: 2500,
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
+      horizontalPosition: horizontalPosition,
+      verticalPosition: verticalPosition,
     });
     if (this.printService.getParcelById(this.id)) return;
 
