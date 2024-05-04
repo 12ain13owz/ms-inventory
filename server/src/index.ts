@@ -22,8 +22,11 @@ const corsOptions: CorsOptions = {
 
 const node_env = config.get('node_env');
 if (node_env === 'production')
-  corsOptions.origin = ['https://ms-stock-it.web.app'];
-else corsOptions.origin = ['http://localhost:4200', 'http://192.168.1.46:4200'];
+  corsOptions.origin = [
+    'https://ms-stock-it.web.app',
+    'https://ms-stock-it.fly.dev',
+  ];
+else corsOptions.origin = ['http://localhost:4200'];
 
 const socketOptions = {
   cors: { origin: corsOptions.origin },
@@ -46,10 +49,12 @@ app.use(healthRoutes);
 app.use(userRoutesV1);
 app.use(errorHandler);
 
-// app.get('*.*', express.static(path.join(__dirname, '../browser')));
-// app.all('*', (req, res) => {
-//   res.status(200).sendFile('/', { root: 'browser' });
-// });
+if (node_env === 'production') {
+  app.get('*.*', express.static(path.join(__dirname, '../browser')));
+  app.all('*', (req, res) => {
+    res.status(200).sendFile('/', { root: 'browser' });
+  });
+}
 
 server.listen(port, async () => {
   await databaseConnect();
