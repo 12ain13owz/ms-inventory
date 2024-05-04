@@ -104,13 +104,17 @@
 
       <mat-list-item>
         <span matListItemTitle>รายละเอียด</span>
-        <span matListItemLine>{{ log.detail }}</span>
       </mat-list-item>
+      <div class="view-textarea">
+        <span>{{ log.detail }}</span>
+      </div>
 
       <mat-list-item>
         <span matListItemTitle>หมายเหตุ</span>
-        <span matListItemLine>{{ isEmpty(log.remark) }}</span>
       </mat-list-item>
+      <div class="view-textarea">
+        <span>{{ isEmpty(log.remark) }}</span>
+      </div>
     </mat-list>
   </mat-card-content>
 </mat-card>

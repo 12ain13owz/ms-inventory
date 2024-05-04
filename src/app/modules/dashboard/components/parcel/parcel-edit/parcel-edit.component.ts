@@ -88,6 +88,8 @@ export class ParcelEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log(this.detail.value);
+
     if (this.formParcel.invalid || this.image.hasError('mimeType')) return;
 
     const receivedDate = this.datePipe.transform(
@@ -307,7 +309,7 @@ export class ParcelEditComponent implements OnInit {
     return this.formBuilder.nonNullable.group({
       code: ['', [Validators.required]],
       oldCode: [''],
-      dateInput: [''],
+      dateInput: ['', [Validators.required]],
       receivedDate: this.formBuilder.control<Date>(null, [
         Validators.required,
         this.validationService.isDate(),

@@ -98,7 +98,6 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     'no',
     'image',
     'track',
-    'receivedDate',
     'category',
     'status',
     'quantity',

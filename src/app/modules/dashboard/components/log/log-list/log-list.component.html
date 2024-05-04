@@ -179,7 +179,7 @@
 
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
-        <mat-cell *matCellDef="let element" style="padding-block: 8px">
+        <mat-cell *matCellDef="let element">
           <a [routerLink]="['./view', element.id]" class="blurred-img">
             <img
               [defaultImage]="'assets/images/no-image.jpg'"

@@ -57,13 +57,17 @@
 
       <mat-list-item>
         <span matListItemTitle>รายละเอียด</span>
-        <span matListItemLine>{{ parcel.detail }}</span>
       </mat-list-item>
+      <div class="view-textarea">
+        <span>{{ parcel.detail }}</span>
+      </div>
 
       <mat-list-item>
         <span matListItemTitle>หมายเหตุ</span>
-        <span matListItemLine>{{ parcel.remark }}</span>
       </mat-list-item>
+      <div class="view-textarea">
+        <span>{{ isEmpty(parcel.remark) }}</span>
+      </div>
     </mat-list>
   </mat-card-content>
 

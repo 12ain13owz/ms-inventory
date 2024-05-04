@@ -237,7 +237,7 @@ export class ParcelNewComponent {
     return this.formBuilder.nonNullable.group({
       code: ['', [Validators.required]],
       oldCode: [''],
-      dateInput: [''],
+      dateInput: ['', [Validators.required]],
       receivedDate: this.formBuilder.control<Date>(null, [
         Validators.required,
         this.validationService.isDate(),
