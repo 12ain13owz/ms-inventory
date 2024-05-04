@@ -3,10 +3,6 @@ import { newError } from '../utils/helper';
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response, next: NextFunction) => {
-  res.sendStatus(200);
-});
-
 router.get('/health', (req: Request, res: Response, next: NextFunction) => {
   res.send('health check');
 });
