@@ -88,8 +88,6 @@ export class ParcelEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.detail.value);
-
     if (this.formParcel.invalid || this.image.hasError('mimeType')) return;
 
     const receivedDate = this.datePipe.transform(
