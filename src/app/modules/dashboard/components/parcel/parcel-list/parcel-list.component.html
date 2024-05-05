@@ -246,7 +246,9 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header
           >รายละเอียด</mat-header-cell
         >
-        <mat-cell *matCellDef="let element"> {{ element.detail }} </mat-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.detail | cutDetail }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="quantity">

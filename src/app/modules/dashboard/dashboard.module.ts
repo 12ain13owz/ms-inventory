@@ -30,6 +30,8 @@ import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrco
 import { QRCodeModule } from 'angularx-qrcode';
 import { LogListComponent } from './components/log/log-list/log-list.component';
 import { LogViewComponent } from './components/log/log-view/log-view.component';
+import { DispTextareaPipe } from './pipes/disp-textarea.pipe';
+import { CutDetailPipe } from './pipes/cut-detail.pipe';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import { LogViewComponent } from './components/log/log-view/log-view.component';
     PrintQrcodeComponent,
     LogListComponent,
     LogViewComponent,
+    DispTextareaPipe,
+    CutDetailPipe,
   ],
   imports: [
     DashboardRoutingModule,

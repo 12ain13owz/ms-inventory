@@ -191,6 +191,11 @@ export class ParcelEditComponent implements OnInit {
     this[keyName].markAsTouched();
   }
 
+  lines(value: string): number {
+    const lines = value.split('\n');
+    return lines.length + 1;
+  }
+
   get code(): FormControl<string> {
     return this.formParcel.controls['code'];
   }
