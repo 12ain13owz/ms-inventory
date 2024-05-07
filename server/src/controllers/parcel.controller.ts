@@ -190,7 +190,7 @@ export async function createParcelHandler(
       decreaseQuantity: false,
       print: false,
       printCount: 0,
-      detailLog: 'สร้างพัสดุ',
+      detailLog: 'เพิ่มพัสดุ',
     });
 
     const resultParcel = await createParcel(payloadParcel, t);
