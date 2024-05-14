@@ -19,7 +19,7 @@ export class ServerErrorComponent implements OnInit {
   private http = inject(HttpClient);
   private loadingScresnSergvice = inject(LoadingScreenService);
   private toastr = inject(ToastNotificationService);
-  private apiUrl = environment.localhost;
+  private apiUrl = environment.localhost + 'health';
 
   ngOnInit(): void {
     const redirected = this.route.snapshot.queryParamMap.get('redirected');
