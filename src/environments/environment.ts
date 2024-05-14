@@ -4,6 +4,6 @@ export const environment = {
   imageUrl: 'https://ms-stock-it.fly.dev/image/',
   apiUrl: 'https://ms-stock-it.fly.dev/api/v1/',
   recaptcha: {
-    siteKey: '6LfEjcMpAAAAAFDtJEtMKeoJL2gvC-1Omkyi_GRO',
+    siteKey: '6LfGJdwpAAAAAJ4-l4EwVPvcdx8ka5NjvttR-4MH',
   },
 };

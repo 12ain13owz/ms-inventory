@@ -2,6 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const config = require("config");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
+const path = require("path");
 
 const sequelize = new Sequelize({
   dialect: config.get("database.dialect"),
@@ -202,8 +203,11 @@ async function initializeDatabase() {
     await sequelize.close();
     console.log("7. Disconnect database.");
 
-    fs.writeFileSync(".env", envContent, "utf8");
-    console.log("8. Create .env");
+    const envFilePath = path.join(__dirname, ".env");
+    if (!fs.existsSync(envFilePath)) {
+      fs.writeFileSync(".env", envContent, "utf8");
+      console.log("8. Create .env");
+    }
 
     console.log("successfully");
   } catch (error) {
@@ -215,9 +219,13 @@ async function generateAdmin() {
   const password = "!Qwer1234";
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
+  const email = "admin@test.com";
 
+  if (result) return;
+
+  const result = User.findOne({ where: { email: email } });
   const user = new User({
-    email: "admin@test.com",
+    email: email,
     password: hash,
     firstname: "Administrator",
     lastname: "Test",
@@ -226,7 +234,7 @@ async function generateAdmin() {
     remark: "",
   });
 
-  await User.create(user.dataValues);
+  await user.save();
 }
 
 async function generateCategory() {
@@ -243,7 +251,10 @@ async function generateCategory() {
   ];
 
   for (const category of categories) {
-    await Category.create(new Category(category).dataValues);
+    const result = Category.findOne({ where: { name: category.name } });
+    if (result) continue;
+
+    await new Category(category).save();
   }
 }
 
@@ -258,7 +269,10 @@ async function generateStatus() {
   ];
 
   for (const status of statuses) {
-    await Status.create(new Status(status).dataValues);
+    const result = Status.findOne({ where: { name: status.name } });
+    if (result) continue;
+
+    await new Status(status).save();
   }
 }
 

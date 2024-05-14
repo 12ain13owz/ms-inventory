@@ -14,7 +14,7 @@ const MIME_TYPE_MAP: { [key: string]: string } = {
 
 export const storage = diskStorage({
   destination: (req, file, cb) => {
-    const path = './public/images';
+    const path = './data/images';
     mkdirSync(path, { recursive: true });
 
     const isValid = MIME_TYPE_MAP[file.mimetype];

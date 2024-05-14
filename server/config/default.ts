@@ -33,7 +33,7 @@ const config: AppConfig = {
   node_env: process.env.NODE_ENV || 'development',
   database: {
     dialect: 'sqlite',
-    storage: './database/ms_stock.sqlite',
+    storage: process.env.DATABASE_URL || './data/database/ms_stock.sqlite',
   },
   smtp: {
     host: 'smtp.gmail.com',

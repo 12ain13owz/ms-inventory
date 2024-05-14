@@ -43,7 +43,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/image', express.static(path.join(__dirname, '../public/images')));
+app.use('/image', express.static(path.join(__dirname, '../data/images')));
 
 app.use(healthRoutes);
 app.use(userRoutesV1);

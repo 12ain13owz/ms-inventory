@@ -4,6 +4,6 @@ export const environment = {
   imageUrl: 'http://localhost:3000/image/',
   apiUrl: 'http://localhost:3000/api/v1/',
   recaptcha: {
-    siteKey: '6LfEjcMpAAAAAFDtJEtMKeoJL2gvC-1Omkyi_GRO',
+    siteKey: '6LfGJdwpAAAAAJ4-l4EwVPvcdx8ka5NjvttR-4MH',
   },
 };
