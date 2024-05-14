@@ -33,7 +33,6 @@
       </mat-card-content>
     </mat-tab>
 
-    @if (platform.ANDROID || platform.IOS) {
     <mat-tab label="กล้อง">
       <mat-card-content>
         <mat-radio-group [(ngModel)]="isScanType" (change)="onStartCamera()">
@@ -44,7 +43,6 @@
         <div [ngClass]="{ blur: isScanning }" #qrBox></div>
       </mat-card-content>
     </mat-tab>
-    }
   </mat-tab-group>
 
   <mat-card-footer>

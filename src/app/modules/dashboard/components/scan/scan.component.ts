@@ -137,7 +137,6 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onTapChange(indexTap: number): void {
-    if (!this.platform.ANDROID && !this.platform.IOS) return;
     if (indexTap !== Tap.Camera) {
       if (this.qrRender) this.qrRender.remove();
       if (this.html5QrcodeScanner) this.html5QrcodeScanner.clear();
