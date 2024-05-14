@@ -16,6 +16,6 @@ router.post(
   loginHandler
 );
 router.delete('/logout', logoutHandler);
-router.post('/refresh', refreshTokenHandler);
+router.get('/refresh', refreshTokenHandler);
 
 export default router;

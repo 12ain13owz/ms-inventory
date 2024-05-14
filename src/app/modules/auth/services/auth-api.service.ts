@@ -62,11 +62,10 @@ export class AuthApiService {
       'Authorization',
       'Bearer ' + this.tokenService.getAccessToken()
     );
-    return this.http.post<AccessToken>(
-      `${this.apiUrlAuth}refresh`,
-      {},
-      { headers, withCredentials: true }
-    );
+    return this.http.get<AccessToken>(`${this.apiUrlAuth}refresh`, {
+      headers,
+      withCredentials: true,
+    });
   }
 
   forgetPassword(email: string): Observable<ForgetPasswordResult> {
