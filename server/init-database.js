@@ -221,9 +221,9 @@ async function generateAdmin() {
   const hash = bcrypt.hashSync(password, salt);
   const email = "admin@test.com";
 
+  const result = await User.findOne({ where: { email: email } });
   if (result) return;
 
-  const result = User.findOne({ where: { email: email } });
   const user = new User({
     email: email,
     password: hash,
@@ -251,7 +251,7 @@ async function generateCategory() {
   ];
 
   for (const category of categories) {
-    const result = Category.findOne({ where: { name: category.name } });
+    const result = await Category.findOne({ where: { name: category.name } });
     if (result) continue;
 
     await new Category(category).save();
@@ -269,7 +269,7 @@ async function generateStatus() {
   ];
 
   for (const status of statuses) {
-    const result = Status.findOne({ where: { name: status.name } });
+    const result = await Status.findOne({ where: { name: status.name } });
     if (result) continue;
 
     await new Status(status).save();
