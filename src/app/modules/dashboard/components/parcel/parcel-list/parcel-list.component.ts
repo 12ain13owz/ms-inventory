@@ -304,17 +304,14 @@ export class ParcelListComponent implements OnInit, OnDestroy {
             take(1)
           )
     ).subscribe(() => {
-      if (!this.dataSource.paginator)
-        this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sort.sort({
+        id: 'track',
+        start: 'desc',
+        disableClear: true,
+      });
 
-      if (!this.dataSource.sort) {
-        this.dataSource.sort = this.sort;
-        this.dataSource.sort.sort({
-          id: 'track',
-          start: 'desc',
-          disableClear: true,
-        });
-      }
       if (this.isPrint) {
         this.isSelected = this.isPrint;
         this.isSelectPrint();

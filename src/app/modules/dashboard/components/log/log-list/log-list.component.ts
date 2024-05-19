@@ -258,17 +258,13 @@ export class LogListComponent implements OnInit, OnDestroy {
             take(1)
           )
     ).subscribe(() => {
-      if (!this.dataSource.paginator)
-        this.dataSource.paginator = this.paginator;
-
-      if (!this.dataSource.sort) {
-        this.dataSource.sort = this.sort;
-        this.dataSource.sort.sort({
-          id: 'createdAt',
-          start: 'desc',
-          disableClear: true,
-        });
-      }
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sort.sort({
+        id: 'createdAt',
+        start: 'desc',
+        disableClear: true,
+      });
     });
   }
 }

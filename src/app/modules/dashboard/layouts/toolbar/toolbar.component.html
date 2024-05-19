@@ -26,17 +26,17 @@
 <mat-menu #menu="matMenu">
   <a mat-menu-item routerLink="/profile">
     <mat-icon>person</mat-icon>
-    <span>Profile</span>
+    <span>โปรไฟล์</span>
   </a>
 
   <a mat-menu-item routerLink="/password">
     <mat-icon>lock</mat-icon>
-    <span>Password</span>
+    <span>เปลี่ยนรหัสผ่าน</span>
   </a>
 
   <button type="button" mat-menu-item>
     <mat-icon>dark_mode</mat-icon>
-    <span>Dark</span>
+    <span>ธีมมืด</span>
     <mat-slide-toggle
       style="margin-left: 50px"
       [(ngModel)]="isDarkTheme"
@@ -46,6 +46,6 @@
 
   <button type="button" mat-menu-item (click)="onLogout()">
     <mat-icon color="warn">logout</mat-icon>
-    <span style="color: #f44336">Log out</span>
+    <span style="color: #f44336">ออกจการะบบ</span>
   </button>
 </mat-menu>
