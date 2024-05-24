@@ -1,3 +1,5 @@
+@import "../../../../core/theme/color-palette.scss";
+
 mat-nav-list {
   padding: 0;
 }
@@ -8,6 +10,10 @@ mat-nav-list {
   gap: 10px;
   transition: 0.3s;
   padding-block: 10px;
+}
+
+.link-active {
+  background-color: $base-light-color;
 }
 
 a {
@@ -64,21 +70,13 @@ mat-toolbar {
   }
 }
 
-.link-active {
-  background-color: #673ab7;
-
-  .link-box {
-    color: #fff;
-  }
-}
-
 .line-2 {
   color: #757575;
 }
 
 :host-context(.dark-theme) {
   .link-active {
-    background-color: #9c27b0;
+    background-color: $base-dark-color;
   }
 
   .line-2 {

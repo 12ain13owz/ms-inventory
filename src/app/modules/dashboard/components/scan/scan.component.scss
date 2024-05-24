@@ -1,3 +1,5 @@
+@import "../../../../core/theme/color-palette.scss";
+
 img {
   width: 100px;
   height: 100px;
@@ -6,12 +8,13 @@ img {
 :host-context(.dark-theme) {
   .search-box {
     input {
-      color: #ffabf3;
+      color: $font-dark-color;
       background-color: #303030;
     }
 
     button[type="submit"] {
-      background-color: #a53ab7;
+      color: #fff;
+      background-color: $base-dark-color;
     }
   }
 }
@@ -42,7 +45,7 @@ img {
 
   input {
     padding: 12px 20px;
-    color: #673ab7;
+    color: $font-light-color;
     background-color: #f1f4f7;
     font-size: 1rem;
     font-weight: 700;
@@ -54,8 +57,8 @@ img {
 
   button[type="submit"] {
     flex-basis: 120px;
-    color: #fff;
-    background-color: #673ab7;
+
+    background-color: $base-light-color;
     font-size: 1rem;
     outline: none;
     border: none;
