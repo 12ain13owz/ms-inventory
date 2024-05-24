@@ -1,43 +1,44 @@
 import { TypeOf, boolean, object, string } from 'zod';
 
-const id = 'ไม่พบข้อมูลรหัสประเภทของอุปกรณ์';
-const name = 'ไม่พบข้อมูลชื่อประเภทของอุปกรณ์';
-const active = 'ไม่พบข้อมูลสถานะการใช้งาน';
-const regexId = new RegExp(/^[0-9]\d*$/);
+const regexNumber = new RegExp(/^[0-9]\d*$/);
 
-export const creatCategorySchema = object({
-  body: object({
-    name: string({ required_error: name }).min(1, {
-      message: name,
+const id = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
+const name = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
+const active = 'ไม่พบสถานะการใช้งาน';
+
+export const categorySehema = {
+  create: object({
+    body: object({
+      name: string({ required_error: name }).min(1, { message: name }),
+      active: boolean({ required_error: active }),
+      remark: string().optional().nullable(),
     }),
-    active: boolean({ required_error: active }),
-    remark: string().optional().nullable(),
   }),
-});
 
-export const updateCategorySchema = object({
-  params: object({
-    id: string({ required_error: id })
-      .min(1, { message: id })
-      .regex(regexId, { message: id }),
-  }),
-  body: object({
-    name: string({ required_error: id }).min(1, {
-      message: id,
+  update: object({
+    params: object({
+      id: string({ required_error: id })
+        .min(1, { message: id })
+        .regex(regexNumber, { message: id }),
     }),
-    active: boolean({ required_error: active }),
-    remark: string().optional().nullable(),
+    body: object({
+      name: string({ required_error: id }).min(1, { message: id }),
+      active: boolean({ required_error: active }),
+      remark: string().optional().nullable(),
+    }),
   }),
-});
 
-export const deleteCategorySchema = object({
-  params: object({
-    id: string({ required_error: id })
-      .min(1, { message: id })
-      .regex(regexId, { message: id }),
+  delete: object({
+    params: object({
+      id: string({ required_error: id })
+        .min(1, { message: id })
+        .regex(regexNumber, { message: id }),
+    }),
   }),
-});
+};
 
-export type CreateCategoryInput = TypeOf<typeof creatCategorySchema>['body'];
-export type UpdateCategoryInput = TypeOf<typeof updateCategorySchema>;
-export type DeleteCategoryInput = TypeOf<typeof deleteCategorySchema>['params'];
+export type CategoryType = {
+  create: TypeOf<typeof categorySehema.create>['body'];
+  update: TypeOf<typeof categorySehema.update>;
+  delete: TypeOf<typeof categorySehema.delete>['params'];
+};

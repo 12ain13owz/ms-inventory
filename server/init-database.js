@@ -183,31 +183,31 @@ REFRESH_TOKEN_PUBLIC_KEY="your_refresh_token_public_key"
 
 async function initializeDatabase() {
   try {
-    console.log("1. Create Database ms_stock.sqlite.");
+    // console.log("1. Create Database ms_stock.sqlite.");
 
-    await sequelize.authenticate();
-    console.log("2. Check connect database.");
+    // await sequelize.authenticate();
+    // console.log("2. Check connect database.");
 
-    await sequelize.sync();
-    console.log("3. Create table.");
+    // await sequelize.sync();
+    // console.log("3. Create table.");
 
     await generateAdmin();
     console.log("4. Generate admin.");
 
-    await generateCategory();
-    console.log("5. Generate category.");
+    // await generateCategory();
+    // console.log("5. Generate category.");
 
-    await generateStatus();
-    console.log("6. Generate status.");
+    // await generateStatus();
+    // console.log("6. Generate status.");
 
-    await sequelize.close();
-    console.log("7. Disconnect database.");
+    // await sequelize.close();
+    // console.log("7. Disconnect database.");
 
-    const envFilePath = path.join(__dirname, ".env");
-    if (!fs.existsSync(envFilePath)) {
-      fs.writeFileSync(".env", envContent, "utf8");
-      console.log("8. Create .env");
-    }
+    // const envFilePath = path.join(__dirname, ".env");
+    // if (!fs.existsSync(envFilePath)) {
+    //   fs.writeFileSync(".env", envContent, "utf8");
+    //   console.log("8. Create .env");
+    // }
 
     console.log("successfully");
   } catch (error) {

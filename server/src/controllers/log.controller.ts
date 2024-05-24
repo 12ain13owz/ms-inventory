@@ -1,45 +1,18 @@
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
-import {
-  findAllLog,
-  findLimitLog,
-  findLogByCode,
-  findLogByDate,
-  findLogById,
-  findLogByTrack,
-} from '../services/log.service';
-import {
-  getLogByCodeInput,
-  getLogByDateInput,
-  getLogByIdInput,
-  getLogByTrackInput,
-} from '../schemas/log.schema';
 import { newError, removeWhitespace } from '../utils/helper';
+import { logService } from '../services/log.service';
+import { LogType } from '../schemas/log.schema';
 
-export async function getAllLogHandler(
+export async function initialLogController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getAllLogHandler';
+  res.locals.func = 'initialLogController';
 
   try {
-    const resLogs = await findAllLog();
-    res.json(resLogs);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function getInitialLogHandler(
-  req: Request,
-  res: ExtendedResponse,
-  next: NextFunction
-) {
-  res.locals.func = 'getInitialLogHandler';
-
-  try {
-    const logs = await findLimitLog(50);
+    const logs = await logService.findLimit(50);
     const resLogs = logs.sort((a, b) => a.id - b.id);
 
     res.json(resLogs);
@@ -48,12 +21,27 @@ export async function getInitialLogHandler(
   }
 }
 
-export async function getLogByDateHandler(
-  req: Request<getLogByDateInput>,
+export async function findAllLogController(
+  req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getLogByDateHandler';
+  res.locals.func = 'findAllLogController';
+
+  try {
+    const resLogs = await logService.findAll();
+    res.json(resLogs);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function findLogByDateController(
+  req: Request<LogType['findByDate']>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'findLogByDateController';
 
   try {
     const dateStart = new Date(req.params.dateStart);
@@ -65,23 +53,23 @@ export async function getLogByDateHandler(
     dateStart.setHours(0, 0, 0, 0);
     dateEnd.setHours(23, 59, 59, 999);
 
-    const resLogs = await findLogByDate(dateStart, dateEnd);
+    const resLogs = await logService.findByDate(dateStart, dateEnd);
     res.json(resLogs);
   } catch (error) {
     next(error);
   }
 }
 
-export async function getLogByTrackHandler(
-  req: Request<getLogByTrackInput>,
+export async function findLogByTrackController(
+  req: Request<LogType['findByTrack']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getLogByTrackHandler';
+  res.locals.func = 'findLogByTrackController';
 
   try {
     const track = removeWhitespace(req.params.track);
-    const resLogs = await findLogByTrack(track);
+    const resLogs = await logService.findByTrack(track);
 
     res.json(resLogs);
   } catch (error) {
@@ -89,16 +77,16 @@ export async function getLogByTrackHandler(
   }
 }
 
-export async function getLogByCodeHandler(
-  req: Request<getLogByCodeInput>,
+export async function findLogByCodeController(
+  req: Request<LogType['findByCode']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getLogByCodeHandler';
+  res.locals.func = 'findLogByCodeController';
 
   try {
     const code = removeWhitespace(req.params.code);
-    const resLogs = await findLogByCode(code);
+    const resLogs = await logService.findByCode(code);
 
     res.json(resLogs);
   } catch (error) {
@@ -106,16 +94,16 @@ export async function getLogByCodeHandler(
   }
 }
 
-export async function getLogByIdHandler(
-  req: Request<getLogByIdInput>,
+export async function findLogByIdController(
+  req: Request<LogType['findById']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getLogByIdHandler';
+  res.locals.func = 'findLogByIdController';
 
   try {
     const id = +req.params.id;
-    const resLog = await findLogById(id);
+    const resLog = await logService.findById(id);
 
     res.json(resLog);
   } catch (error) {

@@ -26,7 +26,12 @@ if (node_env === 'production')
     'https://ms-stock-it.web.app',
     'https://ms-stock-it.fly.dev',
   ];
-else corsOptions.origin = ['http://localhost:4200'];
+else
+  corsOptions.origin = [
+    'http://localhost:4200',
+    'http://192.168.169.1:4200',
+    'https://192.168.169.1:4200',
+  ];
 
 const socketOptions = {
   cors: { origin: corsOptions.origin },
@@ -43,7 +48,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/image', express.static(path.join(__dirname, '../data/images')));
+app.use('/images', express.static(path.join(__dirname, '../data/images')));
 
 app.use(healthRoutes);
 app.use(userRoutesV1);

@@ -1,21 +1,21 @@
 import { Router } from 'express';
 import {
-  loginHandler,
-  logoutHandler,
-  refreshTokenHandler,
+  loginController,
+  logoutController,
+  refreshTokenController,
 } from '../../controllers/auth.controller';
 import { validate } from '../../middlewares/validate.middleware';
-import { LoginUserSchema } from '../../schemas/auth.schema';
+import { authSehema } from '../../schemas/auth.schema';
 import { verifyRecaptcha } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
 router.post(
   '/login',
-  [validate(LoginUserSchema), verifyRecaptcha],
-  loginHandler
+  [validate(authSehema.login), verifyRecaptcha],
+  loginController
 );
-router.delete('/logout', logoutHandler);
-router.get('/refresh', refreshTokenHandler);
+router.delete('/logout', logoutController);
+router.get('/refresh', refreshTokenController);
 
 export default router;

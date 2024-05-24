@@ -1,7 +1,8 @@
 import { Server, Socket } from 'socket.io';
 import log from '../utils/logger';
 import connectSocket from './connect.socket';
-import parcelSocket from './parcel.socket';
+import inventorySocket from './inventory.socket';
+import inventoryCheckSocket from './inventory-check.socket';
 import logSocket from './log.socket';
 
 export default (io: Server): void => {
@@ -9,7 +10,8 @@ export default (io: Server): void => {
     log.info(`Socket connected: ${socket.id}`);
 
     connectSocket(io, socket);
-    parcelSocket(io, socket);
+    inventorySocket(io, socket);
+    inventoryCheckSocket(io, socket);
     logSocket(io, socket);
   });
 };

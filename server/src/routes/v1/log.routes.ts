@@ -1,43 +1,38 @@
 import { Router } from 'express';
 import { isUserActive, verifyToken } from '../../middlewares/auth.middleware';
 import {
-  getAllLogHandler,
-  getInitialLogHandler,
-  getLogByCodeHandler,
-  getLogByDateHandler,
-  getLogByIdHandler,
-  getLogByTrackHandler,
+  findAllLogController,
+  findLogByCodeController,
+  findLogByDateController,
+  findLogByIdController,
+  findLogByTrackController,
+  initialLogController,
 } from '../../controllers/log.controller';
 import { validate } from '../../middlewares/validate.middleware';
-import {
-  getLogByCodeSchema,
-  getLogByDateSchema,
-  getLogByIdSchema,
-  getLogByTrackSchema,
-} from '../../schemas/log.schema';
+import { logSchema } from '../../schemas/log.schema';
 
 const router = Router();
-router.get('/', [verifyToken, isUserActive], getAllLogHandler);
-router.get('/init', [verifyToken, isUserActive], getInitialLogHandler);
+router.get('/', [verifyToken, isUserActive], findAllLogController);
+router.get('/init', [verifyToken, isUserActive], initialLogController);
 router.get(
   '/date/:dateStart/:dateEnd',
-  [verifyToken, isUserActive, validate(getLogByDateSchema)],
-  getLogByDateHandler
+  [verifyToken, isUserActive, validate(logSchema.findByDate)],
+  findLogByDateController
 );
 router.get(
   '/track/:track',
-  [verifyToken, isUserActive, validate(getLogByTrackSchema)],
-  getLogByTrackHandler
+  [verifyToken, isUserActive, validate(logSchema.findByTrack)],
+  findLogByTrackController
 );
 router.get(
   '/code/:code',
-  [verifyToken, isUserActive, validate(getLogByCodeSchema)],
-  getLogByCodeHandler
+  [verifyToken, isUserActive, validate(logSchema.findByCode)],
+  findLogByCodeController
 );
 router.get(
   '/:id',
-  [verifyToken, isUserActive, validate(getLogByIdSchema)],
-  getLogByIdHandler
+  [verifyToken, isUserActive, validate(logSchema.findById)],
+  findLogByIdController
 );
 
 export default router;

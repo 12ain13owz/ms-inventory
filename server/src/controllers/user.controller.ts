@@ -4,55 +4,43 @@ import { ExtendedResponse } from '../types/express';
 import { omit } from 'lodash';
 import { readFileSync } from 'fs';
 import path from 'path';
-import {
-  CreateUserInput,
-  ForgotPasswordInput,
-  ResetPasswordInput,
-  UpdateUserInput,
-} from '../schemas/user.schema';
+import { UserType } from '../schemas/user.schema';
 import {
   comparePassword,
   hashPassword,
   newError,
   normalizeUnique,
 } from '../utils/helper';
-import {
-  createUser,
-  findAllUser,
-  findUserByEmail,
-  findUserById,
-  resetUserPassword,
-  updateUser,
-} from '../services/user.service';
+import { userService } from '../services/user.service';
 import { User, privateUserFields } from '../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { sendEmail } from '../utils/mailer';
 
-export async function getAllUserHandler(
+export async function findAllUserController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getAllUserHandler';
+  res.locals.func = 'findAllUserController';
 
   try {
-    const resUsers = await findAllUser();
+    const resUsers = await userService.findAll();
     res.json(resUsers);
   } catch (error) {
     next(error);
   }
 }
 
-export async function createUserHandler(
-  req: Request<{}, {}, CreateUserInput>,
+export async function createUserController(
+  req: Request<{}, {}, UserType['create']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'createUserHandler';
+  res.locals.func = 'createUserController';
 
   try {
     const email = normalizeUnique(req.body.email);
-    const user = await findUserByEmail(email);
+    const user = await userService.findByEmail(email);
     if (user) throw newError(400, `E-mail: ${email} นี้มีอยู่ในระบบ`);
 
     const password = hashPassword(req.body.password);
@@ -67,7 +55,7 @@ export async function createUserHandler(
       remark: req.body.remark || '',
     });
 
-    const result = await createUser(payload);
+    const result = await userService.create(payload);
     const newUser = omit(result.toJSON(), privateUserFields);
 
     res.json({
@@ -79,17 +67,17 @@ export async function createUserHandler(
   }
 }
 
-export async function updateUserHandler(
-  req: Request<UpdateUserInput['params'], {}, UpdateUserInput['body']>,
+export async function updateUserController(
+  req: Request<UserType['update']['params'], {}, UserType['update']['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateUserHandler';
+  res.locals.func = 'updateUserController';
 
   try {
     const id = +req.params.id;
     const email = normalizeUnique(req.body.email);
-    const existingUser = await findUserByEmail(email);
+    const existingUser = await userService.findByEmail(email);
     if (existingUser && existingUser.id !== id)
       throw newError(
         400,
@@ -105,8 +93,8 @@ export async function updateUserHandler(
       active: req.body.active,
       remark: req.body.remark || '',
     };
-    const result = await updateUser(id, payload);
-    if (!result[0]) throw newError(400, 'แก้ไขข้อมูลผู้ใช้งานไม่สำเร็จ');
+    const [result] = await userService.update(id, payload);
+    if (!result) throw newError(400, `แก้ไขข้อมูลผู้ใช้งาน ${email} ไม่สำเร็จ`);
 
     res.json({
       message: `แก้ไขข้อมูลผู้ใช้งาน ${email} สำเร็จ`,
@@ -117,16 +105,16 @@ export async function updateUserHandler(
   }
 }
 
-export async function forgotPasswordHandler(
-  req: Request<{}, {}, ForgotPasswordInput>,
+export async function forgotPassworController(
+  req: Request<{}, {}, UserType['forgotPassword']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'forgotPasswordHandler';
+  res.locals.func = 'forgotPassworController';
 
   try {
     const email = normalizeUnique(req.body.email);
-    const user = await findUserByEmail(email);
+    const user = await userService.findByEmail(email);
     if (!user) throw newError(404, 'ไม่พบ E-mail');
 
     const createdAt = new Date();
@@ -164,17 +152,22 @@ export async function forgotPasswordHandler(
   }
 }
 
-export async function resetPasswordHandler(
-  req: Request<ResetPasswordInput['params'], {}, ResetPasswordInput['body']>,
+export async function resetPasswordController(
+  req: Request<
+    UserType['resetPassword']['params'],
+    {},
+    UserType['resetPassword']['body']
+  >,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'resetPasswordHandler';
+  res.locals.func = 'resetPasswordController';
 
   try {
     const id = +req.params.id;
     const passwordResetCode = req.body.passwordResetCode;
-    const user = await findUserById(id);
+    const user = await userService.findById(id);
+
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ');
     if (!user.passwordResetCode)
       throw newError(
@@ -195,8 +188,8 @@ export async function resetPasswordHandler(
     }
 
     const hash = hashPassword(req.body.newPassword);
-    const result = await resetUserPassword(id, hash);
-    if (!result[0]) throw newError(400, 'เปลี่ยนรหัสผ่านไม่สำเร็จ');
+    const [result] = await userService.resetPassword(id, hash);
+    if (!result) throw newError(400, 'เปลี่ยนรหัสผ่านไม่สำเร็จ');
 
     res.json({ message: 'เปลี่ยนรหัสผ่านสำเร็จ' });
   } catch (error) {

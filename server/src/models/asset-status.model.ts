@@ -7,9 +7,9 @@ import {
 } from 'sequelize';
 import sequelize from '../utils/sequelize';
 
-export class Category extends Model<
-  InferAttributes<Category>,
-  InferCreationAttributes<Category>
+export class AssetStatus extends Model<
+  InferAttributes<AssetStatus>,
+  InferCreationAttributes<AssetStatus>
 > {
   id: CreationOptional<number>;
   name: string;
@@ -19,7 +19,7 @@ export class Category extends Model<
   updatedAt: CreationOptional<Date>;
 }
 
-export default Category.init(
+export default AssetStatus.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
@@ -31,7 +31,7 @@ export default Category.init(
   {
     indexes: [{ fields: ['name'] }],
     sequelize,
-    modelName: 'Category',
+    modelName: 'AssetStatus',
     timestamps: true,
   }
 );

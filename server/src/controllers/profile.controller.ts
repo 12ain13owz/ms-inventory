@@ -1,14 +1,7 @@
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
-import {
-  findUserByEmail,
-  updateUser,
-  updateUserPassword,
-} from '../services/user.service';
-import {
-  UpdateProfileInput,
-  UpdatePasswordInput,
-} from '../schemas/profile.schema';
+import { userService } from '../services/user.service';
+import { ProfileType } from '../schemas/profile.schema';
 import {
   newError,
   comparePassword,
@@ -18,12 +11,12 @@ import {
 import { omit } from 'lodash';
 import { User, privateUserFields } from '../models/user.model';
 
-export async function getProfileHandeler(
+export async function findProfileController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'getProfileHandeler';
+  res.locals.func = 'findProfileController';
 
   try {
     const resProfile = omit(res.locals.user, privateUserFields);
@@ -33,16 +26,16 @@ export async function getProfileHandeler(
   }
 }
 
-export async function updateProfileHandler(
-  req: Request<{}, {}, UpdateProfileInput>,
+export async function updateProfileController(
+  req: Request<{}, {}, ProfileType['update']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateProfileHandler';
+  res.locals.func = 'updateProfileController';
 
   try {
     const email = normalizeUnique(req.body.email);
-    const user = await findUserByEmail(email);
+    const user = await userService.findByEmail(email);
     if (user && user.id !== res.locals.userId)
       throw newError(
         400,
@@ -56,8 +49,8 @@ export async function updateProfileHandler(
       remark: req.body.remark || '',
     };
 
-    const result = await updateUser(res.locals.userId!, payload);
-    if (!result[0]) throw newError(400, 'แก้ไขโปรไฟล์ไม่สำเร็จ');
+    const [result] = await userService.update(res.locals.userId!, payload);
+    if (!result) throw newError(400, 'แก้ไขโปรไฟล์ไม่สำเร็จ');
 
     res.json({ message: 'แก้ไขโปรไฟล์สำเร็จ' });
   } catch (error) {
@@ -65,12 +58,12 @@ export async function updateProfileHandler(
   }
 }
 
-export async function updatePasswordHandler(
-  req: Request<{}, {}, UpdatePasswordInput>,
+export async function changePasswordController(
+  req: Request<{}, {}, ProfileType['changePassword']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updatePasswordHandler';
+  res.locals.func = 'changePasswordController';
 
   try {
     const compare = comparePassword(
@@ -80,8 +73,8 @@ export async function updatePasswordHandler(
     if (!compare) throw newError(400, 'รหัสผ่านเก่าไม่ถูกต้อง');
 
     const hash = hashPassword(req.body.newPassword);
-    const result = await updateUserPassword(res.locals.userId!, hash);
-    if (!result[0]) throw newError(400, 'แก้ไขรหัสผ่านไม่สำเร็จ');
+    const [result] = await userService.changePassword(res.locals.userId!, hash);
+    if (!result) throw newError(400, 'แก้ไขรหัสผ่านไม่สำเร็จ');
 
     res.json({ message: 'แก้ไขรหัสผ่านสำเร็จ' });
   } catch (error) {

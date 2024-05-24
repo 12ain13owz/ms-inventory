@@ -1,35 +1,34 @@
 import { Transaction, Op } from 'sequelize';
 import logModel, { Log } from '../models/log.model';
 
-export function findAllLog(): Promise<Log[]> {
-  return logModel.findAll();
-}
+export const logService = {
+  findAll(): Promise<Log[]> {
+    return logModel.findAll();
+  },
 
-export function findLimitLog(limit: number): Promise<Log[]> {
-  return logModel.findAll({
-    limit: limit,
-    order: [['createdAt', 'DESC']],
-  });
-}
+  findLimit(limit: number): Promise<Log[]> {
+    return logModel.findAll({ limit: limit, order: [['createdAt', 'DESC']] });
+  },
 
-export function findLogByTrack(track: string): Promise<Log[]> {
-  return logModel.findAll({ where: { track } });
-}
+  findByDate(dateStart: Date, dateEnd: Date): Promise<Log[]> {
+    return logModel.findAll({
+      where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
+    });
+  },
 
-export function findLogByDate(dateStart: Date, dateEnd: Date) {
-  return logModel.findAll({
-    where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
-  });
-}
+  findByCode(code: string): Promise<Log[]> {
+    return logModel.findAll({ where: { code } });
+  },
 
-export function findLogByCode(code: string): Promise<Log[]> {
-  return logModel.findAll({ where: { code } });
-}
+  findByTrack(track: string): Promise<Log[]> {
+    return logModel.findAll({ where: { track } });
+  },
 
-export function findLogById(id: number): Promise<Log | null> {
-  return logModel.findByPk(id);
-}
+  findById(id: number): Promise<Log | null> {
+    return logModel.findByPk(id);
+  },
 
-export function createLog(log: Log, t: Transaction): Promise<Log> {
-  return logModel.create(log.toJSON(), { transaction: t });
-}
+  create(log: Log, t: Transaction): Promise<Log> {
+    return logModel.create(log.toJSON(), { transaction: t });
+  },
+};

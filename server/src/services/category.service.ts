@@ -1,42 +1,38 @@
 import { Op } from 'sequelize';
 import categoryModel, { Category } from '../models/category.model';
 
-export function findAllCategory(): Promise<Category[]> {
-  return categoryModel.findAll({
-    ...getCategoryQueryOptions(),
-  });
-}
+export const categoryService = {
+  findAll(): Promise<Category[]> {
+    return categoryModel.findAll({ ...queryOptions() });
+  },
 
-export function findCategoryById(id: number): Promise<Category | null> {
-  return categoryModel.findByPk(id, {
-    ...getCategoryQueryOptions(),
-  });
-}
+  findById(id: number): Promise<Category | null> {
+    return categoryModel.findByPk(id, { ...queryOptions() });
+  },
 
-export function findCategoryByName(name: string): Promise<Category | null> {
-  return categoryModel.findOne({
-    where: { name: { [Op.like]: name } },
-    ...getCategoryQueryOptions(),
-  });
-}
+  findByName(name: string): Promise<Category | null> {
+    return categoryModel.findOne({
+      where: { name: { [Op.like]: name } },
+      ...queryOptions(),
+    });
+  },
 
-export function createCategory(category: Category): Promise<Category> {
-  return categoryModel.create(category.toJSON());
-}
+  create(category: Category): Promise<Category> {
+    return categoryModel.create(category.toJSON());
+  },
 
-export function updateCategory(
-  id: number,
-  category: Partial<Category>
-): Promise<[affectedCount: number]> {
-  return categoryModel.update(category, { where: { id } });
-}
+  update(
+    id: number,
+    category: Partial<Category>
+  ): Promise<[affectedCount: number]> {
+    return categoryModel.update(category, { where: { id } });
+  },
 
-export function deleteCategory(id: number): Promise<number> {
-  return categoryModel.destroy({ where: { id } });
-}
+  delete(id: number): Promise<number> {
+    return categoryModel.destroy({ where: { id } });
+  },
+};
 
-function getCategoryQueryOptions() {
-  return {
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
-  };
+function queryOptions() {
+  return { attributes: { exclude: ['createdAt', 'updatedAt'] } };
 }

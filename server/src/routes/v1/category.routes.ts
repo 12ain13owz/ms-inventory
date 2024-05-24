@@ -1,39 +1,35 @@
 import { Router } from 'express';
 import { validate } from '../../middlewares/validate.middleware';
-import {
-  creatCategorySchema,
-  deleteCategorySchema,
-  updateCategorySchema,
-} from '../../schemas/category.schema';
+import { categorySehema } from '../../schemas/category.schema';
 import {
   isRoleAdmin,
   isUserActive,
   verifyToken,
 } from '../../middlewares/auth.middleware';
 import {
-  createCategoryHandler,
-  deleteCategoryHandler,
-  getAllCategoryHandler,
-  updateCategoryHandler,
+  createCategoryController,
+  deleteCategoryController,
+  findAllCategoryController,
+  updateCategoryController,
 } from '../../controllers/category.controller';
 
 const router = Router();
 
-router.get('/', [verifyToken, isUserActive], getAllCategoryHandler);
+router.get('/', [verifyToken, isUserActive], findAllCategoryController);
 router.post(
   '/',
-  [verifyToken, isUserActive, isRoleAdmin, validate(creatCategorySchema)],
-  createCategoryHandler
+  [verifyToken, isUserActive, isRoleAdmin, validate(categorySehema.create)],
+  createCategoryController
 );
 router.put(
   '/:id',
-  [verifyToken, isUserActive, isRoleAdmin, validate(updateCategorySchema)],
-  updateCategoryHandler
+  [verifyToken, isUserActive, isRoleAdmin, validate(categorySehema.update)],
+  updateCategoryController
 );
 router.delete(
   '/:id',
-  [verifyToken, isUserActive, isRoleAdmin, validate(deleteCategorySchema)],
-  deleteCategoryHandler
+  [verifyToken, isUserActive, isRoleAdmin, validate(categorySehema.delete)],
+  deleteCategoryController
 );
 
 export default router;

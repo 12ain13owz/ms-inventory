@@ -2,8 +2,8 @@ import config from 'config';
 import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { omit } from 'lodash';
-import { LoginUserInput } from '../schemas/auth.schema';
-import { findUserByEmail, findUserById } from '../services/user.service';
+import { AuthType } from '../schemas/auth.schema';
+import { userService } from '../services/user.service';
 import { newError, comparePassword, normalizeUnique } from '../utils/helper';
 import { privateUserFields } from '../models/user.model';
 import {
@@ -16,16 +16,16 @@ import {
 const tokenKey = 'refresh_token';
 const isProduction = config.get<string>('node_env') === 'production';
 
-export async function loginHandler(
-  req: Request<{}, {}, LoginUserInput>,
+export async function loginController(
+  req: Request<{}, {}, AuthType['login']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'loginHandler';
+  res.locals.func = 'loginController';
 
   try {
     const email = normalizeUnique(req.body.email);
-    const user = await findUserByEmail(email);
+    const user = await userService.findByEmail(email);
     if (!user) throw newError(404, `ไม่พบ E-mail: ${email}`);
 
     const isValidPassword = comparePassword(req.body.password, user.password);
@@ -57,12 +57,12 @@ export async function loginHandler(
   }
 }
 
-export async function logoutHandler(
+export async function logoutController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'logoutHandler';
+  res.locals.func = 'logoutController';
 
   try {
     res.clearCookie(tokenKey);
@@ -72,12 +72,12 @@ export async function logoutHandler(
   }
 }
 
-export async function refreshTokenHandler(
+export async function refreshTokenController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'refreshTokenHandler';
+  res.locals.func = 'refreshTokenController';
   try {
     const accessToken = (req.headers.authorization || '').replace(
       /^Bearer\s/,
@@ -101,7 +101,7 @@ export async function refreshTokenHandler(
     if (!decodedRefreshToken)
       throw newError(401, 'Token หมดอายุ, กรุณาเข้าสู่ระบบใหม่ (4)', true);
 
-    const user = await findUserById(decodedRefreshToken.userId);
+    const user = await userService.findById(decodedRefreshToken.userId);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
 
     const newAccessToken = signAccessToken(user.id);

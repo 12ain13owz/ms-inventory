@@ -3,8 +3,8 @@ import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { newError } from '../utils/helper';
 import { verifyJwt } from '../utils/jwt';
-import { findUserById } from '../services/user.service';
-import { LoginUserInput } from '../schemas/auth.schema';
+import { userService } from '../services/user.service';
+import { AuthType } from '../schemas/auth.schema';
 
 interface decodeUser {
   userId: number;
@@ -13,11 +13,14 @@ interface decodeUser {
 }
 
 export async function verifyRecaptcha(
-  req: Request<{}, {}, LoginUserInput>,
+  req: Request<{}, {}, AuthType['login']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
   res.locals.func = 'verifyRecaptcha';
+
+  const node_env = config.get('node_env');
+  if (node_env === 'development') return next();
 
   try {
     const secretKey = config.get<string>('recaptcha.secretKey');
@@ -34,7 +37,10 @@ export async function verifyRecaptcha(
     });
 
     if (response.status !== 200)
-      throw newError(response.status, 'การตรวจสอบ reCAPTCHA ไม่สำเร็จ');
+      throw newError(
+        response.status,
+        'ไม่อนุญาติให้เข้าสู่ระบบ เนื่องจากการตรวจสอบ reCAPTCHA ไม่สำเร็จ'
+      );
 
     next();
   } catch (error) {
@@ -75,12 +81,12 @@ export async function isUserActive(
   res.locals.func = 'isUserActive';
 
   try {
-    const user = await findUserById(res.locals.userId!);
+    const user = await userService.findById(res.locals.userId!);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
     if (!user.active)
       throw newError(401, 'บัญชีนี้ไม่ได้รับอนุญาติให้ใช้งาน', true);
 
-    res.locals.user = user.dataValues;
+    res.locals.user = user.toJSON();
     next();
   } catch (error) {
     next(error);
