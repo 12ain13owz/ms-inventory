@@ -4,7 +4,6 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { Password, Profile } from '../../models/profile.model';
 import { ProfileService } from './profile.service';
-
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
 import { Message } from '../../../shared/models/response.model';
 
@@ -37,7 +36,7 @@ export class ProfileApiService {
 
   changePassword(payload: Password): Observable<Message> {
     return this.http
-      .post<Message>(`${this.apiUrl}/password`, payload)
+      .post<Message>(`${this.apiUrl}/change-password`, payload)
       .pipe(tap((res) => this.toastService.success('', res.message)));
   }
 }

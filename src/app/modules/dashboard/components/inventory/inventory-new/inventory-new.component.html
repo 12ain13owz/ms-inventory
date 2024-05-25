@@ -1,0 +1,271 @@
+@defer (when !isLoading) {
+<ng-container
+  *ngIf="
+    categories.length <= 0 || statuses.length <= 0 || usages.length <= 0;
+    else content
+  "
+>
+  <button mat-flat-button color="warn" class="w-100">
+    ไม่พบข้อมูลคุณสมบัติ, สถานะหรือการใช้งานของครุภัณฑ์ กรุณาติดต่อ Admin
+  </button>
+</ng-container>
+
+<ng-template #content>
+  <mat-card>
+    <mat-card-header class="justify-between">
+      <mat-card-title>{{ title }}</mat-card-title>
+      <button
+        type="button"
+        mat-button
+        color="warn"
+        (click)="onReset()"
+        [disabled]="isLoading"
+      >
+        รีเซ็ต
+      </button>
+    </mat-card-header>
+
+    <form
+      class="form-container"
+      [formGroup]="formInventory"
+      (ngSubmit)="onSubmit()"
+      #formDirec="ngForm"
+    >
+      <mat-card-content class="box">
+        <ngx-dropzone
+          [accept]="'image/jpeg,image/jpg,image/png'"
+          [multiple]="false"
+          (change)="onSelectImage($event)"
+          class="dropzone"
+        >
+          <ngx-dropzone-label>เพิ่มรูป (jpg, jpeg, png)</ngx-dropzone-label>
+          <ngx-dropzone-image-preview
+            ngProjectAs="ngx-dropzone-preview"
+            *ngFor="let f of files"
+            [file]="f"
+            [removable]="true"
+            (removed)="onRemoveImage(f)"
+          >
+          </ngx-dropzone-image-preview>
+        </ngx-dropzone>
+
+        <mat-error>
+          <app-error-field
+            [control]="image"
+            [errorMessage]="validationField.image"
+          ></app-error-field>
+        </mat-error>
+
+        <mat-form-field>
+          <mat-label>รหัสครุภัณฑ์</mat-label>
+          <input type="text" matInput formControlName="code" #codeEl />
+
+          <mat-error>
+            <app-error-field
+              [control]="code"
+              [errorMessage]="validationField.code"
+            ></app-error-field>
+          </mat-error>
+        </mat-form-field>
+
+        <div class="row">
+          <mat-form-field>
+            <mat-label>รหัสครุภัณฑ์เดิม</mat-label>
+            <input type="text" matInput formControlName="oldCode" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>หน่วยนับ</mat-label>
+            <input type="text" matInput formControlName="unit" />
+
+            <mat-error>
+              <app-error-field
+                [control]="unit"
+                [errorMessage]="validationField.unit"
+              ></app-error-field>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field>
+            <mat-label>มูลค่าครุภัณฑ์</mat-label>
+            <input
+              matInput
+              type="text"
+              mask="separator.2"
+              thousandSeparator=","
+              decimalMarker="."
+              formControlName="value"
+            />
+
+            <mat-error>
+              <app-error-field
+                [control]="value"
+                [errorMessage]="validationField.value"
+              ></app-error-field>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>แหล่งเงิน</mat-label>
+            <input matInput type="text" formControlName="fundingSource" />
+
+            <mat-error>
+              <app-error-field
+                [control]="fundingSource"
+                [errorMessage]="validationField.fundingSource"
+              ></app-error-field>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field>
+            <mat-label>วันที่ได้มา</mat-label>
+            <input
+              matInput
+              mask="d0/M0/0000"
+              (focusout)="onDateInput()"
+              formControlName="dateInput"
+              #dateEl
+            />
+            <input
+              class="hidden-input"
+              matInput
+              [matDatepicker]="picker"
+              (dateInput)="onDatePicker($event)"
+              formControlName="receivedDate"
+            />
+            <mat-hint align="end">วัน/เดือน/พ.ศ. (5/9/2560)</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+              [disabled]="formInventory.disabled"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>สถานที่ตั้ง/จัดเก็บ</mat-label>
+            <input matInput type="text" formControlName="location" />
+
+            <mat-error>
+              <app-error-field
+                [control]="location"
+                [errorMessage]="validationField.location"
+              ></app-error-field>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="d-flex flex-column">
+          <mat-card-title>คุณสมบัติ (ยี่ห้อ/รุ่น)</mat-card-title>
+
+          <mat-chip-listbox formControlName="category">
+            @for (category of categories; track category) {
+            <mat-chip-option
+              [value]="category.id"
+              (selectionChange)="onSelectChip('category')"
+              >{{ category.name }}</mat-chip-option
+            >
+            }
+          </mat-chip-listbox>
+
+          <mat-error>
+            <app-error-field
+              [control]="category"
+              [errorMessage]="validationField.category"
+            ></app-error-field>
+          </mat-error>
+        </div>
+
+        <div class="d-flex flex-column">
+          <mat-card-title>สถานะ</mat-card-title>
+
+          <mat-chip-listbox formControlName="status">
+            @for (status of statuses; track status) {
+            <mat-chip-option
+              [value]="status.id"
+              (selectionChange)="onSelectChip('status')"
+            >
+              {{ status.name }}
+            </mat-chip-option>
+            }
+          </mat-chip-listbox>
+
+          <mat-error>
+            <app-error-field
+              [control]="status"
+              [errorMessage]="validationField.status"
+            ></app-error-field>
+          </mat-error>
+        </div>
+
+        <div class="d-flex flex-column">
+          <mat-card-title>การใช้งาน</mat-card-title>
+
+          <mat-chip-listbox formControlName="usage">
+            @for (usage of usages; track usage) {
+            <mat-chip-option
+              [value]="usage.id"
+              (selectionChange)="onSelectChip('usage')"
+            >
+              {{ usage.name }}
+            </mat-chip-option>
+            }
+          </mat-chip-listbox>
+
+          <mat-error>
+            <app-error-field
+              [control]="usage"
+              [errorMessage]="validationField.usage"
+            ></app-error-field>
+          </mat-error>
+        </div>
+
+        <mat-form-field>
+          <mat-label>รายการครุภัณฑ์</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+
+          <mat-error>
+            <app-error-field
+              [control]="description"
+              [errorMessage]="validationField.description"
+            ></app-error-field>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>หมายเหตุ</mat-label>
+          <textarea matInput formControlName="remark"></textarea>
+        </mat-form-field>
+      </mat-card-content>
+
+      <mat-card-actions class="gap-20">
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          [disabled]="isLoading"
+        >
+          ตกลง
+        </button>
+
+        <mat-checkbox [checked]="remember" (change)="remember = $event.checked"
+          >จำข้อมูลล่าสุด</mat-checkbox
+        >
+      </mat-card-actions>
+    </form>
+
+    <mat-card-footer>
+      @if (isLoading) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+    </mat-card-footer>
+  </mat-card>
+</ng-template>
+
+} @placeholder (minimum 300ms) {
+<app-loading-data [form]="'card'"></app-loading-data>
+}

@@ -28,7 +28,7 @@ export class StatusService {
     return this.statuses.map((status, i) => ({ no: i + 1, ...status })).slice();
   }
 
-  getActiveStatusesName(): string[] {
+  getActiveStatusNames(): string[] {
     return this.statuses
       .filter((status) => status.active)
       .map((status) => status.name)

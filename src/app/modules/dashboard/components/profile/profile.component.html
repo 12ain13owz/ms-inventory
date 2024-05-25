@@ -1,7 +1,16 @@
 @defer (when profile) {
 <mat-card>
-  <mat-card-header>
-    <mat-card-title>แก้ไขโปรไฟล์</mat-card-title>
+  <mat-card-header class="justify-between">
+    <mat-card-title>{{ title }}</mat-card-title>
+    <button
+      type="button"
+      mat-button
+      color="warn"
+      (click)="onReset()"
+      [disabled]="isLoading"
+    >
+      รีเซ็ต
+    </button>
   </mat-card-header>
 
   <form class="form-container" [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -70,15 +79,6 @@
         [disabled]="isLoading"
       >
         ตกลง
-      </button>
-      <button
-        type="button"
-        mat-button
-        color="warn"
-        (click)="onReset()"
-        [disabled]="isLoading"
-      >
-        รีเซ็ต
       </button>
     </mat-card-actions>
     <mat-card-footer>

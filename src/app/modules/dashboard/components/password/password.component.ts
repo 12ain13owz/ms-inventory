@@ -27,6 +27,7 @@ export class PasswordComponent implements OnInit {
 
   patternPassword = PASSWORD.patternPassword;
   validationField = PASSWORD.validationField;
+  title: string = 'เปลี่ยนรหัสผ่าน';
   isLoading: boolean = false;
   hideOldPassword: boolean = true;
   hideNewPassword: boolean = true;

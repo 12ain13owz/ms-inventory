@@ -1,0 +1,121 @@
+@defer (when !isLoading) {
+<ng-container *ngIf="!inventory; else content">
+  <button class="w-100" mat-flat-button color="warn">
+    ไม่พบข้อมูลครุภัณฑ์
+  </button>
+</ng-container>
+
+<ng-template #content>
+  <mat-card class="mat-elevation-z8">
+    <mat-card-header class="mb-16">
+      <mat-card-title>{{ title }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="blurred-img">
+        <img
+          class="size"
+          [defaultImage]="'assets/images/no-image.jpg'"
+          [lazyLoad]="imageUrl + inventory.image"
+        />
+      </div>
+
+      <mat-list>
+        <mat-list-item>
+          <span matListItemTitle>รหัสครุภัณฑ์</span>
+          <span matListItemLine>{{ inventory.code }}</span>
+        </mat-list-item>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>รหัสครุภัณฑ์เดิม</span>
+            <span matListItemLine>{{ isEmpty(inventory.oldCode) }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>หน่วยนับ</span>
+            <span matListItemLine>{{ inventory.unit }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
+            <span matListItemLine>{{ inventory.value }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>แหล่งเงิน</span>
+            <span matListItemLine>{{ inventory.fundingSource }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>วันที่ได้มา</span>
+            <span matListItemLine>{{ inventory.receivedDate | thaiYear }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>สถานที่ตั้ง/จัดเก็บ</span>
+            <span matListItemLine>{{ inventory.location }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>คุณสมบัติ (ยี่ห้อ/รุ่น)</span>
+            <span matListItemLine>{{ inventory.Category.name }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>สถานะ</span>
+            <span matListItemLine>{{ inventory.Status.name }}</span>
+          </mat-list-item>
+        </div>
+
+        <mat-list-item>
+          <span matListItemTitle>การใช้งาน</span>
+          <span matListItemLine>{{ inventory.Usage.name }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>รายการครุภัณฑ์</span>
+        </mat-list-item>
+        <div
+          class="view-textarea"
+          [innerHTML]="inventory.description | dispTextarea"
+        ></div>
+
+        <mat-list-item>
+          <span matListItemTitle>หมายเหตุ</span>
+        </mat-list-item>
+        <div
+          class="view-textarea"
+          [innerHTML]="inventory.remark | dispTextarea"
+        ></div>
+      </mat-list>
+    </mat-card-content>
+
+    <mat-card-actions class="gap-10">
+      <a
+        [routerLink]="['../../edit', inventory.id]"
+        mat-raised-button
+        color="primary"
+        >แก้ไข</a
+      >
+      <button
+        type="button"
+        mat-raised-button
+        color="accent"
+        (click)="onPrint()"
+      >
+        เพิ่มพัสดุสำหรับปริ้น
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>
+
+} @placeholder (minimum 300ms) {
+<app-loading-data [form]="'card'"></app-loading-data>
+}

@@ -17,10 +17,10 @@
     </div>
   </a>
 
-  <a mat-list-item routerLink="/parcel" routerLinkActive="link-active">
+  <a mat-list-item routerLink="/inventory" routerLinkActive="link-active">
     <div class="link-box">
       <mat-icon matListIcon>list_alt</mat-icon>
-      <div mat-line>พัสดุ</div>
+      <div mat-line>ครุภัณฑ์</div>
     </div>
   </a>
 
@@ -35,7 +35,7 @@
         aria-hidden="false"
         >print</mat-icon
       >
-      <div mat-line>ปริ้น</div>
+      <div mat-line>พิมพ์</div>
     </div>
   </a>
 
@@ -80,7 +80,7 @@
         >
           <div class="link-box">
             <mat-icon matListIcon>list_alt</mat-icon>
-            <div mat-line>ประเภทพัสดุ</div>
+            <div mat-line>คุณสมบัติ</div>
           </div>
         </a>
 
@@ -91,7 +91,18 @@
         >
           <div class="link-box">
             <mat-icon matListIcon>dataset</mat-icon>
-            <div mat-line>สถานะพัสดุ</div>
+            <div mat-line>สถานะ</div>
+          </div>
+        </a>
+
+        <a
+          mat-list-item
+          routerLink="/setting/usage"
+          routerLinkActive="link-active"
+        >
+          <div class="link-box">
+            <mat-icon matListIcon>text_snippet</mat-icon>
+            <div mat-line>การใช้งาน</div>
           </div>
         </a>
       </mat-nav-list>

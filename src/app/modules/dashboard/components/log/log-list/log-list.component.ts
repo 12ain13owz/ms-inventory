@@ -68,7 +68,7 @@ export class LogListComponent implements OnInit, OnDestroy {
       'ปริ้น',
     ],
     categories: this.categoryService.getActiveCategoriesName(),
-    statuses: this.statusService.getActiveStatusesName(),
+    statuses: this.statusService.getActiveStatusNames(),
   };
   form = this.initForm();
 

@@ -10,42 +10,41 @@ import {
   of,
   take,
 } from 'rxjs';
-import { StatusService } from '../../services/status/status.service';
-import { StatusApiService } from '../../services/status/status-api.service';
+import { UsageService } from '../../services/usage/usage.service';
+import { UsageApiService } from '../../services/usage/usage-api.service';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { Status, StatusTable } from '../../models/status.model';
-import { StatusEditComponent } from './status-edit/status-edit.component';
+import { Usage, UsageTable } from '../../models/usage.model';
+import { UsageEditComponent } from './usage-edit/usage-edit.component';
 
 @Component({
-  selector: 'app-status',
-  templateUrl: './status.component.html',
-  styleUrl: './status.component.scss',
+  selector: 'app-usage',
+  templateUrl: './usage.component.html',
+  styleUrl: './usage.component.scss',
 })
-export class StatusComponent implements OnInit, OnDestroy {
+export class UsageComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   private subscription = new Subscription();
-  private assetStatusService = inject(StatusService);
-  private assetStatusApiService = inject(StatusApiService);
+  private usageService = inject(UsageService);
+  private usageApiService = inject(UsageApiService);
   private validationService = inject(ValidationService);
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
-  dataSource = new MatTableDataSource<StatusTable>([]);
+  dataSource = new MatTableDataSource<UsageTable>([]);
   isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.initDataSource();
-    this.subscription = this.assetStatusService
-      .onStatusesListener()
+    this.subscription = this.usageService
+      .onUsagesListener()
       .subscribe(
-        () =>
-          (this.dataSource.data = this.assetStatusService.getStatusesTable())
+        () => (this.dataSource.data = this.usageService.getUsagesTable())
       );
   }
 
@@ -54,23 +53,23 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   onCreate(): void {
-    this.dialog.open(StatusEditComponent, {
+    this.dialog.open(UsageEditComponent, {
       width: '500px',
       disableClose: true,
     });
   }
 
-  onUpdate(assetStatus: Status): void {
-    this.dialog.open(StatusEditComponent, {
-      data: assetStatus,
+  onUpdate(usageStatus: Usage): void {
+    this.dialog.open(UsageEditComponent, {
+      data: usageStatus,
       width: '500px',
       disableClose: true,
     });
   }
 
   onDelete(id: number): void {
-    this.assetStatusApiService
-      .deleteStatus(id)
+    this.usageApiService
+      .deleteUsage(id)
       .subscribe((res) => this.toastService.info('Delete', res.message));
   }
 
@@ -80,11 +79,11 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.assetStatusService.getStatusesTable();
+    this.dataSource.data = this.usageService.getUsagesTable();
 
     if (this.validationService.isEmpty(this.dataSource.data))
-      this.assetStatusApiService
-        .getStatuses()
+      this.usageApiService
+        .getUsages()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
 
   validationField = PROFILE.validationField;
+  title: string = 'แก้ไขโปรไฟล์';
   isLoading: boolean = false;
 
   form = this.initForm();

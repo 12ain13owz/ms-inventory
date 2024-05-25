@@ -9,7 +9,6 @@ import { ParcelComponent } from './components/parcel/parcel.component';
 import { LogComponent } from './components/log/log.component';
 import { UserComponent } from './components/user/user.component';
 import { CategoryComponent } from './components/category/category.component';
-import { StatusComponent } from './components/status/status.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { PasswordComponent } from './components/password/password.component';
 import { dashboardResolver } from './dashboard.resolver';
@@ -22,6 +21,13 @@ import { PrintBarcodeComponent } from './components/print/print-barcode/print-ba
 import { PrintQrcodeComponent } from './components/print/print-qrcode/print-qrcode.component';
 import { LogListComponent } from './components/log/log-list/log-list.component';
 import { LogViewComponent } from './components/log/log-view/log-view.component';
+import { StatusComponent } from './components/status/status.component';
+import { UsageComponent } from './components/usage/usage.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
+import { InventoryListComponent } from './components/inventory/inventory-list/inventory-list.component';
+import { InventoryNewComponent } from './components/inventory/inventory-new/inventory-new.component';
+import { InventoryViewComponent } from './components/inventory/inventory-view/inventory-view.component';
+import { InventoryEditComponent } from './components/inventory/inventory-edit/inventory-edit.component';
 
 export const routes: Routes = [
   {
@@ -32,13 +38,23 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'scan', pathMatch: 'full' },
       { path: 'scan', component: ScanComponent },
+      // {
+      //   path: 'parcel',
+      //   component: ParcelComponent,
+      //   children: [
+      //     { path: '', component: ParcelListComponent },
+      //     { path: 'new', component: ParcelNewComponent },
+      //     { path: 'view/:id', component: ParcelViewComponent },
+      //   ],
+      // },
       {
-        path: 'parcel',
-        component: ParcelComponent,
+        path: 'inventory',
+        component: InventoryComponent,
         children: [
-          { path: '', component: ParcelListComponent },
-          { path: 'new', component: ParcelNewComponent },
-          { path: 'view/:id', component: ParcelViewComponent },
+          { path: '', component: InventoryListComponent },
+          { path: 'new', component: InventoryNewComponent },
+          { path: 'view/:id', component: InventoryViewComponent },
+          { path: 'edit/:id', component: InventoryEditComponent },
         ],
       },
       {
@@ -69,6 +85,7 @@ export const routes: Routes = [
           { path: 'user', component: UserComponent },
           { path: 'category', component: CategoryComponent },
           { path: 'status', component: StatusComponent },
+          { path: 'usage', component: UsageComponent },
         ],
       },
     ],

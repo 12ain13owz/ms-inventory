@@ -70,7 +70,7 @@ export class AuthApiService {
 
   forgetPassword(email: string): Observable<ForgetPasswordResult> {
     return this.http.post<ForgetPasswordResult>(
-      `${this.apiUrlUser}forgotpassword`,
+      `${this.apiUrlUser}forgot-password`,
       { email }
     );
   }
@@ -80,7 +80,7 @@ export class AuthApiService {
     payload: ResetPasswordPayload
   ): Observable<Message> {
     return this.http.post<Message>(
-      `${this.apiUrlUser}resetpassword/${id}`,
+      `${this.apiUrlUser}reset-password/${id}`,
       payload
     );
   }

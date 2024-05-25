@@ -12,7 +12,7 @@ import { UserService } from '../../services/user/user.service';
 import { UserApiService } from '../../services/user/user-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { User, UserTable } from '../../models/user.model';
 import { UserEditComponent } from './user-edit/user-edit.component';

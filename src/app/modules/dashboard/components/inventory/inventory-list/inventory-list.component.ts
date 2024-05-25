@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   Observable,
   Subscription,
@@ -19,55 +19,56 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { ParcelService } from '../../../services/parcel/parcel.service';
-import { ParcelApiService } from '../../../services/parcel/parcel-api.service';
+import { InventoryService } from '../../../services/inventory/inventory.service';
+import { InventoryApiService } from '../../../services/inventory/inventory-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
+import { UsageService } from '../../../services/usage/usage.service';
 import { ValidationService } from '../../../../shared/services/validation.service';
-import {
-  FilterParcel,
-  Parcel,
-  ParcelTable,
-} from '../../../models/parcel.model';
-import { DatePipe } from '@angular/common';
-import { environment } from '../../../../../../environments/environment';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 import { PrintService } from '../../../services/print/print.service';
+import {
+  FilterInventory,
+  Inventory,
+  InventoryTable,
+} from '../../../models/inventory.model';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { Platform } from '@angular/cdk/platform';
+import { DatePipe } from '@angular/common';
+import { environment } from '../../../../../../environments/environment';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from '@angular/cdk/collections';
 
 enum Tap {
   Date,
   Code,
-  Track,
 }
+
 @Component({
-  selector: 'app-parcel-list',
-  templateUrl: './parcel-list.component.html',
-  styleUrl: './parcel-list.component.scss',
+  selector: 'app-inventory-list',
+  templateUrl: './inventory-list.component.html',
+  styleUrl: './inventory-list.component.scss',
 })
-export class ParcelListComponent implements OnInit, OnDestroy {
+export class InventoryListComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
   private formBuilder = inject(FormBuilder);
-  private subscription = new Subscription();
-  private parcelService = inject(ParcelService);
-  private parcelApiService = inject(ParcelApiService);
+  private inventoryService = inject(InventoryService);
+  private inventoryApiService = inject(InventoryApiService);
   private categoryService = inject(CategoryService);
-  private statusService = inject(StatusService);
+  private assetStatusService = inject(StatusService);
+  private usageStatusService = inject(UsageService);
   private validationService = inject(ValidationService);
   private printService = inject(PrintService);
-  private operation$: Observable<Parcel[] | Parcel>;
+  private operation$: Observable<Inventory[] | Inventory>;
   private snackBar = inject(MatSnackBar);
   private platfrom = inject(Platform);
 
+  private subscription = new Subscription();
   datePipe = inject(DatePipe);
   imageUrl: string = environment.imageUrl;
 
@@ -75,14 +76,15 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
-  @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
-  filterParcel: FilterParcel = {
+  filter: FilterInventory = {
     categories: this.categoryService.getActiveCategoriesName(),
-    statuses: this.statusService.getActiveStatusNames(),
+    statuses: this.assetStatusService.getActiveStatusNames(),
+    usages: this.usageStatusService.getActiveUsageNames(),
   };
   form = this.initForm();
 
+  title: string = 'รายการครุภัณฑ์';
   isLoading: boolean = false;
   isSelected: boolean = false;
   isPrint: boolean = false;
@@ -97,23 +99,19 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'no',
     'image',
-    'track',
+    'code',
     'category',
     'status',
-    'quantity',
-    'detail',
+    'usage',
+    'description',
   ];
-  dataSource = new MatTableDataSource<ParcelTable>([]);
-  selection = new SelectionModel<ParcelTable>(true, []);
+  dataSource = new MatTableDataSource<InventoryTable>([]);
+  selection = new SelectionModel<InventoryTable>(true, []);
   isFirstLoading: boolean = false;
 
   ngOnInit(): void {
     this.initDataSource();
-
-    this.subscription = this.parcelService.onParcelsListener().subscribe(() => {
-      this.dataSource.data = this.parcelService.getParcelsTable();
-      this.initPaginatorAndSort();
-    });
+    this.initSubscriptions();
 
     if (this.activatedRoute.snapshot.queryParams['isPrint'] === 'true')
       this.isPrint = true;
@@ -121,10 +119,6 @@ export class ParcelListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  onCreate(): void {
-    this.router.navigate(['parcel/new']);
   }
 
   onSearch(): void {
@@ -139,7 +133,7 @@ export class ParcelListComponent implements OnInit, OnDestroy {
         this.dateRange.controls['end'].value,
         'yyyy-MM-dd'
       );
-      this.operation$ = this.parcelApiService.getParcelsByDate(
+      this.operation$ = this.inventoryApiService.getInventorysByDate(
         startDate,
         endDate
       );
@@ -149,20 +143,15 @@ export class ParcelListComponent implements OnInit, OnDestroy {
       const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
       if (!code) return;
 
-      this.operation$ = this.parcelApiService.getParcelsByCode(code);
-    } else if (this.selectedTap.value === Tap.Track) {
-      if (!this.track) return;
-
-      const track = this.track.nativeElement.value.replace(/^\s+|\s+$/gm, '');
-      if (!track) return;
-
-      const parcel = this.parcelService.getParcelByTrackInput(track);
-      if (this.validationService.isEmpty(parcel))
-        this.operation$ = this.parcelApiService.getParcelByTrack(track);
+      const inventory = this.inventoryService.getInventoryByCodeTable(code);
+      if (this.validationService.isEmpty(inventory))
+        this.operation$ = this.inventoryApiService.getInventoryByCode(code);
       else {
-        this.dataSource.data = parcel;
+        this.dataSource.data = inventory;
         return;
       }
+
+      this.operation$ = this.inventoryApiService.getInventoryByCode(code);
     }
 
     this.isLoading = true;
@@ -176,8 +165,8 @@ export class ParcelListComponent implements OnInit, OnDestroy {
 
   onSearchAll(): void {
     this.isLoading = true;
-    this.parcelApiService
-      .getAllParcels()
+    this.inventoryApiService
+      .getAllInventorys()
       .pipe(
         tap(() => this.setFilter()),
         finalize(() => (this.isLoading = false))
@@ -186,11 +175,11 @@ export class ParcelListComponent implements OnInit, OnDestroy {
   }
 
   setFilter(): void {
-    this.form.setValue({ category: [], status: [] });
+    this.form.setValue({ category: [], status: [], usage: [] });
   }
 
   onFilter(): void {
-    const parcels = this.parcelService.getParcelsTable();
+    const inventorys = this.inventoryService.getInventoriesTable();
     const filters = this.form.value;
 
     this.dataSource.data = Object.keys(filters)
@@ -200,9 +189,9 @@ export class ParcelListComponent implements OnInit, OnDestroy {
             if (filters[keyName].length === 0) return result;
             return filters[keyName].includes(item[keyName]);
           }),
-        parcels
+        inventorys
       )
-      .map((parcel, i) => ({ ...parcel, no: i + 1 }));
+      .map((inventory, i) => ({ ...inventory, no: i + 1 }));
   }
 
   onResetFilter(): void {
@@ -246,24 +235,24 @@ export class ParcelListComponent implements OnInit, OnDestroy {
       verticalPosition = 'top';
     }
 
-    this.snackBar.open('เพิ่มพัสดุไปยังหน้าปริ้น', 'ปิด', {
+    this.snackBar.open('เพิ่มครุภัณฑ์ไปยังรายการพิมพ์', 'ปิด', {
       duration: 2500,
       horizontalPosition: horizontalPosition,
       verticalPosition: verticalPosition,
     });
 
-    const parcels = this.selection.selected
-      .filter((parcel) => !this.printService.getParcelById(parcel.id))
-      .map((parcel) => ({
-        id: parcel.id,
-        image: parcel.image,
-        track: parcel.track,
-        quantity: parcel.quantity,
-        print: parcel.print,
-        printCount: parcel.quantity,
-      }));
+    // const intenvorys = this.selection.selected
+    //   .filter((parcel) => !this.printService.getParcelById(parcel.id))
+    //   .map((parcel) => ({
+    //     id: parcel.id,
+    //     image: parcel.image,
+    //     track: parcel.track,
+    //     quantity: parcel.quantity,
+    //     print: parcel.print,
+    //     printCount: parcel.quantity,
+    //   }));
 
-    for (const parcel of parcels) this.printService.createParcel(parcel);
+    // for (const parcel of parcels) this.printService.createParcel(parcel);
   }
 
   get category(): FormControl<string[]> {
@@ -274,21 +263,25 @@ export class ParcelListComponent implements OnInit, OnDestroy {
     return this.form.controls['status'];
   }
 
+  get usage(): FormControl<string[]> {
+    return this.form.controls['usage'];
+  }
+
   private initForm() {
     return this.formBuilder.group({
       category: this.formBuilder.control<string[]>([]),
       status: this.formBuilder.control<string[]>([]),
+      usage: this.formBuilder.control<string[]>([]),
     });
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.parcelService.getParcelsTable();
+    this.dataSource.data = this.inventoryService.getInventoriesTable();
     if (this.validationService.isEmpty(this.dataSource.data)) {
-      this.parcelApiService
-        .getInitialParcels()
+      this.inventoryApiService
+        .getInitialInventorys()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
-
       return;
     }
 
@@ -307,7 +300,7 @@ export class ParcelListComponent implements OnInit, OnDestroy {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.dataSource.sort.sort({
-        id: 'track',
+        id: 'code',
         start: 'desc',
         disableClear: true,
       });
@@ -317,5 +310,32 @@ export class ParcelListComponent implements OnInit, OnDestroy {
         this.isSelectPrint();
       }
     });
+  }
+
+  private initSubscriptions() {
+    this.subscription.add(
+      this.inventoryService.onInventoriesListener().subscribe(() => {
+        this.dataSource.data = this.inventoryService.getInventoriesTable();
+        this.initPaginatorAndSort();
+      })
+    );
+
+    this.subscription.add(
+      this.categoryService.onCategoriesListener().subscribe(() => {
+        this.filter.categories = this.categoryService.getActiveCategoriesName();
+      })
+    );
+
+    this.subscription.add(
+      this.assetStatusService.onStatusesListener().subscribe(() => {
+        this.filter.statuses = this.assetStatusService.getActiveStatusNames();
+      })
+    );
+
+    this.subscription.add(
+      this.usageStatusService.onUsagesListener().subscribe(() => {
+        this.filter.usages = this.usageStatusService.getActiveUsageNames();
+      })
+    );
   }
 }

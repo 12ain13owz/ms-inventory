@@ -11,32 +11,32 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { Observable, catchError, finalize, throwError } from 'rxjs';
-import { Status, StatusResponse } from '../../../models/status.model';
+import { Usage, UsageResponse } from '../../../models/usage.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { StatusApiService } from '../../../services/status/status-api.service';
+import { UsageApiService } from '../../../services/usage/usage-api.service';
 import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 import { Message } from '../../../../shared/models/response.model';
-import { STATUS } from '../../../constants/status.constant';
+import { Observable, catchError, finalize, throwError } from 'rxjs';
+import { USAGE } from '../../../constants/usage.constant';
 
 @Component({
-  selector: 'app-status-edit',
-  templateUrl: './status-edit.component.html',
-  styleUrl: './status-edit.component.scss',
+  selector: 'app-usage-edit',
+  templateUrl: './usage-edit.component.html',
+  styleUrl: './usage-edit.component.scss',
 })
-export class StatusEditComponent implements OnInit {
+export class UsageEditComponent implements OnInit {
   @ViewChild('formDirec') formDirec: FormGroupDirective;
   @ViewChild('nameInput') nameInput: ElementRef<HTMLInputElement>;
 
-  private data: Status = inject(MAT_DIALOG_DATA);
+  private data: Usage = inject(MAT_DIALOG_DATA);
   private formBuilder = inject(FormBuilder);
-  private dialogRef = inject(MatDialogRef<StatusEditComponent>);
-  private statusApiService = inject(StatusApiService);
+  private dialogRef = inject(MatDialogRef<UsageEditComponent>);
+  private usageApiService = inject(UsageApiService);
   private toastService = inject(ToastNotificationService);
-  private operation$: Observable<Message | StatusResponse>;
+  private operation$: Observable<Message | UsageResponse>;
 
-  validationField = STATUS.validationField;
-  title: string = 'เพิ่มสภานะครุภัณฑ์';
+  validationField = USAGE.validationField;
+  title: string = 'เพิ่มการใช้งานครุภัณฑ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
@@ -44,7 +44,7 @@ export class StatusEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไขสถานะครุภัณฑ์';
+      this.title = 'แก้ไขการใช้งานครุภัณฑ์';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }
@@ -60,11 +60,11 @@ export class StatusEditComponent implements OnInit {
     if (this.form.invalid) return;
     if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
 
-    const { id, ...payload }: Status = { ...this.form.getRawValue() };
+    const { id, ...payload }: Usage = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.statusApiService.updateStatus(id, payload)
-      : this.statusApiService.createStatus(payload);
+      ? this.usageApiService.updateUsage(id, payload)
+      : this.usageApiService.createUsage(payload);
 
     this.operation$
       .pipe(
