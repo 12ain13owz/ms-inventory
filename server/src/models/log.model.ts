@@ -27,8 +27,8 @@ export class Log extends Model<
   firstname: string;
   lastname: string;
   categoryName: string;
-  assetStatusName: string;
-  usageStatusName: string;
+  statusName: string;
+  usageName: string;
   createdAt: CreationOptional<Date>;
 }
 
@@ -50,8 +50,8 @@ export default Log.init(
     firstname: { type: DataTypes.STRING, allowNull: false },
     lastname: { type: DataTypes.STRING, allowNull: false },
     categoryName: { type: DataTypes.STRING, allowNull: false },
-    assetStatusName: { type: DataTypes.STRING, allowNull: false },
-    usageStatusName: { type: DataTypes.STRING, allowNull: false },
+    statusName: { type: DataTypes.STRING, allowNull: false },
+    usageName: { type: DataTypes.STRING, allowNull: false },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
@@ -79,6 +79,6 @@ export interface PropertyLog {
   firstname: string;
   lastname: string;
   categoryName: string;
-  assetStatusName: string;
-  usageStatusName: string;
+  statusName: string;
+  usageName: string;
 }

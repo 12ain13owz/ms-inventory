@@ -1,35 +1,35 @@
 import { Op } from 'sequelize';
-import categoryModel, { Category } from '../models/category.model';
+import CategoryModel, { Category } from '../models/category.model';
 
 export const categoryService = {
   findAll(): Promise<Category[]> {
-    return categoryModel.findAll({ ...queryOptions() });
+    return CategoryModel.findAll({ ...queryOptions() });
   },
 
   findById(id: number): Promise<Category | null> {
-    return categoryModel.findByPk(id, { ...queryOptions() });
+    return CategoryModel.findByPk(id, { ...queryOptions() });
   },
 
   findByName(name: string): Promise<Category | null> {
-    return categoryModel.findOne({
+    return CategoryModel.findOne({
       where: { name: { [Op.like]: name } },
       ...queryOptions(),
     });
   },
 
   create(category: Category): Promise<Category> {
-    return categoryModel.create(category.toJSON());
+    return CategoryModel.create(category.toJSON());
   },
 
   update(
     id: number,
     category: Partial<Category>
   ): Promise<[affectedCount: number]> {
-    return categoryModel.update(category, { where: { id } });
+    return CategoryModel.update(category, { where: { id } });
   },
 
   delete(id: number): Promise<number> {
-    return categoryModel.destroy({ where: { id } });
+    return CategoryModel.destroy({ where: { id } });
   },
 };
 

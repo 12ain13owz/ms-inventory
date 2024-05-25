@@ -7,9 +7,9 @@ import {
 } from 'sequelize';
 import sequelize from '../utils/sequelize';
 
-export class AssetStatus extends Model<
-  InferAttributes<AssetStatus>,
-  InferCreationAttributes<AssetStatus>
+export class Usage extends Model<
+  InferAttributes<Usage>,
+  InferCreationAttributes<Usage>
 > {
   id: CreationOptional<number>;
   name: string;
@@ -19,11 +19,11 @@ export class AssetStatus extends Model<
   updatedAt: CreationOptional<Date>;
 }
 
-export default AssetStatus.init(
+export default Usage.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
-    active: { type: DataTypes.BOOLEAN, allowNull: false },
+    active: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
     remark: { type: DataTypes.TEXT },
     createdAt: { type: DataTypes.DATE, allowNull: false },
     updatedAt: { type: DataTypes.DATE, allowNull: false },
@@ -31,7 +31,7 @@ export default AssetStatus.init(
   {
     indexes: [{ fields: ['name'] }],
     sequelize,
-    modelName: 'AssetStatus',
+    modelName: 'Usage',
     timestamps: true,
   }
 );

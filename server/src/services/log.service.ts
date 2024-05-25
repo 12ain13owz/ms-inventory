@@ -1,34 +1,34 @@
 import { Transaction, Op } from 'sequelize';
-import logModel, { Log } from '../models/log.model';
+import LogModel, { Log } from '../models/log.model';
 
 export const logService = {
   findAll(): Promise<Log[]> {
-    return logModel.findAll();
+    return LogModel.findAll();
   },
 
   findLimit(limit: number): Promise<Log[]> {
-    return logModel.findAll({ limit: limit, order: [['createdAt', 'DESC']] });
+    return LogModel.findAll({ limit: limit, order: [['createdAt', 'DESC']] });
   },
 
   findByDate(dateStart: Date, dateEnd: Date): Promise<Log[]> {
-    return logModel.findAll({
+    return LogModel.findAll({
       where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
     });
   },
 
   findByCode(code: string): Promise<Log[]> {
-    return logModel.findAll({ where: { code } });
+    return LogModel.findAll({ where: { code } });
   },
 
   findByTrack(track: string): Promise<Log[]> {
-    return logModel.findAll({ where: { track } });
+    return LogModel.findAll({ where: { track } });
   },
 
   findById(id: number): Promise<Log | null> {
-    return logModel.findByPk(id);
+    return LogModel.findByPk(id);
   },
 
   create(log: Log, t: Transaction): Promise<Log> {
-    return logModel.create(log.toJSON(), { transaction: t });
+    return LogModel.create(log.toJSON(), { transaction: t });
   },
 };

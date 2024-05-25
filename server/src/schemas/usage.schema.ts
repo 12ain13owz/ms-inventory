@@ -2,11 +2,11 @@ import { TypeOf, boolean, object, string } from 'zod';
 
 const regexId = new RegExp(/^[0-9]\d*$/);
 
-const id = 'ไม่พบสถานะครุภัณฑ์';
-const name = 'ไม่พบสถานะครุภัณฑ์';
+const id = 'ไม่พบการใช้งานครุภัณฑ์';
+const name = 'ไม่พบการใช้งานครุภัณฑ์';
 const active = 'ไม่พบสถานะการใช้งาน';
 
-export const assetStatusSchema = {
+export const usageSchema = {
   create: object({
     body: object({
       name: string({ required_error: name }).min(1, {
@@ -41,8 +41,8 @@ export const assetStatusSchema = {
   }),
 };
 
-export type AssetStatusType = {
-  create: TypeOf<typeof assetStatusSchema.create>['body'];
-  update: TypeOf<typeof assetStatusSchema.update>;
-  delete: TypeOf<typeof assetStatusSchema.delete>['params'];
+export type UsageType = {
+  create: TypeOf<typeof usageSchema.create>['body'];
+  update: TypeOf<typeof usageSchema.update>;
+  delete: TypeOf<typeof usageSchema.delete>['params'];
 };

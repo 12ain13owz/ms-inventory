@@ -1,12 +1,11 @@
-import { Op, col, fn, where } from 'sequelize';
 import InventoryCheckModel, {
   InventoryCheck,
 } from '../models/inventory-check.model';
 import { Inventory } from '../models/inventory.model';
 import { User } from '../models/user.model';
 import { Category } from '../models/category.model';
-import { AssetStatus } from '../models/asset-status.model';
-import { UsageStatus } from '../models/usage-status.model';
+import { Status } from '../models/status.model';
+import { Usage } from '../models/usage.model';
 
 export const inventoryCheckService = {
   findAll(): Promise<InventoryCheck[]> {
@@ -48,13 +47,13 @@ function queryOptions() {
       {
         model: Inventory,
         attributes: {
-          exclude: ['userId', 'categoryId', 'assetStatusId', 'usageStatusId'],
+          exclude: ['userId', 'categoryId', 'statusId', 'usageId'],
         },
         include: [
           { model: User, attributes: ['firstname', 'lastname'] },
           { model: Category, attributes: ['name'] },
-          { model: AssetStatus, attributes: ['name'] },
-          { model: UsageStatus, attributes: ['name'] },
+          { model: Status, attributes: ['name'] },
+          { model: Usage, attributes: ['name'] },
         ],
       },
     ],

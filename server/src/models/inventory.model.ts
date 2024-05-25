@@ -10,8 +10,8 @@ import {
 import sequelize from '../utils/sequelize';
 import { User } from './user.model';
 import { Category } from './category.model';
-import { AssetStatus } from './asset-status.model';
-import { UsageStatus } from './usage-status.model';
+import { Status } from './status.model';
+import { Usage } from './usage.model';
 
 export class Inventory extends Model<
   InferAttributes<Inventory>,
@@ -33,12 +33,12 @@ export class Inventory extends Model<
   updatedAt: CreationOptional<Date>;
   userId: ForeignKey<User['id']>;
   categoryId: ForeignKey<Category['id']>;
-  assetStatusId: ForeignKey<AssetStatus['id']>;
-  usageStatusId: ForeignKey<UsageStatus['id']>;
+  statusId: ForeignKey<Status['id']>;
+  usageId: ForeignKey<Usage['id']>;
   user: NonAttribute<User>;
   category: NonAttribute<Category>;
-  assetStatus: NonAttribute<AssetStatus>;
-  usageStatus: NonAttribute<UsageStatus>;
+  status: NonAttribute<Status>;
+  usage: NonAttribute<Usage>;
 }
 
 export default Inventory.init(
@@ -67,15 +67,15 @@ export default Inventory.init(
       allowNull: false,
       references: { model: Category, key: 'id' },
     },
-    assetStatusId: {
+    statusId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: AssetStatus, key: 'id' },
+      references: { model: Status, key: 'id' },
     },
-    usageStatusId: {
+    usageId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: { model: UsageStatus, key: 'id' },
+      references: { model: Usage, key: 'id' },
     },
   },
   {

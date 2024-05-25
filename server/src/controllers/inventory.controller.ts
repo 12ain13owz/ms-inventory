@@ -150,8 +150,8 @@ export async function createInventoryController(
       image: image || '',
       userId: res.locals.userId!,
       categoryId: +req.body.categoryId,
-      assetStatusId: +req.body.assetStatusId,
-      usageStatusId: +req.body.usageStatusId,
+      statusId: +req.body.statusId,
+      usageId: +req.body.usageId,
     });
 
     const propertyLog: PropertyLog = {
@@ -163,8 +163,8 @@ export async function createInventoryController(
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
       categoryName: req.body.categoryName,
-      assetStatusName: req.body.assetStatusName,
-      usageStatusName: req.body.usageStatusName,
+      statusName: req.body.statusName,
+      usageName: req.body.usageName,
     };
     const payloadLog = generateLog(req.body, propertyLog);
 
@@ -228,8 +228,8 @@ export async function updateInventoryController(
       image: image || '',
       userId: res.locals.userId!,
       categoryId: +req.body.categoryId,
-      assetStatusId: +req.body.assetStatusId,
-      usageStatusId: +req.body.usageStatusId,
+      statusId: +req.body.statusId,
+      usageId: +req.body.usageId,
     };
 
     const propertyLog: PropertyLog = {
@@ -241,8 +241,8 @@ export async function updateInventoryController(
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
       categoryName: req.body.categoryName,
-      assetStatusName: req.body.assetStatusName,
-      usageStatusName: req.body.usageStatusName,
+      statusName: req.body.statusName,
+      usageName: req.body.usageName,
     };
     const payloadLog = generateLog(req.body, propertyLog);
 
@@ -305,7 +305,7 @@ function generateLog(body: InventoryType['create'], property: PropertyLog) {
     firstname: property.firstname,
     lastname: property.lastname,
     categoryName: property.categoryName,
-    assetStatusName: property.assetStatusName,
-    usageStatusName: property.usageStatusName,
+    statusName: property.statusName,
+    usageName: property.usageName,
   });
 }

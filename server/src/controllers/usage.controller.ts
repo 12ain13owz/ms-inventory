@@ -2,9 +2,9 @@ import { NextFunction, Request } from 'express';
 import { ExtendedResponse } from '../types/express';
 import { omit } from 'lodash';
 import { newError, privateFields, removeWhitespace } from '../utils/helper';
-import { UsageStatus } from '../models/usage-status.model';
-import { UsageStatusType } from '../schemas/usage-status.schema';
-import { usageStatusService } from '../services/usage-status.service';
+import { Usage } from '../models/usage.model';
+import { UsageType } from '../schemas/usage.schema';
+import { usageService } from '../services/usage.service';
 
 export async function findAllUsageController(
   req: Request,
@@ -14,92 +14,88 @@ export async function findAllUsageController(
   res.locals.func = 'findAllUsageController';
 
   try {
-    const usageStatuses = await usageStatusService.findAll();
-    res.json(usageStatuses);
+    const usages = await usageService.findAll();
+    res.json(usages);
   } catch (error) {
     next(error);
   }
 }
 
-export async function createUsageStatusController(
-  req: Request<{}, {}, UsageStatusType['create']>,
+export async function createUsageController(
+  req: Request<{}, {}, UsageType['create']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'createUsageStatusController';
+  res.locals.func = 'createUsageController';
 
   try {
     const name = removeWhitespace(req.body.name);
-    const usageStatus = await usageStatusService.findByName(name);
-    if (usageStatus) throw newError(400, `สถานะครุภัณฑ์ ${name} ซ้ำ`);
+    const usage = await usageService.findByName(name);
+    if (usage) throw newError(400, `สถานะครุภัณฑ์ ${name} ซ้ำ`);
 
-    const payload = new UsageStatus({
+    const payload = new Usage({
       name: name,
       active: req.body.active,
       remark: req.body.remark || '',
     });
-    const result = await usageStatusService.create(payload);
-    const newUsageStatus = omit(result.toJSON(), privateFields);
+    const result = await usageService.create(payload);
+    const newUsage = omit(result.toJSON(), privateFields);
 
     res.json({
       message: `เพิ่มสถานะครุภัณฑ์ ${name} สำเร็จ`,
-      usageStatus: newUsageStatus,
+      usage: newUsage,
     });
   } catch (error) {
     next(error);
   }
 }
 
-export async function updateUsageStatusController(
-  req: Request<
-    UsageStatusType['update']['params'],
-    {},
-    UsageStatusType['update']['body']
-  >,
+export async function updateUsageController(
+  req: Request<UsageType['update']['params'], {}, UsageType['update']['body']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateUsageStatusController';
+  res.locals.func = 'updateUsageController';
 
   try {
     const id = +req.params.id;
     const name = removeWhitespace(req.body.name);
-    const existingAssetStatus = await usageStatusService.findByName(name);
+    const existingUsage = await usageService.findByName(name);
 
-    if (existingAssetStatus && existingAssetStatus.id !== id)
+    if (existingUsage && existingUsage.id !== id)
       throw newError(400, `ชื่อสถานะครุภัณฑ์ ${name} ซ้ำ`);
 
-    const payload: Partial<UsageStatus> = {
+    const payload: Partial<Usage> = {
       name: name,
       active: req.body.active,
       remark: req.body.remark || '',
     };
-    const [result] = await usageStatusService.update(id, payload);
+    const [result] = await usageService.update(id, payload);
     if (!result) throw newError(400, `แก้ไขสถานะครุภัณฑ์ ${name} ไม่สำเร็จ`);
 
     res.json({
       message: `แก้ไขสถานะครุภัณฑ์ ${name} สำเร็จ`,
-      usageStatus: payload,
+      usage: payload,
     });
   } catch (error) {
     next(error);
   }
 }
 
-export async function deleteUsageStatusController(
-  req: Request<UsageStatusType['delete']>,
+export async function deleteUsageController(
+  req: Request<UsageType['delete']>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'deleteUsageStatusController';
+  res.locals.func = 'deleteUsageController';
 
   try {
     const id = +req.params.id;
-    const usageStatus = await usageStatusService.findById(id);
-    if (!usageStatus) throw newError(400, 'ไม่พบสถานะครุภัณฑ์');
+    const usage = await usageService.findById(id);
+    if (!usage) throw newError(400, 'ไม่พบสถานะครุภัณฑ์');
 
-    const name = usageStatus.name;
-    const result = await usageStatusService.delete(id);
+    const name = usage.name;
+    const result = await usageService.delete(id);
     if (!result) throw newError(400, `ลบสถานะครุภัณฑ์ ${name} ไม่สำเร็จ`);
 
     res.json({ message: `ลบสถานะครุภัณฑ์ ${name} สำเร็จ` });

@@ -12,10 +12,10 @@ const fundingSource = 'ไม่พบแหล่งเงิน';
 const location = 'ไม่พบสถานที่ตั้ง/จัดเก็บ';
 const categoryId = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
 const categoryName = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
-const assetStatusId = 'ไม่พบสถานะครุภัณฑ์';
-const assetStatusName = 'ไม่พบสถานะครุภัณฑ์';
-const usageStatusId = 'ไม่พบการใช้งานครุภัณฑ์';
-const usageStatusName = 'ไม่พบการใช้งานครุภัณฑ์';
+const statusId = 'ไม่พบสถานะครุภัณฑ์';
+const statusName = 'ไม่พบสถานะครุภัณฑ์';
+const usageId = 'ไม่พบการใช้งานครุภัณฑ์';
+const usageName = 'ไม่พบการใช้งานครุภัณฑ์';
 
 const dateStart = 'ไม่พบวันที่เริ่มต้นในการค้นหา';
 const dateEnd = 'ไม่พบวันที่สิ้นสุดในการค้นหา';
@@ -80,17 +80,17 @@ export const inventorySchema = {
       categoryName: string({ required_error: categoryName }).min(1, {
         message: categoryName,
       }),
-      assetStatusId: string({ required_error: assetStatusId }).min(1, {
-        message: assetStatusId,
+      statusId: string({ required_error: statusId }).min(1, {
+        message: statusId,
       }),
-      assetStatusName: string({ required_error: assetStatusName }).min(1, {
-        message: assetStatusName,
+      statusName: string({ required_error: statusName }).min(1, {
+        message: statusName,
       }),
-      usageStatusId: string({ required_error: usageStatusId }).min(1, {
-        message: usageStatusId,
+      usageId: string({ required_error: usageId }).min(1, {
+        message: usageId,
       }),
-      usageStatusName: string({ required_error: usageStatusName }).min(1, {
-        message: usageStatusName,
+      usageName: string({ required_error: usageName }).min(1, {
+        message: usageName,
       }),
     }),
   }),
@@ -129,17 +129,17 @@ export const inventorySchema = {
       categoryName: string({ required_error: categoryName }).min(1, {
         message: categoryName,
       }),
-      assetStatusId: string({ required_error: assetStatusId }).min(1, {
-        message: assetStatusId,
+      statusId: string({ required_error: statusId }).min(1, {
+        message: statusId,
       }),
-      assetStatusName: string({ required_error: assetStatusName }).min(1, {
-        message: assetStatusName,
+      statusName: string({ required_error: statusName }).min(1, {
+        message: statusName,
       }),
-      usageStatusId: string({ required_error: usageStatusId }).min(1, {
-        message: usageStatusId,
+      usageId: string({ required_error: usageId }).min(1, {
+        message: usageId,
       }),
-      usageStatusName: string({ required_error: usageStatusName }).min(1, {
-        message: usageStatusName,
+      usageName: string({ required_error: usageName }).min(1, {
+        message: usageName,
       }),
     }),
   }),

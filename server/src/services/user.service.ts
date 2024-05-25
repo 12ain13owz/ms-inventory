@@ -1,38 +1,38 @@
-import userModel, { User } from '../models/user.model';
+import UserModel, { User } from '../models/user.model';
 
 export const userService = {
   findAll(): Promise<User[]> {
-    return userModel.findAll({ ...queryOptions() });
+    return UserModel.findAll({ ...queryOptions() });
   },
 
   findById(id: number): Promise<User | null> {
-    return userModel.findByPk(id);
+    return UserModel.findByPk(id);
   },
 
   findByEmail(email: string): Promise<User | null> {
-    return userModel.findOne({ where: { email } });
+    return UserModel.findOne({ where: { email } });
   },
 
   create(user: User): Promise<User> {
-    return userModel.create(user.toJSON());
+    return UserModel.create(user.toJSON());
   },
 
   update(id: number, user: Partial<User>): Promise<[affectedCount: number]> {
-    return userModel.update(user, { where: { id } });
+    return UserModel.update(user, { where: { id } });
   },
 
   changePassword(
     id: number,
     password: string
   ): Promise<[affectedCount: number]> {
-    return userModel.update({ password }, { where: { id } });
+    return UserModel.update({ password }, { where: { id } });
   },
 
   resetPassword(
     id: number,
     password: string
   ): Promise<[affectedCount: number]> {
-    return userModel.update(
+    return UserModel.update(
       { password: password, passwordResetCode: null, passwordExpired: null },
       { where: { id } }
     );
