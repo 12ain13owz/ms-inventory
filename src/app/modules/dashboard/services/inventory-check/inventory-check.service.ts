@@ -34,8 +34,9 @@ export class InventoryCheckService {
   getInChecksTable(): InventoryCheckTable[] {
     return this.inChecks
       .map((check, i) => ({
-        id: check.Inventory.id,
         no: i + 1,
+        id: check.Inventory.id,
+        track: check.Inventory.track,
         image: check.Inventory.image,
         code: check.Inventory.code,
         year: check.year + 543,

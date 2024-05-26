@@ -27,6 +27,10 @@ export class PrintService {
     return this.inventories.find((inventory) => inventory.code === code);
   }
 
+  getInventoryByTrack(track: string): InventoryPrint {
+    return this.inventories.find((inventory) => inventory.track === track);
+  }
+
   createInventory(inventory: InventoryPrint): void {
     this.inventories.push(inventory);
     this.inventories$.next(this.inventories.slice());

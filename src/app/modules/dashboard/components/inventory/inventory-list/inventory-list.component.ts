@@ -248,14 +248,16 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       .filter((inventory) => !this.printService.getInventoryById(inventory.id))
       .map((inventory) => ({
         id: inventory.id,
+        track: inventory.track,
         image: inventory.image,
         code: inventory.code,
         description: inventory.description,
         printCount: 1,
       }));
 
-    for (const inventory of inventories)
+    for (const inventory of inventories) {
       this.printService.createInventory(inventory);
+    }
   }
 
   get category(): FormControl<string[]> {

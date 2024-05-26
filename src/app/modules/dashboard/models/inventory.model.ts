@@ -35,6 +35,7 @@ export interface FilterInventory {
 
 export interface InventoryTable {
   id: number;
+  track: string;
   no: number;
   image: string;
   code: string;
@@ -48,11 +49,13 @@ export interface InventoryScan {
   id: number;
   image: string;
   code: string;
+  track: string;
   description: string;
 }
 
 export interface InventoryPrint {
   id: number;
+  track: string;
   image: string;
   code: string;
   description: string;

@@ -12,17 +12,17 @@
               type="text"
               class="w-100"
               placeholder="ค้นหารหัสครุภัณฑ์"
-              formControlName="code"
-              #codeInput
+              formControlName="search"
+              #searchInput
             />
 
-            @if (code.value) {
+            @if (search.value) {
             <button
               type="button"
               class="close"
               matSuffix
               mat-icon-button
-              (click)="clearCodeInput()"
+              (click)="clearSearchInput()"
             >
               <mat-icon>close</mat-icon>
             </button>

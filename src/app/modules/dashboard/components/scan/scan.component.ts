@@ -64,8 +64,8 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   private validationService = inject(ValidationService);
   platform = inject(Platform);
 
-  @ViewChild('codeInput', { static: true })
-  codeInput: ElementRef<HTMLInputElement>;
+  @ViewChild('searchInput', { static: true })
+  searchInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('qrBox') qrBox: ElementRef<HTMLDivElement>;
@@ -93,7 +93,7 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (!this.platform.ANDROID && !this.platform.IOS)
-      this.codeInput.nativeElement.focus();
+      this.searchInput.nativeElement.focus();
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -134,10 +134,10 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSearchInventory(): void {
-    if (!this.code.value) return;
+    if (!this.search.value) return;
 
-    const code = this.code.value.replace(/^\s+|\s+$/gm, '');
-    this.onGetInventoryByCode(code);
+    const code = this.search.value.replace(/^\s+|\s+$/gm, '');
+    this.onGetInventory(code);
   }
 
   onTapChange(indexTap: number): void {
@@ -191,23 +191,28 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  onScanSuccess(code: string): void {
+  onScanSuccess(data: string): void {
     if (this.isScanning == true) return;
 
     this.isScanning = true;
-    this.onGetInventoryByCode(code);
+    this.onGetInventory(data);
 
     timer(1500).subscribe(() => (this.isScanning = false));
   }
 
-  onGetInventoryByCode(code: string): void {
+  onGetInventory(data: string): void {
+    if (data.length === 7) this.onGetByTrack(data.toUpperCase());
+    if (data.length === 28) this.onGetByCode(data);
+  }
+
+  onGetByCode(code: string): void {
     const inventoryScan = this.scanService.getInventoryByCode(code);
-    if (inventoryScan) return this.code.setValue('');
+    if (inventoryScan) return this.search.setValue('');
 
     const inventory = this.inventoryService.getInventoryByCode(code);
     if (inventory) {
       this.scanService.createInventory(inventory);
-      return this.code.setValue('');
+      return this.search.setValue('');
     }
 
     this.isLoading = true;
@@ -217,8 +222,30 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((res) => {
         if (res) {
           this.scanService.createInventory(res);
-          this.code.setValue('');
+          this.search.setValue('');
         } else this.toastService.warning('', `${code} ไม่พบข้อมูลครุภัณฑ์`);
+      });
+  }
+
+  onGetByTrack(track: string) {
+    const inventoryScan = this.scanService.getInventoryByTrack(track);
+    if (inventoryScan) return this.search.setValue('');
+
+    const inventory = this.inventoryService.getInventoryByTrack(track);
+    if (inventory) {
+      this.scanService.createInventory(inventory);
+      return this.search.setValue('');
+    }
+
+    this.isLoading = true;
+    this.scanApiService
+      .getInventoryByTrack(track)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((res) => {
+        if (res) {
+          this.scanService.createInventory(res);
+          this.search.setValue('');
+        } else this.toastService.warning('', `${track} ไม่พบข้อมูลครุภัณฑ์`);
       });
   }
 
@@ -226,22 +253,22 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
     this.scanService.deleteInventory(id);
   }
 
-  clearCodeInput(): void {
-    this.code.setValue('');
-    this.codeInput.nativeElement.focus();
+  clearSearchInput(): void {
+    this.search.setValue('');
+    this.searchInput.nativeElement.focus();
   }
 
   onResetInventory(): void {
     this.scanService.resetInventory();
   }
 
-  get code(): FormControl<string> {
-    return this.form.controls['code'];
+  get search(): FormControl<string> {
+    return this.form.controls['search'];
   }
 
   private initForm() {
     return this.formBuilder.group({
-      code: [''],
+      search: [''],
     });
   }
 }

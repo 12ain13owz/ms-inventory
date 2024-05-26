@@ -15,4 +15,8 @@ export class ScanApiService {
   getInventoryByCode(code: string): Observable<Inventory> {
     return this.http.get<Inventory>(`${this.apiUrl}/code/${code}`);
   }
+
+  getInventoryByTrack(track: string): Observable<Inventory> {
+    return this.http.get<Inventory>(`${this.apiUrl}/track/${track}`);
+  }
 }

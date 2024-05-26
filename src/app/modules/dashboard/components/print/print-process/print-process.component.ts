@@ -225,12 +225,12 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
     const doc = new jsPDF('p', 'px', 'a4'); // width 446.46
     const startX = 15;
     const startY = 15;
-    const columnWidth = 200.73;
+    const columnWidth = 128.82;
     const columnHeight = 40;
     const columnGap = 15;
-    const rowGap = 5;
-    const rowDash = 15;
-    const rowCountThreshold = 11;
+    const rowGap = 20;
+    const rowDash = 25;
+    const rowCountThreshold = 10;
 
     const delayTime = 10;
     const totalInventories = this.inventories.reduce(
@@ -243,6 +243,7 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
     let rowCount = 0;
     let columnCount = 0;
     let processedInventories = 0;
+    doc.setFontSize(9);
 
     this.subscription = from(this.inventories)
       .pipe(
@@ -276,6 +277,11 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
           columnWidth,
           columnHeight
         );
+        doc.text(
+          inventory.code,
+          currentX + columnGap + 2,
+          currentY + columnHeight + 4
+        );
         currentX += columnWidth + columnGap;
 
         if (currentX + columnWidth <= doc.internal.pageSize.getWidth()) {
@@ -284,7 +290,7 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
             currentX - columnGap / 2,
             currentY - rowGap,
             currentX - columnGap / 2,
-            currentY + columnHeight + rowGap
+            currentY + columnHeight + columnGap - 3
           );
 
           columnCount++;
@@ -303,7 +309,7 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
 
         if (currentX + columnWidth > doc.internal.pageSize.getWidth()) {
           currentX = startX;
-          currentY += columnHeight + columnGap;
+          currentY += columnHeight + rowGap;
           rowCount++;
           columnCount = 0;
         }

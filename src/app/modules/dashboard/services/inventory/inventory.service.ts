@@ -49,8 +49,9 @@ export class InventoryService {
   getInventoriesTable(): InventoryTable[] {
     return this.inventories
       .map((inventory, i) => ({
-        id: inventory.id,
         no: i + 1,
+        id: inventory.id,
+        track: inventory.track,
         image: inventory.image,
         code: inventory.code,
         category: inventory.Category.name,
@@ -69,12 +70,17 @@ export class InventoryService {
     return this.inventories.find((inventory) => inventory.code === code);
   }
 
+  getInventoryByTrack(track: string): Inventory {
+    return this.inventories.find((inventory) => inventory.track === track);
+  }
+
   getInventoryByCodeTable(code: string): InventoryTable[] {
     return this.inventories
       .filter((inventory) => inventory.code === code)
       .map((inventory, i) => ({
-        id: inventory.id,
         no: i + 1,
+        id: inventory.id,
+        track: inventory.track,
         image: inventory.image,
         code: inventory.code,
         category: inventory.Category.name,

@@ -92,6 +92,7 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
 
     const inventory: InventoryPrint = {
       id: this.inventory.id,
+      track: this.inventory.track,
       image: this.inventory.image,
       code: this.inventory.code,
       description: this.inventory.description,

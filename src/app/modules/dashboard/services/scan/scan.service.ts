@@ -27,11 +27,16 @@ export class ScanService {
     return this.inventories.find((inventory) => inventory.code === code);
   }
 
+  getInventoryByTrack(track: string): InventoryScan {
+    return this.inventories.find((inventory) => inventory.track === track);
+  }
+
   createInventory(inventory: Inventory): void {
     const inventoryScan: InventoryScan = {
       id: inventory.id,
       image: inventory.image,
       code: inventory.code,
+      track: inventory.track,
       description: inventory.description,
     };
 

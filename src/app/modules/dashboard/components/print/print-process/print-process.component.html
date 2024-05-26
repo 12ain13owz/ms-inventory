@@ -46,8 +46,7 @@
     @for (inventory of inventories; track $index) {
     <ngx-barcode6
       [bc-format]="'CODE39'"
-      [bc-value]="inventory.code"
-      [bc-display-value]="true"
+      [bc-value]="inventory.track"
       #svgElement
     >
     </ngx-barcode6>
