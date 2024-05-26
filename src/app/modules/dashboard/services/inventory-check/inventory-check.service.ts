@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { InventoryCheck } from '../../models/inventory-check';
 import { Observable, Subject } from 'rxjs';
+import { InventoryTable } from '../../models/inventory.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,21 @@ export class InventoryCheckService {
 
   getInChecks(): InventoryCheck[] {
     return this.inChecks.slice();
+  }
+
+  getInChecksTable(): InventoryTable[] {
+    return this.inChecks
+      .map((check, i) => ({
+        id: check.Inventory.id,
+        no: i + 1,
+        image: check.Inventory.image,
+        code: check.Inventory.code,
+        category: check.Inventory.Category.name,
+        status: check.Inventory.Status.name,
+        usage: check.Inventory.Usage.name,
+        description: check.Inventory.description,
+      }))
+      .slice();
   }
 
   createInCheck(inCheck: InventoryCheck): void {

@@ -40,9 +40,6 @@ export class ScanService {
   }
 
   deleteInventory(id: number): void {
-    console.log(id);
-    console.log(this.inventories);
-
     const index = this.inventories.findIndex(
       (inventory) => inventory.id === id
     );

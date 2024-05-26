@@ -27,7 +27,6 @@ import { INVENTORY } from '../../../constants/inventory.constant';
 import { Subscription, finalize } from 'rxjs';
 import { NgxDropzoneChangeEvent } from '@todorus/ngx-dropzone';
 import { InventoryService } from '../../../services/inventory/inventory.service';
-import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-inventory-new',

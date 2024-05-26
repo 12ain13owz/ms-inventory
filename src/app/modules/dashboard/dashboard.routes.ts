@@ -23,6 +23,7 @@ import { InventoryNewComponent } from './components/inventory/inventory-new/inve
 import { InventoryViewComponent } from './components/inventory/inventory-view/inventory-view.component';
 import { InventoryEditComponent } from './components/inventory/inventory-edit/inventory-edit.component';
 import { PrintProcessComponent } from './components/print/print-process/print-process.component';
+import { InventoryCheckComponent } from './components/inventory-check/inventory-check.component';
 
 export const routes: Routes = [
   {
@@ -51,7 +52,6 @@ export const routes: Routes = [
           { path: 'process/:print', component: PrintProcessComponent },
         ],
       },
-
       {
         path: 'log',
         component: LogComponent,
@@ -59,6 +59,10 @@ export const routes: Routes = [
           { path: '', component: LogListComponent },
           { path: 'view/:id', component: LogViewComponent },
         ],
+      },
+      {
+        path: 'inventory-check',
+        component: InventoryCheckComponent,
       },
       { path: 'profile', component: ProfileComponent },
       { path: 'password', component: PasswordComponent },

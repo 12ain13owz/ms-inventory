@@ -32,12 +32,14 @@
     "ng-recaptcha": "^13.2.1",
     "ngx-barcode6": "^1.0.24",
     "ngx-mask": "^17.0.4",
+    "ngx-mat-select-search": "^7.0.6",
     "ngx-skeleton-loader": "^9.0.0",
     "ngx-toastr": "^18.0.0",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.6.13",
     "tslib": "^2.3.0",
+    "uninstall": "^0.0.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {

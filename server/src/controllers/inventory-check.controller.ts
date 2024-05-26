@@ -44,8 +44,6 @@ export async function findInventoryCheckByIdController(
 
   try {
     const id = +req.params.id;
-    console.log('Test', id);
-
     const resInventoryCheck = await inventoryCheckService.findById(id);
     res.json(resInventoryCheck?.toJSON());
   } catch (error) {
@@ -61,7 +59,6 @@ export async function createInventoryCheckController(
   try {
     const inventoryId = req.body.inventoryId;
     const currentYear = new Date().getFullYear();
-
     const inventoryCheck = await inventoryCheckService.findByInventoryId(
       inventoryId,
       currentYear
@@ -73,8 +70,7 @@ export async function createInventoryCheckController(
         inventoryCheck: inventoryCheck.toJSON(),
       });
 
-    const year = new Date().getFullYear();
-    const payload = new InventoryCheck({ inventoryId, year });
+    const payload = new InventoryCheck({ inventoryId, year: currentYear });
     const result = await inventoryCheckService.create(payload);
     const resInvenroryCheck = await inventoryCheckService.findById(result.id);
 

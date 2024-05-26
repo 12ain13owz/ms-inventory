@@ -32,6 +32,8 @@ import { InventoryNewComponent } from './components/inventory/inventory-new/inve
 import { InventoryViewComponent } from './components/inventory/inventory-view/inventory-view.component';
 import { InventoryEditComponent } from './components/inventory/inventory-edit/inventory-edit.component';
 import { PrintProcessComponent } from './components/print/print-process/print-process.component';
+import { InventoryCheckComponent } from './components/inventory-check/inventory-check.component';
+import { SearchPipe } from './pipes/search.pipe';
 
 @NgModule({
   declarations: [
@@ -62,6 +64,8 @@ import { PrintProcessComponent } from './components/print/print-process/print-pr
     InventoryNewComponent,
     InventoryViewComponent,
     InventoryEditComponent,
+    InventoryCheckComponent,
+    SearchPipe,
   ],
   imports: [
     DashboardRoutingModule,
