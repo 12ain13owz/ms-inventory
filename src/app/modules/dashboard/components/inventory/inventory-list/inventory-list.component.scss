@@ -28,7 +28,7 @@
 }
 
 .mat-column-description {
-  min-width: 300px;
+  min-width: 200px;
 }
 
 img {
@@ -65,13 +65,17 @@ mat-row:hover {
 }
 
 @media (max-width: 968px) {
-  mat-form-field {
-    flex: 1 1 calc(50% - 10px);
+  .filter-box {
+    mat-form-field {
+      flex: 1 1 calc(50% - 10px);
+    }
   }
 }
 
 @media (min-width: 599px) {
-  mat-form-field {
-    flex: 1 1 calc(25% - 10px);
+  .filter-box {
+    mat-form-field {
+      flex: 1 1 calc(25% - 10px);
+    }
   }
 }

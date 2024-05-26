@@ -50,3 +50,12 @@ export interface InventoryScan {
   code: string;
   description: string;
 }
+
+export interface InventoryPrint {
+  id: number;
+  image: string;
+  code: string;
+  description: string;
+  printCount: number;
+  fileUrl?: string;
+}

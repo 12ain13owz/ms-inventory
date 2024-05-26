@@ -1,121 +1,134 @@
-@defer (when !isLoading) { @if (log) {
-<mat-card
-  [ngClass]="{
-    'shadow-newParcel': log.newParcel,
-    'shadow-editParcel': log.editParcel,
-    'shadow-increaseQuantity': log.increaseQuantity,
-    'shadow-decreaseQuantity': log.decreaseQuantity,
-    'shadow-print': log.print
-  }"
->
-  <mat-card-header class="mb-16">
-    <mat-card-title
-      [ngClass]="{
-        newParcel: log.newParcel,
-        editParcel: log.editParcel,
-        increaseQuantity: log.increaseQuantity,
-        decreaseQuantity: log.decreaseQuantity,
-        print: log.print
-      }"
-      >{{ title }}</mat-card-title
-    >
-  </mat-card-header>
+@defer (when !isLoading) {
+<ng-container *ngIf="!log; else content">
+  <button class="w-100" mat-flat-button color="warn">
+    ไม่พบประวัติครุภัณฑ์
+  </button>
+</ng-container>
 
-  <mat-card-content>
-    <div class="blurred-img">
-      <img
-        class="size"
-        [defaultImage]="'assets/images/no-image.jpg'"
-        [lazyLoad]="imageUrl + log.image"
-      />
-    </div>
+<ng-template #content>
+  <mat-card class="mat-elevation-z8">
+    <mat-card-header class="mb-16">
+      <mat-card-title>{{ title }}</mat-card-title>
+    </mat-card-header>
 
-    <mat-list>
-      <div class="m-left-0" mat-subheader>รายละเอียดประวัติ</div>
-      <mat-divider></mat-divider>
-      <mat-list-item>
-        <span matListItemTitle>วันที่สร้าง Log</span>
-        <span matListItemLine>{{ log.createdAt | date : "medium" }}</span>
-      </mat-list-item>
-
-      <div class="d-flex flex-row">
-        <mat-list-item>
-          <span matListItemTitle>ชื่อ - สกุล</span>
-          <span matListItemLine>{{ log.firstname }} {{ log.lastname }}</span>
-        </mat-list-item>
-
-        <mat-list-item>
-          <span matListItemTitle>รายละเอียด</span>
-          <span matListItemLine>{{ log.detailLog }}</span>
-        </mat-list-item>
+    <mat-card-content>
+      <div class="blurred-img">
+        <img
+          class="size"
+          [defaultImage]="'assets/images/no-image.jpg'"
+          [lazyLoad]="imageUrl + log.image"
+        />
       </div>
 
-      <mat-list-item>
-        <span matListItemTitle>พัสดุเข้า / ออก</span>
-        <span matListItemLine>{{
-          displayModifyQuantity(log.modifyQuantity)
-        }}</span>
-      </mat-list-item>
-    </mat-list>
-
-    <mat-list>
-      <div style="margin-left: 0" mat-subheader>รายละเอียดพัสดุ</div>
-      <mat-divider></mat-divider>
-      <mat-list-item>
-        <span matListItemTitle>Track</span>
-        <span matListItemLine>{{ log.track }}</span>
-      </mat-list-item>
-
-      <div class="d-flex flex-row">
+      <mat-list>
+        <div class="m-left-0" mat-subheader>รายละเอียด ประวัติ</div>
+        <mat-divider></mat-divider>
         <mat-list-item>
-          <span matListItemTitle>รหัส</span>
+          <span matListItemTitle>วันที่เพิ่ม Log</span>
+          <span matListItemLine>{{ log.createdAt | date : "medium" }}</span>
+        </mat-list-item>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>ชื่อ - สกุล</span>
+            <span matListItemLine>{{ log.firstname }} {{ log.lastname }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>เพิ่ม / แก้ไข</span>
+            <span matListItemLine
+              >@if (log.isCreated) {เพิ่มครุภัณฑ์} @else {แก้ไขครุภัณฑ์}</span
+            >
+          </mat-list-item>
+        </div>
+      </mat-list>
+
+      <mat-list>
+        <div style="margin-left: 0" mat-subheader>รายละเอียด ครุภัณฑ์</div>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+          <span matListItemTitle>รหัสครุภัณฑ์</span>
           <span matListItemLine>{{ log.code }}</span>
         </mat-list-item>
 
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>รหัสครุภัณฑ์เดิม</span>
+            <span matListItemLine>{{ isEmpty(log.oldCode) }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>หน่วยนับ</span>
+            <span matListItemLine>{{ log.unit }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
+            <span matListItemLine>{{ log.value | number : "1.2-2" }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>แหล่งเงิน</span>
+            <span matListItemLine>{{ log.unit }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>วันที่ได้มา</span>
+            <span matListItemLine>{{ log.receivedDate | thaiYear }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>สถานที่ตั้ง/จัดเก็บ</span>
+            <span matListItemLine>{{ log.location }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>คุณสมบัติ (ยี่ห้อ/รุ่น) </span>
+            <span matListItemLine>{{ log.categoryName }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>สถานะ</span>
+            <span matListItemLine>{{ log.statusName }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>การใช้งาน</span>
+            <span matListItemLine>{{ log.usageName }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>ใช้งานมาแล้ว</span>
+            <span matListItemLine>{{ getUseDate(log.receivedDate) }}</span>
+          </mat-list-item>
+        </div>
         <mat-list-item>
-          <span matListItemTitle>รหัสเดิม</span>
-          <span matListItemLine>{{ isEmpty(log.oldCode) }}</span>
+          <span matListItemTitle>รายการครุภัณฑ์</span>
         </mat-list-item>
-      </div>
-
-      <div class="d-flex flex-row">
-        <mat-list-item>
-          <span matListItemTitle>วันที่รับพัสดุ</span>
-          <span matListItemLine>{{ log.receivedDate | thaiYear }}</span>
-        </mat-list-item>
+        <div
+          class="view-textarea"
+          [innerHTML]="log.description | dispTextarea"
+        ></div>
 
         <mat-list-item>
-          <span matListItemTitle>จำนวน</span>
-          <span matListItemLine>{{ log.quantity }}</span>
+          <span matListItemTitle>หมายเหตุ</span>
         </mat-list-item>
-      </div>
-
-      <div class="d-flex flex-row">
-        <mat-list-item>
-          <span matListItemTitle>ประเภท</span>
-          <span matListItemLine>{{ log.categoryName }}</span>
-        </mat-list-item>
-
-        <mat-list-item>
-          <span matListItemTitle>สถานะ</span>
-          <span matListItemLine>{{ log.statusName }}</span>
-        </mat-list-item>
-      </div>
-
-      <mat-list-item>
-        <span matListItemTitle>รายละเอียด</span>
-      </mat-list-item>
-      <div class="view-textarea" [innerHTML]="log.detail | dispTextarea"></div>
-
-      <mat-list-item>
-        <span matListItemTitle>หมายเหตุ</span>
-      </mat-list-item>
-      <div class="view-textarea" [innerHTML]="log.remark | dispTextarea"></div>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
-} @else {
-<button class="w-100" mat-flat-button color="warn">ไม่พบข้อมูลพัสดุ</button>
-} } @placeholder (minimum 300ms) {
+        <div
+          class="view-textarea"
+          [innerHTML]="log.remark | dispTextarea"
+        ></div>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+} @placeholder (minimum 300ms) {
 <app-loading-data [form]="'card'"></app-loading-data>
 }

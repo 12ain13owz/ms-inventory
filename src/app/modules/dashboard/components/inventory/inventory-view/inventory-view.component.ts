@@ -11,7 +11,7 @@ import {
 } from '@angular/material/snack-bar';
 import { Platform } from '@angular/cdk/platform';
 import { environment } from '../../../../../../environments/environment';
-import { Inventory } from '../../../models/inventory.model';
+import { Inventory, InventoryPrint } from '../../../models/inventory.model';
 
 @Component({
   selector: 'app-inventory-view',
@@ -30,7 +30,7 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
 
   imageUrl: string = environment.imageUrl;
 
-  title: string = 'รายละเอียดครุภัณฑ์';
+  title: string = 'รายละเอียด ครุภัณฑ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
   id: number = +this.route.snapshot.params['id'];
@@ -54,6 +54,11 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  getUseDate(receivedDate: Date) {
+    const date = new Date(receivedDate);
+    return this.inventoryService.getUseDate(date);
   }
 
   isEmpty(value: any): string | any {
@@ -85,15 +90,13 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
       verticalPosition: verticalPosition,
     });
 
-    // if (this.printService.getParcelById(this.id)) return;
-    // const parcel: ParcelPrint = {
-    //   id: this.parcel.id,
-    //   image: this.parcel.image,
-    //   track: this.parcel.track,
-    //   quantity: this.parcel.quantity,
-    //   print: this.parcel.print,
-    //   printCount: this.parcel.quantity,
-    // };
-    // this.printService.createParcel(parcel);
+    const inventory: InventoryPrint = {
+      id: this.inventory.id,
+      image: this.inventory.image,
+      code: this.inventory.code,
+      description: this.inventory.description,
+      printCount: 1,
+    };
+    this.printService.createInventory(inventory);
   }
 }

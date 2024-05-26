@@ -84,7 +84,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   };
   form = this.initForm();
 
-  title: string = 'รายการครุภัณฑ์';
+  title: string = 'รายการ ครุภัณฑ์';
   isLoading: boolean = false;
   isSelected: boolean = false;
   isPrint: boolean = false;
@@ -179,7 +179,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   }
 
   onFilter(): void {
-    const inventorys = this.inventoryService.getInventoriesTable();
+    const inventories = this.inventoryService.getInventoriesTable();
     const filters = this.form.value;
 
     this.dataSource.data = Object.keys(filters)
@@ -189,7 +189,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
             if (filters[keyName].length === 0) return result;
             return filters[keyName].includes(item[keyName]);
           }),
-        inventorys
+        inventories
       )
       .map((inventory, i) => ({ ...inventory, no: i + 1 }));
   }
@@ -241,18 +241,18 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       verticalPosition: verticalPosition,
     });
 
-    // const intenvorys = this.selection.selected
-    //   .filter((parcel) => !this.printService.getParcelById(parcel.id))
-    //   .map((parcel) => ({
-    //     id: parcel.id,
-    //     image: parcel.image,
-    //     track: parcel.track,
-    //     quantity: parcel.quantity,
-    //     print: parcel.print,
-    //     printCount: parcel.quantity,
-    //   }));
+    const inventories = this.selection.selected
+      .filter((inventory) => !this.printService.getInventoryById(inventory.id))
+      .map((inventory) => ({
+        id: inventory.id,
+        image: inventory.image,
+        code: inventory.code,
+        description: inventory.description,
+        printCount: 1,
+      }));
 
-    // for (const parcel of parcels) this.printService.createParcel(parcel);
+    for (const inventory of inventories)
+      this.printService.createInventory(inventory);
   }
 
   get category(): FormControl<string[]> {

@@ -1,0 +1,59 @@
+@if (isMissing) {
+<button mat-flat-button color="warn" class="w-100">
+  ไม่พบข้อมูลสำหรับพิมพ์
+</button>
+} @else {
+<mat-card>
+  <mat-card-content class="mb-16">
+    <button
+      class="mb-20"
+      mat-flat-button
+      color="primary"
+      [disabled]="isLoading"
+      (click)="onClickDownload()"
+    >
+      ดาวน์โหลดไฟล์
+    </button>
+
+    @if (isLoading) {
+    <h3>ประมวลผล {{ this.percentComplete.toFixed(2) }}%</h3>
+    }
+  </mat-card-content>
+
+  <mat-card-footer>
+    @if (isLoading) {
+    <mat-progress-bar
+      mode="buffer"
+      color="accent"
+      [value]="percentComplete"
+    ></mat-progress-bar>
+    }
+  </mat-card-footer>
+</mat-card>
+}
+
+<ng-container *ngIf="print === 1">
+  <div class="d-flex flex-wrap gap-10 visibility-hidden">
+    @for (inventory of inventories; track $index) {
+    <qrcode [qrdata]="inventory.code" [width]="128" #canvasElement></qrcode>
+    }
+    <a [download]="fileName" #downloadElement></a>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="print === 2">
+  <div class="d-flex flex-wrap gap-10 visibility-hidden">
+    @for (inventory of inventories; track $index) {
+    <ngx-barcode6
+      [bc-format]="'CODE39'"
+      [bc-value]="inventory.code"
+      [bc-display-value]="true"
+      #svgElement
+    >
+    </ngx-barcode6>
+    }
+
+    <canvas #canvasElement></canvas>
+    <a [download]="fileName" #downloadElement></a>
+  </div>
+</ng-container>

@@ -1,85 +1,60 @@
 import { Injectable } from '@angular/core';
-import { Parcel, ParcelScan } from '../../models/parcel.model';
+import { Inventory, InventoryScan } from '../../models/inventory.model';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScanService {
-  private parcels: ParcelScan[] = [];
-  private parcels$ = new Subject<ParcelScan[]>();
+  private inventories: InventoryScan[] = [];
+  private inventories$ = new Subject<InventoryScan[]>();
 
   constructor() {}
 
-  onParcelsListener(): Observable<ParcelScan[]> {
-    return this.parcels$.asObservable();
+  onInventoriesListener(): Observable<InventoryScan[]> {
+    return this.inventories$.asObservable();
   }
 
-  getParcels(): ParcelScan[] {
-    return this.parcels.slice();
+  getInventories(): InventoryScan[] {
+    return this.inventories.slice();
   }
 
-  getParcelById(id: number): ParcelScan {
-    return this.parcels.find((parcel) => parcel.id === id);
+  getInventoryById(id: number): InventoryScan {
+    return this.inventories.find((inventory) => inventory.id === id);
   }
 
-  getParcelByTrack(track: string): ParcelScan {
-    return this.parcels.find((parcel) => parcel.track === track);
+  getInventoryByCode(code: string): InventoryScan {
+    return this.inventories.find((inventory) => inventory.code === code);
   }
 
-  createParcelScan(parcel: Parcel): void {
-    const parcelScan: ParcelScan = {
-      id: parcel.id,
-      image: parcel.image,
-      track: parcel.track,
-      quantity: parcel.quantity,
-      stock: 1,
+  createInventory(inventory: Inventory): void {
+    const inventoryScan: InventoryScan = {
+      id: inventory.id,
+      image: inventory.image,
+      code: inventory.code,
+      description: inventory.description,
     };
 
-    this.parcels.unshift(parcelScan);
-    this.parcels$.next(this.parcels.slice());
+    this.inventories.unshift(inventoryScan);
+    this.inventories$.next(this.inventories.slice());
   }
 
-  updateStockParcel(id: number, stock: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
+  deleteInventory(id: number): void {
+    console.log(id);
+    console.log(this.inventories);
+
+    const index = this.inventories.findIndex(
+      (inventory) => inventory.id === id
+    );
 
     if (index !== -1) {
-      this.parcels[index].stock = stock;
-      this.parcels$.next(this.parcels.slice());
+      this.inventories.splice(index, 1);
+      this.inventories$.next(this.inventories.slice());
     }
   }
 
-  incrementStockParcel(id: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
-
-    if (index === -1) return;
-    if (this.parcels[index].stock >= this.parcels[index].quantity) return;
-
-    this.parcels[index].stock += 1;
-    this.parcels$.next(this.parcels.slice());
-  }
-
-  decrementStockParcel(id: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
-
-    if (index === -1) return;
-    if (this.parcels[index].stock <= 1) return;
-
-    this.parcels[index].stock -= 1;
-    this.parcels$.next(this.parcels.slice());
-  }
-
-  deleteParcle(id: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
-
-    if (index !== -1) {
-      this.parcels.splice(index, 1);
-      this.parcels$.next(this.parcels.slice());
-    }
-  }
-
-  resetParcel(): void {
-    this.parcels = [];
-    this.parcels$.next(this.parcels.slice());
+  resetInventory(): void {
+    this.inventories = [];
+    this.inventories$.next(this.inventories.slice());
   }
 }

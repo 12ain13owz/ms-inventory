@@ -97,15 +97,16 @@ export class InventoryService {
     }
   }
 
-  private getUseDate(receivedDate: Date): string {
+  getUseDate(receivedDate: Date): string {
     const now = new Date();
-    const date = now.getTime() - receivedDate.getTime();
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const day = Math.floor(date / millisecondsPerDay);
-    const year = Math.floor(day / 365);
-    const remainingDays = day % 365;
-    const month = Math.floor(remainingDays / 30);
+    let yearDiff = now.getFullYear() - receivedDate.getFullYear();
+    let monthDiff = now.getMonth() - receivedDate.getMonth();
 
-    return `${year} ปี ${month} เดือน`;
+    if (monthDiff < 0) {
+      yearDiff--;
+      monthDiff += 12;
+    }
+
+    return `${yearDiff} ปี ${monthDiff} เดือน`;
   }
 }

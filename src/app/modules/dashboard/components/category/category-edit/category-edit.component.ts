@@ -36,7 +36,7 @@ export class CategoryEditComponent implements OnInit {
   private operation$: Observable<Message | CategoryResponse>;
 
   validationField = CATEGORY.validationField;
-  title: string = 'เพิ่มประเภทพัสดุ';
+  title: string = 'เพิ่ม คุณสมบัติครุภัณฑ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
@@ -44,7 +44,7 @@ export class CategoryEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไขประเภทพัสดุ';
+      this.title = 'แก้ไข คุณสมบัติครุภัณฑ์';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }

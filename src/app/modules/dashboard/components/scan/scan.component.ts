@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { ParcelQuantityResponse, ParcelScan } from '../../models/parcel.model';
 import {
   Observable,
   Subscription,
@@ -30,12 +29,14 @@ import { ScanService } from '../../services/scan/scan.service';
 import { ScanApiService } from '../../services/scan/scan-api.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
 import { ValidationService } from '../../../shared/services/validation.service';
-import { ParcelApiService } from '../../services/parcel/parcel-api.service';
 import { Platform } from '@angular/cdk/platform';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Html5QrcodeResult, Html5QrcodeScanner } from 'html5-qrcode';
 import { Html5QrcodeError } from 'html5-qrcode/esm/core';
+import { InventoryScan } from '../../models/inventory.model';
+import { InventoryCheckApiService } from '../../services/inventory-check/inventory-check-api.service';
+import { InCheckResponse } from '../../models/inventory-check';
 
 enum Tap {
   Search,
@@ -56,30 +57,25 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private scanService = inject(ScanService);
   private scanApiService = inject(ScanApiService);
-  private parcelApiService = inject(ParcelApiService);
+  private inventoryCheckApiService = inject(InventoryCheckApiService);
   private toastService = inject(ToastNotificationService);
   private validationService = inject(ValidationService);
   platform = inject(Platform);
 
-  @ViewChild('trackInput', { static: true })
-  trackInput: ElementRef<HTMLInputElement>;
+  @ViewChild('codeInput', { static: true })
+  codeInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('qrBox') qrBox: ElementRef<HTMLDivElement>;
   qrRender: HTMLElement;
 
+  title: string = 'รายการ ตรวจสอบครุภัณฑ์';
   selectedTap = new FormControl(Tap.Search);
   imageUrl: string = environment.imageUrl;
   form = this.initForm();
 
-  displayedColumns: string[] = [
-    'image',
-    'track',
-    'quantity',
-    'stock',
-    'action',
-  ];
-  dataSource = new MatTableDataSource<ParcelScan>([]);
+  displayedColumns: string[] = ['image', 'code', 'description', 'action'];
+  dataSource = new MatTableDataSource<InventoryScan>([]);
   isLoading: boolean = false;
   isScanning: boolean = false;
   isScanType: number = 0;
@@ -87,15 +83,15 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   html5QrcodeScanner: Html5QrcodeScanner = null;
 
   ngOnInit(): void {
-    this.dataSource.data = this.scanService.getParcels();
+    this.dataSource.data = this.scanService.getInventories();
     this.subscription = this.scanService
-      .onParcelsListener()
-      .subscribe((parcelsScan) => (this.dataSource.data = parcelsScan));
+      .onInventoriesListener()
+      .subscribe((inventoryScan) => (this.dataSource.data = inventoryScan));
   }
 
   ngAfterViewInit(): void {
     if (!this.platform.ANDROID && !this.platform.IOS)
-      this.trackInput.nativeElement.focus();
+      this.codeInput.nativeElement.focus();
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -106,22 +102,28 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSubmit(): void {
-    const parcels = this.scanService.getParcels();
-    if (this.validationService.isEmpty(parcels)) return;
+    const inventories = this.scanService.getInventories();
+    if (this.validationService.isEmpty(inventories)) return;
 
-    const operations$: Observable<ParcelQuantityResponse>[] = [];
+    const operations$: Observable<InCheckResponse>[] = [];
     this.isLoading = true;
 
-    for (const parcel of parcels) {
+    for (const inventory of inventories) {
       operations$.push(
-        this.parcelApiService.decrementParcel(parcel.id, parcel.stock)
+        this.inventoryCheckApiService.createInCheck({
+          inventoryId: inventory.id,
+        })
       );
     }
 
     from(operations$)
       .pipe(
         concatMap((call) => call.pipe(catchError(() => of(null)))),
-        tap((res) => res && this.scanService.deleteParcle(res.id)),
+        tap(
+          (res) =>
+            res &&
+            this.scanService.deleteInventory(res.inventoryCheck.Inventory.id)
+        ),
         finalize(() => (this.isLoading = false))
       )
       .subscribe(
@@ -129,11 +131,11 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  onSearchParcel(): void {
-    if (!this.track.value) return;
+  onSearchInventory(): void {
+    if (!this.code.value) return;
 
-    const track = this.track.value.replace(/^\s+|\s+$/gm, '');
-    this.onGetParcelByTrack(track);
+    const code = this.code.value.replace(/^\s+|\s+$/gm, '');
+    this.onGetInventoryByCode(code);
   }
 
   onTapChange(indexTap: number): void {
@@ -187,76 +189,51 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  onScanSuccess(track: string): void {
+  onScanSuccess(code: string): void {
     if (this.isScanning == true) return;
 
     this.isScanning = true;
-    this.onGetParcelByTrack(track);
+    this.onGetInventoryByCode(code);
 
     timer(1500).subscribe(() => (this.isScanning = false));
   }
 
-  onGetParcelByTrack(track: string): void {
-    const parcel = this.scanService.getParcelByTrack(track);
-
-    if (parcel) {
-      this.scanService.incrementStockParcel(parcel.id);
-      return this.track.setValue('');
-    }
+  onGetInventoryByCode(code: string): void {
+    const inventory = this.scanService.getInventoryByCode(code);
+    if (inventory) return this.code.setValue('');
 
     this.isLoading = true;
     this.scanApiService
-      .getParcelByTrack(track)
+      .getInventoryByCode(code)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res) {
-          this.scanService.createParcelScan(res);
-          this.track.setValue('');
-        } else this.toastService.warning('', `${track} ไม่พบข้อมูลพัสดุ`);
+          this.scanService.createInventory(res);
+          this.code.setValue('');
+        } else this.toastService.warning('', `${code} ไม่พบข้อมูลครุภัณฑ์`);
       });
   }
 
-  onBlurStock(event: Event, id: number): void {
-    const parcel = this.scanService.getParcelById(id);
-    if (!parcel) return;
-
-    const el = event.target as HTMLInputElement;
-    el.value = el.value.replace(/[^0-9]/g, '');
-
-    if (+el.value <= 0) el.value = '1';
-    if (+el.value >= parcel.quantity) el.value = parcel.quantity.toString();
-
-    this.scanService.updateStockParcel(id, +el.value);
+  onDeleteInventory(id: number): void {
+    this.scanService.deleteInventory(id);
   }
 
-  incrementStock(id: number): void {
-    this.scanService.incrementStockParcel(id);
+  clearCodeInput(): void {
+    this.code.setValue('');
+    this.codeInput.nativeElement.focus();
   }
 
-  decrementStock(id: number): void {
-    this.scanService.decrementStockParcel(id);
+  onResetInventory(): void {
+    this.scanService.resetInventory();
   }
 
-  onDeleteParcel(id: number): void {
-    this.scanService.deleteParcle(id);
-  }
-
-  clearTrackInput(): void {
-    this.track.setValue('');
-    this.trackInput.nativeElement.focus();
-  }
-
-  onResetParcel(): void {
-    this.scanService.resetParcel();
-  }
-
-  get track(): FormControl<string> {
-    return this.form.controls['track'];
+  get code(): FormControl<string> {
+    return this.form.controls['code'];
   }
 
   private initForm() {
     return this.formBuilder.group({
-      track: [''],
+      code: [''],
     });
   }
 }

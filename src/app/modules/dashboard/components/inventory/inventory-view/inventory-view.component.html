@@ -41,7 +41,9 @@
         <div class="d-flex flex-row">
           <mat-list-item>
             <span matListItemTitle>มูลค่าครุภัณฑ์</span>
-            <span matListItemLine>{{ inventory.value }}</span>
+            <span matListItemLine>{{
+              inventory.value | number : "1.2-2"
+            }}</span>
           </mat-list-item>
 
           <mat-list-item>
@@ -74,10 +76,19 @@
           </mat-list-item>
         </div>
 
-        <mat-list-item>
-          <span matListItemTitle>การใช้งาน</span>
-          <span matListItemLine>{{ inventory.Usage.name }}</span>
-        </mat-list-item>
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>การใช้งาน</span>
+            <span matListItemLine>{{ inventory.Usage.name }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>ใช้งานมาแล้ว</span>
+            <span matListItemLine>{{
+              getUseDate(inventory.receivedDate)
+            }}</span>
+          </mat-list-item>
+        </div>
 
         <mat-list-item>
           <span matListItemTitle>รายการครุภัณฑ์</span>

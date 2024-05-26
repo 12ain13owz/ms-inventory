@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket, io } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
-import { SocketParcelService } from './socket-parcel.service';
+import { SocketInventoryService } from './socket-inventory.service';
 import { SocketLogService } from './socket-log.service';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class SocketIoService {
   private socketIO: Socket;
 
   constructor(
-    private socketParcelService: SocketParcelService,
+    private socketInventoryService: SocketInventoryService,
     private socketLogService: SocketLogService
   ) {}
 
@@ -22,7 +22,7 @@ export class SocketIoService {
     });
     if (!this.socketIO) return;
 
-    this.socketParcelService.initializeSocketIO(this.socketIO);
+    this.socketInventoryService.initializeSocketIO(this.socketIO);
     this.socketLogService.initializeSocketIO(this.socketIO);
   }
 

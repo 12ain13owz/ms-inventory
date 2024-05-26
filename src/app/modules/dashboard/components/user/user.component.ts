@@ -35,6 +35,7 @@ export class UserComponent implements OnInit, OnDestroy {
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
 
+  title: string = 'รายการ บัญชีผู้ใช้งาน';
   profileId = this.profileService.getProfile().id;
   displayedColumns: string[] = [
     'no',

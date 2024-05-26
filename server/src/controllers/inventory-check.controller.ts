@@ -12,8 +12,8 @@ export async function findAllInventoryCheckController(
   res.locals.func = 'findAllInventoryCheckController';
 
   try {
-    const resInventorysCheck = await inventoryCheckService.findAll();
-    res.json(resInventorysCheck);
+    const resInventoriesCheck = await inventoryCheckService.findAll();
+    res.json(resInventoriesCheck);
   } catch (error) {
     next(error);
   }

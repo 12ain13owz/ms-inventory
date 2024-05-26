@@ -36,7 +36,7 @@ export class StatusEditComponent implements OnInit {
   private operation$: Observable<Message | StatusResponse>;
 
   validationField = STATUS.validationField;
-  title: string = 'เพิ่มสภานะครุภัณฑ์';
+  title: string = 'เพิ่ม สภานะครุภัณฑ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
@@ -44,7 +44,7 @@ export class StatusEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไขสถานะครุภัณฑ์';
+      this.title = 'แก้ไข สถานะครุภัณฑ์';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }

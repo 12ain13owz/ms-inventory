@@ -35,6 +35,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
+  title: string = 'รายการ สถานะครุภัณฑ์';
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<StatusTable>([]);
   isFirstLoading: boolean = false;

@@ -35,6 +35,7 @@ export class UsageComponent implements OnInit, OnDestroy {
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
+  title: string = 'รายการ การใช้งานครุภัณฑ์';
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<UsageTable>([]);
   isFirstLoading: boolean = false;

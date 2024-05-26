@@ -3,23 +3,20 @@ export interface Log {
   track: string;
   code: string;
   oldCode: string;
+  description: string;
+  unit: string;
+  value: number;
   receivedDate: string;
-  detail: string;
-  quantity: number;
-  modifyQuantity: number;
+  fundingSource: string;
+  location: string;
+  remark: string;
+  image: string;
+  isCreated: boolean;
   firstname: string;
   lastname: string;
   categoryName: string;
   statusName: string;
-  remark: string;
-  image: string;
-  newParcel: boolean;
-  editParcel: boolean;
-  increaseQuantity: boolean;
-  decreaseQuantity: boolean;
-  print: boolean;
-  printCount: number;
-  detailLog: string;
+  usageName: string;
   createdAt: string;
 }
 
@@ -28,7 +25,8 @@ export interface LogTable extends Log {
 }
 
 export interface FilterLog {
-  parcelStatus: string[];
+  inventories: string[];
   categories: string[];
   statuses: string[];
+  usages: string[];
 }

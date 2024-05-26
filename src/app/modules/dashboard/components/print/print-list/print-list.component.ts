@@ -12,7 +12,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { environment } from '../../../../../../environments/environment';
 import { MatTableDataSource } from '@angular/material/table';
-import { ParcelPrint } from '../../../models/parcel.model';
+import { InventoryPrint } from '../../../models/inventory.model';
 
 @Component({
   selector: 'app-print-list',
@@ -26,23 +26,25 @@ export class PrintListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  title: string = 'รายการ พิมพ์ครุภัณฑ์';
   imageUrl: string = environment.imageUrl;
   isLoading: boolean = false;
+  print: string = '1';
 
   displayedColumns: string[] = [
     'image',
-    'track',
-    'quantity',
+    'code',
+    'description',
     'printCount',
     'action',
   ];
-  dataSource = new MatTableDataSource<ParcelPrint>([]);
+  dataSource = new MatTableDataSource<InventoryPrint>([]);
 
   ngOnInit(): void {
-    this.dataSource.data = this.printService.getParcels();
+    this.dataSource.data = this.printService.getInventories();
     this.subscription = this.printService
-      .onParcelsListener()
-      .subscribe((parcels) => (this.dataSource.data = parcels));
+      .onInventoriesListener()
+      .subscribe((inventories) => (this.dataSource.data = inventories));
   }
 
   ngAfterViewInit(): void {
@@ -55,18 +57,18 @@ export class PrintListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onReset() {
-    this.printService.resetParcel();
+    this.printService.resetInventory();
   }
 
   onBlurPrintCount(event: Event, id: number): void {
-    const parcel = this.printService.getParcelById(id);
-    if (!parcel) return;
+    const inventory = this.printService.getInventoryById(id);
+    if (!inventory) return;
 
     const el = event.target as HTMLInputElement;
     el.value = el.value.replace(/[^0-9]/g, '');
     if (+el.value <= 0) el.value = '1';
-    if (+el.value >= parcel.printCount) el.value = parcel.quantity.toString();
-    this.printService.updatPrintCountParcel(id, +el.value);
+    if (+el.value >= 100) el.value = '100';
+    this.printService.updatPrintCountInventory(id, +el.value);
   }
 
   incrementPrintCount(id: number): void {
@@ -77,7 +79,7 @@ export class PrintListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.printService.decrementPrintCount(id);
   }
 
-  onDeleteParcel(id: number): void {
-    this.printService.deleteParcle(id);
+  onDeleteInventory(id: number): void {
+    this.printService.deleteInventory(id);
   }
 }

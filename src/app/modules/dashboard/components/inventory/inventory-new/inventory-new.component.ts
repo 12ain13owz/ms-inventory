@@ -53,7 +53,7 @@ export class InventoryNewComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   validationField = INVENTORY.validationField;
   files: File[] = [];
-  title: string = 'เพิ่มครุภัณฑ์';
+  title: string = 'เพิ่ม ครุภัณฑ์';
   isLoading: boolean = this.inventoryService.getIsLoading();
   remember: boolean = false;
   categories: { id: number; name: string }[] = [];

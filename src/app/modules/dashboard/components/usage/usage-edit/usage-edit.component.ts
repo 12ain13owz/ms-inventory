@@ -36,7 +36,7 @@ export class UsageEditComponent implements OnInit {
   private operation$: Observable<Message | UsageResponse>;
 
   validationField = USAGE.validationField;
-  title: string = 'เพิ่มการใช้งานครุภัณฑ์';
+  title: string = 'เพิ่ม การใช้งานครุภัณฑ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
@@ -44,7 +44,7 @@ export class UsageEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไขการใช้งานครุภัณฑ์';
+      this.title = 'แก้ไข การใช้งานครุภัณฑ์';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }

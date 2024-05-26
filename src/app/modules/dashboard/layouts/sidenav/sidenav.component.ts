@@ -25,7 +25,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
     this.isAdmin = this.profileService.getProfile().role === 'admin';
 
     this.subscription = this.printService
-      .onParcelsListener()
+      .onInventoriesListener()
       .subscribe((parcel) => {
         this.badge = parcel.length;
 

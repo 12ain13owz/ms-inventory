@@ -35,6 +35,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
+  title: string = 'รายการ คุณสมบัติ (ยี่ห้อ/รุ่น)';
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<CategoryTable>([]);
   isFirstLoading: boolean = false;

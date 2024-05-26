@@ -1,23 +1,26 @@
-<div class="d-flex flex-wrap align-center gap-10 mb-20">
-  <a [routerLink]="['./qrcode']" mat-raised-button color="primary">
-    ปริ้นคิวอาร์โค้ด
-  </a>
+<div class="d-flex justify-between mb-20">
+  <div class="d-flex gap-20">
+    <mat-radio-group [(ngModel)]="print">
+      <mat-radio-button value="1" checked>คิวอาร์โค้ด</mat-radio-button>
+      <mat-radio-button value="2">บาร์โค้ด</mat-radio-button>
+    </mat-radio-group>
 
-  <a [routerLink]="['./barcode']" mat-raised-button color="primary">
-    ปริ้นบาร์โค้ด
-  </a>
+    <a [routerLink]="['./process', print]" mat-raised-button color="primary">
+      พิมพ์
+    </a>
+  </div>
 
   <a
-    [routerLink]="['/parcel']"
+    [routerLink]="['/inventory']"
     [queryParams]="{ isPrint: true }"
     mat-raised-button
-    >เพิ่มพัสดุสำหรับปริ้น</a
+    color="accent"
+    >เพิ่มรายการพิมพ์ครุภัณฑ์</a
   >
 </div>
-
 <mat-card>
   <mat-card-header class="mb-16 d-flex justify-between align-center">
-    <mat-card-title>รายการปริ้นบาร์โค้ด</mat-card-title>
+    <mat-card-title>{{ title }}</mat-card-title>
     <button type="button" mat-button color="warn" (click)="onReset()">
       รีเซ็ต
     </button>
@@ -29,7 +32,7 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
         <mat-cell *matCellDef="let element" style="padding-block: 8px">
           <a
-            [routerLink]="['../parcel/view', element.id]"
+            [routerLink]="['../inventory/view', element.id]"
             class="blurred-img"
             tabindex="-1"
           >
@@ -41,23 +44,25 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="track">
+      <ng-container matColumnDef="code">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >Track</mat-header-cell
+          >รหัสครุภัณฑ์</mat-header-cell
         >
-        <mat-cell *matCellDef="let element"> {{ element.track }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.code }} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="quantity">
+      <ng-container matColumnDef="description">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >จำนวน</mat-header-cell
+          >รายการครุภัณฑ์</mat-header-cell
         >
-        <mat-cell *matCellDef="let element"> {{ element.quantity }} </mat-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.description }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="printCount">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >จำนวนปริ้น</mat-header-cell
+          >จำนวนพิมพ์</mat-header-cell
         >
         <mat-cell *matCellDef="let element" class="p-0">
           <div class="d-flex align-center">
@@ -94,7 +99,7 @@
         <mat-cell *matCellDef="let element" class="p-0">
           <button
             mat-icon-button
-            (click)="onDeleteParcel(element.id)"
+            (click)="onDeleteInventory(element.id)"
             tabindex="-1"
           >
             <mat-icon color="warn">close</mat-icon>

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { Observable, forkJoin, map, of, tap } from 'rxjs';
+import { Observable, forkJoin, map, tap } from 'rxjs';
 import { UserService } from './services/user/user.service';
 import { UserApiService } from './services/user/user-api.service';
 import { CategoryService } from './services/category/category.service';

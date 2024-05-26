@@ -29,11 +29,11 @@ import { ValidationService } from '../../../../shared/services/validation.servic
 import { LogApiService } from '../../../services/log/log-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
+import { UsageService } from '../../../services/usage/usage.service';
 
 enum Tap {
   Date,
   Code,
-  Track,
 }
 @Component({
   selector: 'app-log-list',
@@ -45,6 +45,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private categoryService = inject(CategoryService);
   private statusService = inject(StatusService);
+  private usageService = inject(UsageService);
   private logService = inject(LogService);
   private logApiService = inject(LogApiService);
   private validationService = inject(ValidationService);
@@ -57,18 +58,13 @@ export class LogListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
-  @ViewChild('track', { static: true }) track: ElementRef<HTMLInputElement>;
 
+  title: string = 'รายการ ประว้ติครุภัณฑ์';
   filterLog: FilterLog = {
-    parcelStatus: [
-      'เพิ่มพัสดุ',
-      'แก้ไขพัสดุ',
-      'เพิ่มสต็อก',
-      'ตัดสต็อก',
-      'ปริ้น',
-    ],
+    inventories: ['เพิ่มพัสดุ', 'แก้ไขพัสดุ'],
     categories: this.categoryService.getActiveCategoriesName(),
     statuses: this.statusService.getActiveStatusNames(),
+    usages: this.usageService.getActiveUsageNames(),
   };
   form = this.initForm();
 
@@ -84,12 +80,12 @@ export class LogListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'no',
     'image',
-    'track',
+    'code',
     'category',
     'status',
-    'modifyQuantity',
-    'printCount',
-    'detailLog',
+    'usage',
+    'isCreated',
+    'description',
     'createdAt',
   ];
   dataSource = new MatTableDataSource<LogTable>([]);
@@ -128,13 +124,6 @@ export class LogListComponent implements OnInit, OnDestroy {
       if (!code) return;
 
       this.operation$ = this.logApiService.getLogsByCode(code);
-    } else if (this.selectedTap.value === Tap.Track) {
-      if (!this.track) return;
-
-      const track = this.track.nativeElement.value.replace(/^\s+|\s+$/gm, '');
-      if (!track) return;
-
-      this.operation$ = this.logApiService.getLogsByTrack(track);
     }
 
     this.isLoading = true;
@@ -158,7 +147,12 @@ export class LogListComponent implements OnInit, OnDestroy {
   }
 
   setFilter(): void {
-    this.form.setValue({ parcelStatus: [], category: [], status: [] });
+    this.form.setValue({
+      inventory: [],
+      category: [],
+      status: [],
+      usage: [],
+    });
   }
 
   onFilter(): void {
@@ -166,6 +160,7 @@ export class LogListComponent implements OnInit, OnDestroy {
     const filters = {
       categoryName: this.category.value,
       statusName: this.status.value,
+      usageName: this.usage.value,
     };
 
     const logFilter = Object.keys(filters).reduce(
@@ -177,7 +172,7 @@ export class LogListComponent implements OnInit, OnDestroy {
       logs
     );
 
-    if (this.validationService.isEmpty(this.parcelStatus.value)) {
+    if (this.validationService.isEmpty(this.inventory.value)) {
       this.dataSource.data = logFilter.map((log, i) => ({
         ...log,
         no: i + 1,
@@ -185,20 +180,12 @@ export class LogListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newParcel = this.parcelStatus.value.includes('เพิ่มพัสดุ');
-    const editParcel = this.parcelStatus.value.includes('แก้ไขพัสดุ');
-    const increaseQuantity = this.parcelStatus.value.includes('เพิ่มสต็อก');
-    const decreaseQuantity = this.parcelStatus.value.includes('ตัดสต็อก');
-    const print = this.parcelStatus.value.includes('ปริ้น');
+    const newParcel = this.inventory.value.includes('เพิ่มพัสดุ');
+    const editParcel = this.inventory.value.includes('แก้ไขพัสดุ');
 
     this.dataSource.data = logFilter
       .filter(
-        (log) =>
-          (log.newParcel && newParcel) ||
-          (log.editParcel && editParcel) ||
-          (log.increaseQuantity && increaseQuantity) ||
-          (log.decreaseQuantity && decreaseQuantity) ||
-          (log.print && print)
+        (log) => (log.isCreated && newParcel) || (!log.isCreated && editParcel)
       )
       .map((log, i) => ({ ...log, no: i + 1 }));
   }
@@ -215,8 +202,8 @@ export class LogListComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  get parcelStatus(): FormControl<string[]> {
-    return this.form.controls['parcelStatus'];
+  get inventory(): FormControl<string[]> {
+    return this.form.controls['inventory'];
   }
 
   get category(): FormControl<string[]> {
@@ -227,11 +214,16 @@ export class LogListComponent implements OnInit, OnDestroy {
     return this.form.controls['status'];
   }
 
+  get usage(): FormControl<string[]> {
+    return this.form.controls['usage'];
+  }
+
   private initForm() {
     return this.formBuilder.group({
-      parcelStatus: this.formBuilder.control<string[]>([]),
+      inventory: this.formBuilder.control<string[]>([]),
       category: this.formBuilder.control<string[]>([]),
       status: this.formBuilder.control<string[]>([]),
+      usage: this.formBuilder.control<string[]>([]),
     });
   }
 

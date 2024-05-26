@@ -1,73 +1,85 @@
 import { Injectable } from '@angular/core';
-import { ParcelPrint } from '../../models/parcel.model';
+import { InventoryPrint } from '../../models/inventory.model';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PrintService {
-  private parcels: ParcelPrint[] = [];
-  private parcels$ = new Subject<ParcelPrint[]>();
+  private inventories: InventoryPrint[] = [];
+  private inventories$ = new Subject<InventoryPrint[]>();
 
   constructor() {}
 
-  onParcelsListener(): Observable<ParcelPrint[]> {
-    return this.parcels$.asObservable();
+  onInventoriesListener(): Observable<InventoryPrint[]> {
+    return this.inventories$.asObservable();
   }
 
-  getParcels(): ParcelPrint[] {
-    return this.parcels.slice();
+  getInventories(): InventoryPrint[] {
+    return this.inventories.slice();
   }
 
-  getParcelById(id: number): ParcelPrint {
-    return this.parcels.find((parcel) => parcel.id === id);
+  getInventoryById(id: number): InventoryPrint {
+    return this.inventories.find((inventory) => inventory.id === id);
   }
 
-  createParcel(parcel: ParcelPrint): void {
-    this.parcels.push(parcel);
-    this.parcels$.next(this.parcels.slice());
+  getInventoryByCode(code: string): InventoryPrint {
+    return this.inventories.find((inventory) => inventory.code === code);
   }
 
-  updatPrintCountParcel(id: number, stock: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
+  createInventory(inventory: InventoryPrint): void {
+    this.inventories.push(inventory);
+    this.inventories$.next(this.inventories.slice());
+  }
+
+  updatPrintCountInventory(id: number, count: number): void {
+    const index = this.inventories.findIndex(
+      (inventory) => inventory.id === id
+    );
 
     if (index !== -1) {
-      this.parcels[index].printCount = stock;
-      this.parcels$.next(this.parcels.slice());
+      this.inventories[index].printCount = count;
+      this.inventories$.next(this.inventories.slice());
     }
   }
 
   incrementPrintCount(id: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
+    const index = this.inventories.findIndex(
+      (inventory) => inventory.id === id
+    );
 
     if (index === -1) return;
-    if (this.parcels[index].printCount >= this.parcels[index].quantity) return;
+    if (this.inventories[index].printCount >= 100) return;
 
-    this.parcels[index].printCount += 1;
-    this.parcels$.next(this.parcels.slice());
+    this.inventories[index].printCount += 1;
+    this.inventories$.next(this.inventories.slice());
   }
 
   decrementPrintCount(id: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
+    const index = this.inventories.findIndex(
+      (inventory) => inventory.id === id
+    );
 
     if (index === -1) return;
-    if (this.parcels[index].printCount <= 1) return;
+    if (this.inventories[index].printCount <= 1) return;
 
-    this.parcels[index].printCount -= 1;
-    this.parcels$.next(this.parcels.slice());
+    this.inventories[index].printCount -= 1;
+    this.inventories$.next(this.inventories.slice());
   }
 
-  deleteParcle(id: number): void {
-    const index = this.parcels.findIndex((parcel) => parcel.id === id);
+  deleteInventory(id: number): void {
+    const index = this.inventories.findIndex(
+      (inventory) => inventory.id === id
+    );
 
     if (index !== -1) {
-      this.parcels.splice(index, 1);
-      this.parcels$.next(this.parcels.slice());
+      this.inventories.splice(index, 1);
+      this.inventories$.next(this.inventories.slice());
     }
   }
 
-  resetParcel(): void {
-    this.parcels = [];
-    this.parcels$.next(this.parcels.slice());
+  resetInventory(): void {
+    this.inventories = [];
+    this.inventories$.next(this.inventories.slice());
   }
 }

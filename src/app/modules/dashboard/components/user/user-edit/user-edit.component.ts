@@ -41,7 +41,7 @@ export class UserEditComponent implements OnInit {
   validationField = USER.validationField;
   patternPassword = USER.patternPassword;
   roleOptions: string[] = ['user', 'admin'];
-  title: string = 'เพิ่มผู้ใช้งาน';
+  title: string = 'เพิ่ม ผู้ใช้งาน';
   isEdit: boolean = false;
   isLoading: boolean = false;
   hidePassword: boolean = true;
@@ -51,7 +51,7 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไขผู้ใข้งาน';
+      this.title = 'แก้ไข ผู้ใข้งาน';
       this.isEdit = true;
 
       this.password.disable();

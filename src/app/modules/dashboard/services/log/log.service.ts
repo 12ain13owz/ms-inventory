@@ -28,9 +28,9 @@ export class LogService {
     return this.logs.map((log, i) => ({ no: i + 1, ...log })).slice();
   }
 
-  getLogsByTrackInput(track: string): LogTable[] {
+  getLogsByCodeInput(code: string): LogTable[] {
     return this.logs
-      .filter((log) => log.track === track)
+      .filter((log) => log.code === code)
       .map((log, i) => ({ no: i + 1, ...log }))
       .slice();
   }

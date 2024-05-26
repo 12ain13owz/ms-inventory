@@ -18,8 +18,8 @@ export async function findAllInventoryController(
   res.locals.func = 'findAllInventoryController';
 
   try {
-    const resInventorys = await inventoryService.findAll();
-    res.json(resInventorys);
+    const resInventories = await inventoryService.findAll();
+    res.json(resInventories);
   } catch (error) {
     next(error);
   }
@@ -33,10 +33,10 @@ export async function initialInventoryController(
   res.locals.func = 'initialInventoryController';
 
   try {
-    const inventorys = await inventoryService.findLimit(30);
-    const resInventorys = inventorys.sort((a, b) => a.id - b.id);
+    const inventories = await inventoryService.findLimit(30);
+    const resInventories = inventories.sort((a, b) => a.id - b.id);
 
-    res.json(resInventorys);
+    res.json(resInventories);
   } catch (error) {
     next(error);
   }
@@ -59,8 +59,11 @@ export async function findInventoryByDateController(
     dateStart.setHours(0, 0, 0, 0);
     dateEnd.setHours(23, 59, 59, 999);
 
-    const resInventorys = await inventoryService.findByDate(dateStart, dateEnd);
-    res.json(resInventorys);
+    const resInventories = await inventoryService.findByDate(
+      dateStart,
+      dateEnd
+    );
+    res.json(resInventories);
   } catch (error) {
     next(error);
   }

@@ -5,24 +5,24 @@
         <form
           class="search-box"
           [formGroup]="form"
-          (ngSubmit)="onSearchParcel()"
+          (ngSubmit)="onSearchInventory()"
         >
           <div class="search-input-box">
             <input
               type="text"
               class="w-100"
-              placeholder="ค้นหา Track"
-              formControlName="track"
-              #trackInput
+              placeholder="ค้นหารหัสครุภัณฑ์"
+              formControlName="code"
+              #codeInput
             />
 
-            @if (track.value) {
+            @if (code.value) {
             <button
               type="button"
               class="close"
               matSuffix
               mat-icon-button
-              (click)="clearTrackInput()"
+              (click)="clearCodeInput()"
             >
               <mat-icon>close</mat-icon>
             </button>
@@ -54,8 +54,8 @@
 
 <mat-card class="mat-elevation-z8 mb-20">
   <mat-card-header class="mb-16 d-flex justify-between align-center">
-    <mat-card-title>รายการตัดสต็อกพัสดุ</mat-card-title>
-    <button type="button" mat-button color="warn" (click)="onResetParcel()">
+    <mat-card-title>{{ title }}</mat-card-title>
+    <button type="button" mat-button color="warn" (click)="onResetInventory()">
       รีเซ็ต
     </button>
   </mat-card-header>
@@ -64,8 +64,11 @@
     <mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
-        <mat-cell *matCellDef="let element" style="padding-block: 8px">
-          <a [routerLink]="['../parcel/view', element.id]" class="blurred-img">
+        <mat-cell *matCellDef="let element">
+          <a
+            [routerLink]="['../inventory/view', element.id]"
+            class="blurred-img"
+          >
             <img
               [defaultImage]="'assets/images/no-image.jpg'"
               [lazyLoad]="imageUrl + element.image"
@@ -74,50 +77,26 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="track">
+      <ng-container matColumnDef="code">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >Track</mat-header-cell
+          >รหัสครุภัณฑ์</mat-header-cell
         >
-        <mat-cell *matCellDef="let element"> {{ element.track }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.code }} </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="quantity">
+      <ng-container matColumnDef="description">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >จำนวน</mat-header-cell
+          >รายการครุภัณฑ์</mat-header-cell
         >
-        <mat-cell *matCellDef="let element"> {{ element.quantity }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="stock">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >ตัดสต็อก</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element" class="p-0">
-          <div class="d-flex align-center">
-            <button mat-icon-button (click)="incrementStock(element.id)">
-              <mat-icon color="accent">add</mat-icon>
-            </button>
-
-            <mat-form-field class="stock-field">
-              <input
-                type="number"
-                matInput
-                [value]="element.stock"
-                (blur)="onBlurStock($event, element.id)"
-              />
-            </mat-form-field>
-
-            <button mat-icon-button (click)="decrementStock(element.id)">
-              <mat-icon color="accent">remove</mat-icon>
-            </button>
-          </div>
+        <mat-cell *matCellDef="let element">
+          {{ element.description | cutDetail }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="action">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let element" class="p-0">
-          <button mat-icon-button (click)="onDeleteParcel(element.id)">
+          <button mat-icon-button (click)="onDeleteInventory(element.id)">
             <mat-icon color="warn">close</mat-icon>
           </button>
         </mat-cell>
@@ -135,7 +114,18 @@
   </mat-card-content>
 </mat-card>
 
-<button
+<div class="d-flex justify-center">
+  <button
+    class="btn-submit"
+    [swal]="confirmStock"
+    (confirm)="onSubmit()"
+    [disabled]="isLoading"
+  >
+    ตรวจสอบครุภัณฑ์
+  </button>
+</div>
+
+<!-- <button
   type="button"
   mat-raised-button
   color="primary"
@@ -144,7 +134,7 @@
   [disabled]="isLoading"
 >
   ตัดสต็อก
-</button>
+</button> -->
 
 <swal
   #confirmStock

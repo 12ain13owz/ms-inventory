@@ -66,7 +66,7 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
   validationField = INVENTORY.validationField;
   imageUrl: string = environment.imageUrl;
   files: File[] = [];
-  title: string = 'เพิ่มครุภัณฑ์';
+  title: string = 'แก้ไข ครุภัณฑ์';
   isImageEdit: boolean = false;
   isLoading: boolean = this.inventoryService.getIsLoading();
 
@@ -103,6 +103,7 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.formInventory.invalid || this.image.hasError('mimeType')) return;
 
+    this.onDateInput();
     const receivedDate = this.datePipe.transform(
       this.receivedDate.value,
       'yyyy-MM-dd'

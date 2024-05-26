@@ -41,7 +41,7 @@ export const inventoryCheckService = {
 function queryOptions() {
   return {
     attributes: {
-      exclude: ['inventoryId'],
+      exclude: ['inventoryId', 'createdAt'],
     },
     include: [
       {
