@@ -65,10 +65,10 @@ app.use(healthRoutes);
 app.use(userRoutesV1);
 app.use(errorHandler);
 
-// app.get('*.*', express.static(path.join(__dirname, '../browser')));
-// app.all('*', (req, res) => {
-//   res.status(200).sendFile('/', { root: 'browser' });
-// });
+app.get('*.*', express.static(path.join(__dirname, '../browser')));
+app.all('*', (req, res) => {
+  res.status(200).sendFile('/', { root: 'browser' });
+});
 
 server.listen(port, async () => {
   await databaseConnect();
