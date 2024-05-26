@@ -56,7 +56,7 @@
           >รายการครุภัณฑ์</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.description }}
+          {{ element.description | cutDetail }}
         </mat-cell>
       </ng-container>
 
