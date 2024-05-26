@@ -86,6 +86,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
   title: string = 'รายการ ครุภัณฑ์';
   isLoading: boolean = false;
+  isSort: boolean = false;
   isSelected: boolean = false;
   isPrint: boolean = false;
   selectedTap = new FormControl(Tap.Date);
@@ -155,6 +156,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true;
+    this.isSort = false;
     this.operation$
       .pipe(
         tap(() => this.onFilter()),
@@ -165,6 +167,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
   onSearchAll(): void {
     this.isLoading = true;
+    this.isSort = false;
     this.inventoryApiService
       .getAllInventorys()
       .pipe(
@@ -299,12 +302,16 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.dataSource.sort.sort({
-        id: 'code',
-        start: 'desc',
-        disableClear: true,
-      });
 
+      if (!this.isSort) {
+        this.dataSource.sort.sort({
+          id: 'code',
+          start: 'desc',
+          disableClear: true,
+        });
+
+        this.isSort = true;
+      }
       if (this.isPrint) {
         this.isSelected = this.isPrint;
         this.isSelectPrint();

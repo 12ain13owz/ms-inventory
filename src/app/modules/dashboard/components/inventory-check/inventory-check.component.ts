@@ -71,6 +71,7 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
     'no',
     'image',
     'code',
+    'year',
     'category',
     'status',
     'usage',

@@ -5,6 +5,8 @@ import { InventoryService } from './inventory.service';
 import { LogService } from '../log/log.service';
 import { Observable, map, switchMap, tap, timer } from 'rxjs';
 import { Inventory, InventoryResponse } from '../../models/inventory.model';
+import { SocketLogService } from '../../socket-io/socket-log.service';
+import { SocketInventoryService } from '../../socket-io/socket-inventory.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +17,9 @@ export class InventoryApiService {
   constructor(
     private http: HttpClient,
     private inventoryService: InventoryService,
-    // private socketParcelService: SocketParcelService,
-    private logService: LogService // private socketLogService: SocketLogService
+    private socketInventoryService: SocketInventoryService,
+    private logService: LogService,
+    private socketLogService: SocketLogService
   ) {}
 
   getAllInventorys(): Observable<Inventory[]> {
@@ -59,9 +62,9 @@ export class InventoryApiService {
   createInventory(payload: FormData): Observable<InventoryResponse> {
     return this.http.post<InventoryResponse>(this.apiUrl, payload).pipe(
       tap((res) => this.inventoryService.createInventory(res.inventory)),
-      // tap((res) => this.socketParcelService.createParcel(res.parcel)),
-      tap((res) => this.logService.createLog(res.log))
-      // tap((res) => this.socketLogService.createLog(res.log))
+      tap((res) => this.socketInventoryService.createInventory(res.inventory)),
+      tap((res) => this.logService.createLog(res.log)),
+      tap((res) => this.socketLogService.createLog(res.log))
     );
   }
 
@@ -73,9 +76,11 @@ export class InventoryApiService {
       .put<InventoryResponse>(`${this.apiUrl}/${id}`, payload)
       .pipe(
         tap((res) => this.inventoryService.updateInventory(id, res.inventory)),
-        // tap((res) => this.socketParcelService.updateParcel(id, res.parcel)),
-        tap((res) => this.logService.createLog(res.log))
-        // tap((res) => this.socketLogService.createLog(res.log))
+        tap((res) =>
+          this.socketInventoryService.updateInventory(id, res.inventory)
+        ),
+        tap((res) => this.logService.createLog(res.log)),
+        tap((res) => this.socketLogService.createLog(res.log))
       );
   }
 

@@ -1,5 +1,5 @@
 import { Message } from '../../shared/models/response.model';
-import { Inventory } from './inventory.model';
+import { Inventory, InventoryTable } from './inventory.model';
 
 export interface InventoryCheck {
   id: number;
@@ -13,4 +13,8 @@ export interface InCheckPayload {
 
 export interface InCheckResponse extends Message {
   inventoryCheck: InventoryCheck;
+}
+
+export interface InventoryCheckTable extends InventoryTable {
+  year: number;
 }

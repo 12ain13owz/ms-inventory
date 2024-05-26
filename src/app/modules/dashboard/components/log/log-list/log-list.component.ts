@@ -90,6 +90,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource<LogTable>([]);
   isFirstLoading: boolean = false;
+  isSort: boolean = false;
 
   ngOnInit(): void {
     this.initDataSource();
@@ -127,6 +128,7 @@ export class LogListComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true;
+    this.isSort = false;
     this.operation$
       .pipe(
         tap(() => this.onFilter()),
@@ -137,6 +139,7 @@ export class LogListComponent implements OnInit, OnDestroy {
 
   onSearchAll(): void {
     this.isLoading = true;
+    this.isSort = false;
     this.logApiService
       .getAllLogs()
       .pipe(
@@ -252,11 +255,16 @@ export class LogListComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      this.dataSource.sort.sort({
-        id: 'createdAt',
-        start: 'desc',
-        disableClear: true,
-      });
+
+      if (!this.isSort) {
+        this.dataSource.sort.sort({
+          id: 'createdAt',
+          start: 'desc',
+          disableClear: true,
+        });
+
+        this.isSort = true;
+      }
     });
   }
 }

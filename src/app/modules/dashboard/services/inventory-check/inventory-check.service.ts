@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { InventoryCheck } from '../../models/inventory-check';
+import {
+  InventoryCheck,
+  InventoryCheckTable,
+} from '../../models/inventory-check';
 import { Observable, Subject } from 'rxjs';
-import { InventoryTable } from '../../models/inventory.model';
 
 @Injectable({
   providedIn: 'root',
@@ -25,13 +27,18 @@ export class InventoryCheckService {
     return this.inChecks.slice();
   }
 
-  getInChecksTable(): InventoryTable[] {
+  getInCheckByInventoryId(id: number): InventoryCheck {
+    return this.inChecks.find((inCheck) => inCheck.Inventory.id === id);
+  }
+
+  getInChecksTable(): InventoryCheckTable[] {
     return this.inChecks
       .map((check, i) => ({
         id: check.Inventory.id,
         no: i + 1,
         image: check.Inventory.image,
         code: check.Inventory.code,
+        year: check.year + 543,
         category: check.Inventory.Category.name,
         status: check.Inventory.Status.name,
         usage: check.Inventory.Usage.name,

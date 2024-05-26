@@ -39,12 +39,14 @@ export class InventoryCheckApiService {
   }
 
   createInCheck(inCheck: InCheckPayload): Observable<InCheckResponse> {
-    return this.http
-      .post<InCheckResponse>(this.apiUrl, inCheck)
-      .pipe(
-        tap((res) =>
-          this.inventoryCheckService.createInCheck(res.inventoryCheck)
-        )
-      );
+    return this.http.post<InCheckResponse>(this.apiUrl, inCheck).pipe(
+      tap((res) => {
+        const inCheck = this.inventoryCheckService.getInCheckByInventoryId(
+          res.inventoryCheck.Inventory.id
+        );
+        if (!inCheck)
+          this.inventoryCheckService.createInCheck(res.inventoryCheck);
+      })
+    );
   }
 }

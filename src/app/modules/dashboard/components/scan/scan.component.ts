@@ -37,6 +37,7 @@ import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 import { InventoryScan } from '../../models/inventory.model';
 import { InventoryCheckApiService } from '../../services/inventory-check/inventory-check-api.service';
 import { InCheckResponse } from '../../models/inventory-check';
+import { InventoryService } from '../../services/inventory/inventory.service';
 
 enum Tap {
   Search,
@@ -57,6 +58,7 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private scanService = inject(ScanService);
   private scanApiService = inject(ScanApiService);
+  private inventoryService = inject(InventoryService);
   private inventoryCheckApiService = inject(InventoryCheckApiService);
   private toastService = inject(ToastNotificationService);
   private validationService = inject(ValidationService);
@@ -199,8 +201,14 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onGetInventoryByCode(code: string): void {
-    const inventory = this.scanService.getInventoryByCode(code);
-    if (inventory) return this.code.setValue('');
+    const inventoryScan = this.scanService.getInventoryByCode(code);
+    if (inventoryScan) return this.code.setValue('');
+
+    const inventory = this.inventoryService.getInventoryByCode(code);
+    if (inventory) {
+      this.scanService.createInventory(inventory);
+      return this.code.setValue('');
+    }
 
     this.isLoading = true;
     this.scanApiService

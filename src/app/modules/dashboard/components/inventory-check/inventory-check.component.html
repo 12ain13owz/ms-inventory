@@ -15,6 +15,15 @@
           }
         </mat-autocomplete>
 
+        <button
+          *ngIf="selectYear.value"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="selectYear.setValue('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
         <button type="submit" matSuffix mat-icon-button>
           <mat-icon matSuffix fontIcon="search"></mat-icon>
         </button>
@@ -143,6 +152,13 @@
           >รหัสครุภัณฑ์</mat-header-cell
         >
         <mat-cell *matCellDef="let element"> {{ element.code }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="year">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ปี</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.year }}
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="category">

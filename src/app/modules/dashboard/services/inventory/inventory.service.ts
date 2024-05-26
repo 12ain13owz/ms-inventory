@@ -65,6 +65,10 @@ export class InventoryService {
     return this.inventories.find((inventory) => inventory.id === id);
   }
 
+  getInventoryByCode(code: string): Inventory {
+    return this.inventories.find((inventory) => inventory.code === code);
+  }
+
   getInventoryByCodeTable(code: string): InventoryTable[] {
     return this.inventories
       .filter((inventory) => inventory.code === code)
