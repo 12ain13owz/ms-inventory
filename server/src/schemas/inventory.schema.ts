@@ -8,19 +8,19 @@ const description = 'ไม่พบรายการครุภัณฑ์';
 const unit = 'ไม่พบหน่วยนับ';
 const value = 'ไม่พบมูลค่าครุภัณฑ์';
 const receivedDate = 'ไม่พบวันที่ได้รับมา';
-const fundingSource = 'ไม่พบแหล่งเงิน';
-const location = 'ไม่พบสถานที่ตั้ง/จัดเก็บ';
-const categoryId = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
-const categoryName = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
-const statusId = 'ไม่พบสถานะครุภัณฑ์';
-const statusName = 'ไม่พบสถานะครุภัณฑ์';
-const usageId = 'ไม่พบการใช้งานครุภัณฑ์';
-const usageName = 'ไม่พบการใช้งานครุภัณฑ์';
+const categoryId = 'ไม่พบประเภท';
+const categoryName = 'ไม่พบประเภท';
+const statusId = 'ไม่พบสถานะ';
+const statusName = 'ไม่พบสถานะ';
+const fundId = 'ไม่พบแหล่งเงิน';
+const fundName = 'ไม่พบแหล่งเงิน';
+const locationId = 'ไม่พบห้อง';
+const locationName = 'ไม่พบห้อง';
 
 const dateStart = 'ไม่พบวันที่เริ่มต้นในการค้นหา';
 const dateEnd = 'ไม่พบวันที่สิ้นสุดในการค้นหา';
 const track = 'ไม่พบเลข Track';
-const imageEdit = 'ไม่พบข้อมูล การยืนยันแก้ไขรูปภาพ';
+const imageEdit = 'ไม่พบการยืนยันแก้ไขรูปภาพ';
 
 export const inventorySchema = {
   findByDate: object({
@@ -66,12 +66,6 @@ export const inventorySchema = {
       unit: string({ required_error: unit }).min(1, { message: unit }),
       value: string({ required_error: value }),
       receivedDate: string({ required_error: receivedDate }),
-      fundingSource: string({ required_error: fundingSource }).min(1, {
-        message: fundingSource,
-      }),
-      location: string({ required_error: location }).min(1, {
-        message: location,
-      }),
       remark: string().optional().nullable(),
       image: string().optional().nullable(),
       categoryId: string({ required_error: categoryId }).min(1, {
@@ -86,11 +80,17 @@ export const inventorySchema = {
       statusName: string({ required_error: statusName }).min(1, {
         message: statusName,
       }),
-      usageId: string({ required_error: usageId }).min(1, {
-        message: usageId,
+      fundId: string({ required_error: fundId }).min(1, {
+        message: fundId,
       }),
-      usageName: string({ required_error: usageName }).min(1, {
-        message: usageName,
+      fundName: string({ required_error: fundName }).min(1, {
+        message: fundName,
+      }),
+      locationId: string({ required_error: locationId }).min(1, {
+        message: fundId,
+      }),
+      locationName: string({ required_error: locationName }).min(1, {
+        message: fundName,
       }),
     }),
   }),
@@ -112,12 +112,6 @@ export const inventorySchema = {
       unit: string({ required_error: unit }).min(1, { message: unit }),
       value: string({ required_error: value }),
       receivedDate: string({ required_error: receivedDate }),
-      fundingSource: string({ required_error: fundingSource }).min(1, {
-        message: fundingSource,
-      }),
-      location: string({ required_error: location }).min(1, {
-        message: location,
-      }),
       remark: string().optional().nullable(),
       image: string().optional().nullable(),
       imageEdit: string({ required_error: imageEdit }).min(1, {
@@ -135,11 +129,17 @@ export const inventorySchema = {
       statusName: string({ required_error: statusName }).min(1, {
         message: statusName,
       }),
-      usageId: string({ required_error: usageId }).min(1, {
-        message: usageId,
+      fundId: string({ required_error: fundId }).min(1, {
+        message: fundId,
       }),
-      usageName: string({ required_error: usageName }).min(1, {
-        message: usageName,
+      fundName: string({ required_error: fundName }).min(1, {
+        message: fundName,
+      }),
+      locationId: string({ required_error: locationId }).min(1, {
+        message: fundId,
+      }),
+      locationName: string({ required_error: locationName }).min(1, {
+        message: fundName,
       }),
     }),
   }),

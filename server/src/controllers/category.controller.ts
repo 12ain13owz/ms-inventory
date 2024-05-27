@@ -31,7 +31,7 @@ export async function createCategoryController(
   try {
     const name = removeWhitespace(req.body.name);
     const category = await categoryService.findByName(name);
-    if (category) throw newError(400, `ชื่อคุณสมบัติของครุภัณฑ์ ${name} ซ้ำ'`);
+    if (category) throw newError(400, `ประเภท ${name} ซ้ำ'`);
 
     const payload = new Category({
       name: name,
@@ -42,7 +42,7 @@ export async function createCategoryController(
     const newCagegory = omit(result.toJSON(), privateFields);
 
     res.json({
-      message: `เพิ่มประเภทพัสดุ ${name} สำเร็จ`,
+      message: `เพิ่มประเภท ${name} สำเร็จ`,
       category: newCagegory,
     });
   } catch (error) {
@@ -64,12 +64,12 @@ export async function updateCategoryController(
   try {
     const id = +req.params.id;
     const cateogory = await categoryService.findById(id);
-    if (!cateogory) throw newError(400, 'ไม่พบคุณสมบัติของครุภัณฑ์');
+    if (!cateogory) throw newError(400, 'ไม่พบประเภท');
 
     const name = removeWhitespace(req.body.name);
     const existingCategory = await categoryService.findByName(name);
     if (existingCategory && existingCategory.id !== id)
-      throw newError(400, `ชื่อคุณสมบัติของครุภัณฑ์ ${name} ซ้ำ'`);
+      throw newError(400, `ประเภท ${name} ซ้ำ'`);
 
     const payload: Partial<Category> = {
       name: name,
@@ -77,10 +77,10 @@ export async function updateCategoryController(
       remark: req.body.remark || '',
     };
     const [result] = await categoryService.update(id, payload);
-    if (!result) throw newError(400, `แก้ไขคุณสมบัติ ${name} ไม่สำเร็จ`);
+    if (!result) throw newError(400, `แก้ไขประเภท ${name} ไม่สำเร็จ`);
 
     res.json({
-      message: `แก้ไขคุณสมบัติ ${name} สำเร็จ`,
+      message: `แก้ไขประเภท ${name} สำเร็จ`,
       category: payload,
     });
   } catch (error) {
@@ -98,13 +98,13 @@ export async function deleteCategoryController(
   try {
     const id = +req.params.id;
     const category = await categoryService.findById(id);
-    if (!category) throw newError(400, 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)');
+    if (!category) throw newError(400, 'ไม่พบประเภท');
 
     const name = category.name;
     const result = await categoryService.delete(id);
-    if (!result) throw newError(400, `ลบคุณสมบัติ ${name} ไม่สำเร็จ`);
+    if (!result) throw newError(400, `ลบประเภท ${name} ไม่สำเร็จ`);
 
-    res.json({ message: `ลบคุณสมบัติ ${name} สำเร็จ` });
+    res.json({ message: `ลบประเภท ${name} สำเร็จ` });
   } catch (error) {
     next(error);
   }

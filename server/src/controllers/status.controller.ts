@@ -31,7 +31,7 @@ export async function createStatusController(
   try {
     const name = removeWhitespace(req.body.name);
     const status = await statusService.findByName(name);
-    if (status) throw newError(400, `สถานะครุภัณฑ์ ${name} ซ้ำ`);
+    if (status) throw newError(400, `สถานะ ${name} ซ้ำ`);
 
     const payload = new Status({
       name: name,
@@ -42,7 +42,7 @@ export async function createStatusController(
     const newStatus = omit(result.toJSON(), privateFields);
 
     res.json({
-      message: `เพิ่มสถานะครุภัณฑ์ ${name} สำเร็จ`,
+      message: `เพิ่มสถานะ ${name} สำเร็จ`,
       status: newStatus,
     });
   } catch (error) {
@@ -63,11 +63,13 @@ export async function updateStatusController(
 
   try {
     const id = +req.params.id;
+    const status = await statusService.findById(id);
+    if (!status) throw newError(400, 'ไม่พบสถานะ');
+
     const name = removeWhitespace(req.body.name);
     const existingStatus = await statusService.findByName(name);
-
     if (existingStatus && existingStatus.id !== id)
-      throw newError(400, `ชื่อสถานะครุภัณฑ์ ${name} ซ้ำ`);
+      throw newError(400, `ชื่อสถานะ ${name} ซ้ำ`);
 
     const payload: Partial<Status> = {
       name: name,
@@ -75,10 +77,10 @@ export async function updateStatusController(
       remark: req.body.remark || '',
     };
     const [result] = await statusService.update(id, payload);
-    if (!result) throw newError(400, `แก้ไขสถานะครุภัณฑ์ ${name} ไม่สำเร็จ`);
+    if (!result) throw newError(400, `แก้ไขสถานะ ${name} ไม่สำเร็จ`);
 
     res.json({
-      message: `แก้ไขสถานะครุภัณฑ์ ${name} สำเร็จ`,
+      message: `แก้ไขสถานะ ${name} สำเร็จ`,
       status: payload,
     });
   } catch (error) {
@@ -96,13 +98,13 @@ export async function deleteStatusController(
   try {
     const id = +req.params.id;
     const status = await statusService.findById(id);
-    if (!status) throw newError(400, 'ไม่พบสถานะครุภัณฑ์');
+    if (!status) throw newError(400, 'ไม่พบสถานะ');
 
     const name = status.name;
     const result = await statusService.delete(id);
-    if (!result) throw newError(400, `ลบสถานะครุภัณฑ์ ${name} ไม่สำเร็จ`);
+    if (!result) throw newError(400, `ลบสถานะ ${name} ไม่สำเร็จ`);
 
-    res.json({ message: `ลบสถานะครุภัณฑ์ ${name} สำเร็จ` });
+    res.json({ message: `ลบสถานะ ${name} สำเร็จ` });
   } catch (error) {
     next(error);
   }

@@ -147,15 +147,16 @@ export async function createInventoryController(
       unit: req.body.unit,
       value: value,
       receivedDate: receivedDate,
-      fundingSource: req.body.fundingSource,
-      location: req.body.location,
       remark: req.body.remark || '',
       image: image || '',
       userId: res.locals.userId!,
       categoryId: +req.body.categoryId,
       statusId: +req.body.statusId,
-      usageId: +req.body.usageId,
+      fundId: +req.body.fundId,
+      locationId: +req.body.locationId,
     });
+
+    console.log(payloadInventory.dataValues);
 
     const propertyLog: PropertyLog = {
       track: track,
@@ -167,7 +168,8 @@ export async function createInventoryController(
       lastname: res.locals.user!.lastname,
       categoryName: req.body.categoryName,
       statusName: req.body.statusName,
-      usageName: req.body.usageName,
+      fundName: req.body.fundName,
+      locationName: req.body.locationName,
     };
     const payloadLog = generateLog(req.body, propertyLog);
 
@@ -225,14 +227,14 @@ export async function updateInventoryController(
       unit: req.body.unit,
       value: value,
       receivedDate: receivedDate,
-      fundingSource: req.body.fundingSource,
-      location: req.body.location,
+
       remark: req.body.remark || '',
       image: image || '',
       userId: res.locals.userId!,
       categoryId: +req.body.categoryId,
       statusId: +req.body.statusId,
-      usageId: +req.body.usageId,
+      fundId: +req.body.fundId,
+      locationId: +req.body.locationId,
     };
 
     const propertyLog: PropertyLog = {
@@ -245,7 +247,8 @@ export async function updateInventoryController(
       lastname: res.locals.user!.lastname,
       categoryName: req.body.categoryName,
       statusName: req.body.statusName,
-      usageName: req.body.usageName,
+      fundName: req.body.fundName,
+      locationName: req.body.locationName,
     };
     const payloadLog = generateLog(req.body, propertyLog);
 
@@ -279,7 +282,7 @@ export async function deleteInventoryController(
   try {
     const id = +req.params.id;
     const inventory = await inventoryService.findById(id);
-    if (!inventory) throw newError(400, 'ไม่พบครุภัณฑ์');
+    if (!inventory) throw newError(400, 'ไม่พบ ครุภัณฑ์');
 
     const code = inventory.code;
     const result = await inventoryService.delete(id);
@@ -300,8 +303,6 @@ function generateLog(body: InventoryType['create'], property: PropertyLog) {
     unit: body.unit,
     value: property.value,
     receivedDate: property.receivedDate,
-    fundingSource: body.fundingSource,
-    location: body.location,
     remark: body.remark || '',
     image: property.image || '',
     isCreated: property.isCreated,
@@ -309,6 +310,7 @@ function generateLog(body: InventoryType['create'], property: PropertyLog) {
     lastname: property.lastname,
     categoryName: property.categoryName,
     statusName: property.statusName,
-    usageName: property.usageName,
+    fundName: property.fundName,
+    locationName: property.locationName,
   });
 }

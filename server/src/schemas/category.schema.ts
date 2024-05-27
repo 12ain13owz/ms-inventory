@@ -2,8 +2,8 @@ import { TypeOf, boolean, object, string } from 'zod';
 
 const regexNumber = new RegExp(/^[0-9]\d*$/);
 
-const id = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
-const name = 'ไม่พบคุณสมบัติ (ยี่ห้อ/รุ่น)';
+const id = 'ไม่พบประเภท';
+const name = 'ไม่พบประเภท';
 const active = 'ไม่พบสถานะการใช้งาน';
 
 export const categorySehema = {

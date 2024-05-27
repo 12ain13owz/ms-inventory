@@ -2,8 +2,8 @@ import { TypeOf, boolean, number, object, string } from 'zod';
 
 const regexNumber = new RegExp(/^[0-9]\d*$/);
 
-const id = 'ไม่พบข้อมูลที่ต้องการตรวจสอบ';
-const year = 'ไม่พบปีที่ต้องการค้นหา';
+const id = 'ไม่พบ ข้อมูลที่ต้องการตรวจสอบ';
+const year = 'ไม่พบ ปีที่ต้องการค้นหา';
 const inventoryId = 'ไม่พบครุภัณฑ์';
 
 export const inventoryCheckSehema = {

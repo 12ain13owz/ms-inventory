@@ -2,7 +2,7 @@ import { TypeOf, object, string } from 'zod';
 
 const email = 'กรุณาระบุ E-mail';
 const emailInvalid = 'รูปแบบ E-mail ไม่ถูกต้อง';
-const password = 'กรุณาระบุรหัสผ่าน';
+const password = 'กรุณาระบุ รหัสผ่าน';
 const recaptcha = 'ไม่พบ recaptcha';
 
 export const authSehema = {

@@ -5,12 +5,12 @@ const regexPassword = new RegExp(
 );
 const email = 'ไม่พบข้อมูล E-mail';
 const emailInvalid = 'รูปแบบ E-mail ไม่ถูกต้อง';
-const firstname = 'ไม่พบข้อมูลชื่อผู้ใช้งาน';
-const lastname = 'ไม่พบข้อมูลนามสกุลผู้ใช้งาน';
+const firstname = 'ไม่พบชื่อผู้ใช้งาน';
+const lastname = 'ไม่พบนามสกุลผู้ใช้งาน';
 
-const oldPassword = 'ไม่พบข้อมูลรหัสผ่านเก่า';
-const newPassword = 'ไม่พบข้อมูลรหัสผ่านใหม่';
-const confirmPassword = 'ไม่พบข้อมูลยืนยันรหัสผ่าน';
+const oldPassword = 'ไม่พบรหัสผ่านเก่า';
+const newPassword = 'ไม่พบรหัสผ่านใหม่';
+const confirmPassword = 'ไม่พบยืนยันรหัสผ่าน';
 const regexInValid =
   'รูปแบบรหัสผ่านไม่ถูกต้อง! ต้องมีตัวเล็ก, ตัวใหญ่, ตัวเลข, อักษรพิเศษ และไม่ต่ำกว่า 8 ตัวอักษร';
 const comparePassword = 'รหัสผ่านไม่ตรงกัน';

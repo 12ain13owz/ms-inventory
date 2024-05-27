@@ -5,7 +5,8 @@ import { Inventory } from '../models/inventory.model';
 import { User } from '../models/user.model';
 import { Category } from '../models/category.model';
 import { Status } from '../models/status.model';
-import { Usage } from '../models/usage.model';
+import { Fund } from '../models/fund.model';
+import { Location } from '../models/location.model';
 
 export const inventoryCheckService = {
   findAll(): Promise<InventoryCheck[]> {
@@ -47,13 +48,14 @@ function queryOptions() {
       {
         model: Inventory,
         attributes: {
-          exclude: ['userId', 'categoryId', 'statusId', 'usageId'],
+          exclude: ['userId', 'categoryId', 'statusId', 'fundId', 'locationId'],
         },
         include: [
           { model: User, attributes: ['firstname', 'lastname'] },
           { model: Category, attributes: ['name'] },
           { model: Status, attributes: ['name'] },
-          { model: Usage, attributes: ['name'] },
+          { model: Fund, attributes: ['name'] },
+          { model: Location, attributes: ['name'] },
         ],
       },
     ],

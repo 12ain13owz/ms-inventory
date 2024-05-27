@@ -19,8 +19,6 @@ export class Log extends Model<
   unit: string;
   value: number;
   receivedDate: Date;
-  fundingSource: string;
-  location: string;
   remark: string;
   image: string;
   isCreated: boolean;
@@ -28,7 +26,8 @@ export class Log extends Model<
   lastname: string;
   categoryName: string;
   statusName: string;
-  usageName: string;
+  fundName: string;
+  locationName: string;
   createdAt: CreationOptional<Date>;
 }
 
@@ -42,8 +41,6 @@ export default Log.init(
     unit: { type: DataTypes.STRING, allowNull: false },
     value: { type: DataTypes.FLOAT, allowNull: false },
     receivedDate: { type: DataTypes.DATEONLY, allowNull: false },
-    fundingSource: { type: DataTypes.STRING, allowNull: false },
-    location: { type: DataTypes.STRING, allowNull: false },
     remark: { type: DataTypes.TEXT },
     image: { type: DataTypes.TEXT },
     isCreated: { type: DataTypes.BOOLEAN, allowNull: false },
@@ -51,10 +48,11 @@ export default Log.init(
     lastname: { type: DataTypes.STRING, allowNull: false },
     categoryName: { type: DataTypes.STRING, allowNull: false },
     statusName: { type: DataTypes.STRING, allowNull: false },
-    usageName: { type: DataTypes.STRING, allowNull: false },
+    fundName: { type: DataTypes.STRING, allowNull: false },
+    locationName: { type: DataTypes.STRING, allowNull: false },
     createdAt: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
       defaultValue: DataTypes.NOW,
     },
   },
@@ -80,5 +78,6 @@ export interface PropertyLog {
   lastname: string;
   categoryName: string;
   statusName: string;
-  usageName: string;
+  fundName: string;
+  locationName: string;
 }

@@ -3,7 +3,8 @@ import InventoryModel, { Inventory } from '../models/inventory.model';
 import { User } from '../models/user.model';
 import { Category } from '../models/category.model';
 import { Status } from '../models/status.model';
-import { Usage } from '../models/usage.model';
+import { Fund } from '../models/fund.model';
+import { Location } from '../models/location.model';
 
 export const inventoryService = {
   findAll(): Promise<Inventory[]> {
@@ -62,13 +63,14 @@ export const inventoryService = {
 function queryOptions() {
   return {
     attributes: {
-      exclude: ['userId', 'categoryId', 'statusId', 'usageId'],
+      exclude: ['userId', 'categoryId', 'statusId', 'fundId', 'locationId'],
     },
     include: [
       { model: User, attributes: ['firstname', 'lastname'] },
       { model: Category, attributes: ['id', 'name'] },
       { model: Status, attributes: ['id', 'name'] },
-      { model: Usage, attributes: ['id', 'name'] },
+      { model: Fund, attributes: ['id', 'name'] },
+      { model: Location, attributes: ['id', 'name'] },
     ],
   };
 }
