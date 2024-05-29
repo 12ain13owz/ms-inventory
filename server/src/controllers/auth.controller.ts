@@ -47,7 +47,7 @@ export async function loginController(
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       secure: isProduction,
     });
 
@@ -116,7 +116,7 @@ export async function refreshTokenController(
       path: '/',
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
       secure: isProduction,
     });
     res.json({ accessToken: newAccessToken });
