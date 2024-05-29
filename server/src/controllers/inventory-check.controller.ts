@@ -76,8 +76,6 @@ export async function createInventoryCheckController(
     if (!inventory) throw newError(404, 'ไม่พบครุภัณฑ์');
 
     if (inventory.statusId !== inventoryStatusId) {
-      console.log(inventory.statusId, inventoryStatusId);
-
       const payloadInventory: Partial<Inventory> = {
         statusId: inventoryStatusId,
       };
@@ -106,6 +104,7 @@ export async function createInventoryCheckController(
         payloadInventory,
         t
       );
+
       if (!result)
         throw newError(400, `แก้ไขครุภัณฑ์ ${inventory.code} ไม่สำเร็จ`);
 
@@ -121,10 +120,10 @@ export async function createInventoryCheckController(
     }
 
     const payload = new InventoryCheck({ inventoryId, year: currentYear });
-    const result = await inventoryCheckService.create(payload);
-    const resInvenroryCheck = await inventoryCheckService.findById(result.id);
-
+    const result = await inventoryCheckService.create(payload, t);
     await t.commit();
+
+    const resInvenroryCheck = await inventoryCheckService.findById(result.id);
     res.json({
       message: 'ตรวจสอบครุภัณฑ์ สำเร็จ',
       item: resInvenroryCheck,

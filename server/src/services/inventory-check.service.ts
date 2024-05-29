@@ -7,6 +7,7 @@ import { Category } from '../models/category.model';
 import { Status } from '../models/status.model';
 import { Fund } from '../models/fund.model';
 import { Location } from '../models/location.model';
+import { Transaction } from 'sequelize';
 
 export const inventoryCheckService = {
   findAll(): Promise<InventoryCheck[]> {
@@ -34,8 +35,13 @@ export const inventoryCheckService = {
     });
   },
 
-  create(inventoryCheck: InventoryCheck): Promise<InventoryCheck> {
-    return InventoryCheckModel.create(inventoryCheck.toJSON());
+  create(
+    inventoryCheck: InventoryCheck,
+    t: Transaction
+  ): Promise<InventoryCheck> {
+    return InventoryCheckModel.create(inventoryCheck.toJSON(), {
+      transaction: t,
+    });
   },
 };
 
