@@ -153,10 +153,14 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource() {
-    const currentYear = new Date().getFullYear();
-    for (let i = currentYear; i >= 1896; i--) {
-      this.years.push((i + 543).toString());
+    const startYear = 2567;
+    const currentYear = new Date().getFullYear() + 543;
+    const futureYear = currentYear + 20;
+
+    for (let i = startYear; i <= futureYear; i++) {
+      this.years.push(i.toString());
     }
+
     this.filteredOptions = this.selectYear.valueChanges.pipe(
       startWith(''),
       map((value) => this._filter(value || ''))

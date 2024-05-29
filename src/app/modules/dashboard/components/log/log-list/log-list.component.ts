@@ -29,7 +29,6 @@ import { ValidationService } from '../../../../shared/services/validation.servic
 import { LogApiService } from '../../../services/log/log-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
-import { FundService } from '../../../services/fund/fund.service';
 
 enum Tap {
   Date,
@@ -60,7 +59,7 @@ export class LogListComponent implements OnInit, OnDestroy {
 
   title: string = 'รายการ ประว้ติครุภัณฑ์';
   filterLog: FilterLog = {
-    inventories: ['เพิ่มพัสดุ', 'แก้ไขพัสดุ'],
+    inventories: ['เพิ่มครุภัณฑ์', 'แก้ไขครุภัณฑ์'],
     categories: this.categoryService.getActiveNames(),
     statuses: this.statusService.getActiveNames(),
   };
@@ -178,8 +177,8 @@ export class LogListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newParcel = this.inventory.value.includes('เพิ่มพัสดุ');
-    const editParcel = this.inventory.value.includes('แก้ไขพัสดุ');
+    const newParcel = this.inventory.value.includes('เพิ่มครุภัณฑ์');
+    const editParcel = this.inventory.value.includes('แก้ไขครุภัณฑ์');
 
     this.dataSource.data = logFilter
       .filter(

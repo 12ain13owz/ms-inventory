@@ -108,6 +108,7 @@ export async function createInventoryCheckController(
       );
       if (!result)
         throw newError(400, `แก้ไขครุภัณฑ์ ${inventory.code} ไม่สำเร็จ`);
+
       await logService.create(payloadLog, t);
     }
 

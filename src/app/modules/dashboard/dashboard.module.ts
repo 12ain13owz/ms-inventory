@@ -36,6 +36,7 @@ import { InventoryCheckComponent } from './components/inventory-check/inventory-
 import { SearchPipe } from './pipes/search.pipe';
 import { LocationComponent } from './components/location/location.component';
 import { LocationEditComponent } from './components/location/location-edit/location-edit.component';
+import { ScanEditComponent } from './components/scan/scan-edit/scan-edit.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { LocationEditComponent } from './components/location/location-edit/locat
     SearchPipe,
     LocationComponent,
     LocationEditComponent,
+    ScanEditComponent,
   ],
   imports: [
     DashboardRoutingModule,

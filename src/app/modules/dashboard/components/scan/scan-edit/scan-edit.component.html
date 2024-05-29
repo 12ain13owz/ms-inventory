@@ -1,0 +1,84 @@
+<div class="d-flex justify-between align-center">
+  <h2 mat-dialog-title>{{ title }}</h2>
+  <button
+    mat-icon-button
+    class="btn-close"
+    tabindex="-1"
+    (click)="dialogRef.close()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-divider></mat-divider>
+  <mat-dialog-content class="form-container">
+    <div class="box">
+      <div class="blurred-img">
+        <img
+          class="size"
+          [defaultImage]="'assets/images/no-image.jpg'"
+          [lazyLoad]="imageUrl + inventory.image"
+        />
+      </div>
+
+      <mat-list>
+        <mat-list-item>
+          <span matListItemTitle>รหัสครุภัณฑ์</span>
+          <span matListItemLine>{{ inventory.code }}</span>
+        </mat-list-item>
+
+        <mat-list-item>
+          <span matListItemTitle>รายการครุภัณฑ์</span>
+        </mat-list-item>
+        <div
+          class="view-textarea"
+          [innerHTML]="inventory.description | dispTextarea"
+        ></div>
+      </mat-list>
+
+      <div class="d-flex flex-column">
+        <mat-card-title>สถานะ</mat-card-title>
+
+        <mat-chip-listbox formControlName="status">
+          @for (status of statuses; track $index) {
+          <mat-chip-option
+            [value]="status.id"
+            (selectionChange)="onSelectChip('status')"
+          >
+            {{ status.name }}
+          </mat-chip-option>
+          }
+        </mat-chip-listbox>
+
+        <mat-error style="color: #f44336">
+          <app-error-field
+            [control]="status"
+            [errorMessage]="validationField.status"
+          ></app-error-field>
+        </mat-error>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="isLoading"
+    >
+      ตกลง
+    </button>
+    <button
+      type="button"
+      mat-button
+      color="warn"
+      (click)="onReset()"
+      [disabled]="isLoading"
+    >
+      รีเซ็ต
+    </button>
+  </mat-dialog-actions>
+</form>
+@if (isLoading) {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

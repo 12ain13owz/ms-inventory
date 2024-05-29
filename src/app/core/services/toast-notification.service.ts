@@ -25,7 +25,8 @@ export class ToastNotificationService {
     this.toastr.info(message, title, this.toastOptions);
   }
 
-  success(title: string, message: string) {
+  success(title: string, message: string, timeOut?: number) {
+    if (timeOut) this.toastOptions.timeOut = 1000;
     this.toastr.success(message, title, this.toastOptions);
   }
 

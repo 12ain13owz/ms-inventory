@@ -29,7 +29,7 @@ export class SocketInventoryService {
     this.socketIO.emit('inventory:create', inventory);
   }
 
-  update(id: number, inventory: Inventory): void {
+  update(id: number, inventory: Partial<Inventory>): void {
     if (!this.socketIO) return;
     this.socketIO.emit('inventory:update', id, inventory);
   }

@@ -2,52 +2,34 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  OnDestroy,
   OnInit,
   ViewChild,
   inject,
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
 import {
   Observable,
-  Subscription,
-  catchError,
-  concatMap,
   defer,
   filter,
   finalize,
-  from,
   interval,
   of,
-  reduce,
   take,
-  tap,
   timer,
 } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import { ScanService } from '../../services/scan/scan.service';
 import { ScanApiService } from '../../services/scan/scan-api.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
-import { ValidationService } from '../../../shared/services/validation.service';
 import { Platform } from '@angular/cdk/platform';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { Html5QrcodeResult, Html5QrcodeScanner } from 'html5-qrcode';
 import { Html5QrcodeError } from 'html5-qrcode/esm/core';
-import { InventoryScan } from '../../models/inventory.model';
-import { InventoryCheckApiService } from '../../services/inventory-check/inventory-check-api.service';
 import { InventoryService } from '../../services/inventory/inventory.service';
-import {
-  SweetAlertComponent,
-  SweetAlertInterface,
-} from '../../../shared/components/sweet-alert/sweet-alert.component';
-import { ApiResponse } from '../../../shared/models/response.model';
-import { InventoryCheck } from '../../models/inventory-check';
+import { Inventory } from '../../models/inventory.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ScanEditComponent } from './scan-edit/scan-edit.component';
 
 enum Tap {
-  Search,
   Camera,
+  Search,
 }
 
 enum ScanType {
@@ -59,33 +41,25 @@ enum ScanType {
   templateUrl: './scan.component.html',
   styleUrl: './scan.component.scss',
 })
-export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
-  private subscription = new Subscription();
+export class ScanComponent implements OnInit, AfterViewInit {
   private formBuilder = inject(FormBuilder);
-  private scanService = inject(ScanService);
   private scanApiService = inject(ScanApiService);
   private inventoryService = inject(InventoryService);
-  private inventoryCheckApiService = inject(InventoryCheckApiService);
   private toastService = inject(ToastNotificationService);
-  private validationService = inject(ValidationService);
+  private dialog = inject(MatDialog);
+  private operation$: Observable<Inventory>;
+
   platform = inject(Platform);
 
   @ViewChild('searchInput', { static: true })
   searchInput: ElementRef<HTMLInputElement>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
   @ViewChild('qrBox') qrBox: ElementRef<HTMLDivElement>;
   qrRender: HTMLElement;
-  @ViewChild(SweetAlertComponent) sweetAlert: SweetAlertInterface;
 
   title: string = 'รายการ ตรวจสอบครุภัณฑ์';
-  sweetAlertTitle: string = 'ยืนยันตรวจสอบครุภัณฑ์';
   selectedTap = new FormControl(Tap.Search);
-  imageUrl: string = environment.imageUrl;
   form = this.initForm();
 
-  displayedColumns: string[] = ['image', 'code', 'description', 'action'];
-  dataSource = new MatTableDataSource<InventoryScan>([]);
   isLoading: boolean = false;
   isScanning: boolean = false;
   isScanType: number = 0;
@@ -93,69 +67,19 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
   html5QrcodeScanner: Html5QrcodeScanner = null;
 
   ngOnInit(): void {
-    this.dataSource.data = this.scanService.getAll();
-    this.subscription = this.scanService
-      .onListener()
-      .subscribe((inventoryScan) => (this.dataSource.data = inventoryScan));
+    defer(() =>
+      this.qrBox
+        ? of(null)
+        : interval(300).pipe(
+            filter(() => !!this.qrBox),
+            take(1)
+          )
+    ).subscribe(() => this.onStartCamera());
   }
 
   ngAfterViewInit(): void {
     if (!this.platform.ANDROID && !this.platform.IOS)
       this.searchInput.nativeElement.focus();
-
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  onConfirm(): void {
-    this.sweetAlert.alert(this.sweetAlertTitle);
-  }
-
-  onSubmit(confirm: boolean): void {
-    if (!confirm) return;
-
-    const inventories = this.scanService.getAll();
-    if (this.validationService.isEmpty(inventories)) return;
-
-    const operations$: Observable<ApiResponse<InventoryCheck>>[] = [];
-    this.isLoading = true;
-
-    for (const inventory of inventories) {
-      operations$.push(this.inventoryCheckApiService.create(inventory.id));
-    }
-
-    from(operations$)
-      .pipe(
-        concatMap((call) => call.pipe(catchError(() => of(null)))),
-        reduce(
-          (acc, res) => {
-            if (res) {
-              this.scanService.delete(res.item.Inventory.id);
-              acc.message.push(res.message);
-            }
-            return acc;
-          },
-          { message: [] }
-        ),
-        finalize(() => (this.isLoading = false))
-      )
-      .subscribe(({ message }) => {
-        if (message.length === operations$.length)
-          this.toastService.success('Success', message[0]);
-        else
-          this.toastService.warning('Warning', 'ตรวจสอบครุภัณฑ์ สำเร็จบางส่วน');
-      });
-  }
-
-  onSearchInventory(): void {
-    if (!this.search.value) return;
-
-    const code = this.search.value.replace(/^\s+|\s+$/gm, '');
-    this.onGetInventory(code);
   }
 
   onTapChange(indexTap: number): void {
@@ -173,6 +97,13 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
             take(1)
           )
     ).subscribe(() => this.onStartCamera());
+  }
+
+  onSearchInventory(): void {
+    if (!this.search.value) return;
+
+    const code = this.search.value.replace(/^\s+|\s+$/gm, '');
+    this.determineType(code);
   }
 
   onStartCamera(): void {
@@ -213,75 +144,62 @@ export class ScanComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isScanning == true) return;
 
     this.isScanning = true;
-    this.onGetInventory(data);
-
-    timer(1500).subscribe(() => (this.isScanning = false));
+    this.determineType(data);
   }
 
-  onGetInventory(data: string): void {
+  determineType(data: string): void {
     if (data.length === 7) {
-      this.onGetByTrack(data.toUpperCase());
+      this.onGetInventory('track', data.toUpperCase());
+      return;
+    }
+    this.onGetInventory('code', data);
+  }
+
+  onGetInventory(type: 'code' | 'track', data: string): void {
+    let inventory: Inventory;
+
+    if (type === 'code') inventory = this.inventoryService.getByCode(data);
+    else inventory = this.inventoryService.getByTrack(data);
+
+    if (inventory) {
+      this.search.setValue('');
+      this.dialogOpen(inventory);
       return;
     }
 
-    this.onGetByCode(data);
-  }
-
-  onGetByCode(code: string): void {
-    const inventoryScan = this.scanService.getByCode(code);
-    if (inventoryScan) return this.search.setValue('');
-
-    const inventory = this.inventoryService.getByCode(code);
-    if (inventory) {
-      this.scanService.create(inventory);
-      return this.search.setValue('');
-    }
-
     this.isLoading = true;
-    this.scanApiService
-      .getByCode(code)
+    this.operation$ =
+      type === 'code'
+        ? this.scanApiService.getByCode(data)
+        : this.scanApiService.getByTrack(data);
+
+    this.operation$
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res) {
-          this.scanService.create(res);
           this.search.setValue('');
-        } else this.toastService.warning('', `${code} ไม่พบข้อมูลครุภัณฑ์`);
+          this.dialogOpen(res);
+          return;
+        }
+
+        timer(1500).subscribe(() => (this.isScanning = false));
+        this.toastService.warning('', `${data} ไม่พบข้อมูลครุภัณฑ์`);
       });
   }
 
-  onGetByTrack(track: string) {
-    const inventoryScan = this.scanService.getByTrack(track);
-    if (inventoryScan) return this.search.setValue('');
-
-    const inventory = this.inventoryService.getByTrack(track);
-    if (inventory) {
-      this.scanService.create(inventory);
-      return this.search.setValue('');
-    }
-
-    this.isLoading = true;
-    this.scanApiService
-      .getByTrack(track)
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe((res) => {
-        if (res) {
-          this.scanService.create(res);
-          this.search.setValue('');
-        } else this.toastService.warning('', `${track} ไม่พบข้อมูลครุภัณฑ์`);
-      });
-  }
-
-  onDeleteInventory(id: number): void {
-    this.scanService.delete(id);
+  dialogOpen(inventory: Inventory): void {
+    this.dialog
+      .open(ScanEditComponent, {
+        data: inventory,
+        width: '500px',
+      })
+      .afterClosed()
+      .subscribe(() => timer(500).subscribe(() => (this.isScanning = false)));
   }
 
   clearSearchInput(): void {
     this.search.setValue('');
     this.searchInput.nativeElement.focus();
-  }
-
-  onResetInventory(): void {
-    this.scanService.reset();
   }
 
   get search(): FormControl<string> {

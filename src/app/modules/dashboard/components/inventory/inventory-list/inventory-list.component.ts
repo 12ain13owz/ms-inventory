@@ -23,7 +23,6 @@ import { InventoryService } from '../../../services/inventory/inventory.service'
 import { InventoryApiService } from '../../../services/inventory/inventory-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
-import { FundService } from '../../../services/fund/fund.service';
 import { ValidationService } from '../../../../shared/services/validation.service';
 import { PrintService } from '../../../services/print/print.service';
 import {

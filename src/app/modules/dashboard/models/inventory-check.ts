@@ -9,3 +9,9 @@ export interface InventoryCheck {
 export interface InventoryCheckTable extends InventoryTable {
   year: number;
 }
+
+export interface InventoryCheckPayload {
+  inventoryId: number;
+  inventoryStatusId: number;
+  inventoryStatusName: string;
+}

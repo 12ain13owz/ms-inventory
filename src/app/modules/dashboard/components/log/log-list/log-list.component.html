@@ -87,7 +87,7 @@
   <mat-card-content>
     <form class="filter-box" [formGroup]="form">
       <mat-form-field>
-        <mat-label>คุณสมบัติ</mat-label>
+        <mat-label>ประเภท</mat-label>
         <mat-select formControlName="category" multiple>
           <mat-select-trigger>
             {{category.value?.[0] || ''}}
@@ -127,7 +127,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>การใช้งาน</mat-label>
+        <mat-label>รายละเอียด</mat-label>
         <mat-select formControlName="inventory" multiple>
           <mat-select-trigger>
             {{inventory.value?.[0] || ''}}
@@ -180,7 +180,7 @@
 
       <ng-container matColumnDef="category">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >คุณสมบัติ</mat-header-cell
+          >ประเภท</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
           {{ element.categoryName }}

@@ -91,7 +91,7 @@ export class InventoryService {
     this.inventories$.next(this.inventories.slice());
   }
 
-  update(id: number, item: Inventory): void {
+  update(id: number, item: Partial<Inventory>): void {
     const index = this.inventories.findIndex(
       (inventory) => inventory.id === id
     );

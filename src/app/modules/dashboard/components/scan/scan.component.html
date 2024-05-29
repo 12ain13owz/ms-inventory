@@ -1,6 +1,17 @@
 <mat-card class="mat-elevation-z8 mb-20">
   <mat-tab-group dynamicHeight (selectedIndexChange)="onTapChange($event)">
-    <mat-tab label="เครื่องสแกน">
+    <mat-tab label="กล้อง">
+      <mat-card-content>
+        <mat-radio-group [(ngModel)]="isScanType" (change)="onStartCamera()">
+          <mat-radio-button [value]="0">QR code</mat-radio-button>
+          <mat-radio-button [value]="1">Barcode</mat-radio-button>
+        </mat-radio-group>
+
+        <div [ngClass]="{ blur: isScanning }" #qrBox></div>
+      </mat-card-content>
+    </mat-tab>
+
+    <mat-tab label="ค้นหา">
       <mat-card-content>
         <form
           class="search-box"
@@ -32,17 +43,6 @@
         </form>
       </mat-card-content>
     </mat-tab>
-
-    <mat-tab label="กล้อง">
-      <mat-card-content>
-        <mat-radio-group [(ngModel)]="isScanType" (change)="onStartCamera()">
-          <mat-radio-button [value]="0">QR code</mat-radio-button>
-          <mat-radio-button [value]="1">Barcode</mat-radio-button>
-        </mat-radio-group>
-
-        <div [ngClass]="{ blur: isScanning }" #qrBox></div>
-      </mat-card-content>
-    </mat-tab>
   </mat-tab-group>
 
   <mat-card-footer>
@@ -51,76 +51,3 @@
     }
   </mat-card-footer>
 </mat-card>
-
-<mat-card class="mat-elevation-z8 mb-20">
-  <mat-card-header class="mb-16 d-flex justify-between align-center">
-    <mat-card-title>{{ title }}</mat-card-title>
-    <button type="button" mat-button color="warn" (click)="onResetInventory()">
-      รีเซ็ต
-    </button>
-  </mat-card-header>
-
-  <mat-card-content>
-    <mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="image">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <a
-            [routerLink]="['../inventory/view', element.id]"
-            class="blurred-img"
-          >
-            <img
-              [defaultImage]="'assets/images/no-image.jpg'"
-              [lazyLoad]="imageUrl + element.image"
-            />
-          </a>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="code">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >รหัสครุภัณฑ์</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element"> {{ element.code }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="description">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >รายการครุภัณฑ์</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element">
-          {{ element.description | cutDetail }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="action">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let element" class="p-0">
-          <button mat-icon-button (click)="onDeleteInventory(element.id)">
-            <mat-icon color="warn">close</mat-icon>
-          </button>
-        </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </mat-table>
-
-    <mat-paginator
-      [pageSize]="50"
-      [pageSizeOptions]="[10, 25, 50, 100]"
-      showFirstLastButtons
-    ></mat-paginator>
-  </mat-card-content>
-</mat-card>
-
-<div class="d-flex justify-center">
-  <button class="btn-submit" (click)="onConfirm()" [disabled]="isLoading">
-    ตรวจสอบครุภัณฑ์
-  </button>
-</div>
-
-<app-sweet-alert
-  [icon]="'question'"
-  (confirm)="onSubmit($event)"
-></app-sweet-alert>

@@ -1,4 +1,3 @@
-import { Message } from '../../shared/models/response.model';
 import { Log } from './log.model';
 
 export interface Inventory {
@@ -44,6 +43,7 @@ export interface InventoryScan {
   image: string;
   code: string;
   track: string;
+  Status: { id: number; name: string };
   description: string;
 }
 
