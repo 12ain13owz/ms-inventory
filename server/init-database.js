@@ -38,83 +38,6 @@ const User = sequelize.define(
   }
 );
 
-const Inventory = sequelize.define(
-  "Inventory",
-  {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    track: { type: DataTypes.STRING(7), allowNull: false, unique: true },
-    code: { type: DataTypes.STRING, allowNull: false, unique: true },
-    oldCode: { type: DataTypes.STRING },
-    description: { type: DataTypes.TEXT, allowNull: false },
-    unit: { type: DataTypes.STRING, allowNull: false },
-    value: { type: DataTypes.FLOAT, allowNull: false },
-    receivedDate: { type: DataTypes.DATEONLY, allowNull: false },
-    remark: { type: DataTypes.TEXT },
-    image: { type: DataTypes.TEXT },
-    createdAt: { type: DataTypes.DATE, allowNull: false },
-    updatedAt: { type: DataTypes.DATE, allowNull: false },
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: User, key: "id" },
-    },
-    categoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: Category, key: "id" },
-    },
-    statusId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: Status, key: "id" },
-    },
-    fundId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: Fund, key: "id" },
-    },
-    locationId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: Location, key: "id" },
-    },
-  },
-  {
-    indexes: [
-      { fields: ["track"] },
-      { fields: ["code"] },
-      { fields: ["createdAt"] },
-    ],
-    sequelize,
-    modelName: "Inventory",
-    timestamps: true,
-  }
-);
-
-const InventoryCheck = sequelize.define(
-  "InventoryCheck",
-  {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    year: { type: DataTypes.INTEGER, allowNull: false },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    inventoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: Inventory, key: "id" },
-    },
-  },
-  {
-    indexes: [{ fields: ["createdAt"] }, { fields: ["inventoryId"] }],
-    sequelize,
-    modelName: "InventoryCheck",
-    timestamps: false,
-  }
-);
-
 const Log = sequelize.define(
   "Log",
   {
@@ -237,6 +160,83 @@ const Location = sequelize.define(
   }
 );
 
+const Inventory = sequelize.define(
+  "Inventory",
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    track: { type: DataTypes.STRING(7), allowNull: false, unique: true },
+    code: { type: DataTypes.STRING, allowNull: false, unique: true },
+    oldCode: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT, allowNull: false },
+    unit: { type: DataTypes.STRING, allowNull: false },
+    value: { type: DataTypes.FLOAT, allowNull: false },
+    receivedDate: { type: DataTypes.DATEONLY, allowNull: false },
+    remark: { type: DataTypes.TEXT },
+    image: { type: DataTypes.TEXT },
+    createdAt: { type: DataTypes.DATE, allowNull: false },
+    updatedAt: { type: DataTypes.DATE, allowNull: false },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: User, key: "id" },
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Category, key: "id" },
+    },
+    statusId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Status, key: "id" },
+    },
+    fundId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Fund, key: "id" },
+    },
+    locationId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Location, key: "id" },
+    },
+  },
+  {
+    indexes: [
+      { fields: ["track"] },
+      { fields: ["code"] },
+      { fields: ["createdAt"] },
+    ],
+    sequelize,
+    modelName: "Inventory",
+    timestamps: true,
+  }
+);
+
+const InventoryCheck = sequelize.define(
+  "InventoryCheck",
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    year: { type: DataTypes.INTEGER, allowNull: false },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    inventoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: { model: Inventory, key: "id" },
+    },
+  },
+  {
+    indexes: [{ fields: ["createdAt"] }, { fields: ["inventoryId"] }],
+    sequelize,
+    modelName: "InventoryCheck",
+    timestamps: false,
+  }
+);
+
 Inventory.belongsTo(User, { foreignKey: "userId" });
 Inventory.belongsTo(Category, { foreignKey: "categoryId" });
 Inventory.belongsTo(Status, { foreignKey: "statusId" });
@@ -292,15 +292,15 @@ async function generateAdmin() {
 
 async function generateCategory() {
   const categories = [
-    { name: "CPU", remark: "" },
-    { name: "Main board", remark: "" },
-    { name: "Display Card", remark: "" },
-    { name: "RAM", remark: "" },
-    { name: "Hard disk", remark: "" },
-    { name: "Power Supply", remark: "" },
-    { name: "Case", remark: "" },
-    { name: "Keyboard", remark: "" },
-    { name: "Mouse", remark: "" },
+    { name: "CPU", active: true, remark: "" },
+    { name: "Main board", active: true, remark: "" },
+    { name: "Display Card", active: true, remark: "" },
+    { name: "RAM", active: true, remark: "" },
+    { name: "Hard disk", active: true, remark: "" },
+    { name: "Power Supply", active: true, remark: "" },
+    { name: "Case", active: true, remark: "" },
+    { name: "Keyboard", active: true, remark: "" },
+    { name: "Mouse", active: true, remark: "" },
   ];
 
   for (const category of categories) {
@@ -313,10 +313,10 @@ async function generateCategory() {
 
 async function generateStatus() {
   const statuses = [
-    { name: "ปกติ", remark: "" },
-    { name: "ชำรุด", remark: "" },
-    { name: "เสื่อมคุณภาพ", remark: "" },
-    { name: "สูญหาย", remark: "" },
+    { name: "ปกติ", active: true, remark: "" },
+    { name: "ชำรุด", active: true, remark: "" },
+    { name: "เสื่อมคุณภาพ", active: true, remark: "" },
+    { name: "สูญหาย", active: true, remark: "" },
   ];
 
   for (const status of statuses) {
@@ -329,9 +329,9 @@ async function generateStatus() {
 
 async function generateFund() {
   const funds = [
-    { name: "งบประมาณแผ่นดิน", remark: "" },
-    { name: "งบบำรุงการศึกษา", remark: "" },
-    { name: "อื่น ๆ", remark: "" },
+    { name: "งบประมาณแผ่นดิน", active: true, remark: "" },
+    { name: "งบบำรุงการศึกษา", active: true, remark: "" },
+    { name: "อื่น ๆ", active: true, remark: "" },
   ];
 
   for (const fund of funds) {
@@ -344,14 +344,14 @@ async function generateFund() {
 
 async function generateLocation() {
   const locations = [
-    { name: "741", remark: "" },
-    { name: "742", remark: "" },
-    { name: "743", remark: "" },
-    { name: "744", remark: "" },
-    { name: "745", remark: "" },
-    { name: "746", remark: "" },
-    { name: "747", remark: "" },
-    { name: "748", remark: "" },
+    { name: "741", active: true, remark: "" },
+    { name: "742", active: true, remark: "" },
+    { name: "743", active: true, remark: "" },
+    { name: "744", active: true, remark: "" },
+    { name: "745", active: true, remark: "" },
+    { name: "746", active: true, remark: "" },
+    { name: "747", active: true, remark: "" },
+    { name: "748", active: true, remark: "" },
   ];
 
   for (const location of locations) {
@@ -375,7 +375,7 @@ async function initializeDatabase() {
     await generateAdmin();
     console.log("4. Generate admin.");
 
-    await generateCategory();
+    // await generateCategory();
     console.log("5. Generate category.");
 
     await generateStatus();
