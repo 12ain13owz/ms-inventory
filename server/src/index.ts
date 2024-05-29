@@ -19,32 +19,34 @@ import { readFileSync } from 'fs';
 
 const app = express();
 
-const httpsOptions = {
-  key: readFileSync(path.join('ssl_private.key')),
-  cert: readFileSync(path.join('ssl.crt')),
-};
-
-const corsOptions: CorsOptions = {
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-};
+let corsOptions: CorsOptions;
 let server;
 
 const node_env = config.get('node_env');
 if (node_env === 'production') {
   server = createServer(app);
-  corsOptions.origin = [
-    'https://ms-stock-it.web.app',
-    'https://ms-stock-it.fly.dev',
-  ];
+
+  corsOptions = {
+    origin: ['https://ms-stock-it.web.app'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  };
 } else {
+  const httpsOptions = {
+    key: readFileSync(path.join('ssl_private.key')),
+    cert: readFileSync(path.join('ssl.crt')),
+  };
   server = https.createServer(httpsOptions, app);
-  corsOptions.origin = [
-    'http://localhost:4200',
-    'https://localhost:4200',
-    'http://192.168.1.33:4200',
-    'https://192.168.1.33:4200',
-  ];
+  corsOptions = {
+    origin: [
+      'http://localhost:4200',
+      'https://localhost:4200',
+      'http://192.168.1.33:4200',
+      'https://192.168.1.33:4200',
+    ],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  };
 }
 
 const socketOptions = {
