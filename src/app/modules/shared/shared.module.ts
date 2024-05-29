@@ -7,14 +7,12 @@ import { LoadingDataComponent } from './components/loading-data/loading-data.com
 import { ThaiYearPipe } from './pipes/thai-year.pipe';
 import { ToArrayPipe } from './pipes/to-array.pipe';
 import { SweetAlertComponent } from './components/sweet-alert/sweet-alert.component';
-import { RefreshTokenComponent } from './components/refresh-token/refresh-token.component';
 
 @NgModule({
   declarations: [
     ErrorFieldComponent,
     SweetAlertComponent,
     LoadingDataComponent,
-    RefreshTokenComponent,
     ValidationPipe,
     ThaiYearPipe,
     ToArrayPipe,
@@ -24,7 +22,6 @@ import { RefreshTokenComponent } from './components/refresh-token/refresh-token.
     ErrorFieldComponent,
     LoadingDataComponent,
     SweetAlertComponent,
-    RefreshTokenComponent,
     ThaiYearPipe,
     ToArrayPipe,
   ],
