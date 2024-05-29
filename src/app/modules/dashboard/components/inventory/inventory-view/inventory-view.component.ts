@@ -37,6 +37,13 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
   id: number = +this.route.snapshot.params['id'];
   inventory: Inventory = this.inventoryService.getById(this.id);
 
+  constructor() {
+    if (!this.inventory) {
+      const navigation = this.router.getCurrentNavigation();
+      this.inventory = navigation?.extras?.state['inventory'] as Inventory;
+    }
+  }
+
   ngOnInit(): void {
     if (!this.inventory) {
       this.isLoading = true;

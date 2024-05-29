@@ -15,7 +15,11 @@ import {
 } from '../../middlewares/auth.middleware';
 const router = Router();
 
-router.get('/', [verifyToken, isUserActive], findAllUserController);
+router.get(
+  '/',
+  [verifyToken, isUserActive, isRoleAdmin],
+  findAllUserController
+);
 router.post(
   '/',
   [verifyToken, isUserActive, isRoleAdmin, validate(userSchema.create)],

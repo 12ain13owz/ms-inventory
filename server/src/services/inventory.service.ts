@@ -23,6 +23,18 @@ export const inventoryService = {
     return InventoryModel.findByPk(id, { ...queryOptions() });
   },
 
+  findByIdDetails(id: number): Promise<Inventory | null> {
+    return InventoryModel.findByPk(id, {
+      include: [
+        { model: User, attributes: ['firstname', 'lastname'] },
+        { model: Category, attributes: ['id', 'name'] },
+        { model: Status, attributes: ['id', 'name'] },
+        { model: Fund, attributes: ['id', 'name'] },
+        { model: Location, attributes: ['id', 'name'] },
+      ],
+    });
+  },
+
   findByTrack(track: string): Promise<Inventory | null> {
     return InventoryModel.findOne({ where: { track }, ...queryOptions() });
   },

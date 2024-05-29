@@ -5,6 +5,7 @@ const regexNumber = new RegExp(/^[0-9]\d*$/);
 const id = 'ไม่พบ ข้อมูลที่ต้องการตรวจสอบ';
 const year = 'ไม่พบ ปีที่ต้องการค้นหา';
 const inventoryId = 'ไม่พบครุภัณฑ์';
+const inventoryStatus = 'ไม่พบสถานะครุภัณฑ์';
 
 export const inventoryCheckSehema = {
   findByYear: object({
@@ -27,6 +28,12 @@ export const inventoryCheckSehema = {
     body: object({
       inventoryId: number({ required_error: inventoryId }).min(1, {
         message: inventoryId,
+      }),
+      inventoryStatusId: number({ required_error: inventoryStatus }).min(1, {
+        message: inventoryStatus,
+      }),
+      inventoryStatusName: string({ required_error: inventoryStatus }).min(1, {
+        message: inventoryStatus,
       }),
     }),
   }),

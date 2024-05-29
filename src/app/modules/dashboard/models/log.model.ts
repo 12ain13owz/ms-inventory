@@ -7,8 +7,6 @@ export interface Log {
   unit: string;
   value: number;
   receivedDate: string;
-  fundingSource: string;
-  location: string;
   remark: string;
   image: string;
   isCreated: boolean;
@@ -16,7 +14,8 @@ export interface Log {
   lastname: string;
   categoryName: string;
   statusName: string;
-  usageName: string;
+  fundName: string;
+  locationName: string;
   createdAt: string;
 }
 

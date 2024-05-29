@@ -20,7 +20,7 @@ export class LogViewComponent implements OnInit {
 
   imageUrl: string = environment.imageUrl;
 
-  title: string = 'รายละเอียด ประว้ติครุภัณฑ์';
+  title: string = 'รายละเอียดประว้ติครุภัณฑ์';
   isLoading: boolean = false;
   id: number = +this.route.snapshot.params['id'];
   log: Log = this.logService.getById(this.id);

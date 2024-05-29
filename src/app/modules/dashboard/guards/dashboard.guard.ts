@@ -19,10 +19,11 @@ export const dashboardGuard: CanActivateChildFn = (childRoute, state) => {
   const accessToken = tokenService.getAccessToken();
 
   if (accessToken && profile) return true;
+
+  loadingScreenService.setIsLoading(true);
   if (!accessToken || accessToken === 'undefined')
     return authService.logout().pipe(map(() => false));
 
-  loadingScreenService.setIsLoading(true);
   if (!profile)
     return profileApiService.get().pipe(
       map(() => {

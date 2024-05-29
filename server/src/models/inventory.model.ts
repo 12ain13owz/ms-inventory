@@ -35,11 +35,11 @@ export class Inventory extends Model<
   statusId: ForeignKey<Status['id']>;
   fundId: ForeignKey<Fund['id']>;
   locationId: ForeignKey<Location['id']>;
-  user: NonAttribute<User>;
-  category: NonAttribute<Category>;
-  status: NonAttribute<Status>;
-  fund: NonAttribute<Fund>;
-  location: NonAttribute<Location>;
+  User: NonAttribute<User>;
+  Category: NonAttribute<Category>;
+  Status: NonAttribute<Status>;
+  Fund: NonAttribute<Fund>;
+  Location: NonAttribute<Location>;
 }
 
 export default Inventory.init(

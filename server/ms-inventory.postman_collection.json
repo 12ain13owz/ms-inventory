@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "22570b15-7594-4037-921f-a799a6e73e2d",
-		"name": "ms-stock",
+		"name": "ms-inventory",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "4070296"
 	},
@@ -50,7 +50,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"test@t.com\",\r\n    \"firstname\": \"Dryst\",\r\n    \"lastname\": \"Admin\",\r\n    \"remark\": \"Test Remark Admin\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@test.com\",\r\n    \"firstname\": \"Admin\",\r\n    \"lastname\": \"Test\",\r\n    \"remark\": \"Test Remark Admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -83,7 +83,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"oldPassword\": \"1111111\",\r\n    \"newPassword\": \"!Qwerty123\",\r\n    \"confirmPassword\": \"!Qwerty123\"\r\n}",
+							"raw": "{\r\n    \"oldPassword\": \"!Qwer1234\",\r\n    \"newPassword\": \"!Qwer123\",\r\n    \"confirmPassword\": \"!Qwer123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,12 +91,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}profile/password",
+							"raw": "{{host}}profile/change-password",
 							"host": [
 								"{{host}}profile"
 							],
 							"path": [
-								"password"
+								"change-password"
 							]
 						}
 					},
@@ -127,7 +127,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@test.com\",\r\n    \"password\": \"!Qwer1234\",\r\n    \"recaptcha\": \"\"\r\n}",
+							"raw": "{\r\n    \"email\": \"user@test.com\",\r\n    \"password\": \"!Qwer1234\",\r\n    \"recaptcha\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -156,7 +156,8 @@
 									"var jsonData = JSON.parse(responseBody)\r",
 									"pm.collectionVariables.set(\"accessToken\", jsonData.accessToken)"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -171,7 +172,7 @@
 								}
 							]
 						},
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "{{host}}auth/refresh",
@@ -259,7 +260,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Memboard99\",\r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
+							"raw": "{\r\n    \"name\": \"โน้ตบุ้ค\",\r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -292,7 +293,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{    \r\n    \"name\": \"ram\",\r\n    \"active\": true,\r\n    \"remark\": \"Test Remark 1a\"\r\n}",
+							"raw": "{    \r\n    \"name\": \"จอ\",\r\n    \"active\": true,\r\n    \"remark\": \"Test Remark 1a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -300,12 +301,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}category/11",
+							"raw": "{{host}}category/1",
 							"host": [
 								"{{host}}category"
 							],
 							"path": [
-								"11"
+								"1"
 							]
 						}
 					},
@@ -327,12 +328,12 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}category/5",
+							"raw": "{{host}}category/1",
 							"host": [
 								"{{host}}category"
 							],
 							"path": [
-								"5"
+								"1"
 							]
 						}
 					},
@@ -384,7 +385,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"t 8estqq\",   \r\n    \"active\": true,\r\n    \"remark\": \"asdasd\"\r\n}",
+							"raw": "{\r\n    \"name\": \"สูญหาย\",   \r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -417,7 +418,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"เสื่อมคุณภาพ 2\",\r\n    \r\n    \"active\": true,\r\n    \"remark\": \"Test Remark\"\r\n}",
+							"raw": "{\r\n    \"name\": \"สูญหาย\",\r\n    \"active\": true,\r\n    \"remark\": \"Test Remark\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -425,19 +426,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}status/0",
+							"raw": "{{host}}status/4",
 							"host": [
 								"{{host}}status"
 							],
 							"path": [
-								"0"
+								"4"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Category",
+					"name": "Delete Status",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -458,6 +459,256 @@
 							],
 							"path": [
 								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fund",
+			"item": [
+				{
+					"name": "Get Funds",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}fund",
+							"host": [
+								"{{host}}fund"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Fund",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"อื่น ๆ\",   \r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}fund",
+							"host": [
+								"{{host}}fund"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Fund",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"อื่น ๆ\",\r\n    \"active\": true,\r\n    \"remark\": \"Test Remark\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}fund/3",
+							"host": [
+								"{{host}}fund"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Fund",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}fund/3",
+							"host": [
+								"{{host}}fund"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "Get Locations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}location",
+							"host": [
+								"{{host}}location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"748\",   \r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}location",
+							"host": [
+								"{{host}}location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"อื่น ๆ\",\r\n    \"active\": true,\r\n    \"remark\": \"Test Remark\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}location/3",
+							"host": [
+								"{{host}}location"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}location/3",
+							"host": [
+								"{{host}}location"
+							],
+							"path": [
+								"3"
 							]
 						}
 					},
@@ -509,7 +760,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"test@t10.com\",\r\n    \"password\": \"!Qwerty123\",\r\n    \"confirmPassword\": \"!Qwerty123\",\r\n    \"firstname\": \"เจตริน\",\r\n    \"lastname\": \"พุทใจดี\",\r\n    \"role\": \"admin\",\r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
+							"raw": "{\r\n    \"email\": \"touchfn@gmail.com\",\r\n    \"password\": \"!Qwerty123\",\r\n    \"confirmPassword\": \"!Qwerty123\",\r\n    \"firstname\": \"Phiaboon\",\r\n    \"lastname\": \"Withanthamrong\",\r\n    \"role\": \"admin\",\r\n    \"active\": true,\r\n    \"remark\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -542,7 +793,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"test@t5.com\",\r\n    \"firstname\": \"โจ\",\r\n    \"lastname\": \"ฮาร์ท\",\r\n    \"role\": \"admin\",\r\n    \"active\": true,\r\n    \"remark\": \"test user test@t5.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"user@test.com\",\r\n    \"firstname\": \"โจ\",\r\n    \"lastname\": \"ฮาร์ท\",\r\n    \"role\": \"user\",\r\n    \"active\": true,\r\n    \"remark\": \"test user test@t5.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -550,49 +801,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}user/3",
+							"raw": "{{host}}user/2",
 							"host": [
 								"{{host}}user"
 							],
 							"path": [
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Change password",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"oldPassword\": \"!Qwerty1234\",\r\n    \"newPassword\": \"!Qwerty123\",\r\n    \"confirmPassword\": \"!Qwerty123\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}user/password/3",
-							"host": [
-								"{{host}}user"
-							],
-							"path": [
-								"password",
-								"3"
+								"2"
 							]
 						}
 					},
@@ -623,12 +837,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}user/forgotpassword",
+							"raw": "{{host}}user/forgot-password",
 							"host": [
 								"{{host}}user"
 							],
 							"path": [
-								"forgotpassword"
+								"forgot-password"
 							]
 						}
 					},
@@ -651,7 +865,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passwordResetCode\": \"c768ef4b\",\r\n    \"newPassword\": \"!Qwer1234\",\r\n    \"confirmPassword\": \"!Qwer1234\"\r\n}",
+							"raw": "{\r\n    \"passwordResetCode\": \"6216f953\",\r\n    \"newPassword\": \"!Qwer1234\",\r\n    \"confirmPassword\": \"!Qwer1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -659,13 +873,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}user/resetpassword/1",
+							"raw": "{{host}}user/reset-password/3",
 							"host": [
 								"{{host}}user"
 							],
 							"path": [
-								"resetpassword",
-								"1"
+								"reset-password",
+								"3"
 							]
 						}
 					},
@@ -674,10 +888,10 @@
 			]
 		},
 		{
-			"name": "Parcel",
+			"name": "Inventory",
 			"item": [
 				{
-					"name": "Get Parcels",
+					"name": "Get Inventories",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -692,16 +906,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel",
+							"raw": "{{host}}inventory",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Parcels Init Data",
+					"name": "Get Inventories Init",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -716,9 +930,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel/init",
+							"raw": "{{host}}inventory/init",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
 								"init"
@@ -728,7 +942,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Parcels By Date",
+					"name": "Get inventories By Date",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -743,21 +957,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel/date/2024-04-1/2024-04-04",
+							"raw": "{{host}}inventory/date/2024-05-1/2024-5-31",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
 								"date",
-								"2024-04-1",
-								"2024-04-04"
+								"2024-05-1",
+								"2024-5-31"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Parcel By Track",
+					"name": "Get Inventory By Track",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -772,20 +986,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel/track/MSBSRU-00016",
+							"raw": "{{host}}inventory/track/BB00002",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
 								"track",
-								"MSBSRU-00016"
+								"BB00002"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Parcel By Id",
+					"name": "Get Inventory By Id",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -800,20 +1014,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel/id/6",
+							"raw": "{{host}}inventory/id/5",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
 								"id",
-								"6"
+								"5"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get Parcel By Code",
+					"name": "Get Inventory By Code",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -828,20 +1042,20 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel/code/ms-1451",
+							"raw": "{{host}}inventory/code/63-21-090207-215-00040-0035",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
 								"code",
-								"ms-1451"
+								"63-21-090207-215-00040-0035"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create Parcel",
+					"name": "Create Inventory",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -873,7 +1087,7 @@
 							"formdata": [
 								{
 									"key": "code",
-									"value": "1-2567-0001",
+									"value": "63-21-090207-215-00040-0036",
 									"type": "text"
 								},
 								{
@@ -882,18 +1096,23 @@
 									"type": "text"
 								},
 								{
+									"key": "description",
+									"value": "เครื่องคอมพิวเตอร์ตั้งโต๊ะ Lenovo",
+									"type": "text"
+								},
+								{
+									"key": "unit",
+									"value": "เครื่อง",
+									"type": "text"
+								},
+								{
+									"key": "value",
+									"value": "16,959.5",
+									"type": "text"
+								},
+								{
 									"key": "receivedDate",
 									"value": "{{receivedDate}}",
-									"type": "text"
-								},
-								{
-									"key": "detail",
-									"value": "MSI Z790",
-									"type": "text"
-								},
-								{
-									"key": "quantity",
-									"value": "50",
 									"type": "text"
 								},
 								{
@@ -904,41 +1123,61 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": "postman-cloud:///1eef1a03-7e5c-4310-973d-ef120cb987a3"
+									"src": "postman-cloud:///1ef199f7-be95-4b40-8fce-83a6e4c9bdaf"
 								},
 								{
 									"key": "categoryId",
-									"value": "1",
+									"value": "3",
 									"type": "text"
 								},
 								{
 									"key": "categoryName",
-									"value": "CPU",
+									"value": "โน้ตบุ้ค",
 									"type": "text"
 								},
 								{
 									"key": "statusId",
-									"value": "2",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "statusName",
-									"value": "ชำรุด",
+									"value": "ปกติ",
+									"type": "text"
+								},
+								{
+									"key": "fundId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "fundName",
+									"value": "งบประมาณแผ่นดิน",
+									"type": "text"
+								},
+								{
+									"key": "locationId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "locationName",
+									"value": "741",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{host}}parcel",
+							"raw": "{{host}}inventory",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Update Parcel",
+					"name": "Update Inventory",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -970,22 +1209,32 @@
 							"formdata": [
 								{
 									"key": "code",
-									"value": "MS-50002",
+									"value": "63-21-090207-215-00040-0036",
 									"type": "text"
 								},
 								{
 									"key": "oldCode",
-									"value": "",
+									"value": "5556",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "เครื่องคอมพิวเตอร์ตั้งโต๊ะ Lenovo",
+									"type": "text"
+								},
+								{
+									"key": "unit",
+									"value": "เครื่อง",
+									"type": "text"
+								},
+								{
+									"key": "value",
+									"value": "16,959.5",
 									"type": "text"
 								},
 								{
 									"key": "receivedDate",
 									"value": "{{receivedDate}}",
-									"type": "text"
-								},
-								{
-									"key": "detail",
-									"value": "Intel I3",
 									"type": "text"
 								},
 								{
@@ -996,7 +1245,7 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": []
+									"src": "postman-cloud:///1ef199f7-be95-4b40-8fce-83a6e4c9bdaf"
 								},
 								{
 									"key": "imageEdit",
@@ -1010,7 +1259,7 @@
 								},
 								{
 									"key": "categoryName",
-									"value": "CPU",
+									"value": "จอ",
 									"type": "text"
 								},
 								{
@@ -1022,134 +1271,43 @@
 									"key": "statusName",
 									"value": "ปกติ",
 									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}parcel/6",
-							"host": [
-								"{{host}}parcel"
-							],
-							"path": [
-								"6"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Increment Quantity Parcel",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+								},
 								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{    \r\n    \"stock\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}parcel/increment/10",
-							"host": [
-								"{{host}}parcel"
-							],
-							"path": [
-								"increment",
-								"10"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Decrement Quantity Parcel",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"key": "fundId",
+									"value": "1",
+									"type": "text"
+								},
 								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{    \r\n    \"stock\": 7\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}parcel/decrement/14",
-							"host": [
-								"{{host}}parcel"
-							],
-							"path": [
-								"decrement",
-								"14"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Print",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"key": "fundName",
+									"value": "งบประมาณแผ่นดิน",
+									"type": "text"
+								},
 								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
+									"key": "locationId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "locationName",
+									"value": "741",
+									"type": "text"
 								}
 							]
 						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"printCount\": 1,\r\n    \"detailLog\": \"ปริ้นบาร์โค้ด\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{host}}parcel/print/14",
+							"raw": "{{host}}inventory/7",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
-								"print",
-								"14"
+								"7"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete Parcel",
+					"name": "Delete Inventory",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1164,12 +1322,143 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{host}}parcel/1",
+							"raw": "{{host}}inventory/1",
 							"host": [
-								"{{host}}parcel"
+								"{{host}}inventory"
 							],
 							"path": [
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inventory Check",
+			"item": [
+				{
+					"name": "Get Inventories Check",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}inventory-check",
+							"host": [
+								"{{host}}inventory-check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inventories Check By Year",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}inventory-check/year/2024",
+							"host": [
+								"{{host}}inventory-check"
+							],
+							"path": [
+								"year",
+								"2024"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Inventories Check By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}inventory-check/id/2",
+							"host": [
+								"{{host}}inventory-check"
+							],
+							"path": [
+								"id",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Inventory Check",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment')\r",
+									"pm.environment.set('receivedDate', moment().format((\"YYYY-MM-DD\")));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inventoryId\": 1,\r\n    \"inventoryStatusId\": 1,\r\n    \"inventoryStatusName\": \"ปกติ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}inventory-check",
+							"host": [
+								"{{host}}inventory-check"
 							]
 						}
 					},
@@ -1247,14 +1536,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}log/date/2024-04-1/2024-04-30",
+							"raw": "{{host}}log/date/2024-05-1/2024-05-30",
 							"host": [
 								"{{host}}log"
 							],
 							"path": [
 								"date",
-								"2024-04-1",
-								"2024-04-30"
+								"2024-05-1",
+								"2024-05-30"
 							]
 						}
 					},
@@ -1276,13 +1565,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}log/track/MSBSRU-00016",
+							"raw": "{{host}}log/track/BB00007",
 							"host": [
 								"{{host}}log"
 							],
 							"path": [
 								"track",
-								"MSBSRU-00016"
+								"BB00007"
 							]
 						}
 					},
@@ -1304,13 +1593,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}log/code/52-21-09020821-00161-0023",
+							"raw": "{{host}}log/code/63-21-090207-215-00040-0030",
 							"host": [
 								"{{host}}log"
 							],
 							"path": [
 								"code",
-								"52-21-09020821-00161-0023"
+								"63-21-090207-215-00040-0030"
 							]
 						}
 					},
@@ -1332,12 +1621,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}log/122",
+							"raw": "{{host}}log/21",
 							"host": [
 								"{{host}}log"
 							],
 							"path": [
-								"122"
+								"21"
 							]
 						}
 					},
@@ -1369,7 +1658,7 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "http://localhost:3000/api/v1/",
+			"value": "https://localhost:3000/api/v1/",
 			"type": "string"
 		},
 		{

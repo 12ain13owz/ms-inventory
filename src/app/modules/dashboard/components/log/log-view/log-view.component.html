@@ -21,10 +21,10 @@
       </div>
 
       <mat-list>
-        <div class="m-left-0" mat-subheader>รายละเอียด ประวัติ</div>
+        <div class="m-left-0" mat-subheader>รายละเอียดประวัติ</div>
         <mat-divider></mat-divider>
         <mat-list-item>
-          <span matListItemTitle>วันที่เพิ่ม Log</span>
+          <span matListItemTitle>วันที่เพิ่มประวัติ</span>
           <span matListItemLine>{{ log.createdAt | date : "medium" }}</span>
         </mat-list-item>
 
@@ -44,7 +44,7 @@
       </mat-list>
 
       <mat-list>
-        <div style="margin-left: 0" mat-subheader>รายละเอียด ครุภัณฑ์</div>
+        <div style="margin-left: 0" mat-subheader>รายละเอียดครุภัณฑ์</div>
         <mat-divider></mat-divider>
         <mat-list-item>
           <span matListItemTitle>รหัสครุภัณฑ์</span>
@@ -65,31 +65,19 @@
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
-            <span matListItemLine>{{ log.value | number : "1.2-2" }}</span>
-          </mat-list-item>
-
-          <mat-list-item>
-            <span matListItemTitle>แหล่งเงิน</span>
-            <span matListItemLine>{{ log.unit }}</span>
-          </mat-list-item>
-        </div>
-
-        <div class="d-flex flex-row">
-          <mat-list-item>
             <span matListItemTitle>วันที่ได้มา</span>
             <span matListItemLine>{{ log.receivedDate | thaiYear }}</span>
           </mat-list-item>
 
           <mat-list-item>
-            <span matListItemTitle>สถานที่ตั้ง/จัดเก็บ</span>
-            <span matListItemLine>{{ log.location }}</span>
+            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
+            <span matListItemLine>{{ log.value | number : "1.2-2" }}</span>
           </mat-list-item>
         </div>
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>คุณสมบัติ (ยี่ห้อ/รุ่น) </span>
+            <span matListItemTitle>ประเภท</span>
             <span matListItemLine>{{ log.categoryName }}</span>
           </mat-list-item>
 
@@ -101,15 +89,21 @@
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>การใช้งาน</span>
-            <span matListItemLine>{{ log.usageName }}</span>
+            <span matListItemTitle>แหล่งเงิน</span>
+            <span matListItemLine>{{ log.fundName }}</span>
           </mat-list-item>
 
           <mat-list-item>
-            <span matListItemTitle>ใช้งานมาแล้ว</span>
-            <span matListItemLine>{{ getUseDate(log.receivedDate) }}</span>
+            <span matListItemTitle>ห้อง</span>
+            <span matListItemLine>{{ log.locationName }}</span>
           </mat-list-item>
         </div>
+
+        <mat-list-item>
+          <span matListItemTitle>ใช้งานมาแล้ว</span>
+          <span matListItemLine>{{ getUseDate(log.receivedDate) }}</span>
+        </mat-list-item>
+
         <mat-list-item>
           <span matListItemTitle>รายการครุภัณฑ์</span>
         </mat-list-item>

@@ -164,7 +164,9 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         this.toastService.success('Success', res.message);
-        this.router.navigate(['/inventory/view', this.id]);
+        this.router.navigate(['/inventory/view', this.id], {
+          state: { inventory: res.item.inventory },
+        });
       });
   }
 
