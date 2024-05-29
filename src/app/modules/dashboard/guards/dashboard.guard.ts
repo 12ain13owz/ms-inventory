@@ -15,7 +15,7 @@ export const dashboardGuard: CanActivateChildFn = (childRoute, state) => {
   const authService = inject(AuthApiService);
   const profileService = inject(ProfileService);
   const profileApiService = inject(ProfileApiService);
-  const profile = profileService.getProfile();
+  const profile = profileService.get();
   const accessToken = tokenService.getAccessToken();
 
   if (accessToken && profile) return true;
@@ -24,7 +24,7 @@ export const dashboardGuard: CanActivateChildFn = (childRoute, state) => {
 
   loadingScreenService.setIsLoading(true);
   if (!profile)
-    return profileApiService.getProfile().pipe(
+    return profileApiService.get().pipe(
       map(() => {
         loadingScreenService.setIsLoading(false);
         return true;

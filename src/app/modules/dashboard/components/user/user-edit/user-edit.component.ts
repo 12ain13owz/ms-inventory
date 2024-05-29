@@ -11,12 +11,12 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { User, UserResponse } from '../../../models/user.model';
+import { User } from '../../../models/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CategoryEditComponent } from '../../category/category-edit/category-edit.component';
 import { UserApiService } from '../../../services/user/user-api.service';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
-import { Message } from '../../../../shared/models/response.model';
+import { ApiResponse } from '../../../../shared/models/response.model';
 import { ValidationService } from '../../../../shared/services/validation.service';
 import { USER } from '../../../constants/user.constant';
 import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
@@ -36,12 +36,12 @@ export class UserEditComponent implements OnInit {
   private userApiService = inject(UserApiService);
   private validationService = inject(ValidationService);
   private toastService = inject(ToastNotificationService);
-  private operation$: Observable<Message | UserResponse>;
+  private operation$: Observable<ApiResponse<User>>;
 
   validationField = USER.validationField;
   patternPassword = USER.patternPassword;
   roleOptions: string[] = ['user', 'admin'];
-  title: string = 'เพิ่ม ผู้ใช้งาน';
+  title: string = 'เพิ่มผู้ใช้งาน';
   isEdit: boolean = false;
   isLoading: boolean = false;
   hidePassword: boolean = true;
@@ -51,7 +51,7 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไข ผู้ใข้งาน';
+      this.title = 'แก้ไขผู้ใข้งาน';
       this.isEdit = true;
 
       this.password.disable();
@@ -73,8 +73,8 @@ export class UserEditComponent implements OnInit {
     const { id, ...payload }: User = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.userApiService.updateUser(id, payload)
-      : this.userApiService.createUser(payload);
+      ? this.userApiService.update(id, payload)
+      : this.userApiService.create(payload);
 
     this.operation$
       .pipe(

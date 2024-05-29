@@ -60,7 +60,7 @@ export async function createUserController(
 
     res.json({
       message: `เพิ่มผู้ใช้งาน ${email} สำเร็จ`,
-      user: newUser,
+      item: newUser,
     });
   } catch (error) {
     next(error);
@@ -98,7 +98,7 @@ export async function updateUserController(
 
     res.json({
       message: `แก้ไขข้อมูลผู้ใช้งาน ${email} สำเร็จ`,
-      user: payload,
+      item: payload,
     });
   } catch (error) {
     next(error);

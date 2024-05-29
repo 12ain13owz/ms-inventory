@@ -14,7 +14,7 @@ export class ThemeService {
   private docTheme = this.document.documentElement.classList;
 
   constructor() {
-    this.onThemeListener().subscribe((theme) => {
+    this.onListener().subscribe((theme) => {
       if (theme) {
         this.docTheme.add(this.themeKey);
         localStorage.setItem(this.themeKey, theme.toString());
@@ -25,7 +25,7 @@ export class ThemeService {
     });
   }
 
-  onThemeListener(): Observable<boolean> {
+  onListener(): Observable<boolean> {
     return this.isDarkTheme$.asObservable();
   }
 

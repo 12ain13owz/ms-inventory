@@ -1,7 +1,7 @@
 @defer (when !isLoading) {
 <ng-container
   *ngIf="
-    categories.length <= 0 || statuses.length <= 0 || usages.length <= 0;
+    categories.length <= 0 || statuses.length <= 0 || locations.length <= 0;
     else content
   "
 >
@@ -59,6 +59,7 @@
         <mat-form-field>
           <mat-label>รหัสครุภัณฑ์</mat-label>
           <input type="text" matInput formControlName="code" #codeEl />
+          <mat-hint align="end">{{ code.value.length }}/27</mat-hint>
 
           <mat-error>
             <app-error-field
@@ -82,39 +83,6 @@
               <app-error-field
                 [control]="unit"
                 [errorMessage]="validationField.unit"
-              ></app-error-field>
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="row">
-          <mat-form-field>
-            <mat-label>มูลค่าครุภัณฑ์</mat-label>
-            <input
-              matInput
-              type="text"
-              mask="separator.2"
-              thousandSeparator=","
-              decimalMarker="."
-              formControlName="value"
-            />
-
-            <mat-error>
-              <app-error-field
-                [control]="value"
-                [errorMessage]="validationField.value"
-              ></app-error-field>
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>แหล่งเงิน</mat-label>
-            <input matInput type="text" formControlName="fundingSource" />
-
-            <mat-error>
-              <app-error-field
-                [control]="fundingSource"
-                [errorMessage]="validationField.fundingSource"
               ></app-error-field>
             </mat-error>
           </mat-form-field>
@@ -147,23 +115,30 @@
           </mat-form-field>
 
           <mat-form-field>
-            <mat-label>สถานที่ตั้ง/จัดเก็บ</mat-label>
-            <input matInput type="text" formControlName="location" />
+            <mat-label>มูลค่าครุภัณฑ์</mat-label>
+            <input
+              matInput
+              type="text"
+              mask="separator.2"
+              thousandSeparator=","
+              decimalMarker="."
+              formControlName="value"
+            />
 
             <mat-error>
               <app-error-field
-                [control]="location"
-                [errorMessage]="validationField.location"
+                [control]="value"
+                [errorMessage]="validationField.value"
               ></app-error-field>
             </mat-error>
           </mat-form-field>
         </div>
 
         <div class="d-flex flex-column">
-          <mat-card-title>คุณสมบัติ (ยี่ห้อ/รุ่น)</mat-card-title>
+          <mat-card-title>ประเภท</mat-card-title>
 
           <mat-chip-listbox formControlName="category">
-            @for (category of categories; track category) {
+            @for (category of categories; track $index) {
             <mat-chip-option
               [value]="category.id"
               (selectionChange)="onSelectChip('category')"
@@ -184,7 +159,7 @@
           <mat-card-title>สถานะ</mat-card-title>
 
           <mat-chip-listbox formControlName="status">
-            @for (status of statuses; track status) {
+            @for (status of statuses; track $index) {
             <mat-chip-option
               [value]="status.id"
               (selectionChange)="onSelectChip('status')"
@@ -203,23 +178,45 @@
         </div>
 
         <div class="d-flex flex-column">
-          <mat-card-title>การใช้งาน</mat-card-title>
+          <mat-card-title>แหล่งเงิน</mat-card-title>
 
-          <mat-chip-listbox formControlName="usage">
-            @for (usage of usages; track usage) {
+          <mat-chip-listbox formControlName="fund">
+            @for (fund of funds; track $index) {
             <mat-chip-option
-              [value]="usage.id"
-              (selectionChange)="onSelectChip('usage')"
+              [value]="fund.id"
+              (selectionChange)="onSelectChip('fund')"
             >
-              {{ usage.name }}
+              {{ fund.name }}
             </mat-chip-option>
             }
           </mat-chip-listbox>
 
           <mat-error>
             <app-error-field
-              [control]="usage"
-              [errorMessage]="validationField.usage"
+              [control]="fund"
+              [errorMessage]="validationField.fund"
+            ></app-error-field>
+          </mat-error>
+        </div>
+
+        <div class="d-flex flex-column">
+          <mat-card-title>ห้อง</mat-card-title>
+
+          <mat-chip-listbox formControlName="location">
+            @for (location of locations; track $index) {
+            <mat-chip-option
+              [value]="location.id"
+              (selectionChange)="onSelectChip('location')"
+            >
+              {{ location.name }}
+            </mat-chip-option>
+            }
+          </mat-chip-listbox>
+
+          <mat-error>
+            <app-error-field
+              [control]="location"
+              [errorMessage]="validationField.location"
             ></app-error-field>
           </mat-error>
         </div>

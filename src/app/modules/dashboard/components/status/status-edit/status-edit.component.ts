@@ -12,11 +12,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
-import { Status, StatusResponse } from '../../../models/status.model';
+import { Status } from '../../../models/status.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StatusApiService } from '../../../services/status/status-api.service';
 import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
-import { Message } from '../../../../shared/models/response.model';
+import { ApiResponse } from '../../../../shared/models/response.model';
 import { STATUS } from '../../../constants/status.constant';
 
 @Component({
@@ -33,10 +33,10 @@ export class StatusEditComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<StatusEditComponent>);
   private statusApiService = inject(StatusApiService);
   private toastService = inject(ToastNotificationService);
-  private operation$: Observable<Message | StatusResponse>;
+  private operation$: Observable<ApiResponse<Status>>;
 
   validationField = STATUS.validationField;
-  title: string = 'เพิ่ม สภานะครุภัณฑ์';
+  title: string = 'เพิ่มสถานะ';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
@@ -44,7 +44,7 @@ export class StatusEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไข สถานะครุภัณฑ์';
+      this.title = 'แก้ไขสถานะ';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }
@@ -63,8 +63,8 @@ export class StatusEditComponent implements OnInit {
     const { id, ...payload }: Status = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.statusApiService.updateStatus(id, payload)
-      : this.statusApiService.createStatus(payload);
+      ? this.statusApiService.update(id, payload)
+      : this.statusApiService.create(payload);
 
     this.operation$
       .pipe(

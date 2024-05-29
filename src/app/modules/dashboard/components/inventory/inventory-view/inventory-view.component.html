@@ -40,33 +40,21 @@
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
-            <span matListItemLine>{{
-              inventory.value | number : "1.2-2"
-            }}</span>
-          </mat-list-item>
-
-          <mat-list-item>
-            <span matListItemTitle>แหล่งเงิน</span>
-            <span matListItemLine>{{ inventory.fundingSource }}</span>
-          </mat-list-item>
-        </div>
-
-        <div class="d-flex flex-row">
-          <mat-list-item>
             <span matListItemTitle>วันที่ได้มา</span>
             <span matListItemLine>{{ inventory.receivedDate | thaiYear }}</span>
           </mat-list-item>
 
           <mat-list-item>
-            <span matListItemTitle>สถานที่ตั้ง/จัดเก็บ</span>
-            <span matListItemLine>{{ inventory.location }}</span>
+            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
+            <span matListItemLine>{{
+              inventory.value | number : "1.2-2"
+            }}</span>
           </mat-list-item>
         </div>
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>คุณสมบัติ (ยี่ห้อ/รุ่น)</span>
+            <span matListItemTitle>ประเภท</span>
             <span matListItemLine>{{ inventory.Category.name }}</span>
           </mat-list-item>
 
@@ -78,17 +66,20 @@
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>การใช้งาน</span>
-            <span matListItemLine>{{ inventory.Usage.name }}</span>
+            <span matListItemTitle>แหล่งเงิน</span>
+            <span matListItemLine>{{ inventory.Fund.name }}</span>
           </mat-list-item>
 
           <mat-list-item>
-            <span matListItemTitle>ใช้งานมาแล้ว</span>
-            <span matListItemLine>{{
-              getUseDate(inventory.receivedDate)
-            }}</span>
+            <span matListItemTitle>ห้อง</span>
+            <span matListItemLine>{{ inventory.Location.name }}</span>
           </mat-list-item>
         </div>
+
+        <mat-list-item>
+          <span matListItemTitle>ใช้งานมาแล้ว</span>
+          <span matListItemLine>{{ getUseDate(inventory.receivedDate) }}</span>
+        </mat-list-item>
 
         <mat-list-item>
           <span matListItemTitle>รายการครุภัณฑ์</span>
@@ -109,12 +100,14 @@
     </mat-card-content>
 
     <mat-card-actions class="gap-10">
-      <a
-        [routerLink]="['../../edit', inventory.id]"
+      <button
+        type="button"
         mat-raised-button
         color="primary"
-        >แก้ไข</a
+        (click)="onEdit()"
       >
+        แก้ไข
+      </button>
       <button
         type="button"
         mat-raised-button

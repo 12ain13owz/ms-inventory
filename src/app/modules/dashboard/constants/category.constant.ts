@@ -1,11 +1,6 @@
 export const CATEGORY = {
   validationField: {
-    name: {
-      required: 'กรุณาระบุ ชื่อ',
-    },
-
-    active: {
-      required: 'กรุณาระบุ สถานะการใช้งาน',
-    },
+    name: { required: 'กรุณาระบุ ประเภท' },
+    active: { required: 'กรุณาระบุ สถานะการใช้งาน' },
   },
 };

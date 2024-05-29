@@ -11,36 +11,36 @@ export class LogService {
 
   constructor() {}
 
-  onLogsListener(): Observable<Log[]> {
+  onListener(): Observable<Log[]> {
     return this.logs$.asObservable();
   }
 
-  setLogs(logs: Log[]): void {
-    this.logs = logs;
+  assign(item: Log[]): void {
+    this.logs = item;
     this.logs$.next(this.logs.slice());
   }
 
-  getLogs(): Log[] {
+  getAll(): Log[] {
     return this.logs.slice();
   }
 
-  getLogsTable(): LogTable[] {
-    return this.logs.map((log, i) => ({ no: i + 1, ...log })).slice();
+  getTableData(): LogTable[] {
+    return this.logs.map((item, i) => ({ no: i + 1, ...item })).slice();
   }
 
-  getLogsByCodeInput(code: string): LogTable[] {
+  getByCode(code: string): LogTable[] {
     return this.logs
-      .filter((log) => log.code === code)
-      .map((log, i) => ({ no: i + 1, ...log }))
+      .filter((item) => item.code === code)
+      .map((item, i) => ({ no: i + 1, ...item }))
       .slice();
   }
 
-  getLogById(id: number): Log {
+  getById(id: number): Log {
     return this.logs.find((log) => log.id === id);
   }
 
-  createLog(log: Log): void {
-    this.logs.push(log);
+  create(item: Log): void {
+    this.logs.push(item);
     this.logs$.next(this.logs.slice());
   }
 }

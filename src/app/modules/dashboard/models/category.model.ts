@@ -1,5 +1,3 @@
-import { Message } from '../../shared/models/response.model';
-
 export interface Category {
   id?: number;
   name: string;
@@ -9,8 +7,4 @@ export interface Category {
 
 export interface CategoryTable extends Category {
   no: number;
-}
-
-export interface CategoryResponse extends Message {
-  category: Category;
 }

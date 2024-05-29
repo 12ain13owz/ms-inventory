@@ -6,12 +6,16 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LoadingDataComponent } from './components/loading-data/loading-data.component';
 import { ThaiYearPipe } from './pipes/thai-year.pipe';
 import { ToArrayPipe } from './pipes/to-array.pipe';
+import { SweetAlertComponent } from './components/sweet-alert/sweet-alert.component';
+import { RefreshTokenComponent } from './components/refresh-token/refresh-token.component';
 
 @NgModule({
   declarations: [
     ErrorFieldComponent,
-    ValidationPipe,
+    SweetAlertComponent,
     LoadingDataComponent,
+    RefreshTokenComponent,
+    ValidationPipe,
     ThaiYearPipe,
     ToArrayPipe,
   ],
@@ -19,6 +23,8 @@ import { ToArrayPipe } from './pipes/to-array.pipe';
   exports: [
     ErrorFieldComponent,
     LoadingDataComponent,
+    SweetAlertComponent,
+    RefreshTokenComponent,
     ThaiYearPipe,
     ToArrayPipe,
   ],

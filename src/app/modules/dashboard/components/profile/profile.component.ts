@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.profileService
-      .onProfileListener()
+      .onListener()
       .subscribe((profile) => {
         this.profile = profile;
         this.form.patchValue(this.profile);
@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     const payload: Partial<Profile> = { ...this.form.value };
     this.isLoading = true;
-    this.ProfileApiService.updateProfile(payload)
+    this.ProfileApiService.update(payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe();
   }

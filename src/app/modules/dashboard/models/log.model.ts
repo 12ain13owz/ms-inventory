@@ -28,5 +28,4 @@ export interface FilterLog {
   inventories: string[];
   categories: string[];
   statuses: string[];
-  usages: string[];
 }

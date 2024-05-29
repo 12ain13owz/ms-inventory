@@ -23,11 +23,11 @@ import { InventoryService } from '../../../services/inventory/inventory.service'
 import { InventoryApiService } from '../../../services/inventory/inventory-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
-import { UsageService } from '../../../services/usage/usage.service';
+import { FundService } from '../../../services/fund/fund.service';
 import { ValidationService } from '../../../../shared/services/validation.service';
 import { PrintService } from '../../../services/print/print.service';
 import {
-  FilterInventory,
+  InventoryFilter,
   Inventory,
   InventoryTable,
 } from '../../../models/inventory.model';
@@ -60,8 +60,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   private inventoryService = inject(InventoryService);
   private inventoryApiService = inject(InventoryApiService);
   private categoryService = inject(CategoryService);
-  private assetStatusService = inject(StatusService);
-  private usageStatusService = inject(UsageService);
+  private statusService = inject(StatusService);
   private validationService = inject(ValidationService);
   private printService = inject(PrintService);
   private operation$: Observable<Inventory[] | Inventory>;
@@ -77,10 +76,9 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
   @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
 
-  filter: FilterInventory = {
-    categories: this.categoryService.getActiveCategoriesName(),
-    statuses: this.assetStatusService.getActiveStatusNames(),
-    usages: this.usageStatusService.getActiveUsageNames(),
+  filter: InventoryFilter = {
+    categories: this.categoryService.getActiveNames(),
+    statuses: this.statusService.getActiveNames(),
   };
   form = this.initForm();
 
@@ -103,7 +101,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     'code',
     'category',
     'status',
-    'usage',
+    'location',
     'description',
   ];
   dataSource = new MatTableDataSource<InventoryTable>([]);
@@ -134,25 +132,22 @@ export class InventoryListComponent implements OnInit, OnDestroy {
         this.dateRange.controls['end'].value,
         'yyyy-MM-dd'
       );
-      this.operation$ = this.inventoryApiService.getInventorysByDate(
-        startDate,
-        endDate
-      );
+      this.operation$ = this.inventoryApiService.getByDate(startDate, endDate);
     } else if (this.selectedTap.value === Tap.Code) {
       if (!this.code) return;
 
       const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
       if (!code) return;
 
-      const inventory = this.inventoryService.getInventoryByCodeTable(code);
+      const inventory = this.inventoryService.getTableDataWithCode(code);
       if (this.validationService.isEmpty(inventory))
-        this.operation$ = this.inventoryApiService.getInventoryByCode(code);
+        this.operation$ = this.inventoryApiService.getByCode(code);
       else {
         this.dataSource.data = inventory;
         return;
       }
 
-      this.operation$ = this.inventoryApiService.getInventoryByCode(code);
+      this.operation$ = this.inventoryApiService.getByCode(code);
     }
 
     this.isLoading = true;
@@ -169,7 +164,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.isSort = false;
     this.inventoryApiService
-      .getAllInventorys()
+      .getAll()
       .pipe(
         tap(() => this.setFilter()),
         finalize(() => (this.isLoading = false))
@@ -178,11 +173,11 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   }
 
   setFilter(): void {
-    this.form.setValue({ category: [], status: [], usage: [] });
+    this.form.setValue({ category: [], status: [] });
   }
 
   onFilter(): void {
-    const inventories = this.inventoryService.getInventoriesTable();
+    const inventories = this.inventoryService.getTableData();
     const filters = this.form.value;
 
     this.dataSource.data = Object.keys(filters)
@@ -245,7 +240,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     });
 
     const inventories = this.selection.selected
-      .filter((inventory) => !this.printService.getInventoryById(inventory.id))
+      .filter((inventory) => !this.printService.getById(inventory.id))
       .map((inventory) => ({
         id: inventory.id,
         track: inventory.track,
@@ -256,7 +251,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       }));
 
     for (const inventory of inventories) {
-      this.printService.createInventory(inventory);
+      this.printService.create(inventory);
     }
   }
 
@@ -268,23 +263,18 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     return this.form.controls['status'];
   }
 
-  get usage(): FormControl<string[]> {
-    return this.form.controls['usage'];
-  }
-
   private initForm() {
     return this.formBuilder.group({
       category: this.formBuilder.control<string[]>([]),
       status: this.formBuilder.control<string[]>([]),
-      usage: this.formBuilder.control<string[]>([]),
     });
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.inventoryService.getInventoriesTable();
+    this.dataSource.data = this.inventoryService.getTableData();
     if (this.validationService.isEmpty(this.dataSource.data)) {
       this.inventoryApiService
-        .getInitialInventorys()
+        .getInit()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
       return;
@@ -323,27 +313,21 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
   private initSubscriptions() {
     this.subscription.add(
-      this.inventoryService.onInventoriesListener().subscribe(() => {
-        this.dataSource.data = this.inventoryService.getInventoriesTable();
+      this.inventoryService.onListener().subscribe(() => {
+        this.dataSource.data = this.inventoryService.getTableData();
         this.initPaginatorAndSort();
       })
     );
 
     this.subscription.add(
-      this.categoryService.onCategoriesListener().subscribe(() => {
-        this.filter.categories = this.categoryService.getActiveCategoriesName();
+      this.categoryService.onListener().subscribe(() => {
+        this.filter.categories = this.categoryService.getActiveNames();
       })
     );
 
     this.subscription.add(
-      this.assetStatusService.onStatusesListener().subscribe(() => {
-        this.filter.statuses = this.assetStatusService.getActiveStatusNames();
-      })
-    );
-
-    this.subscription.add(
-      this.usageStatusService.onUsagesListener().subscribe(() => {
-        this.filter.usages = this.usageStatusService.getActiveUsageNames();
+      this.statusService.onListener().subscribe(() => {
+        this.filter.statuses = this.statusService.getActiveNames();
       })
     );
   }

@@ -16,7 +16,7 @@ import { PrintListComponent } from './components/print/print-list/print-list.com
 import { LogListComponent } from './components/log/log-list/log-list.component';
 import { LogViewComponent } from './components/log/log-view/log-view.component';
 import { StatusComponent } from './components/status/status.component';
-import { UsageComponent } from './components/usage/usage.component';
+import { FundComponent } from './components/fund/fund.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { InventoryListComponent } from './components/inventory/inventory-list/inventory-list.component';
 import { InventoryNewComponent } from './components/inventory/inventory-new/inventory-new.component';
@@ -24,6 +24,7 @@ import { InventoryViewComponent } from './components/inventory/inventory-view/in
 import { InventoryEditComponent } from './components/inventory/inventory-edit/inventory-edit.component';
 import { PrintProcessComponent } from './components/print/print-process/print-process.component';
 import { InventoryCheckComponent } from './components/inventory-check/inventory-check.component';
+import { LocationComponent } from './components/location/location.component';
 
 export const routes: Routes = [
   {
@@ -74,7 +75,8 @@ export const routes: Routes = [
           { path: 'user', component: UserComponent },
           { path: 'category', component: CategoryComponent },
           { path: 'status', component: StatusComponent },
-          { path: 'usage', component: UsageComponent },
+          { path: 'fund', component: FundComponent },
+          { path: 'location', component: LocationComponent },
         ],
       },
     ],

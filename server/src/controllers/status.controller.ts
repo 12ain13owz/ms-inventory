@@ -43,7 +43,7 @@ export async function createStatusController(
 
     res.json({
       message: `เพิ่มสถานะ ${name} สำเร็จ`,
-      status: newStatus,
+      item: newStatus,
     });
   } catch (error) {
     next(error);
@@ -81,7 +81,7 @@ export async function updateStatusController(
 
     res.json({
       message: `แก้ไขสถานะ ${name} สำเร็จ`,
-      status: payload,
+      item: payload,
     });
   } catch (error) {
     next(error);

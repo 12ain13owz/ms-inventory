@@ -14,19 +14,24 @@ import {
 } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
+import {
+  SweetAlertComponent,
+  SweetAlertInterface,
+} from '../../../shared/components/sweet-alert/sweet-alert.component';
 
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
-  styleUrl: './category.component.scss',
+  styleUrls: ['./category.component.scss', '../../scss/table-styles.scss'],
 })
 export class CategoryComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(SweetAlertComponent) sweetAlert: SweetAlertInterface;
 
   private subscription = new Subscription();
   private categoryService = inject(CategoryService);
@@ -35,17 +40,19 @@ export class CategoryComponent implements OnInit, OnDestroy {
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
-  title: string = 'รายการ คุณสมบัติ (ยี่ห้อ/รุ่น)';
+  title: string = 'รายชื่อประเภท';
+  sweetAlertTitle: string;
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<CategoryTable>([]);
   isFirstLoading: boolean = false;
+  id: number;
 
   ngOnInit(): void {
     this.initDataSource();
     this.subscription = this.categoryService
-      .onCategoriesListener()
+      .onListener()
       .subscribe(
-        () => (this.dataSource.data = this.categoryService.getCategoriesTable())
+        () => (this.dataSource.data = this.categoryService.getTableData())
       );
   }
 
@@ -60,18 +67,26 @@ export class CategoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  onUpdate(category: Category): void {
+  onUpdate(item: Category): void {
     this.dialog.open(CategoryEditComponent, {
-      data: category,
+      data: item,
       width: '500px',
       disableClose: true,
     });
   }
 
-  onDelete(id: number): void {
+  onConfirm(id: number, title: string): void {
+    this.id = id;
+    this.sweetAlertTitle = `ยืนยันการลบ ${title}?`;
+    this.sweetAlert.alert(this.sweetAlertTitle);
+  }
+
+  onDelete(confirm: boolean): void {
+    if (!confirm) return;
+
     this.categoryApiService
-      .deleteCategory(id)
-      .subscribe((res) => this.toastService.info('Delete', res.message));
+      .delete(this.id)
+      .subscribe((res) => this.toastService.info('Info', res.message));
   }
 
   applyFilter(event: Event): void {
@@ -80,11 +95,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.categoryService.getCategoriesTable();
+    this.dataSource.data = this.categoryService.getTableData();
 
     if (this.validationService.isEmpty(this.dataSource.data))
       this.categoryApiService
-        .getCategories()
+        .getAll()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

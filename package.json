@@ -24,6 +24,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@sweetalert2/ngx-sweetalert2": "^12.3.0",
     "@sweetalert2/theme-dark": "^5.0.16",
+    "@sweetalert2/theme-minimal": "^5.0.16",
     "@todorus/ngx-dropzone": "^17.4.0",
     "angularx-qrcode": "^17.0.0",
     "html5-qrcode": "^2.3.8",

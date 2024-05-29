@@ -37,7 +37,7 @@ export class PasswordComponent implements OnInit {
   profile: Profile;
 
   ngOnInit(): void {
-    this.profile = this.profileService.getProfile();
+    this.profile = this.profileService.get();
   }
 
   onSubmit(): void {

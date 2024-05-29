@@ -22,16 +22,14 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isExpanded = this.router.url.includes('setting');
-    this.isAdmin = this.profileService.getProfile().role === 'admin';
+    this.isAdmin = this.profileService.isAdmin();
 
-    this.subscription = this.printService
-      .onInventoriesListener()
-      .subscribe((parcel) => {
-        this.badge = parcel.length;
+    this.subscription = this.printService.onListener().subscribe((parcel) => {
+      this.badge = parcel.length;
 
-        if (this.badge > 0) this.isBadge = true;
-        else this.isBadge = false;
-      });
+      if (this.badge > 0) this.isBadge = true;
+      else this.isBadge = false;
+    });
   }
 
   ngOnDestroy(): void {

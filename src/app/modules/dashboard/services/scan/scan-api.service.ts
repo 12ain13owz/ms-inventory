@@ -12,11 +12,11 @@ export class ScanApiService {
 
   constructor(private http: HttpClient) {}
 
-  getInventoryByCode(code: string): Observable<Inventory> {
+  getByCode(code: string): Observable<Inventory> {
     return this.http.get<Inventory>(`${this.apiUrl}/code/${code}`);
   }
 
-  getInventoryByTrack(track: string): Observable<Inventory> {
+  getByTrack(track: string): Observable<Inventory> {
     return this.http.get<Inventory>(`${this.apiUrl}/track/${track}`);
   }
 }

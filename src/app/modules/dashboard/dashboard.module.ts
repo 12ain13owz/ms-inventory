@@ -24,8 +24,8 @@ import { DispTextareaPipe } from './pipes/disp-textarea.pipe';
 import { CutDetailPipe } from './pipes/cut-detail.pipe';
 import { StatusComponent } from './components/status/status.component';
 import { StatusEditComponent } from './components/status/status-edit/status-edit.component';
-import { UsageComponent } from './components/usage/usage.component';
-import { UsageEditComponent } from './components/usage/usage-edit/usage-edit.component';
+import { FundComponent } from './components/fund/fund.component';
+import { FundEditComponent } from './components/fund/fund-edit/fund-edit.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { InventoryListComponent } from './components/inventory/inventory-list/inventory-list.component';
 import { InventoryNewComponent } from './components/inventory/inventory-new/inventory-new.component';
@@ -34,6 +34,8 @@ import { InventoryEditComponent } from './components/inventory/inventory-edit/in
 import { PrintProcessComponent } from './components/print/print-process/print-process.component';
 import { InventoryCheckComponent } from './components/inventory-check/inventory-check.component';
 import { SearchPipe } from './pipes/search.pipe';
+import { LocationComponent } from './components/location/location.component';
+import { LocationEditComponent } from './components/location/location-edit/location-edit.component';
 
 @NgModule({
   declarations: [
@@ -57,8 +59,8 @@ import { SearchPipe } from './pipes/search.pipe';
     CutDetailPipe,
     StatusComponent,
     StatusEditComponent,
-    UsageComponent,
-    UsageEditComponent,
+    FundComponent,
+    FundEditComponent,
     InventoryComponent,
     InventoryListComponent,
     InventoryNewComponent,
@@ -66,6 +68,8 @@ import { SearchPipe } from './pipes/search.pipe';
     InventoryEditComponent,
     InventoryCheckComponent,
     SearchPipe,
+    LocationComponent,
+    LocationEditComponent,
   ],
   imports: [
     DashboardRoutingModule,

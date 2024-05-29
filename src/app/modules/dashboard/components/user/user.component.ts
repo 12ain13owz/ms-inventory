@@ -35,8 +35,8 @@ export class UserComponent implements OnInit, OnDestroy {
   private validationService = inject(ValidationService);
   private dialog = inject(MatDialog);
 
-  title: string = 'รายการ บัญชีผู้ใช้งาน';
-  profileId = this.profileService.getProfile().id;
+  title: string = 'รายการบัญชีผู้ใช้งาน';
+  profileId = this.profileService.get().id;
   displayedColumns: string[] = [
     'no',
     'email',
@@ -52,9 +52,9 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initDataSource();
     this.subscription = this.userService
-      .onUsersListener()
+      .onListener()
       .subscribe(
-        () => (this.dataSource.data = this.userService.getUsersTable())
+        () => (this.dataSource.data = this.userService.getTableData())
       );
   }
 
@@ -69,9 +69,9 @@ export class UserComponent implements OnInit, OnDestroy {
     });
   }
 
-  onUpdate(user: User): void {
+  onUpdate(item: User): void {
     this.dialog.open(UserEditComponent, {
-      data: user,
+      data: item,
       width: '500px',
       disableClose: true,
     });
@@ -83,11 +83,11 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.userService.getUsersTable();
+    this.dataSource.data = this.userService.getTableData();
 
     if (this.validationService.isEmpty(this.dataSource.data))
       this.userApiService
-        .getUsers()
+        .getAll()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

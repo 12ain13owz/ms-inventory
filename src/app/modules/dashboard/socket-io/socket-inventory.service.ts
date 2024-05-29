@@ -16,20 +16,20 @@ export class SocketInventoryService {
     if (!this.socketIO) return;
 
     this.socketIO.on('inventory:create', (inventory: Inventory) => {
-      this.inventoryService.createInventory(inventory);
+      this.inventoryService.create(inventory);
     });
 
     this.socketIO.on('inventory:update', (id: number, inventory: Inventory) => {
-      this.inventoryService.updateInventory(id, inventory);
+      this.inventoryService.update(id, inventory);
     });
   }
 
-  createInventory(inventory: Inventory): void {
+  create(inventory: Inventory): void {
     if (!this.socketIO) return;
     this.socketIO.emit('inventory:create', inventory);
   }
 
-  updateInventory(id: number, inventory: Inventory): void {
+  update(id: number, inventory: Inventory): void {
     if (!this.socketIO) return;
     this.socketIO.emit('inventory:update', id, inventory);
   }

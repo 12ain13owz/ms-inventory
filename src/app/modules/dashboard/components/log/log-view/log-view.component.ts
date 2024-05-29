@@ -23,13 +23,13 @@ export class LogViewComponent implements OnInit {
   title: string = 'รายละเอียด ประว้ติครุภัณฑ์';
   isLoading: boolean = false;
   id: number = +this.route.snapshot.params['id'];
-  log: Log = this.logService.getLogById(this.id);
+  log: Log = this.logService.getById(this.id);
 
   ngOnInit(): void {
     if (!this.log) {
       this.isLoading = true;
       this.logApiService
-        .getLogById(this.id)
+        .getById(this.id)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res) => res && (this.log = res));
     }

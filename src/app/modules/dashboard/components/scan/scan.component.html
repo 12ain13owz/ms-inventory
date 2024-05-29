@@ -115,19 +115,12 @@
 </mat-card>
 
 <div class="d-flex justify-center">
-  <button
-    class="btn-submit"
-    [swal]="confirmStock"
-    (confirm)="onSubmit()"
-    [disabled]="isLoading"
-  >
+  <button class="btn-submit" (click)="onConfirm()" [disabled]="isLoading">
     ตรวจสอบครุภัณฑ์
   </button>
 </div>
 
-<swal
-  #confirmStock
-  title="ยืนยันการตัดสต็อก"
-  icon="question"
-  [showCancelButton]="true"
-></swal>
+<app-sweet-alert
+  [icon]="'question'"
+  (confirm)="onSubmit($event)"
+></app-sweet-alert>

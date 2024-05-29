@@ -19,16 +19,16 @@ export class ProfileApiService {
     private toastService: ToastNotificationService
   ) {}
 
-  getProfile(): Observable<Profile> {
+  get(): Observable<Profile> {
     return this.http
       .get<Profile>(this.apiUrl)
-      .pipe(tap((profile) => this.profileService.setProfile(profile)));
+      .pipe(tap((profile) => this.profileService.assign(profile)));
   }
 
-  updateProfile(payload: Partial<Profile>): Observable<Message> {
+  update(payload: Partial<Profile>): Observable<Message> {
     return this.http.patch<Message>(this.apiUrl, payload).pipe(
       tap((res) => {
-        this.profileService.updateProfile(payload);
+        this.profileService.update(payload);
         this.toastService.success('', res.message);
       })
     );

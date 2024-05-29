@@ -13,7 +13,7 @@ export class InventoryService {
 
   constructor() {}
 
-  onInventoriesListener(): Observable<Inventory[]> {
+  onListener(): Observable<Inventory[]> {
     return this.inventories$.asObservable();
   }
 
@@ -30,23 +30,16 @@ export class InventoryService {
     return this.isLoading;
   }
 
-  setInventory(inventory: Inventory): void {
-    this.inventories = [];
-
-    if (inventory) this.inventories.push(inventory);
+  assign(item: Inventory[]): void {
+    this.inventories = item;
     this.inventories$.next(this.inventories.slice());
   }
 
-  setInventories(inventories: Inventory[]): void {
-    this.inventories = inventories;
-    this.inventories$.next(this.inventories.slice());
-  }
-
-  getInventories(): Inventory[] {
+  getAll(): Inventory[] {
     return this.inventories.slice();
   }
 
-  getInventoriesTable(): InventoryTable[] {
+  getTableData(): InventoryTable[] {
     return this.inventories
       .map((inventory, i) => ({
         no: i + 1,
@@ -56,61 +49,63 @@ export class InventoryService {
         code: inventory.code,
         category: inventory.Category.name,
         status: inventory.Status.name,
-        usage: inventory.Usage.name,
+        fund: inventory.Fund.name,
+        location: inventory.Location.name,
         description: inventory.description,
       }))
       .slice();
   }
 
-  getInventoryById(id: number): Inventory {
-    return this.inventories.find((inventory) => inventory.id === id);
+  getById(id: number): Inventory {
+    return this.inventories.find((item) => item.id === id);
   }
 
-  getInventoryByCode(code: string): Inventory {
-    return this.inventories.find((inventory) => inventory.code === code);
+  getByCode(code: string): Inventory {
+    return this.inventories.find((item) => item.code === code);
   }
 
-  getInventoryByTrack(track: string): Inventory {
-    return this.inventories.find((inventory) => inventory.track === track);
+  getByTrack(track: string): Inventory {
+    return this.inventories.find((item) => item.track === track);
   }
 
-  getInventoryByCodeTable(code: string): InventoryTable[] {
+  getTableDataWithCode(code: string): InventoryTable[] {
     return this.inventories
-      .filter((inventory) => inventory.code === code)
-      .map((inventory, i) => ({
+      .filter((item) => item.code === code)
+      .map((item, i) => ({
         no: i + 1,
-        id: inventory.id,
-        track: inventory.track,
-        image: inventory.image,
-        code: inventory.code,
-        category: inventory.Category.name,
-        status: inventory.Status.name,
-        usage: inventory.Usage.name,
-        description: inventory.description,
+        id: item.id,
+        track: item.track,
+        image: item.image,
+        code: item.code,
+        category: item.Category.name,
+        status: item.Status.name,
+        fund: item.Fund.name,
+        location: item.Location.name,
+        description: item.description,
       }))
       .slice();
   }
 
-  createInventory(inventory: Inventory): void {
-    this.inventories.push(inventory);
+  create(item: Inventory): void {
+    this.inventories.push(item);
     this.inventories$.next(this.inventories.slice());
   }
 
-  updateInventory(id: number, inventory: Inventory): void {
+  update(id: number, item: Inventory): void {
     const index = this.inventories.findIndex(
       (inventory) => inventory.id === id
     );
 
     if (index !== -1) {
-      this.inventories[index] = { ...this.inventories[index], ...inventory };
+      this.inventories[index] = { ...this.inventories[index], ...item };
       this.inventories$.next(this.inventories.slice());
     }
   }
 
-  getUseDate(receivedDate: Date): string {
+  getUseDate(date: Date): string {
     const now = new Date();
-    let yearDiff = now.getFullYear() - receivedDate.getFullYear();
-    let monthDiff = now.getMonth() - receivedDate.getMonth();
+    let yearDiff = now.getFullYear() - date.getFullYear();
+    let monthDiff = now.getMonth() - date.getMonth();
 
     if (monthDiff < 0) {
       yearDiff--;

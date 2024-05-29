@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { TokenService } from '../../shared/services/token.service';
 import { Router } from '@angular/router';
-import { AccessToken } from '../../shared/models/token.model';
+import { AccessToken } from '../models/token.model';
 import { Observable, finalize, tap } from 'rxjs';
 import { LoadingScreenService } from '../../../core/services/loading-screen.service';
 import { ProfileService } from '../../dashboard/services/profile/profile.service';
@@ -37,7 +37,7 @@ export class AuthApiService {
       .pipe(
         tap((res) => {
           this.tokenService.setAccessToken(res.accessToken);
-          this.profileService.setProfile(res.payload);
+          this.profileService.assign(res.payload);
         })
       );
   }
@@ -50,7 +50,7 @@ export class AuthApiService {
       .pipe(
         finalize(() => {
           this.loadingScreenSerivce.setIsLoading(false);
-          this.profileService.setProfile(null);
+          this.profileService.assign(null);
           this.tokenService.removeToken();
           this.router.navigate(['/login']);
         })

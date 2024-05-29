@@ -11,40 +11,40 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
-import { Usage, UsageResponse } from '../../../models/usage.model';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UsageApiService } from '../../../services/usage/usage-api.service';
-import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
-import { Message } from '../../../../shared/models/response.model';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
-import { USAGE } from '../../../constants/usage.constant';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FundApiService } from '../../../services/fund/fund-api.service';
+import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
+import { ApiResponse } from '../../../../shared/models/response.model';
+import { Fund } from '../../../models/fund.model';
+import { FUND } from '../../../constants/fund.constant';
 
 @Component({
-  selector: 'app-usage-edit',
-  templateUrl: './usage-edit.component.html',
-  styleUrl: './usage-edit.component.scss',
+  selector: 'app-fund-edit',
+  templateUrl: './fund-edit.component.html',
+  styleUrl: './fund-edit.component.scss',
 })
-export class UsageEditComponent implements OnInit {
+export class FundEditComponent implements OnInit {
   @ViewChild('formDirec') formDirec: FormGroupDirective;
   @ViewChild('nameInput') nameInput: ElementRef<HTMLInputElement>;
 
-  private data: Usage = inject(MAT_DIALOG_DATA);
+  private data: Fund = inject(MAT_DIALOG_DATA);
   private formBuilder = inject(FormBuilder);
-  private dialogRef = inject(MatDialogRef<UsageEditComponent>);
-  private usageApiService = inject(UsageApiService);
+  private dialogRef = inject(MatDialogRef<FundEditComponent>);
+  private fundApiService = inject(FundApiService);
   private toastService = inject(ToastNotificationService);
-  private operation$: Observable<Message | UsageResponse>;
+  private operation$: Observable<ApiResponse<Fund>>;
 
-  validationField = USAGE.validationField;
-  title: string = 'เพิ่ม การใช้งานครุภัณฑ์';
+  title: string = 'เพิ่มแหล่งเงิน';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
+  validationField = FUND.validationField;
   form = this.initForm();
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไข การใช้งานครุภัณฑ์';
+      this.title = 'แก้ไขแหล่งเงิน';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }
@@ -52,7 +52,6 @@ export class UsageEditComponent implements OnInit {
     this.dialogRef
       .keydownEvents()
       .subscribe((event) => event.key === 'Escape' && this.onCloseDialog());
-
     this.dialogRef.backdropClick().subscribe(() => this.onCloseDialog());
   }
 
@@ -60,11 +59,11 @@ export class UsageEditComponent implements OnInit {
     if (this.form.invalid) return;
     if (JSON.stringify(this.data) === JSON.stringify(this.form.value)) return;
 
-    const { id, ...payload }: Usage = { ...this.form.getRawValue() };
+    const { id, ...payload }: Fund = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.usageApiService.updateUsage(id, payload)
-      : this.usageApiService.createUsage(payload);
+      ? this.fundApiService.update(id, payload)
+      : this.fundApiService.create(payload);
 
     this.operation$
       .pipe(

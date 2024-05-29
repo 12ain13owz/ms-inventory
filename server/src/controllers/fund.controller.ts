@@ -43,7 +43,7 @@ export async function createFundController(
 
     res.json({
       message: `เพิ่มแหล่งเงิน ${name} สำเร็จ`,
-      fund: newFund,
+      item: newFund,
     });
   } catch (error) {
     next(error);
@@ -77,7 +77,7 @@ export async function updateFundController(
 
     res.json({
       message: `แก้ไขแหล่งเงิน ${name} สำเร็จ`,
-      fund: payload,
+      item: payload,
     });
   } catch (error) {
     next(error);

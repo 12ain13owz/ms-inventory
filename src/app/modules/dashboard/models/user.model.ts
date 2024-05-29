@@ -14,13 +14,6 @@ export interface UserTable extends User {
   no: number;
 }
 
-export interface UserPassword {
-  id: number;
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
-
 export interface UserResponse extends Message {
   user: User;
 }

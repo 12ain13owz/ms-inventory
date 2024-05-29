@@ -8,32 +8,27 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class ProfileService {
   private profile: Profile | null;
   private profile$ = new BehaviorSubject<Profile>(null);
-  private isAdmin: boolean = false;
 
-  constructor() {
-    this.profile$.subscribe((profile) => {
-      if (profile) this.isAdmin = profile.role === 'admin';
-    });
+  constructor() {}
+
+  isAdmin(): boolean {
+    return this.profile.role === 'admin';
   }
 
-  isProfileAdmin(): boolean {
-    return this.isAdmin;
-  }
-
-  onProfileListener(): Observable<Profile> {
+  onListener(): Observable<Profile> {
     return this.profile$.asObservable();
   }
 
-  setProfile(profile: Profile): void {
-    this.profile = profile;
-    this.profile$.next(profile);
+  assign(item: Profile): void {
+    this.profile = item;
+    this.profile$.next(item);
   }
 
-  getProfile(): Profile {
+  get(): Profile {
     return this.profile;
   }
 
-  updateProfile(profile: Partial<Profile>): void {
+  update(profile: Partial<Profile>): void {
     this.profile = { ...this.profile, ...profile };
     this.profile$.next(this.profile);
   }

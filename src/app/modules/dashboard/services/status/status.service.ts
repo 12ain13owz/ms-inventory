@@ -11,53 +11,53 @@ export class StatusService {
 
   constructor() {}
 
-  onStatusesListener(): Observable<Status[]> {
+  onListener(): Observable<Status[]> {
     return this.statuses$.asObservable();
   }
 
-  setStatuses(statuses: Status[]): void {
-    this.statuses = statuses;
+  assign(items: Status[]): void {
+    this.statuses = items;
     this.statuses$.next(this.statuses.slice());
   }
 
-  getStatuses(): Status[] {
+  getAll(): Status[] {
     return this.statuses.slice();
   }
 
-  getStatusesTable(): StatusTable[] {
-    return this.statuses.map((status, i) => ({ no: i + 1, ...status })).slice();
+  getTableData(): StatusTable[] {
+    return this.statuses.map((item, i) => ({ no: i + 1, ...item })).slice();
   }
 
-  getActiveStatusNames(): string[] {
+  getActiveNames(): string[] {
     return this.statuses
-      .filter((status) => status.active)
-      .map((status) => status.name)
+      .filter((item) => item.active)
+      .map((item) => item.name)
       .slice();
   }
 
-  getActiveStatuses(): { id: number; name: string }[] {
+  getActiveDetails(): { id: number; name: string }[] {
     return this.statuses
-      .filter((status) => status.active)
-      .map((status) => ({ id: status.id, name: status.name }))
+      .filter((item) => item.active)
+      .map((item) => ({ id: item.id, name: item.name }))
       .slice();
   }
 
-  createStatus(status: Status): void {
-    this.statuses.push(status);
+  create(item: Status): void {
+    this.statuses.push(item);
     this.statuses$.next(this.statuses.slice());
   }
 
-  updateStatus(id: number, status: Status): void {
-    const index = this.statuses.findIndex((status) => status.id === id);
+  update(id: number, item: Status): void {
+    const index = this.statuses.findIndex((item) => item.id === id);
 
     if (index !== -1) {
-      this.statuses[index] = { ...this.statuses[index], ...status };
+      this.statuses[index] = { ...this.statuses[index], ...item };
       this.statuses$.next(this.statuses.slice());
     }
   }
 
-  deleteStatus(id: number): void {
-    const index = this.statuses.findIndex((status) => status.id === id);
+  delete(id: number): void {
+    const index = this.statuses.findIndex((item) => item.id === id);
 
     if (index !== -1) {
       this.statuses.splice(index, 1);

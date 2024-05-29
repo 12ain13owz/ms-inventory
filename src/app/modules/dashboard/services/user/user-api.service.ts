@@ -3,8 +3,8 @@ import { environment } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from './user.service';
 import { Observable, tap } from 'rxjs';
-import { User, UserPassword, UserResponse } from '../../models/user.model';
-import { Message } from '../../../shared/models/response.model';
+import { User } from '../../models/user.model';
+import { ApiResponse, Message } from '../../../shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,25 +14,21 @@ export class UserApiService {
 
   constructor(private http: HttpClient, private userService: UserService) {}
 
-  getUsers(): Observable<User[]> {
+  getAll(): Observable<User[]> {
     return this.http
       .get<User[]>(this.apiUrl)
-      .pipe(tap((res) => this.userService.setUsers(res)));
+      .pipe(tap((res) => this.userService.assign(res)));
   }
 
-  createUser(payload: User): Observable<UserResponse> {
+  create(payload: User): Observable<ApiResponse<User>> {
     return this.http
-      .post<UserResponse>(this.apiUrl, payload)
-      .pipe(tap((res) => this.userService.createUser(res.user)));
+      .post<ApiResponse<User>>(this.apiUrl, payload)
+      .pipe(tap((res) => this.userService.create(res.item)));
   }
 
-  updateUser(id: number, payload: User): Observable<UserResponse> {
+  update(id: number, payload: User): Observable<ApiResponse<User>> {
     return this.http
-      .patch<UserResponse>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.userService.updateUser(id, res.user)));
-  }
-
-  changeUserPassword(id: number, payload: UserPassword): Observable<Message> {
-    return this.http.post<Message>(`${this.apiUrl}/password/${id}`, payload);
+      .patch<ApiResponse<User>>(`${this.apiUrl}/${id}`, payload)
+      .pipe(tap((res) => this.userService.update(id, res.item)));
   }
 }

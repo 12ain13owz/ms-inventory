@@ -1,0 +1,61 @@
+<div class="d-flex justify-between align-center">
+  <h2 mat-dialog-title>{{ title }}</h2>
+  <button
+    mat-icon-button
+    class="btn-close"
+    tabindex="-1"
+    (click)="onCloseDialog()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" #formDirec="ngForm">
+  <mat-divider></mat-divider>
+  <mat-dialog-content class="form-container">
+    <div class="box">
+      <mat-form-field>
+        <mat-label>ชื่อ</mat-label>
+        <input type="text" matInput formControlName="name" #nameInput />
+
+        <mat-error>
+          <app-error-field
+            [control]="name"
+            [errorMessage]="validationField.name"
+          ></app-error-field>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>หมายเหตุ</mat-label>
+        <input type="text" matInput formControlName="remark" />
+      </mat-form-field>
+    </div>
+
+    <div class="d-flex gap-10">
+      <mat-slide-toggle formControlName="active"></mat-slide-toggle>
+      <span>เปิดใช้งาน</span>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="isLoading"
+    >
+      ตกลง
+    </button>
+    <button
+      type="button"
+      mat-button
+      color="warn"
+      (click)="onReset()"
+      [disabled]="isLoading"
+    >
+      รีเซ็ต
+    </button>
+  </mat-dialog-actions>
+</form>
+@if (isLoading) {
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

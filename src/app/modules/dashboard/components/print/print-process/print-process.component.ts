@@ -60,7 +60,7 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.inventories = this.printService.getInventories();
+    this.inventories = this.printService.getAll();
     if (this.validationService.isEmpty(this.inventories)) {
       this.isMissing = true;
       return;
@@ -147,7 +147,7 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
               this.fileUrl = doc.output('datauristring');
               this.isLoading = false;
               this.percentComplete = 0;
-              this.printService.resetInventory();
+              this.printService.reset();
             })
         )
       )
@@ -261,7 +261,7 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
               this.fileUrl = doc.output('datauristring');
               this.isLoading = false;
               this.percentComplete = 0;
-              this.printService.resetInventory();
+              this.printService.reset();
             })
         )
       )

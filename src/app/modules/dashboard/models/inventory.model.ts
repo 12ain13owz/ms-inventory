@@ -10,8 +10,6 @@ export interface Inventory {
   unit: string;
   value: number;
   receivedDate: Date;
-  fundingSource: string;
-  location: string;
   remark: string;
   image: string;
   createdAt: Date;
@@ -19,18 +17,13 @@ export interface Inventory {
   User: { firstname: string; lastname: string };
   Category: { id: number; name: string };
   Status: { id: number; name: string };
-  Usage: { id: number; name: string };
+  Fund: { id: number; name: string };
+  Location: { id: number; name: string };
 }
 
-export interface InventoryResponse extends Message {
+export interface InventoryWithLog {
   inventory: Inventory;
   log: Log;
-}
-
-export interface FilterInventory {
-  categories: string[];
-  statuses: string[];
-  usages: string[];
 }
 
 export interface InventoryTable {
@@ -41,7 +34,8 @@ export interface InventoryTable {
   code: string;
   category: string;
   status: string;
-  usage: string;
+  fund: string;
+  location: string;
   description: string;
 }
 
@@ -61,4 +55,9 @@ export interface InventoryPrint {
   description: string;
   printCount: number;
   fileUrl?: string;
+}
+
+export interface InventoryFilter {
+  categories: string[];
+  statuses: string[];
 }

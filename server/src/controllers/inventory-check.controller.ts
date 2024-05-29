@@ -67,7 +67,7 @@ export async function createInventoryCheckController(
     if (inventoryCheck)
       return res.json({
         message: 'ตรวจสอบครุภัณฑ์ สำเร็จ',
-        inventoryCheck: inventoryCheck.toJSON(),
+        item: inventoryCheck.toJSON(),
       });
 
     const payload = new InventoryCheck({ inventoryId, year: currentYear });
@@ -76,7 +76,7 @@ export async function createInventoryCheckController(
 
     res.json({
       message: 'ตรวจสอบครุภัณฑ์ สำเร็จ',
-      inventoryCheck: resInvenroryCheck,
+      item: resInvenroryCheck,
     });
   } catch (error) {
     next(error);

@@ -51,23 +51,15 @@
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
         <mat-cell *matCellDef="let element">
           <button mat-icon-button (click)="onUpdate(element)">
-            <mat-icon color="primary">edit</mat-icon>
+            <mat-icon color="accent">edit</mat-icon>
           </button>
           <button
             mat-icon-button
             color="warn"
-            [swal]="deleteSwal"
-            (confirm)="onDelete(element.id)"
+            (click)="onConfirm(element.id, element.name)"
           >
             <mat-icon>delete</mat-icon>
           </button>
-
-          <swal
-            #deleteSwal
-            title="ยืนยันการลบ {{ element.name }}?"
-            icon="error"
-            [showCancelButton]="true"
-          ></swal>
         </mat-cell>
       </ng-container>
 
@@ -84,3 +76,8 @@
 } @placeholder (minimum 300ms) {
 <app-loading-data [form]="'card'"></app-loading-data>
 }
+
+<app-sweet-alert
+  [icon]="'error'"
+  (confirm)="onDelete($event)"
+></app-sweet-alert>

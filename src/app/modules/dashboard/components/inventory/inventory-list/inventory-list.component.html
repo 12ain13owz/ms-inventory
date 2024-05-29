@@ -131,26 +131,6 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>การใช้งาน</mat-label>
-        <mat-select formControlName="usage" multiple>
-          <mat-select-trigger>
-            {{usage.value?.[0] || ''}}
-            @if ((usage.value?.length || 0) > 1) {
-            <span class="additional-selection">
-              (+{{ (usage.value?.length || 0) - 1 }}
-              อื่น ๆ )
-            </span>
-            }
-          </mat-select-trigger>
-          @for (usage of filter.usages; track usage) {
-          <mat-option [value]="usage" (click)="onFilter()">{{
-            usage
-          }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
         <mat-label>กรองข้อมูล</mat-label>
         <input matInput (keyup)="applyFilter($event)" #filterInput />
       </mat-form-field>
@@ -222,7 +202,7 @@
 
       <ng-container matColumnDef="category">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >คุณสมบัติ</mat-header-cell
+          >ประเภท</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
           {{ element.category }}
@@ -238,12 +218,12 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="usage">
+      <ng-container matColumnDef="location">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >การใช้งาน</mat-header-cell
+          >ห้อง</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.usage }}
+          {{ element.location }}
         </mat-cell>
       </ng-container>
 

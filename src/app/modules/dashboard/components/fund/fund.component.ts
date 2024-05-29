@@ -10,42 +10,49 @@ import {
   of,
   take,
 } from 'rxjs';
-import { UsageService } from '../../services/usage/usage.service';
-import { UsageApiService } from '../../services/usage/usage-api.service';
+import { FundService } from '../../services/fund/fund.service';
+import { FundApiService } from '../../services/fund/fund-api.service';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { Usage, UsageTable } from '../../models/usage.model';
-import { UsageEditComponent } from './usage-edit/usage-edit.component';
+import { Fund, FundTable } from '../../models/fund.model';
+import { FundEditComponent } from './fund-edit/fund-edit.component';
+import {
+  SweetAlertComponent,
+  SweetAlertInterface,
+} from '../../../shared/components/sweet-alert/sweet-alert.component';
 
 @Component({
-  selector: 'app-usage',
-  templateUrl: './usage.component.html',
-  styleUrl: './usage.component.scss',
+  selector: 'app-fund',
+  templateUrl: './fund.component.html',
+  styleUrls: ['./fund.component.scss', '../../scss/table-styles.scss'],
 })
-export class UsageComponent implements OnInit, OnDestroy {
+export class FundComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(SweetAlertComponent) sweetAlert: SweetAlertInterface;
 
   private subscription = new Subscription();
-  private usageService = inject(UsageService);
-  private usageApiService = inject(UsageApiService);
+  private fundService = inject(FundService);
+  private fundApiService = inject(FundApiService);
   private validationService = inject(ValidationService);
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
-  title: string = 'รายการ การใช้งานครุภัณฑ์';
+  title: string = 'รายชื่อแหล่งเงิน';
+  sweetAlertTitle: string;
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
-  dataSource = new MatTableDataSource<UsageTable>([]);
+  dataSource = new MatTableDataSource<FundTable>([]);
   isFirstLoading: boolean = false;
+  id: number;
 
   ngOnInit(): void {
     this.initDataSource();
-    this.subscription = this.usageService
-      .onUsagesListener()
+    this.subscription = this.fundService
+      .onListener()
       .subscribe(
-        () => (this.dataSource.data = this.usageService.getUsagesTable())
+        () => (this.dataSource.data = this.fundService.getTableData())
       );
   }
 
@@ -54,24 +61,32 @@ export class UsageComponent implements OnInit, OnDestroy {
   }
 
   onCreate(): void {
-    this.dialog.open(UsageEditComponent, {
+    this.dialog.open(FundEditComponent, {
       width: '500px',
       disableClose: true,
     });
   }
 
-  onUpdate(usageStatus: Usage): void {
-    this.dialog.open(UsageEditComponent, {
-      data: usageStatus,
+  onUpdate(item: Fund): void {
+    this.dialog.open(FundEditComponent, {
+      data: item,
       width: '500px',
       disableClose: true,
     });
   }
 
-  onDelete(id: number): void {
-    this.usageApiService
-      .deleteUsage(id)
-      .subscribe((res) => this.toastService.info('Delete', res.message));
+  onConfirm(id: number, title: string): void {
+    this.id = id;
+    this.sweetAlertTitle = `ยืนยันการลบ ${title}?`;
+    this.sweetAlert.alert(this.sweetAlertTitle);
+  }
+
+  onDelete(confirm: boolean): void {
+    if (!confirm) return;
+
+    this.fundApiService
+      .delete(this.id)
+      .subscribe((res) => this.toastService.info('Info', res.message));
   }
 
   applyFilter(event: Event): void {
@@ -80,11 +95,11 @@ export class UsageComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.usageService.getUsagesTable();
+    this.dataSource.data = this.fundService.getTableData();
 
     if (this.validationService.isEmpty(this.dataSource.data))
-      this.usageApiService
-        .getUsages()
+      this.fundApiService
+        .getAll()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

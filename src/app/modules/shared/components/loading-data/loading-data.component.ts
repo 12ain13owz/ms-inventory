@@ -17,12 +17,10 @@ export class LoadingDataComponent implements OnInit, OnDestroy {
   repeatRowList = Array(20).fill(0);
 
   ngOnInit(): void {
-    this.subscription = this.themeService
-      .onThemeListener()
-      .subscribe((theme) => {
-        if (theme) this.backgroundColor = '#323232';
-        else this.backgroundColor = '#EFF1F5';
-      });
+    this.subscription = this.themeService.onListener().subscribe((theme) => {
+      if (theme) this.backgroundColor = '#323232';
+      else this.backgroundColor = '#EFF1F5';
+    });
   }
 
   ngOnDestroy(): void {

@@ -156,8 +156,6 @@ export async function createInventoryController(
       locationId: +req.body.locationId,
     });
 
-    console.log(payloadInventory.dataValues);
-
     const propertyLog: PropertyLog = {
       track: track,
       value: value,
@@ -182,8 +180,10 @@ export async function createInventoryController(
 
     res.json({
       message: `เพิ่มครุภัณฑ์ ${code} สำเร็จ`,
-      inventory: resInventory,
-      log: resLog,
+      item: {
+        inventory: resInventory,
+        log: resLog,
+      },
     });
   } catch (error) {
     await t.rollback();
@@ -227,7 +227,6 @@ export async function updateInventoryController(
       unit: req.body.unit,
       value: value,
       receivedDate: receivedDate,
-
       remark: req.body.remark || '',
       image: image || '',
       userId: res.locals.userId!,
@@ -263,8 +262,10 @@ export async function updateInventoryController(
 
     res.json({
       message: `แก้ไขครุภัณฑ์ ${code} สำเร็จ`,
-      inventory: resInventory,
-      log: resLog,
+      item: {
+        inventory: resInventory,
+        log: resLog,
+      },
     });
   } catch (error) {
     await t.rollback();

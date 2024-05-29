@@ -1,4 +1,4 @@
-import { AccessToken } from '../../shared/models/token.model';
+import { AccessToken } from './token.model';
 import { Profile } from '../../dashboard/models/profile.model';
 
 export interface LoginRequest {

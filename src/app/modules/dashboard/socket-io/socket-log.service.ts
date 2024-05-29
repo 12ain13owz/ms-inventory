@@ -16,11 +16,11 @@ export class SocketLogService {
     if (!this.socketIO) return;
 
     this.socketIO.on('log:create', (log: Log) => {
-      this.logService.createLog(log);
+      this.logService.create(log);
     });
   }
 
-  createLog(log: Log): void {
+  create(log: Log): void {
     if (!this.socketIO) return;
     this.socketIO.emit('log:create', log);
   }

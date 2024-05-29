@@ -18,15 +18,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Status, StatusTable } from '../../models/status.model';
 import { StatusEditComponent } from './status-edit/status-edit.component';
+import {
+  SweetAlertComponent,
+  SweetAlertInterface,
+} from '../../../shared/components/sweet-alert/sweet-alert.component';
 
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
-  styleUrl: './status.component.scss',
+  styleUrls: ['./status.component.scss', '../../scss/table-styles.scss'],
 })
 export class StatusComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(SweetAlertComponent) sweetAlert: SweetAlertInterface;
 
   private subscription = new Subscription();
   private assetStatusService = inject(StatusService);
@@ -35,18 +40,19 @@ export class StatusComponent implements OnInit, OnDestroy {
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
 
-  title: string = 'รายการ สถานะครุภัณฑ์';
+  title: string = 'รายชื่อสถานะ';
+  sweetAlertTitle: string;
   displayedColumns: string[] = ['no', 'name', 'active', 'remark', 'action'];
   dataSource = new MatTableDataSource<StatusTable>([]);
   isFirstLoading: boolean = false;
+  id: number;
 
   ngOnInit(): void {
     this.initDataSource();
     this.subscription = this.assetStatusService
-      .onStatusesListener()
+      .onListener()
       .subscribe(
-        () =>
-          (this.dataSource.data = this.assetStatusService.getStatusesTable())
+        () => (this.dataSource.data = this.assetStatusService.getTableData())
       );
   }
 
@@ -61,18 +67,26 @@ export class StatusComponent implements OnInit, OnDestroy {
     });
   }
 
-  onUpdate(assetStatus: Status): void {
+  onUpdate(item: Status): void {
     this.dialog.open(StatusEditComponent, {
-      data: assetStatus,
+      data: item,
       width: '500px',
       disableClose: true,
     });
   }
 
-  onDelete(id: number): void {
+  onConfirm(id: number, title: string): void {
+    this.id = id;
+    this.sweetAlertTitle = `ยืนยันการลบ ${title}?`;
+    this.sweetAlert.alert(this.sweetAlertTitle);
+  }
+
+  onDelete(confirm: boolean): void {
+    if (!confirm) return;
+
     this.assetStatusApiService
-      .deleteStatus(id)
-      .subscribe((res) => this.toastService.info('Delete', res.message));
+      .delete(this.id)
+      .subscribe((res) => this.toastService.info('Info', res.message));
   }
 
   applyFilter(event: Event): void {
@@ -81,11 +95,11 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.assetStatusService.getStatusesTable();
+    this.dataSource.data = this.assetStatusService.getTableData();
 
     if (this.validationService.isEmpty(this.dataSource.data))
       this.assetStatusApiService
-        .getStatuses()
+        .getAll()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

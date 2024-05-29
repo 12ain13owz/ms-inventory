@@ -3,11 +3,8 @@ import { environment } from '../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { InventoryCheckService } from './inventory-check.service';
 import { Observable, map, switchMap, tap, timer } from 'rxjs';
-import {
-  InCheckPayload,
-  InCheckResponse,
-  InventoryCheck,
-} from '../../models/inventory-check';
+import { InventoryCheck } from '../../models/inventory-check';
+import { ApiResponse } from '../../../shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,33 +17,34 @@ export class InventoryCheckApiService {
     private inventoryCheckService: InventoryCheckService
   ) {}
 
-  getAllInChecks(): Observable<InventoryCheck[]> {
+  getAll(): Observable<InventoryCheck[]> {
     return this.http.get<InventoryCheck[]>(this.apiUrl).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.inventoryCheckService.setInChecks(res))
+      tap((res) => this.inventoryCheckService.assign(res))
     );
   }
 
-  getInChecksByYear(year: number): Observable<InventoryCheck[]> {
+  getByYear(year: number): Observable<InventoryCheck[]> {
     return this.http.get<InventoryCheck[]>(`${this.apiUrl}/year/${year}`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.inventoryCheckService.setInChecks(res))
+      tap((res) => this.inventoryCheckService.assign(res))
     );
   }
 
-  getInCheckById(id: number): Observable<InventoryCheck> {
+  getById(id: number): Observable<InventoryCheck> {
     return this.http.get<InventoryCheck>(`${this.apiUrl}/id/${id}`);
   }
 
-  createInCheck(inCheck: InCheckPayload): Observable<InCheckResponse> {
-    return this.http.post<InCheckResponse>(this.apiUrl, inCheck).pipe(
-      tap((res) => {
-        const inCheck = this.inventoryCheckService.getInCheckByInventoryId(
-          res.inventoryCheck.Inventory.id
-        );
-        if (!inCheck)
-          this.inventoryCheckService.createInCheck(res.inventoryCheck);
-      })
-    );
+  create(inventoryId: number): Observable<ApiResponse<InventoryCheck>> {
+    return this.http
+      .post<ApiResponse<InventoryCheck>>(this.apiUrl, { inventoryId })
+      .pipe(
+        tap((res) => {
+          const inventoryCheck = this.inventoryCheckService.getByInventoryId(
+            res.item.Inventory.id
+          );
+          if (!inventoryCheck) this.inventoryCheckService.create(res.item);
+        })
+      );
   }
 }

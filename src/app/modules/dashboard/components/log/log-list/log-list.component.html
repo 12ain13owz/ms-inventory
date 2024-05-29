@@ -128,26 +128,6 @@
 
       <mat-form-field>
         <mat-label>การใช้งาน</mat-label>
-        <mat-select formControlName="usage" multiple>
-          <mat-select-trigger>
-            {{usage.value?.[0] || ''}}
-            @if ((usage.value?.length || 0) > 1) {
-            <span class="additional-selection">
-              (+{{ (usage.value?.length || 0) - 1 }}
-              อื่น ๆ )
-            </span>
-            }
-          </mat-select-trigger>
-          @for (usage of filterLog.usages; track usage) {
-          <mat-option [value]="usage" (click)="onFilter()">{{
-            usage
-          }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>การใช้งาน</mat-label>
         <mat-select formControlName="inventory" multiple>
           <mat-select-trigger>
             {{inventory.value?.[0] || ''}}
@@ -213,15 +193,6 @@
         >
         <mat-cell *matCellDef="let element">
           {{ element.statusName }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="usage">
-        <mat-header-cell *matHeaderCellDef mat-sort-header
-          >การใช้งาน</mat-header-cell
-        >
-        <mat-cell *matCellDef="let element">
-          {{ element.usageName }}
         </mat-cell>
       </ng-container>
 

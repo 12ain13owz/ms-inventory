@@ -11,55 +11,53 @@ export class CategoryService {
 
   constructor() {}
 
-  onCategoriesListener(): Observable<Category[]> {
+  onListener(): Observable<Category[]> {
     return this.categories$.asObservable();
   }
 
-  setCategorise(categories: Category[]): void {
-    this.categories = categories;
+  assign(items: Category[]): void {
+    this.categories = items;
     this.categories$.next(this.categories.slice());
   }
 
-  getCategories(): Category[] {
+  getAll(): Category[] {
     return this.categories.slice();
   }
 
-  getCategoriesTable(): CategoryTable[] {
+  getTableData(): CategoryTable[] {
+    return this.categories.map((item, i) => ({ no: i + 1, ...item })).slice();
+  }
+
+  getActiveNames(): string[] {
     return this.categories
-      .map((category, i) => ({ no: i + 1, ...category }))
+      .filter((item) => item.active)
+      .map((item) => item.name)
       .slice();
   }
 
-  getActiveCategoriesName(): string[] {
+  getActiveDetails(): { id: number; name: string }[] {
     return this.categories
-      .filter((category) => category.active)
-      .map((category) => category.name)
+      .filter((item) => item.active)
+      .map((item) => ({ id: item.id, name: item.name }))
       .slice();
   }
 
-  getActiveCategories(): { id: number; name: string }[] {
-    return this.categories
-      .filter((category) => category.active)
-      .map((category) => ({ id: category.id, name: category.name }))
-      .slice();
-  }
-
-  createCategory(category: Category): void {
-    this.categories.push(category);
+  create(item: Category): void {
+    this.categories.push(item);
     this.categories$.next(this.categories.slice());
   }
 
-  updateCategory(id: number, category: Category): void {
-    const index = this.categories.findIndex((category) => category.id === id);
+  update(id: number, item: Category): void {
+    const index = this.categories.findIndex((item) => item.id === id);
 
     if (index !== -1) {
-      this.categories[index] = { ...this.categories[index], ...category };
+      this.categories[index] = { ...this.categories[index], ...item };
       this.categories$.next(this.categories.slice());
     }
   }
 
-  deleteCategory(id: number): void {
-    const index = this.categories.findIndex((category) => category.id === id);
+  delete(id: number): void {
+    const index = this.categories.findIndex((item) => item.id === id);
 
     if (index !== -1) {
       this.categories.splice(index, 1);

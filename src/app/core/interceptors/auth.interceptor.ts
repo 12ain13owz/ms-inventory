@@ -4,7 +4,7 @@ import { EMPTY, catchError, finalize, switchMap, throwError } from 'rxjs';
 import { TokenService } from '../../modules/shared/services/token.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthApiService } from '../../modules/auth/services/auth-api.service';
-import { AccessToken } from '../../modules/shared/models/token.model';
+import { AccessToken } from '../../modules/auth/models/token.model';
 
 let isRefreshToken: boolean = false;
 

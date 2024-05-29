@@ -43,7 +43,7 @@ export async function createLocationController(
 
     res.json({
       message: `เพิ่มห้อง ${name} สำเร็จ`,
-      fund: newLocation,
+      item: newLocation,
     });
   } catch (error) {
     next(error);
@@ -81,7 +81,7 @@ export async function updateLocationController(
 
     res.json({
       message: `แก้ไขห้อง ${name} สำเร็จ`,
-      location: payload,
+      item: payload,
     });
   } catch (error) {
     next(error);

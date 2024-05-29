@@ -13,44 +13,44 @@ export class LogApiService {
 
   constructor(private http: HttpClient, private logService: LogService) {}
 
-  getAllLogs(): Observable<Log[]> {
+  getAll(): Observable<Log[]> {
     return this.http.get<Log[]>(this.apiUrl).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.logService.setLogs(res))
+      tap((res) => this.logService.assign(res))
     );
   }
 
-  getInitialLogs(): Observable<Log[]> {
+  getInit(): Observable<Log[]> {
     return this.http.get<Log[]>(`${this.apiUrl}/init`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.logService.setLogs(res))
+      tap((res) => this.logService.assign(res))
     );
   }
 
-  getLogsByDate(startDate: string, endDate: string): Observable<Log[]> {
+  getByDate(startDate: string, endDate: string): Observable<Log[]> {
     return this.http
       .get<Log[]>(`${this.apiUrl}/date/${startDate}/${endDate}`)
       .pipe(
         switchMap((res) => timer(200).pipe(map(() => res))),
-        tap((res) => this.logService.setLogs(res))
+        tap((res) => this.logService.assign(res))
       );
   }
 
-  getLogsByTrack(track: string): Observable<Log[]> {
+  getByTrack(track: string): Observable<Log[]> {
     return this.http.get<Log[]>(`${this.apiUrl}/track/${track}`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.logService.setLogs(res))
+      tap((res) => this.logService.assign(res))
     );
   }
 
-  getLogsByCode(code: string): Observable<Log[]> {
+  getByCode(code: string): Observable<Log[]> {
     return this.http.get<Log[]>(`${this.apiUrl}/code/${code}`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.logService.setLogs(res))
+      tap((res) => this.logService.assign(res))
     );
   }
 
-  getLogById(id: number): Observable<Log> {
+  getById(id: number): Observable<Log> {
     return this.http.get<Log>(`${this.apiUrl}/${id}`);
   }
 }

@@ -9,47 +9,48 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class InventoryCheckService {
-  private inChecks: InventoryCheck[] = [];
-  private inChecks$ = new Subject<InventoryCheck[]>();
+  private inventoriesCheck: InventoryCheck[] = [];
+  private inventoriesCheck$ = new Subject<InventoryCheck[]>();
 
   constructor() {}
 
-  onInChecksListener(): Observable<InventoryCheck[]> {
-    return this.inChecks$.asObservable();
+  onListener(): Observable<InventoryCheck[]> {
+    return this.inventoriesCheck$.asObservable();
   }
 
-  setInChecks(InChecks: InventoryCheck[]): void {
-    this.inChecks = InChecks;
-    this.inChecks$.next(this.inChecks.slice());
+  assign(item: InventoryCheck[]): void {
+    this.inventoriesCheck = item;
+    this.inventoriesCheck$.next(this.inventoriesCheck.slice());
   }
 
-  getInChecks(): InventoryCheck[] {
-    return this.inChecks.slice();
+  getAll(): InventoryCheck[] {
+    return this.inventoriesCheck.slice();
   }
 
-  getInCheckByInventoryId(id: number): InventoryCheck {
-    return this.inChecks.find((inCheck) => inCheck.Inventory.id === id);
+  getByInventoryId(id: number): InventoryCheck {
+    return this.inventoriesCheck.find((item) => item.Inventory.id === id);
   }
 
-  getInChecksTable(): InventoryCheckTable[] {
-    return this.inChecks
-      .map((check, i) => ({
+  getTableData(): InventoryCheckTable[] {
+    return this.inventoriesCheck
+      .map((item, i) => ({
         no: i + 1,
-        id: check.Inventory.id,
-        track: check.Inventory.track,
-        image: check.Inventory.image,
-        code: check.Inventory.code,
-        year: check.year + 543,
-        category: check.Inventory.Category.name,
-        status: check.Inventory.Status.name,
-        usage: check.Inventory.Usage.name,
-        description: check.Inventory.description,
+        id: item.Inventory.id,
+        track: item.Inventory.track,
+        image: item.Inventory.image,
+        code: item.Inventory.code,
+        year: item.year + 543,
+        category: item.Inventory.Category.name,
+        status: item.Inventory.Status.name,
+        fund: item.Inventory.Fund.name,
+        location: item.Inventory.Location.name,
+        description: item.Inventory.description,
       }))
       .slice();
   }
 
-  createInCheck(inCheck: InventoryCheck): void {
-    this.inChecks.push(inCheck);
-    this.inChecks$.next(this.inChecks.slice());
+  create(item: InventoryCheck): void {
+    this.inventoriesCheck.push(item);
+    this.inventoriesCheck$.next(this.inventoriesCheck.slice());
   }
 }

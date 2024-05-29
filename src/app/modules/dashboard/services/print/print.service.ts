@@ -11,35 +11,33 @@ export class PrintService {
 
   constructor() {}
 
-  onInventoriesListener(): Observable<InventoryPrint[]> {
+  onListener(): Observable<InventoryPrint[]> {
     return this.inventories$.asObservable();
   }
 
-  getInventories(): InventoryPrint[] {
+  getAll(): InventoryPrint[] {
     return this.inventories.slice();
   }
 
-  getInventoryById(id: number): InventoryPrint {
-    return this.inventories.find((inventory) => inventory.id === id);
+  getById(id: number): InventoryPrint {
+    return this.inventories.find((item) => item.id === id);
   }
 
-  getInventoryByCode(code: string): InventoryPrint {
-    return this.inventories.find((inventory) => inventory.code === code);
+  getByCode(code: string): InventoryPrint {
+    return this.inventories.find((item) => item.code === code);
   }
 
-  getInventoryByTrack(track: string): InventoryPrint {
-    return this.inventories.find((inventory) => inventory.track === track);
+  getByTrack(track: string): InventoryPrint {
+    return this.inventories.find((item) => item.track === track);
   }
 
-  createInventory(inventory: InventoryPrint): void {
-    this.inventories.push(inventory);
+  create(item: InventoryPrint): void {
+    this.inventories.push(item);
     this.inventories$.next(this.inventories.slice());
   }
 
-  updatPrintCountInventory(id: number, count: number): void {
-    const index = this.inventories.findIndex(
-      (inventory) => inventory.id === id
-    );
+  updateCount(id: number, count: number): void {
+    const index = this.inventories.findIndex((item) => item.id === id);
 
     if (index !== -1) {
       this.inventories[index].printCount = count;
@@ -47,10 +45,8 @@ export class PrintService {
     }
   }
 
-  incrementPrintCount(id: number): void {
-    const index = this.inventories.findIndex(
-      (inventory) => inventory.id === id
-    );
+  incrementCount(id: number): void {
+    const index = this.inventories.findIndex((item) => item.id === id);
 
     if (index === -1) return;
     if (this.inventories[index].printCount >= 100) return;
@@ -59,10 +55,8 @@ export class PrintService {
     this.inventories$.next(this.inventories.slice());
   }
 
-  decrementPrintCount(id: number): void {
-    const index = this.inventories.findIndex(
-      (inventory) => inventory.id === id
-    );
+  decrementCount(id: number): void {
+    const index = this.inventories.findIndex((item) => item.id === id);
 
     if (index === -1) return;
     if (this.inventories[index].printCount <= 1) return;
@@ -71,10 +65,8 @@ export class PrintService {
     this.inventories$.next(this.inventories.slice());
   }
 
-  deleteInventory(id: number): void {
-    const index = this.inventories.findIndex(
-      (inventory) => inventory.id === id
-    );
+  delete(id: number): void {
+    const index = this.inventories.findIndex((item) => item.id === id);
 
     if (index !== -1) {
       this.inventories.splice(index, 1);
@@ -82,7 +74,7 @@ export class PrintService {
     }
   }
 
-  resetInventory(): void {
+  reset(): void {
     this.inventories = [];
     this.inventories$.next(this.inventories.slice());
   }

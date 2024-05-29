@@ -43,7 +43,7 @@ export async function createCategoryController(
 
     res.json({
       message: `เพิ่มประเภท ${name} สำเร็จ`,
-      category: newCagegory,
+      item: newCagegory,
     });
   } catch (error) {
     next(error);
@@ -81,7 +81,7 @@ export async function updateCategoryController(
 
     res.json({
       message: `แก้ไขประเภท ${name} สำเร็จ`,
-      category: payload,
+      item: payload,
     });
   } catch (error) {
     next(error);

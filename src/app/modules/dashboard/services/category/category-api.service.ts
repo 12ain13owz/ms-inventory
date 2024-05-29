@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
-import { Message } from './../../../shared/models/response.model';
-import { Category, CategoryResponse } from '../../models/category.model';
+import { ApiResponse } from './../../../shared/models/response.model';
+import { Category } from '../../models/category.model';
 import { CategoryService } from './category.service';
 
 @Injectable({
@@ -17,29 +17,27 @@ export class CategoryApiService {
     private categoryService: CategoryService
   ) {}
 
-  getCategories(): Observable<Category[]> {
+  getAll(): Observable<Category[]> {
     return this.http
       .get<Category[]>(this.apiUrl)
-      .pipe(tap((res) => this.categoryService.setCategorise(res)));
+      .pipe(tap((res) => this.categoryService.assign(res)));
   }
 
-  createCategory(payload: Category): Observable<CategoryResponse> {
+  create(payload: Category): Observable<ApiResponse<Category>> {
     return this.http
-      .post<CategoryResponse>(this.apiUrl, payload)
-      .pipe(tap((res) => this.categoryService.createCategory(res.category)));
+      .post<ApiResponse<Category>>(this.apiUrl, payload)
+      .pipe(tap((res) => this.categoryService.create(res.item)));
   }
 
-  updateCategory(id: number, payload: Category): Observable<CategoryResponse> {
+  update(id: number, payload: Category): Observable<ApiResponse<Category>> {
     return this.http
-      .put<CategoryResponse>(`${this.apiUrl}/${id}`, payload)
-      .pipe(
-        tap((res) => this.categoryService.updateCategory(id, res.category))
-      );
+      .put<ApiResponse<Category>>(`${this.apiUrl}/${id}`, payload)
+      .pipe(tap((res) => this.categoryService.update(id, res.item)));
   }
 
-  deleteCategory(id: number): Observable<Message> {
+  delete(id: number): Observable<ApiResponse> {
     return this.http
-      .delete<Message>(`${this.apiUrl}/${id}`)
-      .pipe(tap(() => this.categoryService.deleteCategory(id)));
+      .delete<ApiResponse>(`${this.apiUrl}/${id}`)
+      .pipe(tap((res) => this.categoryService.delete(id)));
   }
 }

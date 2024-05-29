@@ -29,7 +29,7 @@ import { ValidationService } from '../../../../shared/services/validation.servic
 import { LogApiService } from '../../../services/log/log-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
-import { UsageService } from '../../../services/usage/usage.service';
+import { FundService } from '../../../services/fund/fund.service';
 
 enum Tap {
   Date,
@@ -45,7 +45,6 @@ export class LogListComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private categoryService = inject(CategoryService);
   private statusService = inject(StatusService);
-  private usageService = inject(UsageService);
   private logService = inject(LogService);
   private logApiService = inject(LogApiService);
   private validationService = inject(ValidationService);
@@ -62,9 +61,8 @@ export class LogListComponent implements OnInit, OnDestroy {
   title: string = 'รายการ ประว้ติครุภัณฑ์';
   filterLog: FilterLog = {
     inventories: ['เพิ่มพัสดุ', 'แก้ไขพัสดุ'],
-    categories: this.categoryService.getActiveCategoriesName(),
-    statuses: this.statusService.getActiveStatusNames(),
-    usages: this.usageService.getActiveUsageNames(),
+    categories: this.categoryService.getActiveNames(),
+    statuses: this.statusService.getActiveNames(),
   };
   form = this.initForm();
 
@@ -83,7 +81,6 @@ export class LogListComponent implements OnInit, OnDestroy {
     'code',
     'category',
     'status',
-    'usage',
     'isCreated',
     'description',
     'createdAt',
@@ -95,8 +92,8 @@ export class LogListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initDataSource();
 
-    this.subscription = this.logService.onLogsListener().subscribe(() => {
-      this.dataSource.data = this.logService.getLogsTable();
+    this.subscription = this.logService.onListener().subscribe(() => {
+      this.dataSource.data = this.logService.getTableData();
       this.initPaginatorAndSort();
     });
   }
@@ -117,14 +114,14 @@ export class LogListComponent implements OnInit, OnDestroy {
         this.dateRange.controls['end'].value,
         'yyyy-MM-dd'
       );
-      this.operation$ = this.logApiService.getLogsByDate(startDate, endDate);
+      this.operation$ = this.logApiService.getByDate(startDate, endDate);
     } else if (this.selectedTap.value === Tap.Code) {
       if (!this.code) return;
 
       const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
       if (!code) return;
 
-      this.operation$ = this.logApiService.getLogsByCode(code);
+      this.operation$ = this.logApiService.getByCode(code);
     }
 
     this.isLoading = true;
@@ -141,7 +138,7 @@ export class LogListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.isSort = false;
     this.logApiService
-      .getAllLogs()
+      .getAll()
       .pipe(
         tap(() => this.setFilter()),
         finalize(() => (this.isLoading = false))
@@ -154,16 +151,14 @@ export class LogListComponent implements OnInit, OnDestroy {
       inventory: [],
       category: [],
       status: [],
-      usage: [],
     });
   }
 
   onFilter(): void {
-    const logs = this.logService.getLogs();
+    const logs = this.logService.getAll();
     const filters = {
       categoryName: this.category.value,
       statusName: this.status.value,
-      usageName: this.usage.value,
     };
 
     const logFilter = Object.keys(filters).reduce(
@@ -217,24 +212,19 @@ export class LogListComponent implements OnInit, OnDestroy {
     return this.form.controls['status'];
   }
 
-  get usage(): FormControl<string[]> {
-    return this.form.controls['usage'];
-  }
-
   private initForm() {
     return this.formBuilder.group({
       inventory: this.formBuilder.control<string[]>([]),
       category: this.formBuilder.control<string[]>([]),
       status: this.formBuilder.control<string[]>([]),
-      usage: this.formBuilder.control<string[]>([]),
     });
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.logService.getLogsTable();
+    this.dataSource.data = this.logService.getTableData();
     if (this.validationService.isEmpty(this.dataSource.data)) {
       this.logApiService
-        .getInitialLogs()
+        .getInit()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
 

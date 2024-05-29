@@ -11,43 +11,41 @@ export class ScanService {
 
   constructor() {}
 
-  onInventoriesListener(): Observable<InventoryScan[]> {
+  onListener(): Observable<InventoryScan[]> {
     return this.inventories$.asObservable();
   }
 
-  getInventories(): InventoryScan[] {
+  getAll(): InventoryScan[] {
     return this.inventories.slice();
   }
 
-  getInventoryById(id: number): InventoryScan {
-    return this.inventories.find((inventory) => inventory.id === id);
+  getById(id: number): InventoryScan {
+    return this.inventories.find((item) => item.id === id);
   }
 
-  getInventoryByCode(code: string): InventoryScan {
-    return this.inventories.find((inventory) => inventory.code === code);
+  getByCode(code: string): InventoryScan {
+    return this.inventories.find((item) => item.code === code);
   }
 
-  getInventoryByTrack(track: string): InventoryScan {
-    return this.inventories.find((inventory) => inventory.track === track);
+  getByTrack(track: string): InventoryScan {
+    return this.inventories.find((item) => item.track === track);
   }
 
-  createInventory(inventory: Inventory): void {
+  create(item: Inventory): void {
     const inventoryScan: InventoryScan = {
-      id: inventory.id,
-      image: inventory.image,
-      code: inventory.code,
-      track: inventory.track,
-      description: inventory.description,
+      id: item.id,
+      image: item.image,
+      code: item.code,
+      track: item.track,
+      description: item.description,
     };
 
     this.inventories.unshift(inventoryScan);
     this.inventories$.next(this.inventories.slice());
   }
 
-  deleteInventory(id: number): void {
-    const index = this.inventories.findIndex(
-      (inventory) => inventory.id === id
-    );
+  delete(id: number): void {
+    const index = this.inventories.findIndex((item) => item.id === id);
 
     if (index !== -1) {
       this.inventories.splice(index, 1);
@@ -55,7 +53,7 @@ export class ScanService {
     }
   }
 
-  resetInventory(): void {
+  reset(): void {
     this.inventories = [];
     this.inventories$.next(this.inventories.slice());
   }

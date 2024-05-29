@@ -13,9 +13,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { CategoryApiService } from '../../../services/category/category-api.service';
-import { Category, CategoryResponse } from '../../../models/category.model';
+import { Category } from '../../../models/category.model';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
-import { Message } from '../../../../shared/models/response.model';
+import { ApiResponse } from '../../../../shared/models/response.model';
 import { CATEGORY } from '../../../constants/category.constant';
 import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 
@@ -33,10 +33,10 @@ export class CategoryEditComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<CategoryEditComponent>);
   private categoryApiService = inject(CategoryApiService);
   private toastService = inject(ToastNotificationService);
-  private operation$: Observable<Message | CategoryResponse>;
+  private operation$: Observable<ApiResponse<Category>>;
 
   validationField = CATEGORY.validationField;
-  title: string = 'เพิ่ม คุณสมบัติครุภัณฑ์';
+  title: string = 'เพิ่มประเภท';
   isEdit: boolean = false;
   isLoading: boolean = false;
 
@@ -44,7 +44,7 @@ export class CategoryEditComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.title = 'แก้ไข คุณสมบัติครุภัณฑ์';
+      this.title = 'แก้ไขประเภท';
       this.isEdit = true;
       this.form.patchValue(this.data);
     }
@@ -63,8 +63,8 @@ export class CategoryEditComponent implements OnInit {
     const { id, ...payload }: Category = { ...this.form.getRawValue() };
     this.isLoading = true;
     this.operation$ = this.isEdit
-      ? this.categoryApiService.updateCategory(id, payload)
-      : this.categoryApiService.createCategory(payload);
+      ? this.categoryApiService.update(id, payload)
+      : this.categoryApiService.create(payload);
 
     this.operation$
       .pipe(

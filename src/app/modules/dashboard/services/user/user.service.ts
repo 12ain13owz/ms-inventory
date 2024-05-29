@@ -11,33 +11,33 @@ export class UserService {
 
   constructor() {}
 
-  onUsersListener(): Observable<User[]> {
+  onListener(): Observable<User[]> {
     return this.users$.asObservable();
   }
 
-  setUsers(users: User[]): void {
-    this.users = users;
+  assign(items: User[]): void {
+    this.users = items;
     this.users$.next(this.users.slice());
   }
 
-  getUsers(): User[] {
+  getAll(): User[] {
     return this.users.slice();
   }
 
-  getUsersTable(): UserTable[] {
-    return this.users.map((user, i) => ({ no: i + 1, ...user })).slice();
+  getTableData(): UserTable[] {
+    return this.users.map((item, i) => ({ no: i + 1, ...item })).slice();
   }
 
-  createUser(user: User): void {
-    this.users.push(user);
+  create(item: User): void {
+    this.users.push(item);
     this.users$.next(this.users.slice());
   }
 
-  updateUser(id: number, user: User): void {
-    const index = this.users.findIndex((user) => user.id === id);
+  update(id: number, item: User): void {
+    const index = this.users.findIndex((item) => item.id === id);
 
     if (index !== -1) {
-      this.users[index] = { ...this.users[index], ...user };
+      this.users[index] = { ...this.users[index], ...item };
       this.users$.next(this.users.slice());
     }
   }

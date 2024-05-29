@@ -41,9 +41,9 @@ export class PrintListComponent implements OnInit, AfterViewInit, OnDestroy {
   dataSource = new MatTableDataSource<InventoryPrint>([]);
 
   ngOnInit(): void {
-    this.dataSource.data = this.printService.getInventories();
+    this.dataSource.data = this.printService.getAll();
     this.subscription = this.printService
-      .onInventoriesListener()
+      .onListener()
       .subscribe((inventories) => (this.dataSource.data = inventories));
   }
 
@@ -57,29 +57,29 @@ export class PrintListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onReset() {
-    this.printService.resetInventory();
+    this.printService.reset();
   }
 
   onBlurPrintCount(event: Event, id: number): void {
-    const inventory = this.printService.getInventoryById(id);
+    const inventory = this.printService.getById(id);
     if (!inventory) return;
 
     const el = event.target as HTMLInputElement;
     el.value = el.value.replace(/[^0-9]/g, '');
     if (+el.value <= 0) el.value = '1';
     if (+el.value >= 100) el.value = '100';
-    this.printService.updatPrintCountInventory(id, +el.value);
+    this.printService.updateCount(id, +el.value);
   }
 
   incrementPrintCount(id: number): void {
-    this.printService.incrementPrintCount(id);
+    this.printService.incrementCount(id);
   }
 
   decrementPrintCount(id: number): void {
-    this.printService.decrementPrintCount(id);
+    this.printService.decrementCount(id);
   }
 
   onDeleteInventory(id: number): void {
-    this.printService.deleteInventory(id);
+    this.printService.delete(id);
   }
 }

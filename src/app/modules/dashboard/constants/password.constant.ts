@@ -3,19 +3,15 @@ export const PASSWORD = {
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
 
   validationField: {
-    oldPassword: {
-      required: 'กรุณาระบุ Old password',
-    },
-
+    oldPassword: { required: 'กรุณาระบุ รหัสผ่านเก่า' },
     newPassword: {
-      required: 'กรุณาระบุ New password',
+      required: 'กรุณาระบุ รหัสผ่านใหม่',
       pattern:
         'ต้องมีตัวเล็ก, ตัวใหญ่, ตัวเลข, อักษรพิเศษ และไม่ต่ำกว่า 8 ตัวอักษร',
     },
-
     confirmPassword: {
-      required: 'กรุณาระบุ Confirm password',
-      match: 'Password ไม่ตรงกัน',
+      required: 'กรุณาระบุ ยืนยันรหัสผ่านใหม่',
+      match: 'รหัสผ่านไม่ตรงกัน',
     },
   },
 };

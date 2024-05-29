@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, finalize } from 'rxjs';
 import { InventoryService } from '../../../services/inventory/inventory.service';
 import { InventoryApiService } from '../../../services/inventory/inventory-api.service';
@@ -21,6 +21,7 @@ import { Inventory, InventoryPrint } from '../../../models/inventory.model';
 export class InventoryViewComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
+  private router = inject(Router);
   private route = inject(ActivatedRoute);
   private inventoryService = inject(InventoryService);
   private inventoryApiService = inject(InventoryApiService);
@@ -30,30 +31,36 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
 
   imageUrl: string = environment.imageUrl;
 
-  title: string = 'รายละเอียด ครุภัณฑ์';
+  title: string = 'รายละเอียดครุภัณฑ์';
   isEdit: boolean = false;
   isLoading: boolean = false;
   id: number = +this.route.snapshot.params['id'];
-  inventory: Inventory = this.inventoryService.getInventoryById(this.id);
+  inventory: Inventory = this.inventoryService.getById(this.id);
 
   ngOnInit(): void {
     if (!this.inventory) {
       this.isLoading = true;
       this.inventoryApiService
-        .getInventoryById(this.id)
+        .getById(this.id)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res) => res && (this.inventory = res));
     }
 
     this.subscription = this.inventoryService
-      .onInventoriesListener()
+      .onListener()
       .subscribe(
-        () => (this.inventory = this.inventoryService.getInventoryById(this.id))
+        () => (this.inventory = this.inventoryService.getById(this.id))
       );
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onEdit(): void {
+    this.router.navigate(['/inventory/edit', this.inventory.id], {
+      state: { inventory: this.inventory },
+    });
   }
 
   getUseDate(receivedDate: Date) {
@@ -64,15 +71,6 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
   isEmpty(value: any): string | any {
     if (!value) return '-';
     return value;
-  }
-
-  onEdit() {
-    this.isEdit = true;
-  }
-
-  onEditSuccess(inventory: Inventory) {
-    this.isEdit = false;
-    this.inventory = inventory;
   }
 
   onPrint(): void {
@@ -98,6 +96,6 @@ export class InventoryViewComponent implements OnInit, OnDestroy {
       description: this.inventory.description,
       printCount: 1,
     };
-    this.printService.createInventory(inventory);
+    this.printService.create(inventory);
   }
 }

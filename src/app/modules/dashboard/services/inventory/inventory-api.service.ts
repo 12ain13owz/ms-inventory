@@ -4,9 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { InventoryService } from './inventory.service';
 import { LogService } from '../log/log.service';
 import { Observable, map, switchMap, tap, timer } from 'rxjs';
-import { Inventory, InventoryResponse } from '../../models/inventory.model';
+import { Inventory, InventoryWithLog } from '../../models/inventory.model';
 import { SocketLogService } from '../../socket-io/socket-log.service';
 import { SocketInventoryService } from '../../socket-io/socket-inventory.service';
+import { ApiResponse } from '../../../shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,65 +23,66 @@ export class InventoryApiService {
     private socketLogService: SocketLogService
   ) {}
 
-  getAllInventorys(): Observable<Inventory[]> {
+  getAll(): Observable<Inventory[]> {
     return this.http.get<Inventory[]>(this.apiUrl).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.inventoryService.setInventories(res))
+      tap((res) => this.inventoryService.assign(res))
     );
   }
 
-  getInitialInventorys(): Observable<Inventory[]> {
+  getInit(): Observable<Inventory[]> {
     return this.http.get<Inventory[]>(`${this.apiUrl}/init`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.inventoryService.setInventories(res))
+      tap((res) => this.inventoryService.assign(res))
     );
   }
 
-  getInventorysByDate(
-    startDate: string,
-    endDate: string
-  ): Observable<Inventory[]> {
+  getByDate(startDate: string, endDate: string): Observable<Inventory[]> {
     return this.http
       .get<Inventory[]>(`${this.apiUrl}/date/${startDate}/${endDate}`)
       .pipe(
         switchMap((res) => timer(200).pipe(map(() => res))),
-        tap((res) => this.inventoryService.setInventories(res))
+        tap((res) => this.inventoryService.assign(res))
       );
   }
 
-  getInventoryById(id: number): Observable<Inventory> {
+  getById(id: number): Observable<Inventory> {
     return this.http.get<Inventory>(`${this.apiUrl}/id/${id}`);
   }
 
-  getInventoryByCode(code: string): Observable<Inventory> {
+  getByCode(code: string): Observable<Inventory> {
     return this.http.get<Inventory>(`${this.apiUrl}/code/${code}`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.inventoryService.setInventory(res))
+      tap((res) => this.inventoryService.assign([res]))
     );
   }
 
-  createInventory(payload: FormData): Observable<InventoryResponse> {
-    return this.http.post<InventoryResponse>(this.apiUrl, payload).pipe(
-      tap((res) => this.inventoryService.createInventory(res.inventory)),
-      tap((res) => this.socketInventoryService.createInventory(res.inventory)),
-      tap((res) => this.logService.createLog(res.log)),
-      tap((res) => this.socketLogService.createLog(res.log))
-    );
+  create(payload: FormData): Observable<ApiResponse<InventoryWithLog>> {
+    return this.http
+      .post<ApiResponse<InventoryWithLog>>(this.apiUrl, payload)
+      .pipe(
+        tap((res) => {
+          this.inventoryService.create(res.item.inventory);
+          this.socketInventoryService.create(res.item.inventory);
+          this.logService.create(res.item.log);
+          this.socketLogService.create(res.item.log);
+        })
+      );
   }
 
-  updateInventory(
+  update(
     id: number,
     payload: FormData
-  ): Observable<InventoryResponse> {
+  ): Observable<ApiResponse<InventoryWithLog>> {
     return this.http
-      .put<InventoryResponse>(`${this.apiUrl}/${id}`, payload)
+      .put<ApiResponse<InventoryWithLog>>(`${this.apiUrl}/${id}`, payload)
       .pipe(
-        tap((res) => this.inventoryService.updateInventory(id, res.inventory)),
-        tap((res) =>
-          this.socketInventoryService.updateInventory(id, res.inventory)
-        ),
-        tap((res) => this.logService.createLog(res.log)),
-        tap((res) => this.socketLogService.createLog(res.log))
+        tap((res) => {
+          this.inventoryService.update(id, res.item.inventory);
+          this.socketInventoryService.update(id, res.item.inventory);
+          this.logService.create(res.item.log);
+          this.socketLogService.create(res.item.log);
+        })
       );
   }
 

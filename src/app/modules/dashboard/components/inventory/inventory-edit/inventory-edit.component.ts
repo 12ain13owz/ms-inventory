@@ -20,7 +20,7 @@ import { InventoryService } from '../../../services/inventory/inventory.service'
 import { InventoryApiService } from '../../../services/inventory/inventory-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
-import { UsageService } from '../../../services/usage/usage.service';
+import { FundService } from '../../../services/fund/fund.service';
 import { ValidationService } from '../../../../shared/services/validation.service';
 import { ToastNotificationService } from '../../../../../core/services/toast-notification.service';
 import { DatePipe } from '@angular/common';
@@ -38,6 +38,7 @@ import { NgxDropzoneChangeEvent } from '@todorus/ngx-dropzone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Inventory } from '../../../models/inventory.model';
 import { environment } from '../../../../../../environments/environment';
+import { LocationService } from '../../../services/location/location.service';
 
 @Component({
   selector: 'app-inventory-edit',
@@ -50,14 +51,15 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
   @ViewChild('dateEl') dateEl: ElementRef<HTMLInputElement>;
   @ViewChild('picker') picker: MatDatepicker<Date>;
 
-  private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   private inventoryService = inject(InventoryService);
   private inventoryApiService = inject(InventoryApiService);
   private categoryService = inject(CategoryService);
   private statusService = inject(StatusService);
-  private usageService = inject(UsageService);
+  private fundService = inject(FundService);
+  private locationService = inject(LocationService);
   private validationService = inject(ValidationService);
   private toastService = inject(ToastNotificationService);
   private datePipe = inject(DatePipe);
@@ -66,34 +68,44 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
   validationField = INVENTORY.validationField;
   imageUrl: string = environment.imageUrl;
   files: File[] = [];
-  title: string = 'แก้ไข ครุภัณฑ์';
+  title: string = 'แก้ไขครุภัณฑ์';
   isImageEdit: boolean = false;
   isLoading: boolean = this.inventoryService.getIsLoading();
 
-  categories = this.categoryService.getActiveCategories();
-  statuses = this.statusService.getActiveStatuses();
-  usages = this.usageService.getActiveUsages();
+  categories = this.categoryService.getActiveDetails();
+  statuses = this.statusService.getActiveDetails();
+  funds = this.fundService.getActiveDetails();
+  locations = this.locationService.getActiveDetails();
+
   id: number = +this.route.snapshot.params['id'];
-  inventory: Inventory = this.inventoryService.getInventoryById(this.id);
+  inventory: Inventory = this.inventoryService.getById(this.id);
   isInventory: boolean = false;
 
   formInventory = this.initFormInventory();
   formImage = this.initFormImage();
 
+  constructor() {
+    if (!this.inventory) {
+      const navigation = this.router.getCurrentNavigation();
+      this.inventory = navigation?.extras?.state['inventory'] as Inventory;
+    }
+  }
+
   ngOnInit(): void {
     this.initSubscription();
 
-    if (this.inventory) this.setData(this.inventory);
-    if (!this.inventory) {
-      this.isInventory = true;
-      this.inventoryApiService
-        .getInventoryById(this.id)
-        .pipe(finalize(() => (this.isInventory = false)))
-        .subscribe((res) => {
-          this.inventory = res;
-          this.setData(this.inventory);
-        });
+    if (this.inventory) {
+      this.assignInventory(this.inventory);
+      return;
     }
+    this.isInventory = true;
+    this.inventoryApiService
+      .getById(this.id)
+      .pipe(finalize(() => (this.isInventory = false)))
+      .subscribe((res) => {
+        this.inventory = res;
+        this.assignInventory(this.inventory);
+      });
   }
 
   ngOnDestroy(): void {
@@ -108,15 +120,24 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
       this.receivedDate.value,
       'yyyy-MM-dd'
     );
-    const categoryName = this.categories.find(
+
+    const category = this.categories.find(
       (category) => category.id === this.category.value
-    ).name;
-    const statusName = this.statuses.find(
+    );
+    const categoryName = category ? category.name : '';
+
+    const status = this.statuses.find(
       (status) => status.id === this.status.value
-    ).name;
-    const usageName = this.usages.find(
-      (usage) => usage.id === this.usage.value
-    ).name;
+    );
+    const statusName = status ? status.name : '';
+
+    const fund = this.funds.find((fund) => fund.id === this.fund.value);
+    const fundName = fund ? fund.name : '';
+
+    const location = this.locations.find(
+      (location) => location.id === this.location.value
+    );
+    const locationName = location ? location.name : '';
 
     const payload = new FormData();
     payload.append('code', this.code.value);
@@ -125,8 +146,6 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
     payload.append('unit', this.unit.value);
     payload.append('value', this.value.value);
     payload.append('receivedDate', receivedDate);
-    payload.append('fundingSource', this.fundingSource.value);
-    payload.append('location', this.location.value);
     payload.append('remark', this.remark.value);
     payload.append('image', this.image.value);
     payload.append('imageEdit', this.isImageEdit.toString());
@@ -134,12 +153,14 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
     payload.append('categoryName', categoryName);
     payload.append('statusId', this.status.value.toString());
     payload.append('statusName', statusName);
-    payload.append('usageId', this.usage.value.toString());
-    payload.append('usageName', usageName);
+    payload.append('fundId', this.fund.value.toString());
+    payload.append('fundName', fundName);
+    payload.append('locationId', this.location.value.toString());
+    payload.append('locationName', locationName);
 
     this.isLoading = true;
     this.inventoryApiService
-      .updateInventory(this.id, payload)
+      .update(this.id, payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         this.toastService.success('Success', res.message);
@@ -152,7 +173,7 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
     this.isImageEdit = false;
     this.codeEl.nativeElement.focus();
     this.formImage.reset();
-    this.setData(this.inventory);
+    this.assignInventory(this.inventory);
   }
 
   onSelectImage(event: NgxDropzoneChangeEvent): void {
@@ -245,14 +266,6 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
     return this.formInventory.controls['receivedDate'];
   }
 
-  get fundingSource(): FormControl<string> {
-    return this.formInventory.controls['fundingSource'];
-  }
-
-  get location(): FormControl<string> {
-    return this.formInventory.controls['location'];
-  }
-
   get remark(): FormControl<string> {
     return this.formInventory.controls['remark'];
   }
@@ -265,15 +278,19 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
     return this.formInventory.controls['status'];
   }
 
-  get usage(): FormControl<number> {
-    return this.formInventory.controls['usage'];
+  get fund(): FormControl<number> {
+    return this.formInventory.controls['fund'];
+  }
+
+  get location(): FormControl<number> {
+    return this.formInventory.controls['location'];
   }
 
   get image(): FormControl<File> {
     return this.formImage;
   }
 
-  private setData(inventory: Inventory): void {
+  private assignInventory(inventory: Inventory): void {
     if (!inventory) return;
 
     if (inventory.image) {
@@ -293,24 +310,26 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
             take(1)
           )
     ).subscribe(() => {
+      const receivedDate = new Date(inventory.receivedDate);
+
       this.formInventory.patchValue({
         code: inventory.code,
         oldCode: inventory.oldCode,
         description: inventory.description,
         unit: inventory.unit,
         value: inventory.value.toString(),
-        receivedDate: new Date(inventory.receivedDate),
-        fundingSource: inventory.fundingSource,
-        location: inventory.location,
+        receivedDate: receivedDate,
         remark: inventory.remark,
         category: inventory.Category.id,
         status: inventory.Status.id,
-        usage: inventory.Usage.id,
+        fund: inventory.Fund.id,
+        location: inventory.Location.id,
         image: inventory.image,
       });
 
-      const receivedDateInput = new Date(inventory.receivedDate);
-      receivedDateInput.setFullYear(receivedDateInput.getFullYear() + 543);
+      const receivedDateInput = receivedDate.setFullYear(
+        receivedDate.getFullYear() + 543
+      );
       const datePipe = this.datePipe.transform(receivedDateInput, 'd/M/yyyy');
       this.dateInput.setValue(datePipe);
     });
@@ -328,12 +347,11 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
         Validators.required,
         this.validationService.isDate(),
       ]),
-      fundingSource: ['', [Validators.required]],
-      location: ['', [Validators.required]],
       remark: [''],
       category: this.formBuilder.control<number>(null, [Validators.required]),
       status: this.formBuilder.control<number>(null, [Validators.required]),
-      usage: this.formBuilder.control<number>(null, [Validators.required]),
+      fund: this.formBuilder.control<number>(null, [Validators.required]),
+      location: this.formBuilder.control<number>(null, [Validators.required]),
       image: [''],
     });
   }
@@ -348,39 +366,38 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
   private initSubscription(): void {
     this.subscription.add(
       this.categoryService
-        .onCategoriesListener()
+        .onListener()
         .subscribe(
-          () => (this.categories = this.categoryService.getActiveCategories())
+          () => (this.categories = this.categoryService.getActiveDetails())
         )
     );
 
     this.subscription.add(
       this.statusService
-        .onStatusesListener()
+        .onListener()
         .subscribe(
-          () => (this.statuses = this.statusService.getActiveStatuses())
+          () => (this.statuses = this.statusService.getActiveDetails())
         )
     );
 
     this.subscription.add(
-      this.usageService
-        .onUsagesListener()
-        .subscribe(() => (this.usages = this.usageService.getActiveUsages()))
+      this.fundService
+        .onListener()
+        .subscribe(() => (this.funds = this.fundService.getActiveDetails()))
+    );
+
+    this.subscription.add(
+      this.locationService
+        .onListener()
+        .subscribe(
+          () => (this.locations = this.locationService.getActiveDetails())
+        )
     );
 
     this.subscription.add(
       this.inventoryService
         .onIsLoadingListener()
         .subscribe((isLoading) => (this.isLoading = isLoading))
-    );
-
-    this.subscription.add(
-      this.inventoryService
-        .onInventoriesListener()
-        .subscribe(
-          () =>
-            (this.inventory = this.inventoryService.getInventoryById(this.id))
-        )
     );
   }
 }

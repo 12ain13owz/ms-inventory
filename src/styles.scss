@@ -281,7 +281,9 @@ mat-table {
 
 .hidden-input {
   position: absolute;
+  left: -9999px;
   visibility: hidden;
+  opacity: 0;
 }
 
 .btn-close {

@@ -6,7 +6,7 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Profile } from '../../models/profile.model';
 import { ProfileService } from '../../services/profile/profile.service';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
@@ -17,10 +17,9 @@ import { ThemeService } from '../../../shared/services/theme.service';
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
 })
-export class ToolbarComponent implements OnInit, OnDestroy {
+export class ToolbarComponent implements OnInit {
   @Output() menuToggle = new EventEmitter();
 
-  private subscription = new Subscription();
   private profileService = inject(ProfileService);
   private authService = inject(AuthApiService);
   private themeService = inject(ThemeService);
@@ -30,12 +29,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   title: string = '';
 
   ngOnInit(): void {
-    this.profile$ = this.profileService.onProfileListener();
+    this.profile$ = this.profileService.onListener();
     this.isDarkTheme = this.themeService.getTheme();
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   onMenuToggle(): void {

@@ -29,7 +29,7 @@
 
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >ชื่อ</mat-header-cell
+          >ชื่อ - สกุล</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
           {{ element.firstname + " " + element.lastname }}
@@ -68,7 +68,7 @@
         <mat-cell *matCellDef="let element">
           @if(element.id !== profileId) {
           <button mat-icon-button (click)="onUpdate(element)">
-            <mat-icon color="primary">edit</mat-icon>
+            <mat-icon color="accent">edit</mat-icon>
           </button>
           }
         </mat-cell>

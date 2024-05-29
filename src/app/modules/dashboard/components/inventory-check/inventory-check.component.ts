@@ -25,11 +25,10 @@ import { DatePipe } from '@angular/common';
 import { environment } from '../../../../../environments/environment';
 import { CategoryService } from '../../services/category/category.service';
 import { StatusService } from '../../services/status/status.service';
-import { UsageService } from '../../services/usage/usage.service';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { FilterInventory, InventoryTable } from '../../models/inventory.model';
+import { InventoryFilter, InventoryTable } from '../../models/inventory.model';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -42,8 +41,7 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
   private inventoryCheckService = inject(InventoryCheckService);
   private inventoryCheckApiService = inject(InventoryCheckApiService);
   private categoryService = inject(CategoryService);
-  private assetStatusService = inject(StatusService);
-  private usageStatusService = inject(UsageService);
+  private statusService = inject(StatusService);
   private validationService = inject(ValidationService);
 
   private subscription = new Subscription();
@@ -54,10 +52,9 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
 
-  filter: FilterInventory = {
-    categories: this.categoryService.getActiveCategoriesName(),
-    statuses: this.assetStatusService.getActiveStatusNames(),
-    usages: this.usageStatusService.getActiveUsageNames(),
+  filter: InventoryFilter = {
+    categories: this.categoryService.getActiveNames(),
+    statuses: this.statusService.getActiveNames(),
   };
   form = this.initForm();
 
@@ -74,7 +71,7 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
     'year',
     'category',
     'status',
-    'usage',
+    'location',
     'description',
   ];
   dataSource = new MatTableDataSource<InventoryTable>([]);
@@ -95,17 +92,17 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
     const year = +this.selectYear.value - 543;
     this.isLoading = true;
     this.inventoryCheckApiService
-      .getInChecksByYear(year)
+      .getByYear(year)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe();
   }
 
   setFilter(): void {
-    this.form.setValue({ category: [], status: [], usage: [] });
+    this.form.setValue({ category: [], status: [] });
   }
 
   onFilter(): void {
-    const inventories = this.inventoryCheckService.getInChecksTable();
+    const inventories = this.inventoryCheckService.getTableData();
     const filters = this.form.value;
 
     this.dataSource.data = Object.keys(filters)
@@ -140,8 +137,11 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
     return this.form.controls['status'];
   }
 
-  get usage(): FormControl<string[]> {
-    return this.form.controls['usage'];
+  private initForm() {
+    return this.formBuilder.group({
+      category: this.formBuilder.control<string[]>([]),
+      status: this.formBuilder.control<string[]>([]),
+    });
   }
 
   private _filter(value: string): string[] {
@@ -162,18 +162,10 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
       map((value) => this._filter(value || ''))
     );
 
-    this.dataSource.data = this.inventoryCheckService.getInChecksTable();
+    this.dataSource.data = this.inventoryCheckService.getTableData();
     if (!this.validationService.isEmpty(this.dataSource.data)) {
       this.initPaginatorAndSort();
     }
-  }
-
-  private initForm() {
-    return this.formBuilder.group({
-      category: this.formBuilder.control<string[]>([]),
-      status: this.formBuilder.control<string[]>([]),
-      usage: this.formBuilder.control<string[]>([]),
-    });
   }
 
   private initPaginatorAndSort(): void {
@@ -197,27 +189,21 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
 
   private initSubscriptions() {
     this.subscription.add(
-      this.inventoryCheckService.onInChecksListener().subscribe(() => {
-        this.dataSource.data = this.inventoryCheckService.getInChecksTable();
+      this.inventoryCheckService.onListener().subscribe(() => {
+        this.dataSource.data = this.inventoryCheckService.getTableData();
         this.initPaginatorAndSort();
       })
     );
 
     this.subscription.add(
-      this.categoryService.onCategoriesListener().subscribe(() => {
-        this.filter.categories = this.categoryService.getActiveCategoriesName();
+      this.categoryService.onListener().subscribe(() => {
+        this.filter.categories = this.categoryService.getActiveNames();
       })
     );
 
     this.subscription.add(
-      this.assetStatusService.onStatusesListener().subscribe(() => {
-        this.filter.statuses = this.assetStatusService.getActiveStatusNames();
-      })
-    );
-
-    this.subscription.add(
-      this.usageStatusService.onUsagesListener().subscribe(() => {
-        this.filter.usages = this.usageStatusService.getActiveUsageNames();
+      this.statusService.onListener().subscribe(() => {
+        this.filter.statuses = this.statusService.getActiveNames();
       })
     );
   }
