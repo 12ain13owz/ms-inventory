@@ -229,7 +229,11 @@
 
         <mat-form-field>
           <mat-label>รายการครุภัณฑ์</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
+          <textarea
+            matInput
+            formControlName="description"
+            [rows]="lines(description.value)"
+          ></textarea>
 
           <mat-error>
             <app-error-field
