@@ -19,6 +19,7 @@ import { readFileSync } from 'fs';
 
 const app = express();
 const node_env = config.get<string>('node_env');
+const port = config.get<number>('port');
 
 const getCorsOptions = (env: string): CorsOptions => {
   if (env === 'production')
@@ -30,6 +31,7 @@ const getCorsOptions = (env: string): CorsOptions => {
   else
     return {
       origin: [
+        'https://localhost:' + port,
         'http://localhost:4200',
         'https://localhost:4200',
         'http://192.168.1.33:4200',
@@ -56,9 +58,8 @@ const socketOptions = {
   cors: { origin: corsOptions.origin },
 };
 const io = new Server(server, socketOptions);
-const port = config.get<number>('port');
-
 socket(io);
+
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(cookieParser());
