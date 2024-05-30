@@ -14,6 +14,12 @@ import {
 import { validate } from '../../middlewares/validate.middleware';
 import { inventorySchema } from '../../schemas/inventory.schema';
 import { reduceQualityImage, upload } from '../../middlewares/file.middlerware';
+import {
+  checkCategoryActive,
+  checkFundActive,
+  checkLocationActive,
+  checkStatusActive,
+} from '../../middlewares/check-active.middleware';
 
 const router = Router();
 
@@ -47,6 +53,10 @@ router.post(
     upload,
     reduceQualityImage,
     validate(inventorySchema.create),
+    checkCategoryActive,
+    checkStatusActive,
+    checkFundActive,
+    checkLocationActive,
   ],
   createInventoryController
 );
@@ -58,6 +68,10 @@ router.put(
     upload,
     reduceQualityImage,
     validate(inventorySchema.update),
+    checkCategoryActive,
+    checkStatusActive,
+    checkFundActive,
+    checkLocationActive,
   ],
   updateInventoryController
 );

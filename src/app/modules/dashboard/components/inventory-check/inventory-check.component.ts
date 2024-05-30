@@ -30,6 +30,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { InventoryFilter, InventoryTable } from '../../models/inventory.model';
 import { MatTableDataSource } from '@angular/material/table';
+import {
+  SweetAlertComponent,
+  SweetAlertInterface,
+} from '../../../shared/components/sweet-alert/sweet-alert.component';
+import { ToastNotificationService } from '../../../../core/services/toast-notification.service';
+import { ProfileService } from '../../services/profile/profile.service';
+import { InventoryCheckTable } from '../../models/inventory-check';
 
 @Component({
   selector: 'app-inventory-check',
@@ -43,13 +50,17 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
   private categoryService = inject(CategoryService);
   private statusService = inject(StatusService);
   private validationService = inject(ValidationService);
+  private toastService = inject(ToastNotificationService);
+  private profileService = inject(ProfileService);
 
   private subscription = new Subscription();
   datePipe = inject(DatePipe);
   imageUrl: string = environment.imageUrl;
+  isAdmin: boolean = this.profileService.isAdmin();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(SweetAlertComponent) sweetAlert: SweetAlertInterface;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
 
   filter: InventoryFilter = {
@@ -59,10 +70,12 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
   form = this.initForm();
 
   title: string = 'รายการ ตรวจสอบครุภัณฑ์';
+  sweetAlertTitle: string = '';
   years: string[] = [];
   selectYear = new FormControl<string>(null);
   filteredOptions: Observable<string[]>;
   isLoading: boolean = false;
+  id: number;
 
   displayedColumns: string[] = [
     'no',
@@ -74,9 +87,11 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
     'location',
     'description',
   ];
-  dataSource = new MatTableDataSource<InventoryTable>([]);
+  dataSource = new MatTableDataSource<InventoryCheckTable>([]);
 
   ngOnInit(): void {
+    if (this.isAdmin) this.displayedColumns.push('action');
+
     this.initDataSource();
     this.initSubscriptions();
   }
@@ -122,6 +137,20 @@ export class InventoryCheckComponent implements OnInit, OnDestroy {
     this.dataSource.filter = '';
     this.setFilter();
     this.onFilter();
+  }
+
+  onConfirm(id: number, title: string): void {
+    this.id = id;
+    this.sweetAlertTitle = `ยืนยันการลบตรวจสอบครุภัณฑ์\n${title}?`;
+    this.sweetAlert.alert(this.sweetAlertTitle);
+  }
+
+  onDelete(confirm: boolean): void {
+    if (!confirm) return;
+
+    this.inventoryCheckApiService
+      .delete(this.id)
+      .subscribe((res) => this.toastService.info('Info', res.message));
   }
 
   applyFilter(event: Event): void {

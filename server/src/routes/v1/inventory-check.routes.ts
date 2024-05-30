@@ -13,6 +13,7 @@ import {
 } from '../../controllers/inventory-check.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import { inventoryCheckSehema } from '../../schemas/inventory-check.schema';
+import { checkStatusActive } from '../../middlewares/check-active.middleware';
 
 const router = Router();
 
@@ -29,7 +30,12 @@ router.get(
 );
 router.post(
   '/',
-  [verifyToken, isUserActive, validate(inventoryCheckSehema.create)],
+  [
+    verifyToken,
+    isUserActive,
+    validate(inventoryCheckSehema.create),
+    checkStatusActive,
+  ],
   createInventoryCheckController
 );
 router.delete(

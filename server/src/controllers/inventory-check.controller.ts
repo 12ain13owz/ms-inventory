@@ -66,7 +66,7 @@ export async function createInventoryCheckController(
   const t = await sequelize.transaction();
 
   try {
-    const { inventoryId, inventoryStatusId, inventoryStatusName } = req.body;
+    const { inventoryId, statusId, statusName } = req.body;
     const currentYear = new Date().getFullYear();
     const inventoryCheck = await inventoryCheckService.findByInventoryId(
       inventoryId,
@@ -75,9 +75,10 @@ export async function createInventoryCheckController(
     const inventory = await inventoryService.findByIdDetails(inventoryId);
     if (!inventory) throw newError(404, 'ไม่พบครุภัณฑ์');
 
-    if (inventory.statusId !== inventoryStatusId) {
+    let resLog;
+    if (inventory.statusId !== statusId) {
       const payloadInventory: Partial<Inventory> = {
-        statusId: inventoryStatusId,
+        statusId: statusId,
       };
 
       const payloadLog = new Log({
@@ -94,7 +95,7 @@ export async function createInventoryCheckController(
         firstname: res.locals.user!.firstname,
         lastname: res.locals.user!.lastname,
         categoryName: inventory.Category.name,
-        statusName: inventoryStatusName,
+        statusName: statusName,
         fundName: inventory.Fund.name,
         locationName: inventory.Location.name,
       });
@@ -108,14 +109,18 @@ export async function createInventoryCheckController(
       if (!result)
         throw newError(400, `แก้ไขครุภัณฑ์ ${inventory.code} ไม่สำเร็จ`);
 
-      await logService.create(payloadLog, t);
+      const resultLog = await logService.create(payloadLog, t);
+      resLog = resultLog.toJSON();
     }
 
     if (inventoryCheck) {
       await t.commit();
       return res.json({
         message: 'ตรวจสอบครุภัณฑ์ สำเร็จ',
-        item: inventoryCheck.toJSON(),
+        item: {
+          inventoryCheck: inventoryCheck.toJSON(),
+          log: resLog,
+        },
       });
     }
 
@@ -126,7 +131,10 @@ export async function createInventoryCheckController(
     const resInvenroryCheck = await inventoryCheckService.findById(result.id);
     res.json({
       message: 'ตรวจสอบครุภัณฑ์ สำเร็จ',
-      item: resInvenroryCheck,
+      item: {
+        inventoryCheck: resInvenroryCheck,
+        log: resLog,
+      },
     });
   } catch (error) {
     await t.rollback();

@@ -6,12 +6,13 @@ import { Observable, map, switchMap, tap, timer } from 'rxjs';
 import {
   InventoryCheck,
   InventoryCheckPayload,
+  InventoryCheckWithLog,
 } from '../../models/inventory-check';
 import { ApiResponse } from '../../../shared/models/response.model';
-import { SocketLogService } from '../../socket-io/socket-log.service';
-import { LogService } from '../log/log.service';
 import { SocketInventoryService } from '../../socket-io/socket-inventory.service';
 import { InventoryService } from '../inventory/inventory.service';
+import { LogService } from '../log/log.service';
+import { SocketLogService } from '../../socket-io/socket-log.service';
 
 @Injectable({
   providedIn: 'root',
@@ -48,29 +49,41 @@ export class InventoryCheckApiService {
 
   create(
     payload: InventoryCheckPayload
-  ): Observable<ApiResponse<InventoryCheck>> {
+  ): Observable<ApiResponse<InventoryCheckWithLog>> {
     return this.http
-      .post<ApiResponse<InventoryCheck>>(this.apiUrl, payload)
+      .post<ApiResponse<InventoryCheckWithLog>>(this.apiUrl, payload)
       .pipe(
         tap((res) => {
           const inventoryCheck = this.inventoryCheckService.getByInventoryId(
-            res.item.Inventory.id
+            res.item.inventoryCheck.Inventory.id
           );
-          if (!inventoryCheck) this.inventoryCheckService.create(res.item);
+
+          if (!inventoryCheck)
+            this.inventoryCheckService.create(res.item.inventoryCheck);
 
           this.inventoryService.update(payload.inventoryId, {
             Status: {
-              id: payload.inventoryStatusId,
-              name: payload.inventoryStatusName,
+              id: payload.statusId,
+              name: payload.statusName,
             },
           });
           this.socketInventoryService.update(payload.inventoryId, {
             Status: {
-              id: payload.inventoryStatusId,
-              name: payload.inventoryStatusName,
+              id: payload.statusId,
+              name: payload.statusName,
             },
           });
+
+          if (!res.item.log) return;
+          this.logService.create(res.item.log);
+          this.socketLogService.create(res.item.log);
         })
       );
+  }
+
+  delete(id: number): Observable<ApiResponse> {
+    return this.http
+      .delete<ApiResponse>(`${this.apiUrl}/${id}`)
+      .pipe(tap((res) => this.inventoryCheckService.delete(id)));
   }
 }

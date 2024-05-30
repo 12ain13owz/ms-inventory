@@ -117,7 +117,10 @@
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef mat-sort-header>รูป</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <a [routerLink]="['/inventory/view', element.id]" class="blurred-img">
+          <a
+            [routerLink]="['/inventory/view', element.inventoryId]"
+            class="blurred-img"
+          >
             <img
               [defaultImage]="'assets/images/no-image.jpg'"
               [lazyLoad]="imageUrl + element.image"
@@ -177,6 +180,21 @@
         </mat-cell>
       </ng-container>
 
+      @if (isAdmin) {
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="onConfirm(element.id, element.code)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+      }
+
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
@@ -190,3 +208,8 @@
     ></mat-paginator>
   </mat-card-content>
 </mat-card>
+
+<app-sweet-alert
+  [icon]="'error'"
+  (confirm)="onDelete($event)"
+></app-sweet-alert>

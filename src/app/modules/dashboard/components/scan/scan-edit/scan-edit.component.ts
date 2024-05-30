@@ -62,8 +62,8 @@ export class ScanEditComponent implements OnInit, OnDestroy {
     const statusName = status ? status.name : '';
     const payload: InventoryCheckPayload = {
       inventoryId: this.inventory.id,
-      inventoryStatusId: this.status.value,
-      inventoryStatusName: statusName,
+      statusId: this.status.value,
+      statusName: statusName,
     };
 
     this.isLoading = true;
@@ -71,7 +71,7 @@ export class ScanEditComponent implements OnInit, OnDestroy {
       .create(payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
-        this.toastService.success('Success', res.message, 2000);
+        this.toastService.success('Success', res.message, 1500);
         this.dialogRef.close();
       });
   }

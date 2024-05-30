@@ -29,10 +29,10 @@ export const inventoryCheckSehema = {
       inventoryId: number({ required_error: inventoryId }).min(1, {
         message: inventoryId,
       }),
-      inventoryStatusId: number({ required_error: inventoryStatus }).min(1, {
+      statusId: number({ required_error: inventoryStatus }).min(1, {
         message: inventoryStatus,
       }),
-      inventoryStatusName: string({ required_error: inventoryStatus }).min(1, {
+      statusName: string({ required_error: inventoryStatus }).min(1, {
         message: inventoryStatus,
       }),
     }),

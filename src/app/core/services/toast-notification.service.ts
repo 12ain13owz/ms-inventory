@@ -17,20 +17,31 @@ export class ToastNotificationService {
     tapToDismiss: true,
   };
 
-  error(title: string, message: string) {
+  error(title: string, message: string, timeOut?: number) {
+    if (timeOut) this.toastOptions.timeOut = timeOut;
+    else this.toastOptions.timeOut = 5000;
+
     this.toastr.error(message, title, this.toastOptions);
   }
 
-  info(title: string, message: string) {
+  info(title: string, message: string, timeOut?: number) {
+    if (timeOut) this.toastOptions.timeOut = timeOut;
+    else this.toastOptions.timeOut = 5000;
+
     this.toastr.info(message, title, this.toastOptions);
   }
 
   success(title: string, message: string, timeOut?: number) {
-    if (timeOut) this.toastOptions.timeOut = 1000;
+    if (timeOut) this.toastOptions.timeOut = timeOut;
+    else this.toastOptions.timeOut = 5000;
+
     this.toastr.success(message, title, this.toastOptions);
   }
 
-  warning(title: string, message: string) {
+  warning(title: string, message: string, timeOut?: number) {
+    if (timeOut) this.toastOptions.timeOut = timeOut;
+    else this.toastOptions.timeOut = 5000;
+
     this.toastr.warning(message, title, this.toastOptions);
   }
 }

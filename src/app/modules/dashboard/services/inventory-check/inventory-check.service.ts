@@ -35,7 +35,8 @@ export class InventoryCheckService {
     return this.inventoriesCheck
       .map((item, i) => ({
         no: i + 1,
-        id: item.Inventory.id,
+        id: item.id,
+        inventoryId: item.Inventory.id,
         track: item.Inventory.track,
         image: item.Inventory.image,
         code: item.Inventory.code,
@@ -52,5 +53,14 @@ export class InventoryCheckService {
   create(item: InventoryCheck): void {
     this.inventoriesCheck.push(item);
     this.inventoriesCheck$.next(this.inventoriesCheck.slice());
+  }
+
+  delete(id: number): void {
+    const index = this.inventoriesCheck.findIndex((item) => item.id === id);
+
+    if (index !== -1) {
+      this.inventoriesCheck.splice(index, 1);
+      this.inventoriesCheck$.next(this.inventoriesCheck.slice());
+    }
   }
 }

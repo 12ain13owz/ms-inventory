@@ -34,8 +34,8 @@ export class StatusComponent implements OnInit, OnDestroy {
   @ViewChild(SweetAlertComponent) sweetAlert: SweetAlertInterface;
 
   private subscription = new Subscription();
-  private assetStatusService = inject(StatusService);
-  private assetStatusApiService = inject(StatusApiService);
+  private statusService = inject(StatusService);
+  private statusApiService = inject(StatusApiService);
   private validationService = inject(ValidationService);
   private toastService = inject(ToastNotificationService);
   private dialog = inject(MatDialog);
@@ -49,10 +49,10 @@ export class StatusComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initDataSource();
-    this.subscription = this.assetStatusService
+    this.subscription = this.statusService
       .onListener()
       .subscribe(
-        () => (this.dataSource.data = this.assetStatusService.getTableData())
+        () => (this.dataSource.data = this.statusService.getTableData())
       );
   }
 
@@ -84,7 +84,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   onDelete(confirm: boolean): void {
     if (!confirm) return;
 
-    this.assetStatusApiService
+    this.statusApiService
       .delete(this.id)
       .subscribe((res) => this.toastService.info('Info', res.message));
   }
@@ -95,10 +95,10 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   private initDataSource(): void {
-    this.dataSource.data = this.assetStatusService.getTableData();
+    this.dataSource.data = this.statusService.getTableData();
 
     if (this.validationService.isEmpty(this.dataSource.data))
-      this.assetStatusApiService
+      this.statusApiService
         .getAll()
         .pipe(finalize(() => (this.isFirstLoading = true)))
         .subscribe();
