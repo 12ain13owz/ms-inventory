@@ -37,10 +37,19 @@ export const inventoryCheckSehema = {
       }),
     }),
   }),
+
+  delete: object({
+    params: object({
+      id: string({ required_error: id })
+        .min(1, { message: id })
+        .regex(regexNumber, { message: id }),
+    }),
+  }),
 };
 
 export type InventoryCheckType = {
   findByYear: TypeOf<typeof inventoryCheckSehema.findByYear>['params'];
   findById: TypeOf<typeof inventoryCheckSehema.findById>['params'];
   create: TypeOf<typeof inventoryCheckSehema.create>['body'];
+  delete: TypeOf<typeof inventoryCheckSehema.delete>['params'];
 };

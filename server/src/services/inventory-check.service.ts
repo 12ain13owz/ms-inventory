@@ -43,6 +43,10 @@ export const inventoryCheckService = {
       transaction: t,
     });
   },
+
+  delete(id: number): Promise<number> {
+    return InventoryCheckModel.destroy({ where: { id } });
+  },
 };
 
 function queryOptions() {

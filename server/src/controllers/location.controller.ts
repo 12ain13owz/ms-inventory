@@ -98,7 +98,7 @@ export async function deleteLocationController(
   try {
     const id = +req.params.id;
     const location = await locationService.findById(id);
-    if (!location) throw newError(400, 'ไม่พบห้อง');
+    if (!location) throw newError(400, 'ไม่พบห้อง ที่ต้องการลบ');
 
     const name = location.name;
     const result = await locationService.delete(id);

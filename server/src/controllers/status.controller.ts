@@ -98,7 +98,7 @@ export async function deleteStatusController(
   try {
     const id = +req.params.id;
     const status = await statusService.findById(id);
-    if (!status) throw newError(400, 'ไม่พบสถานะ');
+    if (!status) throw newError(400, 'ไม่พบสถานะ ที่ต้องการลบ');
 
     const name = status.name;
     const result = await statusService.delete(id);

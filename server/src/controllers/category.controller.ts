@@ -98,7 +98,7 @@ export async function deleteCategoryController(
   try {
     const id = +req.params.id;
     const category = await categoryService.findById(id);
-    if (!category) throw newError(400, 'ไม่พบประเภท');
+    if (!category) throw newError(400, 'ไม่พบประเภท ที่ต้องการลบ');
 
     const name = category.name;
     const result = await categoryService.delete(id);

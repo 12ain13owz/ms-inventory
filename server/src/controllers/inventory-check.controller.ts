@@ -133,3 +133,26 @@ export async function createInventoryCheckController(
     next(error);
   }
 }
+
+export async function deleteInventoryCheckController(
+  req: Request<InventoryCheckType['delete']>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'deleteInventoryCheckController';
+
+  try {
+    const id = +req.params.id;
+    const inventoryCheck = await inventoryCheckService.findById(id);
+    if (!inventoryCheck)
+      throw newError(400, 'ไม่พบตรวจสอบครุภัณฑ์ ที่ต้องการลบ');
+
+    const code = inventoryCheck.Inventory.code;
+    const result = await inventoryCheckService.delete(id);
+    if (!result) throw newError(400, `ลบตรวจสอบครุภัณฑ์รหัส ${code} ไม่สำเร็จ`);
+
+    res.json({ message: `ลบตรวจสอบครุภัณฑ์รหัส ${code} สำเร็จ` });
+  } catch (error) {
+    next(error);
+  }
+}

@@ -1,7 +1,12 @@
 import { Router } from 'express';
-import { isUserActive, verifyToken } from '../../middlewares/auth.middleware';
+import {
+  isRoleAdmin,
+  isUserActive,
+  verifyToken,
+} from '../../middlewares/auth.middleware';
 import {
   createInventoryCheckController,
+  deleteInventoryCheckController,
   findAllInventoryCheckController,
   findInventoryCheckByIdController,
   findInventoryCheckByYearController,
@@ -26,6 +31,16 @@ router.post(
   '/',
   [verifyToken, isUserActive, validate(inventoryCheckSehema.create)],
   createInventoryCheckController
+);
+router.delete(
+  '/:id',
+  [
+    verifyToken,
+    isUserActive,
+    isRoleAdmin,
+    validate(inventoryCheckSehema.delete),
+  ],
+  deleteInventoryCheckController
 );
 
 export default router;

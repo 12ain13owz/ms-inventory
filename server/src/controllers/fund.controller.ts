@@ -94,7 +94,7 @@ export async function deleteFundController(
   try {
     const id = +req.params.id;
     const fund = await fundService.findById(id);
-    if (!fund) throw newError(400, 'ไม่พบแหล่งเงิน');
+    if (!fund) throw newError(400, 'ไม่พบแหล่งเงิน ที่ต้องการลบ');
 
     const name = fund.name;
     const result = await fundService.delete(id);

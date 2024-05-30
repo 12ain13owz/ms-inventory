@@ -83,8 +83,7 @@ export async function isUserActive(
   try {
     const user = await userService.findById(res.locals.userId!);
     if (!user) throw newError(404, 'ไม่พบข้อมูลผู้ใช้งานในระบบ', true);
-    if (!user.active)
-      throw newError(401, 'บัญชีนี้ไม่ได้รับอนุญาติให้ใช้งาน', true);
+    if (!user.active) throw newError(401, 'บัญชีนี้ถูกระงับการใช้งาน', true);
 
     res.locals.user = user.toJSON();
     next();
@@ -102,7 +101,7 @@ export async function isRoleAdmin(
 
   try {
     if (res.locals.user!.role !== 'admin')
-      throw newError(401, 'บัญชีนี้ไม่ได้รับอนุญาติให้ใช้งาน');
+      throw newError(401, 'บัญชีนี้ไม่มีสิทธิ์เข้าถึงเนื้อหานี้');
 
     next();
   } catch (error) {

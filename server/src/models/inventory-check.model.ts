@@ -18,7 +18,7 @@ export class InventoryCheck extends Model<
   year: number;
   createdAt: CreationOptional<Date>;
   inventoryId: ForeignKey<Inventory['id']>;
-  inventory: NonAttribute<Inventory>;
+  Inventory: NonAttribute<Inventory>;
 }
 
 export default InventoryCheck.init(
