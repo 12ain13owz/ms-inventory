@@ -5,6 +5,7 @@ import { StatusService } from './status.service';
 import { Observable, tap } from 'rxjs';
 import { Status } from '../../models/status.model';
 import { ApiResponse } from '../../../shared/models/response.model';
+import { SocketStatusService } from '../../socket-io/socket-status.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,11 @@ import { ApiResponse } from '../../../shared/models/response.model';
 export class StatusApiService {
   private apiUrl: string = environment.apiUrl + 'status';
 
-  constructor(private http: HttpClient, private statusService: StatusService) {}
+  constructor(
+    private http: HttpClient,
+    private statusService: StatusService,
+    private socketStatusService: SocketStatusService
+  ) {}
 
   getAll(): Observable<Status[]> {
     return this.http
@@ -21,20 +26,31 @@ export class StatusApiService {
   }
 
   create(payload: Status): Observable<ApiResponse<Status>> {
-    return this.http
-      .post<ApiResponse<Status>>(this.apiUrl, payload)
-      .pipe(tap((res) => this.statusService.create(res.item)));
+    return this.http.post<ApiResponse<Status>>(this.apiUrl, payload).pipe(
+      tap((res) => {
+        this.statusService.create(res.item);
+        this.socketStatusService.create(res.item);
+      })
+    );
   }
 
   update(id: number, payload: Status): Observable<ApiResponse<Status>> {
     return this.http
       .put<ApiResponse<Status>>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.statusService.update(id, res.item)));
+      .pipe(
+        tap((res) => {
+          this.statusService.update(id, res.item);
+          this.socketStatusService.update(id, res.item);
+        })
+      );
   }
 
   delete(id: number): Observable<ApiResponse> {
-    return this.http
-      .delete<ApiResponse>(`${this.apiUrl}/${id}`)
-      .pipe(tap((res) => this.statusService.delete(id)));
+    return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`).pipe(
+      tap((res) => {
+        this.statusService.delete(id);
+        this.socketStatusService.delete(id);
+      })
+    );
   }
 }

@@ -15,13 +15,13 @@ export class SocketLogService {
     this.socketIO = socketIO;
     if (!this.socketIO) return;
 
-    this.socketIO.on('log:create', (log: Log) => {
-      this.logService.create(log);
+    this.socketIO.on('log:create', (item: Log) => {
+      this.logService.create(item);
     });
   }
 
-  create(log: Log): void {
+  create(item: Log): void {
     if (!this.socketIO) return;
-    this.socketIO.emit('log:create', log);
+    this.socketIO.emit('log:create', item);
   }
 }

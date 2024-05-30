@@ -367,33 +367,31 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
 
   private initSubscription(): void {
     this.subscription.add(
-      this.categoryService
-        .onListener()
-        .subscribe(
-          () => (this.categories = this.categoryService.getActiveDetails())
-        )
+      this.categoryService.onListener().subscribe(() => {
+        this.categories = this.categoryService.getActiveDetails();
+        this.category.setValue(null);
+      })
     );
 
     this.subscription.add(
-      this.statusService
-        .onListener()
-        .subscribe(
-          () => (this.statuses = this.statusService.getActiveDetails())
-        )
+      this.statusService.onListener().subscribe(() => {
+        this.statuses = this.statusService.getActiveDetails();
+        this.status.setValue(null);
+      })
     );
 
     this.subscription.add(
-      this.fundService
-        .onListener()
-        .subscribe(() => (this.funds = this.fundService.getActiveDetails()))
+      this.fundService.onListener().subscribe(() => {
+        this.funds = this.fundService.getActiveDetails();
+        this.fund.setValue(null);
+      })
     );
 
     this.subscription.add(
-      this.locationService
-        .onListener()
-        .subscribe(
-          () => (this.locations = this.locationService.getActiveDetails())
-        )
+      this.locationService.onListener().subscribe(() => {
+        this.locations = this.locationService.getActiveDetails();
+        this.location.setValue(null);
+      })
     );
 
     this.subscription.add(

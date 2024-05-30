@@ -44,9 +44,10 @@ export class ScanEditComponent implements OnInit, OnDestroy {
       .keydownEvents()
       .subscribe((event) => event.key === 'Escape' && this.dialogRef.close());
 
-    this.subscription = this.statusService
-      .onListener()
-      .subscribe(() => (this.statuses = this.statusService.getActiveDetails()));
+    this.subscription = this.statusService.onListener().subscribe(() => {
+      this.statuses = this.statusService.getActiveDetails();
+      this.status.setValue(null);
+    });
   }
 
   ngOnDestroy(): void {

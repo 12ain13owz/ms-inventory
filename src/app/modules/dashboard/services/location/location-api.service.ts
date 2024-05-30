@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { LocationService } from './location.service';
 import { Location } from '../../models/location.model';
 import { ApiResponse } from '../../../shared/models/response.model';
+import { SocketLocationService } from '../../socket-io/socket-location.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ export class LocationApiService {
 
   constructor(
     private http: HttpClient,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private socketLocationService: SocketLocationService
   ) {}
 
   getAll(): Observable<Location[]> {
@@ -24,20 +26,31 @@ export class LocationApiService {
   }
 
   create(payload: Location): Observable<ApiResponse<Location>> {
-    return this.http
-      .post<ApiResponse<Location>>(this.apiUrl, payload)
-      .pipe(tap((res) => this.locationService.create(res.item)));
+    return this.http.post<ApiResponse<Location>>(this.apiUrl, payload).pipe(
+      tap((res) => {
+        this.locationService.create(res.item);
+        this.socketLocationService.create(res.item);
+      })
+    );
   }
 
   update(id: number, payload: Location): Observable<ApiResponse<Location>> {
     return this.http
       .put<ApiResponse<Location>>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.locationService.update(id, res.item)));
+      .pipe(
+        tap((res) => {
+          this.locationService.update(id, res.item);
+          this.socketLocationService.update(id, res.item);
+        })
+      );
   }
 
   delete(id: number): Observable<ApiResponse> {
-    return this.http
-      .delete<ApiResponse>(`${this.apiUrl}/${id}`)
-      .pipe(tap((res) => this.locationService.delete(id)));
+    return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`).pipe(
+      tap((res) => {
+        this.locationService.delete(id);
+        this.socketLocationService.delete(id);
+      })
+    );
   }
 }

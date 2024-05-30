@@ -5,6 +5,7 @@ import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from './../../../shared/models/response.model';
 import { Category } from '../../models/category.model';
 import { CategoryService } from './category.service';
+import { SocketCategoryService } from '../../socket-io/socket-category.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ export class CategoryApiService {
 
   constructor(
     private http: HttpClient,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private socketCategoryService: SocketCategoryService
   ) {}
 
   getAll(): Observable<Category[]> {
@@ -24,20 +26,31 @@ export class CategoryApiService {
   }
 
   create(payload: Category): Observable<ApiResponse<Category>> {
-    return this.http
-      .post<ApiResponse<Category>>(this.apiUrl, payload)
-      .pipe(tap((res) => this.categoryService.create(res.item)));
+    return this.http.post<ApiResponse<Category>>(this.apiUrl, payload).pipe(
+      tap((res) => {
+        this.categoryService.create(res.item);
+        this.socketCategoryService.create(res.item);
+      })
+    );
   }
 
   update(id: number, payload: Category): Observable<ApiResponse<Category>> {
     return this.http
       .put<ApiResponse<Category>>(`${this.apiUrl}/${id}`, payload)
-      .pipe(tap((res) => this.categoryService.update(id, res.item)));
+      .pipe(
+        tap((res) => {
+          this.categoryService.update(id, res.item);
+          this.socketCategoryService.update(id, res.item);
+        })
+      );
   }
 
   delete(id: number): Observable<ApiResponse> {
-    return this.http
-      .delete<ApiResponse>(`${this.apiUrl}/${id}`)
-      .pipe(tap((res) => this.categoryService.delete(id)));
+    return this.http.delete<ApiResponse>(`${this.apiUrl}/${id}`).pipe(
+      tap((res) => {
+        this.categoryService.delete(id);
+        this.socketCategoryService.delete(id);
+      })
+    );
   }
 }
