@@ -139,9 +139,8 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       if (!code) return;
 
       const inventory = this.inventoryService.getTableDataWithCode(code);
-      if (this.validationService.isEmpty(inventory))
-        this.operation$ = this.inventoryApiService.getByCode(code);
-      else {
+
+      if (!this.validationService.isEmpty(inventory)) {
         this.dataSource.data = inventory;
         return;
       }

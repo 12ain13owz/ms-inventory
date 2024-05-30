@@ -6,7 +6,6 @@ export default (io: Server, socket: Socket): void => {
   });
 
   socket.on('status:update', (id, item) => {
-    console.log(item);
     socket.broadcast.emit('status:update', id, item);
   });
 

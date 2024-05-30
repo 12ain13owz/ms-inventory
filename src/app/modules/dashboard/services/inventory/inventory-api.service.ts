@@ -53,7 +53,10 @@ export class InventoryApiService {
   getByCode(code: string): Observable<Inventory> {
     return this.http.get<Inventory>(`${this.apiUrl}/code/${code}`).pipe(
       switchMap((res) => timer(200).pipe(map(() => res))),
-      tap((res) => this.inventoryService.assign([res]))
+      tap((res) => {
+        if (res) this.inventoryService.assign([res]);
+        else this.inventoryService.assign([]);
+      })
     );
   }
 
