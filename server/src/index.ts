@@ -31,7 +31,7 @@ const getCorsOptions = (env: string): CorsOptions => {
   else
     return {
       origin: [
-        'https://localhost:' + port,
+        'https://localhost:' + port.toString(),
         'http://localhost:4200',
         'https://localhost:4200',
         'http://192.168.1.33:4200',
