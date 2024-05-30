@@ -18,36 +18,39 @@ import socket from './socket';
 import { readFileSync } from 'fs';
 
 const app = express();
+const node_env = config.get<string>('node_env');
 
-let corsOptions: CorsOptions;
-let server;
+const getCorsOptions = (env: string): CorsOptions => {
+  if (env === 'production')
+    return {
+      origin: ['https://ms-stock-it.web.app'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+    };
+  else
+    return {
+      origin: [
+        'http://localhost:4200',
+        'https://localhost:4200',
+        'http://192.168.1.33:4200',
+        'https://192.168.1.33:4200',
+      ],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+    };
+};
 
-const node_env = config.get('node_env');
-if (node_env === 'production') {
-  server = createServer(app);
-
-  corsOptions = {
-    origin: ['https://ms-stock-it.web.app'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  };
-} else {
-  const httpsOptions = {
-    key: readFileSync(path.join('ssl_private.key')),
-    cert: readFileSync(path.join('ssl.crt')),
-  };
-  server = https.createServer(httpsOptions, app);
-  corsOptions = {
-    origin: [
-      'http://localhost:4200',
-      'https://localhost:4200',
-      'http://192.168.1.33:4200',
-      'https://192.168.1.33:4200',
-    ],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  };
-}
+const corsOptions = getCorsOptions(node_env);
+const server =
+  node_env === 'production'
+    ? createServer(app)
+    : https.createServer(
+        {
+          key: readFileSync(path.join('ssl_private.key')),
+          cert: readFileSync(path.join('ssl.crt')),
+        },
+        app
+      );
 
 const socketOptions = {
   cors: { origin: corsOptions.origin },
@@ -67,9 +70,12 @@ app.use(healthRoutes);
 app.use(userRoutesV1);
 app.use(errorHandler);
 
-app.get('*.*', express.static(path.join(__dirname, '../browser')));
+const staticPath = node_env === 'production' ? '../browser' : '../browser-dev';
+const rootPath = node_env === 'production' ? 'browser' : 'browser-dev';
+
+app.get('*.*', express.static(path.join(__dirname, staticPath)));
 app.all('*', (req, res) => {
-  res.status(200).sendFile('/', { root: 'browser' });
+  res.status(200).sendFile('/', { root: rootPath });
 });
 
 server.listen(port, async () => {
