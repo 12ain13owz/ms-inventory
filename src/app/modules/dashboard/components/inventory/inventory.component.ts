@@ -60,4 +60,8 @@ export class InventoryComponent implements OnInit {
       );
     else this.inventoryService.setIsLoading(false);
   }
+
+  onRouterActive(): void {
+    window.scrollTo(0, 0);
+  }
 }

@@ -5,4 +5,8 @@ import { Component } from '@angular/core';
   templateUrl: './log.component.html',
   styleUrl: './log.component.scss',
 })
-export class LogComponent {}
+export class LogComponent {
+  onRouterActive(): void {
+    window.scrollTo(0, 0);
+  }
+}
