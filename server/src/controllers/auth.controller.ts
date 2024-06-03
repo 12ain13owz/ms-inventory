@@ -30,8 +30,7 @@ export async function loginController(
 
     const isValidPassword = comparePassword(req.body.password, user.password);
     if (!isValidPassword) throw newError(401, 'E-mail หรือ Password ไม่ตรงกัน');
-    if (!user.active)
-      throw newError(401, `E-mail: ${email} นี้ไม่ได้รับอนุญาติให้ใช้งาน`);
+    if (!user.active) throw newError(401, `${email} บัญชีนี้ถูกระงับการใช้งาน`);
 
     const accessToken = signAccessToken(user.id);
     const refreshToken = signRefreshToken(user.id);
