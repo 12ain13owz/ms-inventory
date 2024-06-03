@@ -10,6 +10,31 @@ import { logService } from '../services/log.service';
 import { Inventory } from '../models/inventory.model';
 import { Log, PropertyLog } from '../models/log.model';
 
+let cache: string[] = [];
+
+export async function searchInventoryController(
+  req: Request<{}, {}, {}, InventoryType['search']>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'searchInventoryController';
+
+  try {
+    const query = req.query.code.toLocaleLowerCase();
+    const inventories = cache.filter((item) => item.includes(query));
+    if (inventories.length > 0) return res.json(inventories);
+
+    const result = await inventoryService.search(query);
+    const records = result.map((item) => item.code);
+    const combine = new Set([...cache, ...records]);
+    cache = Array.from(combine);
+
+    res.json(cache);
+  } catch (error) {
+    res.status(200).json([]);
+  }
+}
+
 export async function findAllInventoryController(
   req: Request,
   res: ExtendedResponse,

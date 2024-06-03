@@ -41,7 +41,31 @@
         <form (ngSubmit)="onSearch()">
           <mat-form-field class="w-100">
             <mat-label>รหัสครุภัณฑ์</mat-label>
-            <input matInput #code />
+            <input
+              type="text"
+              matInput
+              [formControl]="search"
+              [matAutocomplete]="auto"
+              (input)="onSearchAutoComplete(search.value)"
+            />
+
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              @for (code of filteredOptions | async ; track code) {
+              <mat-option [value]="code">{{ code }}</mat-option>
+              }
+            </mat-autocomplete>
+
+            <button
+              type="button"
+              *ngIf="search.value"
+              matSuffix
+              mat-icon-button
+              color="primary"
+              (click)="search.setValue('')"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+
             <button type="submit" matSuffix mat-icon-button>
               <mat-icon matSuffix fontIcon="search"></mat-icon>
             </button>

@@ -15,7 +15,9 @@ import {
   filter,
   finalize,
   interval,
+  map,
   of,
+  startWith,
   take,
   tap,
 } from 'rxjs';
@@ -42,6 +44,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
+import { SearchService } from '../../../services/search/search.service';
 
 enum Tap {
   Date,
@@ -62,6 +65,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   private statusService = inject(StatusService);
   private validationService = inject(ValidationService);
   private printService = inject(PrintService);
+  private searchService = inject(SearchService);
   private operation$: Observable<Inventory[] | Inventory>;
   private snackBar = inject(MatSnackBar);
   private platfrom = inject(Platform);
@@ -73,7 +77,6 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
-  @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
 
   filter: InventoryFilter = {
     categories: this.categoryService.getActiveNames(),
@@ -107,6 +110,10 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<InventoryTable>(true, []);
   isFirstLoading: boolean = false;
 
+  search = new FormControl();
+  cache: string[] = [];
+  filteredOptions: Observable<string[]>;
+
   ngOnInit(): void {
     this.initDataSource();
     this.initSubscriptions();
@@ -117,6 +124,10 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onSearchAutoComplete(query: string): void {
+    this.searchService.search$.next(query);
   }
 
   onSearch(): void {
@@ -133,9 +144,9 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       );
       this.operation$ = this.inventoryApiService.getByDate(startDate, endDate);
     } else if (this.selectedTap.value === Tap.Code) {
-      if (!this.code) return;
+      if (!this.search.value) return;
 
-      const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
+      const code = this.search.value.replace(/^\s+|\s+$/gm, '');
       if (!code) return;
 
       const inventory = this.inventoryService.getTableDataWithCode(code);
@@ -327,6 +338,25 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       this.statusService.onListener().subscribe(() => {
         this.filter.statuses = this.statusService.getActiveNames();
       })
+    );
+
+    this.subscription.add(
+      this.searchService
+        .onListener()
+        .subscribe((cache) => (this.cache = this.searchService.getCache()))
+    );
+
+    this.filteredOptions = this.search.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value || ''))
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.cache.filter((option) =>
+      option.toLowerCase().includes(filterValue)
     );
   }
 }

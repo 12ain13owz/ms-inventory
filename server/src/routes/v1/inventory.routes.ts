@@ -9,6 +9,7 @@ import {
   findInventoryByIdController,
   findInventoryByTrackController,
   initialInventoryController,
+  searchInventoryController,
   updateInventoryController,
 } from '../../controllers/inventory.controller';
 import { validate } from '../../middlewares/validate.middleware';
@@ -23,6 +24,7 @@ import {
 
 const router = Router();
 
+router.get('/search', [verifyToken, isUserActive], searchInventoryController);
 router.get('/', [verifyToken, isUserActive], findAllInventoryController);
 router.get('/init', [verifyToken, isUserActive], initialInventoryController);
 router.get(

@@ -1,7 +1,7 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
   inject,
@@ -9,11 +9,14 @@ import {
 import { FormBuilder, FormControl } from '@angular/forms';
 import {
   Observable,
+  Subscription,
   defer,
   filter,
   finalize,
   interval,
+  map,
   of,
+  startWith,
   take,
   timer,
 } from 'rxjs';
@@ -26,6 +29,7 @@ import { InventoryService } from '../../services/inventory/inventory.service';
 import { Inventory } from '../../models/inventory.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ScanEditComponent } from './scan-edit/scan-edit.component';
+import { SearchService } from '../../services/search/search.service';
 
 enum Tap {
   Camera,
@@ -41,18 +45,17 @@ enum ScanType {
   templateUrl: './scan.component.html',
   styleUrl: './scan.component.scss',
 })
-export class ScanComponent implements OnInit, AfterViewInit {
+export class ScanComponent implements OnInit, OnDestroy {
   private formBuilder = inject(FormBuilder);
   private scanApiService = inject(ScanApiService);
   private inventoryService = inject(InventoryService);
   private toastService = inject(ToastNotificationService);
+  private searchService = inject(SearchService);
   private dialog = inject(MatDialog);
   private operation$: Observable<Inventory>;
 
+  private subscription = new Subscription();
   platform = inject(Platform);
-
-  @ViewChild('searchInput', { static: true })
-  searchInput: ElementRef<HTMLInputElement>;
   @ViewChild('qrBox') qrBox: ElementRef<HTMLDivElement>;
   qrRender: HTMLElement;
 
@@ -65,21 +68,15 @@ export class ScanComponent implements OnInit, AfterViewInit {
   isScanType: number = 0;
   scanSize = { width: 0, height: 0 };
   html5QrcodeScanner: Html5QrcodeScanner = null;
+  cache: string[] = this.searchService.getCache();
+  filteredOptions: Observable<string[]>;
 
   ngOnInit(): void {
-    defer(() =>
-      this.qrBox
-        ? of(null)
-        : interval(300).pipe(
-            filter(() => !!this.qrBox),
-            take(1)
-          )
-    ).subscribe(() => this.onStartCamera());
+    this.initSubscriptions();
   }
 
-  ngAfterViewInit(): void {
-    if (!this.platform.ANDROID && !this.platform.IOS)
-      this.searchInput.nativeElement.focus();
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onTapChange(indexTap: number): void {
@@ -97,6 +94,10 @@ export class ScanComponent implements OnInit, AfterViewInit {
             take(1)
           )
     ).subscribe(() => this.onStartCamera());
+  }
+
+  onSearchAutoComplete(query: string): void {
+    this.searchService.search$.next(query);
   }
 
   onSearchInventory(): void {
@@ -197,11 +198,6 @@ export class ScanComponent implements OnInit, AfterViewInit {
       .subscribe(() => timer(500).subscribe(() => (this.isScanning = false)));
   }
 
-  clearSearchInput(): void {
-    this.search.setValue('');
-    this.searchInput.nativeElement.focus();
-  }
-
   get search(): FormControl<string> {
     return this.form.controls['search'];
   }
@@ -210,5 +206,33 @@ export class ScanComponent implements OnInit, AfterViewInit {
     return this.formBuilder.group({
       search: [''],
     });
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.cache.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
+  private initSubscriptions(): void {
+    defer(() =>
+      this.qrBox
+        ? of(null)
+        : interval(300).pipe(
+            filter(() => !!this.qrBox),
+            take(1)
+          )
+    ).subscribe(() => this.onStartCamera());
+
+    this.subscription = this.searchService
+      .onListener()
+      .subscribe((cache) => (this.cache = this.searchService.getCache()));
+
+    this.filteredOptions = this.search.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value || ''))
+    );
   }
 }

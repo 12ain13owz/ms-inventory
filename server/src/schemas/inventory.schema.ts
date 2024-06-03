@@ -23,6 +23,12 @@ const track = 'ไม่พบเลข Track';
 const imageEdit = 'ไม่พบการยืนยันแก้ไขรูปภาพ';
 
 export const inventorySchema = {
+  search: object({
+    query: object({
+      code: string({ required_error: code }),
+    }),
+  }),
+
   findByDate: object({
     params: object({
       dateStart: string({ required_error: dateStart }).min(1, {
@@ -154,6 +160,7 @@ export const inventorySchema = {
 };
 
 export type InventoryType = {
+  search: TypeOf<typeof inventorySchema.search>['query'];
   findByDate: TypeOf<typeof inventorySchema.findByDate>['params'];
   findByTrack: TypeOf<typeof inventorySchema.findByTrack>['params'];
   findById: TypeOf<typeof inventorySchema.findById>['params'];

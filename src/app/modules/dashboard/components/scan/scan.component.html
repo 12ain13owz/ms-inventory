@@ -11,37 +11,55 @@
       </mat-card-content>
     </mat-tab>
 
-    <mat-tab label="ค้นหา">
+    <mat-tab label="รหัสครุภัณฑ์">
       <mat-card-content>
-        <form
-          class="search-box"
-          [formGroup]="form"
-          (ngSubmit)="onSearchInventory()"
-        >
-          <div class="search-input-box">
+        <form [formGroup]="form" (ngSubmit)="onSearchInventory()">
+          <mat-form-field class="w-100">
+            <mat-label>รหัสครุภัณฑ์</mat-label>
             <input
               type="text"
-              class="w-100"
-              placeholder="ค้นหารหัสครุภัณฑ์"
-              formControlName="search"
-              #searchInput
+              matInput
+              [formControl]="search"
+              [matAutocomplete]="auto"
+              (input)="onSearchAutoComplete(search.value)"
             />
 
-            @if (search.value) {
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              @for (code of filteredOptions | async ; track code) {
+              <mat-option [value]="code">{{ code }}</mat-option>
+              }
+            </mat-autocomplete>
+
             <button
               type="button"
-              class="close"
+              *ngIf="search.value"
               matSuffix
               mat-icon-button
-              (click)="clearSearchInput()"
+              color="primary"
+              (click)="search.setValue('')"
             >
               <mat-icon>close</mat-icon>
             </button>
-            }
-          </div>
-          <button type="submit" matRipple [disabled]="isLoading">ค้นหา</button>
+
+            <button type="submit" matSuffix mat-icon-button>
+              <mat-icon matSuffix fontIcon="search"></mat-icon>
+            </button>
+          </mat-form-field>
         </form>
       </mat-card-content>
+
+      <mat-card-actions class="justify-between">
+        <button
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="onSearchInventory()"
+          [disabled]="isLoading"
+        >
+          <mat-icon>search</mat-icon>
+          ค้นหา
+        </button>
+      </mat-card-actions>
     </mat-tab>
   </mat-tab-group>
 

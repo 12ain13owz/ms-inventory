@@ -16,10 +16,11 @@
         </mat-autocomplete>
 
         <button
+          type="button"
           *ngIf="selectYear.value"
           matSuffix
           mat-icon-button
-          aria-label="Clear"
+          color="primary"
           (click)="selectYear.setValue('')"
         >
           <mat-icon>close</mat-icon>

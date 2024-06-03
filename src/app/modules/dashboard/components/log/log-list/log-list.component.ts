@@ -14,7 +14,9 @@ import {
   filter,
   finalize,
   interval,
+  map,
   of,
+  startWith,
   take,
   tap,
 } from 'rxjs';
@@ -29,6 +31,7 @@ import { ValidationService } from '../../../../shared/services/validation.servic
 import { LogApiService } from '../../../services/log/log-api.service';
 import { CategoryService } from '../../../services/category/category.service';
 import { StatusService } from '../../../services/status/status.service';
+import { SearchService } from '../../../services/search/search.service';
 
 enum Tap {
   Date,
@@ -47,6 +50,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   private logService = inject(LogService);
   private logApiService = inject(LogApiService);
   private validationService = inject(ValidationService);
+  private searchService = inject(SearchService);
   private operation$: Observable<Log[]>;
 
   datePipe = inject(DatePipe);
@@ -55,7 +59,6 @@ export class LogListComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
-  @ViewChild('code', { static: true }) code: ElementRef<HTMLInputElement>;
 
   title: string = 'รายการ ประว้ติครุภัณฑ์';
   filterLog: FilterLog = {
@@ -88,17 +91,21 @@ export class LogListComponent implements OnInit, OnDestroy {
   isFirstLoading: boolean = false;
   isSort: boolean = false;
 
+  search = new FormControl();
+  cache: string[] = this.searchService.getCache();
+  filteredOptions: Observable<string[]>;
+
   ngOnInit(): void {
     this.initDataSource();
-
-    this.subscription = this.logService.onListener().subscribe(() => {
-      this.dataSource.data = this.logService.getTableData();
-      this.initPaginatorAndSort();
-    });
+    this.initSubscriptions();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onSearchAutoComplete(query: string): void {
+    this.searchService.search$.next(query);
   }
 
   onSearch(): void {
@@ -115,9 +122,9 @@ export class LogListComponent implements OnInit, OnDestroy {
       );
       this.operation$ = this.logApiService.getByDate(startDate, endDate);
     } else if (this.selectedTap.value === Tap.Code) {
-      if (!this.code) return;
+      if (!this.search) return;
 
-      const code = this.code.nativeElement.value.replace(/^\s+|\s+$/gm, '');
+      const code = this.search.value.replace(/^\s+|\s+$/gm, '');
       if (!code) return;
 
       this.operation$ = this.logApiService.getByCode(code);
@@ -255,5 +262,33 @@ export class LogListComponent implements OnInit, OnDestroy {
         this.isSort = true;
       }
     });
+  }
+
+  private initSubscriptions(): void {
+    this.subscription.add(
+      this.logService.onListener().subscribe(() => {
+        this.dataSource.data = this.logService.getTableData();
+        this.initPaginatorAndSort();
+      })
+    );
+
+    this.subscription.add(
+      this.searchService
+        .onListener()
+        .subscribe((cache) => (this.cache = this.searchService.getCache()))
+    );
+
+    this.filteredOptions = this.search.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value || ''))
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.cache.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
 }
