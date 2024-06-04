@@ -39848,7 +39848,7 @@ var DispTextareaPipe = _DispTextareaPipe;
 function ScanEditComponent_For_17_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "mat-chip-option", 19);
+    \u0275\u0275elementStart(0, "mat-chip-option", 20);
     \u0275\u0275listener("selectionChange", function ScanEditComponent_For_17_Template_mat_chip_option_selectionChange_0_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
@@ -39866,7 +39866,7 @@ function ScanEditComponent_For_17_Template(rf, ctx) {
 }
 function ScanEditComponent_Conditional_37_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "mat-progress-bar", 18);
+    \u0275\u0275element(0, "mat-progress-bar", 19);
   }
 }
 var _ScanEditComponent = class _ScanEditComponent {
@@ -39935,7 +39935,7 @@ var _ScanEditComponent = class _ScanEditComponent {
 _ScanEditComponent.\u0275fac = function ScanEditComponent_Factory(t2) {
   return new (t2 || _ScanEditComponent)();
 };
-_ScanEditComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _ScanEditComponent, selectors: [["app-scan-edit"]], decls: 38, vars: 13, consts: [[1, "d-flex", "justify-between", "align-center"], ["mat-dialog-title", ""], ["mat-icon-button", "", "tabindex", "-1", 1, "btn-close", 3, "click"], [3, "ngSubmit", "formGroup"], [1, "form-container"], [1, "box"], [1, "blurred-img"], [1, "size", 3, "defaultImage", "lazyLoad"], [1, "d-flex", "flex-column"], ["formControlName", "status"], [3, "value"], [2, "color", "#f44336"], [3, "control", "errorMessage"], ["matListItemTitle", ""], ["matListItemLine", ""], [1, "view-textarea", 3, "innerHTML"], ["type", "submit", "mat-raised-button", "", "color", "primary", 3, "disabled"], ["type", "button", "mat-button", "", "color", "warn", 3, "click", "disabled"], ["mode", "indeterminate"], [3, "selectionChange", "value"]], template: function ScanEditComponent_Template(rf, ctx) {
+_ScanEditComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _ScanEditComponent, selectors: [["app-scan-edit"]], decls: 38, vars: 13, consts: [[1, "d-flex", "justify-between", "align-center"], ["mat-dialog-title", ""], ["mat-icon-button", "", "tabindex", "-1", 1, "btn-close", 3, "click"], [3, "ngSubmit", "formGroup"], [1, "form-container"], [1, "box"], [1, "blurred-img"], [1, "size", 3, "defaultImage", "lazyLoad"], [1, "d-flex", "flex-column"], ["formControlName", "status"], [3, "value"], [2, "color", "#f44336"], [3, "control", "errorMessage"], ["matListItemTitle", ""], ["matListItemLine", ""], [1, "view-textarea", 3, "innerHTML"], [2, "justify-content", "space-between"], ["type", "submit", "mat-raised-button", "", "color", "primary", 3, "disabled"], ["type", "button", "mat-button", "", "color", "warn", 3, "click", "disabled"], ["mode", "indeterminate"], [3, "selectionChange", "value"]], template: function ScanEditComponent_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 0)(1, "h2", 1);
     \u0275\u0275text(2);
@@ -39977,16 +39977,16 @@ _ScanEditComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ typ
     \u0275\u0275pipe(30, "dispTextarea");
     \u0275\u0275elementEnd()()();
     \u0275\u0275element(31, "mat-divider");
-    \u0275\u0275elementStart(32, "mat-dialog-actions")(33, "button", 16);
+    \u0275\u0275elementStart(32, "mat-dialog-actions", 16)(33, "button", 17);
     \u0275\u0275text(34, " \u0E15\u0E01\u0E25\u0E07 ");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(35, "button", 17);
+    \u0275\u0275elementStart(35, "button", 18);
     \u0275\u0275listener("click", function ScanEditComponent_Template_button_click_35_listener() {
       return ctx.onReset();
     });
     \u0275\u0275text(36, " \u0E23\u0E35\u0E40\u0E0B\u0E47\u0E15 ");
     \u0275\u0275elementEnd()()();
-    \u0275\u0275template(37, ScanEditComponent_Conditional_37_Template, 1, 0, "mat-progress-bar", 18);
+    \u0275\u0275template(37, ScanEditComponent_Conditional_37_Template, 1, 0, "mat-progress-bar", 19);
   }
   if (rf & 2) {
     \u0275\u0275advance(2);
@@ -58038,4 +58038,4 @@ jspdf/dist/jspdf.es.min.js:
    * http://opensource.org/licenses/mit-license
    *)
 */
-//# sourceMappingURL=chunk-3AH36R3Q.js.map
+//# sourceMappingURL=chunk-J4U3D3YN.js.map
