@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/modules/shared/components/loading-data/loading-data.component.scss"],
+  "sourcesContent": [".loader-box {\r\n  display: flex;\r\n  flex-direction: column;\r\n\r\n  .loader-row {\r\n    display: grid;\r\n    grid-template-columns: 1fr 1fr;\r\n    gap: 10px;\r\n  }\r\n\r\n  .loader-row-list {\r\n    display: grid;\r\n    grid-template-columns: 1fr 1fr 1fr 1fr;\r\n    gap: 10px;\r\n  }\r\n\r\n  .loader-action {\r\n    display: grid;\r\n    grid-template-columns: 100px 100px;\r\n    gap: 10px;\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,kBAAA;;AAEA,CAJF,WAIE,CAAA;AACE,WAAA;AACA,yBAAA,IAAA;AACA,OAAA;;AAGF,CAVF,WAUE,CAAA;AACE,WAAA;AACA,yBAAA,IAAA,IAAA,IAAA;AACA,OAAA;;AAGF,CAhBF,WAgBE,CAAA;AACE,WAAA;AACA,yBAAA,MAAA;AACA,OAAA;;",
+  "names": []
+}

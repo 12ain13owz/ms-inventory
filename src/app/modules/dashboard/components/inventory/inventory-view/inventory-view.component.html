@@ -26,22 +26,30 @@
           <span matListItemLine>{{ inventory.code }}</span>
         </mat-list-item>
 
+        <mat-list-item>
+          <span matListItemTitle>รายการครุภัณฑ์</span>
+        </mat-list-item>
+        <div
+          class="view-textarea"
+          [innerHTML]="inventory.description | dispTextarea"
+        ></div>
+
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>รหัสครุภัณฑ์เดิม</span>
-            <span matListItemLine>{{ isEmpty(inventory.oldCode) }}</span>
+            <span matListItemTitle>ประเภท</span>
+            <span matListItemLine>{{ inventory.Category.name }}</span>
           </mat-list-item>
 
           <mat-list-item>
-            <span matListItemTitle>หน่วยนับ</span>
-            <span matListItemLine>{{ inventory.unit }}</span>
+            <span matListItemTitle>สถานะ</span>
+            <span matListItemLine>{{ inventory.Status.name }}</span>
           </mat-list-item>
         </div>
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>วันที่ได้มา</span>
-            <span matListItemLine>{{ inventory.receivedDate | thaiYear }}</span>
+            <span matListItemTitle>หน่วยนับ</span>
+            <span matListItemLine>{{ inventory.unit }}</span>
           </mat-list-item>
 
           <mat-list-item>
@@ -54,13 +62,13 @@
 
         <div class="d-flex flex-row">
           <mat-list-item>
-            <span matListItemTitle>ประเภท</span>
-            <span matListItemLine>{{ inventory.Category.name }}</span>
+            <span matListItemTitle>วันที่ได้มา</span>
+            <span matListItemLine>{{ inventory.receivedDate | thaiYear }}</span>
           </mat-list-item>
 
           <mat-list-item>
-            <span matListItemTitle>สถานะ</span>
-            <span matListItemLine>{{ inventory.Status.name }}</span>
+            <span matListItemTitle>รหัสครุภัณฑ์เดิม</span>
+            <span matListItemLine>{{ isEmpty(inventory.oldCode) }}</span>
           </mat-list-item>
         </div>
 
@@ -80,14 +88,6 @@
           <span matListItemTitle>ใช้งานมาแล้ว</span>
           <span matListItemLine>{{ getUseDate(inventory.receivedDate) }}</span>
         </mat-list-item>
-
-        <mat-list-item>
-          <span matListItemTitle>รายการครุภัณฑ์</span>
-        </mat-list-item>
-        <div
-          class="view-textarea"
-          [innerHTML]="inventory.description | dispTextarea"
-        ></div>
 
         <mat-list-item>
           <span matListItemTitle>หมายเหตุ</span>

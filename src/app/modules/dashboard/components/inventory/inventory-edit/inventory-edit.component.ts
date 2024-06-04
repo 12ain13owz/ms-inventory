@@ -39,6 +39,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Inventory } from '../../../models/inventory.model';
 import { environment } from '../../../../../../environments/environment';
 import { LocationService } from '../../../services/location/location.service';
+import { SearchService } from '../../../services/search/search.service';
 
 @Component({
   selector: 'app-inventory-edit',
@@ -62,6 +63,7 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
   private locationService = inject(LocationService);
   private validationService = inject(ValidationService);
   private toastService = inject(ToastNotificationService);
+  private searchService = inject(SearchService);
   private datePipe = inject(DatePipe);
 
   private subscription = new Subscription();
@@ -163,6 +165,12 @@ export class InventoryEditComponent implements OnInit, OnDestroy {
       .update(this.id, payload)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
+        if (this.inventory.code !== res.item.inventory.code)
+          this.searchService.updateCache(
+            this.inventory.code,
+            res.item.inventory.code
+          );
+
         this.toastService.success('Success', res.message);
         this.router.navigate(['/inventory/view', this.id], {
           state: { inventory: res.item.inventory },

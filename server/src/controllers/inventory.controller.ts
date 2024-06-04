@@ -282,6 +282,11 @@ export async function updateInventoryController(
     const resultLog = await logService.create(payloadLog, t);
     await t.commit();
 
+    if (inventory.code !== code) {
+      const index = cache.findIndex((item) => item === inventory.code);
+      if (index !== -1) cache[index] = code;
+    }
+
     const resInventory = await inventoryService.findById(id);
     const resLog = resultLog.toJSON();
 

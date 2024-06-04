@@ -16,6 +16,7 @@ import {
   finalize,
   interval,
   map,
+  merge,
   of,
   startWith,
   take,
@@ -306,7 +307,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
       if (!this.isSort) {
         this.dataSource.sort.sort({
-          id: 'code',
+          id: 'no',
           start: 'desc',
           disableClear: true,
         });
@@ -346,7 +347,10 @@ export class InventoryListComponent implements OnInit, OnDestroy {
         .subscribe((cache) => (this.cache = this.searchService.getCache()))
     );
 
-    this.filteredOptions = this.search.valueChanges.pipe(
+    this.filteredOptions = merge(
+      this.search.valueChanges,
+      this.searchService.onListener().pipe(map(() => this.search.value))
+    ).pipe(
       startWith(''),
       map((value) => this._filter(value || ''))
     );

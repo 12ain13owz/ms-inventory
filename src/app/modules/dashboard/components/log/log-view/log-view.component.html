@@ -51,29 +51,13 @@
           <span matListItemLine>{{ log.code }}</span>
         </mat-list-item>
 
-        <div class="d-flex flex-row">
-          <mat-list-item>
-            <span matListItemTitle>รหัสครุภัณฑ์เดิม</span>
-            <span matListItemLine>{{ isEmpty(log.oldCode) }}</span>
-          </mat-list-item>
-
-          <mat-list-item>
-            <span matListItemTitle>หน่วยนับ</span>
-            <span matListItemLine>{{ log.unit }}</span>
-          </mat-list-item>
-        </div>
-
-        <div class="d-flex flex-row">
-          <mat-list-item>
-            <span matListItemTitle>วันที่ได้มา</span>
-            <span matListItemLine>{{ log.receivedDate | thaiYear }}</span>
-          </mat-list-item>
-
-          <mat-list-item>
-            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
-            <span matListItemLine>{{ log.value | number : "1.2-2" }}</span>
-          </mat-list-item>
-        </div>
+        <mat-list-item>
+          <span matListItemTitle>รายการครุภัณฑ์</span>
+        </mat-list-item>
+        <div
+          class="view-textarea"
+          [innerHTML]="log.description | dispTextarea"
+        ></div>
 
         <div class="d-flex flex-row">
           <mat-list-item>
@@ -84,6 +68,30 @@
           <mat-list-item>
             <span matListItemTitle>สถานะ</span>
             <span matListItemLine>{{ log.statusName }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>หน่วยนับ</span>
+            <span matListItemLine>{{ log.unit }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>มูลค่าครุภัณฑ์</span>
+            <span matListItemLine>{{ log.value | number : "1.2-2" }}</span>
+          </mat-list-item>
+        </div>
+
+        <div class="d-flex flex-row">
+          <mat-list-item>
+            <span matListItemTitle>วันที่ได้มา</span>
+            <span matListItemLine>{{ log.receivedDate | thaiYear }}</span>
+          </mat-list-item>
+
+          <mat-list-item>
+            <span matListItemTitle>รหัสครุภัณฑ์เดิม</span>
+            <span matListItemLine>{{ isEmpty(log.oldCode) }}</span>
           </mat-list-item>
         </div>
 
@@ -103,14 +111,6 @@
           <span matListItemTitle>ใช้งานมาแล้ว</span>
           <span matListItemLine>{{ getUseDate(log.receivedDate) }}</span>
         </mat-list-item>
-
-        <mat-list-item>
-          <span matListItemTitle>รายการครุภัณฑ์</span>
-        </mat-list-item>
-        <div
-          class="view-textarea"
-          [innerHTML]="log.description | dispTextarea"
-        ></div>
 
         <mat-list-item>
           <span matListItemTitle>หมายเหตุ</span>

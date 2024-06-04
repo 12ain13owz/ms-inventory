@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/modules/dashboard/dashboard.component.scss"],
+  "sourcesContent": [".sidenav-container {\r\n  height: 100%;\r\n}\r\n\r\n.sidenav {\r\n  width: 200px;\r\n}\r\n\r\n.sidenav .mat-toolbar {\r\n  background: inherit;\r\n}\r\n\r\n.mat-toolbar.mat-primary {\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1;\r\n}\r\n\r\nmain {\r\n  margin: 15px;\r\n  min-height: calc(100vh - 100px);\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,UAAA;;AAGF,CAAA;AACE,SAAA;;AAGF,CAJA,QAIA,CAAA;AACE,cAAA;;AAGF,CAJA,WAIA,CAAA;AACE,YAAA;AACA,OAAA;AACA,WAAA;;AAGF;AACE,UAAA;AACA,cAAA,KAAA,MAAA,EAAA;;",
+  "names": []
+}

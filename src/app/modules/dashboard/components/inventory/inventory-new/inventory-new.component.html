@@ -69,71 +69,17 @@
           </mat-error>
         </mat-form-field>
 
-        <div class="row">
-          <mat-form-field>
-            <mat-label>รหัสครุภัณฑ์เดิม</mat-label>
-            <input type="text" matInput formControlName="oldCode" />
-          </mat-form-field>
+        <mat-form-field>
+          <mat-label>รายการครุภัณฑ์</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
 
-          <mat-form-field>
-            <mat-label>หน่วยนับ</mat-label>
-            <input type="text" matInput formControlName="unit" />
-
-            <mat-error>
-              <app-error-field
-                [control]="unit"
-                [errorMessage]="validationField.unit"
-              ></app-error-field>
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="row">
-          <mat-form-field>
-            <mat-label>วันที่ได้มา</mat-label>
-            <input
-              matInput
-              mask="d0/M0/0000"
-              (focusout)="onDateInput()"
-              formControlName="dateInput"
-              #dateEl
-            />
-            <input
-              class="hidden-input"
-              matInput
-              [matDatepicker]="picker"
-              (dateInput)="onDatePicker($event)"
-              formControlName="receivedDate"
-            />
-            <mat-hint align="end">วัน/เดือน/พ.ศ. (5/9/2560)</mat-hint>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker"
-              [disabled]="formInventory.disabled"
-              tabindex="-1"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>มูลค่าครุภัณฑ์</mat-label>
-            <input
-              matInput
-              type="text"
-              mask="separator.2"
-              thousandSeparator=","
-              decimalMarker="."
-              formControlName="value"
-            />
-
-            <mat-error>
-              <app-error-field
-                [control]="value"
-                [errorMessage]="validationField.value"
-              ></app-error-field>
-            </mat-error>
-          </mat-form-field>
-        </div>
+          <mat-error>
+            <app-error-field
+              [control]="description"
+              [errorMessage]="validationField.description"
+            ></app-error-field>
+          </mat-error>
+        </mat-form-field>
 
         <div class="d-flex flex-column">
           <mat-card-title>ประเภท</mat-card-title>
@@ -176,6 +122,72 @@
               [errorMessage]="validationField.status"
             ></app-error-field>
           </mat-error>
+        </div>
+
+        <div class="row">
+          <mat-form-field>
+            <mat-label>หน่วยนับ</mat-label>
+            <input type="text" matInput formControlName="unit" />
+
+            <mat-error>
+              <app-error-field
+                [control]="unit"
+                [errorMessage]="validationField.unit"
+              ></app-error-field>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>มูลค่าครุภัณฑ์</mat-label>
+            <input
+              matInput
+              type="text"
+              mask="separator.2"
+              thousandSeparator=","
+              decimalMarker="."
+              formControlName="value"
+            />
+
+            <mat-error>
+              <app-error-field
+                [control]="value"
+                [errorMessage]="validationField.value"
+              ></app-error-field>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field>
+            <mat-label>วันที่ได้มา</mat-label>
+            <input
+              matInput
+              mask="d0/M0/0000"
+              (focusout)="onDateInput()"
+              formControlName="dateInput"
+              #dateEl
+            />
+            <input
+              class="hidden-input"
+              matInput
+              [matDatepicker]="picker"
+              (dateInput)="onDatePicker($event)"
+              formControlName="receivedDate"
+            />
+            <mat-hint align="end">วัน/เดือน/พ.ศ. (5/9/2560)</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+              [disabled]="formInventory.disabled"
+              tabindex="-1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>รหัสครุภัณฑ์เดิม</mat-label>
+            <input type="text" matInput formControlName="oldCode" />
+          </mat-form-field>
         </div>
 
         <div class="d-flex flex-column">
@@ -221,18 +233,6 @@
             ></app-error-field>
           </mat-error>
         </div>
-
-        <mat-form-field>
-          <mat-label>รายการครุภัณฑ์</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
-
-          <mat-error>
-            <app-error-field
-              [control]="description"
-              [errorMessage]="validationField.description"
-            ></app-error-field>
-          </mat-error>
-        </mat-form-field>
 
         <mat-form-field>
           <mat-label>หมายเหตุ</mat-label>

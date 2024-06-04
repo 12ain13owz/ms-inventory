@@ -17,9 +17,7 @@ export class SearchService {
   private cache: string[] = [];
   search$ = new BehaviorSubject<string>('');
 
-  constructor(private searchApiService: SearchApiService) {
-    this.searchApiService.search('').subscribe((res) => (this.cache = res));
-  }
+  constructor(private searchApiService: SearchApiService) {}
 
   onListener(): Observable<string[]> {
     return this.search$.asObservable().pipe(
@@ -36,12 +34,21 @@ export class SearchService {
     return this.searchApiService.search(query).pipe(
       tap((res) => {
         const combine = new Set([...this.cache, ...res]);
-        this.cache = Array.from(combine);
+        this.cache = Array.from(combine).sort();
       })
     );
   }
 
   getCache(): string[] {
     return this.cache;
+  }
+
+  updateCache(query: string, update: string): void {
+    const index = this.cache.findIndex((item) => item === query);
+    if (index !== -1) this.cache[index] = update;
+  }
+
+  clearCache(): void {
+    this.cache = [];
   }
 }
