@@ -20,7 +20,7 @@ export async function searchInventoryController(
   res.locals.func = 'searchInventoryController';
 
   try {
-    const query = req.query.code.toLocaleLowerCase();
+    const query = removeWhitespace(req.query.code);
     const inventories = cache.filter((item) => item.includes(query));
     if (inventories.length > 0) return res.json(inventories);
 
@@ -30,6 +30,22 @@ export async function searchInventoryController(
     cache = Array.from(combine);
 
     res.json(cache);
+  } catch (error) {
+    res.status(200).json([]);
+  }
+}
+
+export async function searchInventoryByCodeController(
+  req: Request<{}, {}, {}, InventoryType['search']>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'searchInventoryByCodeController';
+
+  try {
+    const query = removeWhitespace(req.query.code);
+    const resInventories = await inventoryService.searchByCode(query);
+    res.json(resInventories);
   } catch (error) {
     res.status(200).json([]);
   }
@@ -102,7 +118,7 @@ export async function findInventoryByTrackController(
   res.locals.func = 'findInventoryByTrackController';
 
   try {
-    const track = req.params.track;
+    const track = req.params.track.toUpperCase();
     const resInventory = await inventoryService.findByTrack(track);
 
     res.json(resInventory?.toJSON());

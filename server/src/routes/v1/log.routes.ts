@@ -7,11 +7,18 @@ import {
   findLogByIdController,
   findLogByTrackController,
   initialLogController,
+  searchLogByCodeController,
 } from '../../controllers/log.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import { logSchema } from '../../schemas/log.schema';
 
 const router = Router();
+
+router.get(
+  '/search/code',
+  [verifyToken, isUserActive, validate(logSchema.search)],
+  searchLogByCodeController
+);
 router.get('/', [verifyToken, isUserActive], findAllLogController);
 router.get('/init', [verifyToken, isUserActive], initialLogController);
 router.get(

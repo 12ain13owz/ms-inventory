@@ -9,6 +9,12 @@ const track = 'ไม่พบเลข Track';
 const code = 'ไม่พบรหัสครุภัณฑ์';
 
 export const logSchema = {
+  search: object({
+    query: object({
+      code: string({ required_error: code }),
+    }),
+  }),
+
   findByDate: object({
     params: object({
       dateStart: string({ required_error: dateStart }).min(1, {
@@ -48,6 +54,7 @@ export const logSchema = {
 };
 
 export type LogType = {
+  search: TypeOf<typeof logSchema.search>['query'];
   findByDate: TypeOf<typeof logSchema.findByDate>['params'];
   findByTrack: TypeOf<typeof logSchema.findByTrack>['params'];
   findByCode: TypeOf<typeof logSchema.findByCode>['params'];

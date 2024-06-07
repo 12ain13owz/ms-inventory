@@ -4,6 +4,23 @@ import { newError, removeWhitespace } from '../utils/helper';
 import { logService } from '../services/log.service';
 import { LogType } from '../schemas/log.schema';
 
+export async function searchLogByCodeController(
+  req: Request<{}, {}, {}, LogType['search']>,
+  res: ExtendedResponse,
+  next: NextFunction
+) {
+  res.locals.func = 'searchLogByCodeController';
+
+  try {
+    const query = removeWhitespace(req.query.code);
+    const resLogs = await logService.searchByCode(query);
+
+    res.json(resLogs);
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function initialLogController(
   req: Request,
   res: ExtendedResponse,

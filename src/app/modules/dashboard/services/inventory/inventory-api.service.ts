@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { InventoryService } from './inventory.service';
 import { LogService } from '../log/log.service';
 import { Observable, map, switchMap, tap, timer } from 'rxjs';
@@ -22,6 +22,17 @@ export class InventoryApiService {
     private logService: LogService,
     private socketLogService: SocketLogService
   ) {}
+
+  searchByCode(code: string): Observable<Inventory[]> {
+    const params = new HttpParams().set('code', code);
+
+    return this.http
+      .get<Inventory[]>(`${this.apiUrl}/search/code`, { params })
+      .pipe(
+        switchMap((res) => timer(200).pipe(map(() => res))),
+        tap((res) => this.inventoryService.assign(res))
+      );
+  }
 
   getAll(): Observable<Inventory[]> {
     return this.http.get<Inventory[]>(this.apiUrl).pipe(

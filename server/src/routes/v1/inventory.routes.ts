@@ -9,6 +9,7 @@ import {
   findInventoryByIdController,
   findInventoryByTrackController,
   initialInventoryController,
+  searchInventoryByCodeController,
   searchInventoryController,
   updateInventoryController,
 } from '../../controllers/inventory.controller';
@@ -24,7 +25,16 @@ import {
 
 const router = Router();
 
-router.get('/search', [verifyToken, isUserActive], searchInventoryController);
+router.get(
+  '/search',
+  [verifyToken, isUserActive, validate(inventorySchema.search)],
+  searchInventoryController
+);
+router.get(
+  '/search/code',
+  [verifyToken, isUserActive, validate(inventorySchema.search)],
+  searchInventoryByCodeController
+);
 router.get('/', [verifyToken, isUserActive], findAllInventoryController);
 router.get('/init', [verifyToken, isUserActive], initialInventoryController);
 router.get(

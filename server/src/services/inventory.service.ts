@@ -7,10 +7,17 @@ import { Fund } from '../models/fund.model';
 import { Location } from '../models/location.model';
 
 export const inventoryService = {
-  search(code: string) {
+  search(code: string): Promise<Inventory[]> {
     return InventoryModel.findAll({
       where: { code: { [Op.like]: `%${code}%` } },
       attributes: ['code'],
+    });
+  },
+
+  searchByCode(code: string): Promise<Inventory[]> {
+    return InventoryModel.findAll({
+      where: { code: { [Op.like]: `${code}%` } },
+      ...queryOptions(),
     });
   },
 

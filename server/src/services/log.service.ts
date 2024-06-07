@@ -2,6 +2,12 @@ import { Transaction, Op } from 'sequelize';
 import LogModel, { Log } from '../models/log.model';
 
 export const logService = {
+  searchByCode(code: string): Promise<Log[]> {
+    return LogModel.findAll({
+      where: { code: { [Op.like]: `${code}%` } },
+    });
+  },
+
   findAll(): Promise<Log[]> {
     return LogModel.findAll();
   },

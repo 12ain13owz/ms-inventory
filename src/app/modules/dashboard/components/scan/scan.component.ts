@@ -213,7 +213,7 @@ export class ScanComponent implements OnInit, OnDestroy {
     const filterValue = value.toLowerCase();
 
     return this.cache.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+      option.toLowerCase().startsWith(filterValue)
     );
   }
 

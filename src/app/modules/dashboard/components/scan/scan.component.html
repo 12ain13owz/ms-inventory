@@ -22,11 +22,14 @@
               [formControl]="search"
               [matAutocomplete]="auto"
               (input)="onSearchAutoComplete(search.value)"
+              appAutoCode
             />
 
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
               @for (code of filteredOptions | async ; track code) {
-              <mat-option [value]="code">{{ code }}</mat-option>
+              <mat-option [value]="code">
+                <span [innerHTML]="code | highlight : search.value"></span>
+              </mat-option>
               }
             </mat-autocomplete>
 

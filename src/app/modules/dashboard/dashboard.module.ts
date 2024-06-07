@@ -33,10 +33,12 @@ import { InventoryViewComponent } from './components/inventory/inventory-view/in
 import { InventoryEditComponent } from './components/inventory/inventory-edit/inventory-edit.component';
 import { PrintProcessComponent } from './components/print/print-process/print-process.component';
 import { InventoryCheckComponent } from './components/inventory-check/inventory-check.component';
-import { SearchPipe } from './pipes/search.pipe';
 import { LocationComponent } from './components/location/location.component';
 import { LocationEditComponent } from './components/location/location-edit/location-edit.component';
 import { ScanEditComponent } from './components/scan/scan-edit/scan-edit.component';
+import { HighlightPipe } from './pipes/highlight.pipe';
+import { ThaiDatePipe } from './pipes/thai-date.pipe';
+import { AutoCodeDirective } from './directive/auto-code.directive';
 
 @NgModule({
   declarations: [
@@ -68,10 +70,12 @@ import { ScanEditComponent } from './components/scan/scan-edit/scan-edit.compone
     InventoryViewComponent,
     InventoryEditComponent,
     InventoryCheckComponent,
-    SearchPipe,
     LocationComponent,
     LocationEditComponent,
     ScanEditComponent,
+    HighlightPipe,
+    ThaiDatePipe,
+    AutoCodeDirective,
   ],
   imports: [
     DashboardRoutingModule,

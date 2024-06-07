@@ -43,11 +43,14 @@
               [formControl]="search"
               [matAutocomplete]="auto"
               (input)="onSearchAutoComplete(search.value)"
+              appAutoCode
             />
 
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-autocomplete #auto="matAutocomplete">
               @for (code of filteredOptions | async ; track code) {
-              <mat-option [value]="code">{{ code }}</mat-option>
+              <mat-option [value]="code">
+                <span [innerHTML]="code | highlight : search.value"></span>
+              </mat-option>
               }
             </mat-autocomplete>
 
@@ -248,10 +251,10 @@
 
       <ng-container matColumnDef="createdAt">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >วันที่สร้าง Log</mat-header-cell
+          >วันที่เพิ่มประวัติ</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.createdAt | date : "medium" }}
+          {{ element.createdAt | thaiDate }}
         </mat-cell>
       </ng-container>
 

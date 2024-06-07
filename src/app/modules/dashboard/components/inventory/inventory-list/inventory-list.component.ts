@@ -106,12 +106,13 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     'status',
     'location',
     'description',
+    'createdAt',
   ];
   dataSource = new MatTableDataSource<InventoryTable>([]);
   selection = new SelectionModel<InventoryTable>(true, []);
   isFirstLoading: boolean = false;
 
-  search = new FormControl();
+  search = new FormControl('');
   cache: string[] = [];
   filteredOptions: Observable<string[]>;
 
@@ -157,7 +158,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.operation$ = this.inventoryApiService.getByCode(code);
+      this.operation$ = this.inventoryApiService.searchByCode(code);
     }
 
     this.isLoading = true;
@@ -307,7 +308,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
       if (!this.isSort) {
         this.dataSource.sort.sort({
-          id: 'no',
+          id: 'createdAt',
           start: 'desc',
           disableClear: true,
         });
@@ -360,7 +361,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     const filterValue = value.toLowerCase();
 
     return this.cache.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+      option.toLowerCase().startsWith(filterValue)
     );
   }
 }

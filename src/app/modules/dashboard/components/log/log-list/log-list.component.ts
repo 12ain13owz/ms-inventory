@@ -92,7 +92,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   isFirstLoading: boolean = false;
   isSort: boolean = false;
 
-  search = new FormControl();
+  search = new FormControl('');
   cache: string[] = this.searchService.getCache();
   filteredOptions: Observable<string[]>;
 
@@ -128,7 +128,7 @@ export class LogListComponent implements OnInit, OnDestroy {
       const code = this.search.value.replace(/^\s+|\s+$/gm, '');
       if (!code) return;
 
-      this.operation$ = this.logApiService.getByCode(code);
+      this.operation$ = this.logApiService.searchByCode(code);
     }
 
     this.isLoading = true;
@@ -292,7 +292,7 @@ export class LogListComponent implements OnInit, OnDestroy {
     const filterValue = value.toLowerCase();
 
     return this.cache.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+      option.toLowerCase().startsWith(filterValue)
     );
   }
 }

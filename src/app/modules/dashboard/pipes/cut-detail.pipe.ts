@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CutDetailPipe implements PipeTransform {
   transform(value: string): string {
-    const maxLength = 50; // ยาวสุดที่ต้องการ
+    const maxLength = 100; // ยาวสุดที่ต้องการ
 
     if (value.length < maxLength) return value;
 
