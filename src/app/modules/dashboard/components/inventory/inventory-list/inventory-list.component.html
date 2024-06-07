@@ -8,6 +8,46 @@
     [selectedIndex]="selectedTap.value"
     (selectedIndexChange)="selectedTap.setValue($event)"
   >
+    <mat-tab label="รหัสครุภัณฑ์">
+      <mat-card-content>
+        <form (ngSubmit)="onSearch()">
+          <mat-form-field class="w-100">
+            <mat-label>รหัสครุภัณฑ์</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="search"
+              [matAutocomplete]="auto"
+              (input)="onSearchAutoComplete(search.value)"
+            />
+
+            <mat-autocomplete #auto="matAutocomplete">
+              @for (code of filteredOptions | async ; track code) {
+              <mat-option [value]="code">
+                <span [innerHTML]="code | highlight : search.value"></span>
+              </mat-option>
+              }
+            </mat-autocomplete>
+
+            <button
+              type="button"
+              *ngIf="search.value"
+              matSuffix
+              mat-icon-button
+              color="primary"
+              (click)="search.setValue('')"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+
+            <button type="submit" matSuffix mat-icon-button>
+              <mat-icon matSuffix fontIcon="search"></mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+    </mat-tab>
+
     <mat-tab label="วันที่">
       <mat-card-content>
         <mat-form-field class="w-100">
@@ -35,47 +75,6 @@
         </mat-form-field>
       </mat-card-content>
     </mat-tab>
-
-    <mat-tab label="รหัสครุภัณฑ์">
-      <mat-card-content>
-        <form (ngSubmit)="onSearch()">
-          <mat-form-field class="w-100">
-            <mat-label>รหัสครุภัณฑ์</mat-label>
-            <input
-              type="text"
-              matInput
-              [formControl]="search"
-              [matAutocomplete]="auto"
-              (input)="onSearchAutoComplete(search.value)"
-              appAutoCode
-            />
-
-            <mat-autocomplete #auto="matAutocomplete">
-              @for (code of filteredOptions | async ; track code) {
-              <mat-option [value]="code">
-                <span [innerHTML]="code | highlight : search.value"></span>
-              </mat-option>
-              }
-            </mat-autocomplete>
-
-            <button
-              type="button"
-              *ngIf="search.value"
-              matSuffix
-              mat-icon-button
-              color="primary"
-              (click)="search.setValue('')"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-
-            <button type="submit" matSuffix mat-icon-button>
-              <mat-icon matSuffix fontIcon="search"></mat-icon>
-            </button>
-          </mat-form-field>
-        </form>
-      </mat-card-content> </mat-tab
-    >>
   </mat-tab-group>
 
   <mat-card-actions class="justify-between">

@@ -208,6 +208,8 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
           columnCount = 0;
         }
         if (rowCount >= rowCountThreshold) {
+          if (this.percentComplete === 100) return;
+
           doc.addPage();
           currentX = startX;
           currentY = startY;
@@ -314,6 +316,8 @@ export class PrintProcessComponent implements OnInit, OnDestroy {
           columnCount = 0;
         }
         if (rowCount >= rowCountThreshold) {
+          if (this.percentComplete === 100) return;
+
           doc.addPage();
           currentX = startX;
           currentY = startY;

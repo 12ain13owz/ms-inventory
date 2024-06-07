@@ -48,8 +48,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { SearchService } from '../../../services/search/search.service';
 
 enum Tap {
-  Date,
   Code,
+  Date,
 }
 
 @Component({
@@ -90,7 +90,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   isSort: boolean = false;
   isSelected: boolean = false;
   isPrint: boolean = false;
-  selectedTap = new FormControl(Tap.Date);
+  selectedTap = new FormControl(Tap.Code);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   endDate = new Date();
   dateRange = this.formBuilder.group({

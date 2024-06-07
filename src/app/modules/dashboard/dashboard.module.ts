@@ -38,7 +38,6 @@ import { LocationEditComponent } from './components/location/location-edit/locat
 import { ScanEditComponent } from './components/scan/scan-edit/scan-edit.component';
 import { HighlightPipe } from './pipes/highlight.pipe';
 import { ThaiDatePipe } from './pipes/thai-date.pipe';
-import { AutoCodeDirective } from './directive/auto-code.directive';
 
 @NgModule({
   declarations: [
@@ -75,7 +74,6 @@ import { AutoCodeDirective } from './directive/auto-code.directive';
     ScanEditComponent,
     HighlightPipe,
     ThaiDatePipe,
-    AutoCodeDirective,
   ],
   imports: [
     DashboardRoutingModule,

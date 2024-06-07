@@ -35,8 +35,8 @@ import { StatusService } from '../../../services/status/status.service';
 import { SearchService } from '../../../services/search/search.service';
 
 enum Tap {
-  Date,
   Code,
+  Date,
 }
 @Component({
   selector: 'app-log-list',
@@ -70,7 +70,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   form = this.initForm();
 
   isLoading: boolean = false;
-  selectedTap = new FormControl(Tap.Date);
+  selectedTap = new FormControl(Tap.Code);
   startDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   endDate = new Date();
   dateRange = this.formBuilder.group({

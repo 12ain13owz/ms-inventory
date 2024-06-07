@@ -58,13 +58,7 @@
 
         <mat-form-field>
           <mat-label>รหัสครุภัณฑ์</mat-label>
-          <input
-            type="text"
-            matInput
-            formControlName="code"
-            #codeEl
-            appAutoCode
-          />
+          <input type="text" matInput formControlName="code" #codeEl />
           <mat-hint align="end">{{ code.value.length }}/27</mat-hint>
 
           <mat-error>
