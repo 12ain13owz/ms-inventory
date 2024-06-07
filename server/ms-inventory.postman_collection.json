@@ -127,7 +127,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"user@test.com\",\r\n    \"password\": \"!Qwer1234\",\r\n    \"recaptcha\": \"\"\r\n}",
+							"raw": "{\r\n    \"email\": \"admin@mis.com\",\r\n    \"password\": \"!Qwer1234\",\r\n    \"recaptcha\": \"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -891,6 +891,73 @@
 			"name": "Inventory",
 			"item": [
 				{
+					"name": "Search Inventories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}inventory/search?code=\"\"",
+							"host": [
+								"{{host}}inventory"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "\"\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Inventories By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}inventory/search/code?code=54",
+							"host": [
+								"{{host}}inventory"
+							],
+							"path": [
+								"search",
+								"code"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "54"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Inventories",
 					"request": {
 						"auth": {
@@ -1087,7 +1154,7 @@
 							"formdata": [
 								{
 									"key": "code",
-									"value": "63-21-090207-215-00040-0036",
+									"value": "63-21-090207-215-00040-0038",
 									"type": "text"
 								},
 								{
@@ -1132,7 +1199,7 @@
 								},
 								{
 									"key": "categoryName",
-									"value": "โน้ตบุ้ค",
+									"value": "หนังสือ",
 									"type": "text"
 								},
 								{
@@ -1448,7 +1515,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"inventoryId\": 1,\r\n    \"inventoryStatusId\": 1,\r\n    \"inventoryStatusName\": \"ปกติ\"\r\n}",
+							"raw": "{\r\n    \"inventoryId\": 1,\r\n    \"statusId\": 1,\r\n    \"statusName\": \"ปกติ\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1459,6 +1526,46 @@
 							"raw": "{{host}}inventory-check",
 							"host": [
 								"{{host}}inventory-check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Inventory Check",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment')\r",
+									"pm.environment.set('receivedDate', moment().format((\"YYYY-MM-DD\")));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}inventory-check/10",
+							"host": [
+								"{{host}}inventory-check"
+							],
+							"path": [
+								"10"
 							]
 						}
 					},
@@ -1488,6 +1595,40 @@
 							"raw": "{{host}}log",
 							"host": [
 								"{{host}}log"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Logs By Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}log/search/code?code=62",
+							"host": [
+								"{{host}}log"
+							],
+							"path": [
+								"search",
+								"code"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "62"
+								}
 							]
 						}
 					},
