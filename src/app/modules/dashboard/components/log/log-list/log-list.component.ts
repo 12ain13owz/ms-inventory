@@ -61,7 +61,7 @@ export class LogListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('filterInput') filterInput: ElementRef<HTMLInputElement>;
 
-  title: string = 'รายการ ประว้ติครุภัณฑ์';
+  title: string = 'รายการ ประวัติครุภัณฑ์';
   filterLog: FilterLog = {
     inventories: ['เพิ่มครุภัณฑ์', 'แก้ไขครุภัณฑ์'],
     categories: this.categoryService.getActiveNames(),

@@ -83,6 +83,7 @@ export class InventoryService {
         fund: item.Fund.name,
         location: item.Location.name,
         description: item.description,
+        createdAt: item.createdAt,
       }))
       .slice();
   }
