@@ -34772,7 +34772,8 @@ var _InventoryService = class _InventoryService {
       status: item.Status.name,
       fund: item.Fund.name,
       location: item.Location.name,
-      description: item.description
+      description: item.description,
+      createdAt: item.createdAt
     })).slice();
   }
   create(item) {
@@ -40471,7 +40472,7 @@ function UserEditComponent_Conditional_18_Template(rf, ctx) {
   if (rf & 1) {
     const _r2 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "mat-form-field")(1, "mat-label");
-    \u0275\u0275text(2, "Password");
+    \u0275\u0275text(2, "\u0E23\u0E2B\u0E31\u0E2A\u0E1C\u0E48\u0E32\u0E19");
     \u0275\u0275elementEnd();
     \u0275\u0275element(3, "input", 21);
     \u0275\u0275elementStart(4, "mat-icon", 22);
@@ -40486,7 +40487,7 @@ function UserEditComponent_Conditional_18_Template(rf, ctx) {
     \u0275\u0275element(7, "app-error-field", 9);
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(8, "mat-form-field")(9, "mat-label");
-    \u0275\u0275text(10, "Confirm Password");
+    \u0275\u0275text(10, "\u0E22\u0E37\u0E19\u0E22\u0E31\u0E19\u0E23\u0E2B\u0E31\u0E2A\u0E1C\u0E48\u0E32\u0E19");
     \u0275\u0275elementEnd();
     \u0275\u0275element(11, "input", 23);
     \u0275\u0275elementStart(12, "mat-icon", 22);
@@ -42190,7 +42191,7 @@ var PrintComponent = _PrintComponent;
 // src/app/modules/dashboard/pipes/cut-detail.pipe.ts
 var _CutDetailPipe = class _CutDetailPipe {
   transform(value2) {
-    const maxLength = 100;
+    const maxLength = 75;
     if (value2.length < maxLength)
       return value2;
     const shortened = value2.slice(0, maxLength);
@@ -43021,7 +43022,7 @@ var _LogListComponent = class _LogListComponent {
     this.searchService = inject(SearchService);
     this.datePipe = inject(DatePipe);
     this.imageUrl = environment.imageUrl;
-    this.title = "\u0E23\u0E32\u0E22\u0E01\u0E32\u0E23 \u0E1B\u0E23\u0E30\u0E27\u0E49\u0E15\u0E34\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C";
+    this.title = "\u0E23\u0E32\u0E22\u0E01\u0E32\u0E23 \u0E1B\u0E23\u0E30\u0E27\u0E31\u0E15\u0E34\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C";
     this.filterLog = {
       inventories: ["\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C", "\u0E41\u0E01\u0E49\u0E44\u0E02\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C"],
       categories: this.categoryService.getActiveNames(),
@@ -58098,4 +58099,4 @@ jspdf/dist/jspdf.es.min.js:
    * http://opensource.org/licenses/mit-license
    *)
 */
-//# sourceMappingURL=chunk-ZWET4WAK.js.map
+//# sourceMappingURL=chunk-VJVI52I4.js.map
