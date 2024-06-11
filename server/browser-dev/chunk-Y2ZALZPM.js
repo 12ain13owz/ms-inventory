@@ -34748,8 +34748,8 @@ var _InventoryService = class _InventoryService {
       status: inventory.Status.name,
       fund: inventory.Fund.name,
       location: inventory.Location.name,
-      description: inventory.description,
-      createdAt: inventory.createdAt
+      receivedDate: inventory.receivedDate,
+      description: inventory.description
     })).slice();
   }
   getById(id) {
@@ -34772,8 +34772,8 @@ var _InventoryService = class _InventoryService {
       status: item.Status.name,
       fund: item.Fund.name,
       location: item.Location.name,
-      description: item.description,
-      createdAt: item.createdAt
+      receivedDate: item.receivedDate,
+      description: item.description
     })).slice();
   }
   create(item) {
@@ -39740,6 +39740,7 @@ var _InventoryCheckService = class _InventoryCheckService {
       status: item.Inventory.Status.name,
       fund: item.Inventory.Fund.name,
       location: item.Inventory.Location.name,
+      receivedDate: item.Inventory.receivedDate,
       description: item.Inventory.description
     })).slice();
   }
@@ -42532,7 +42533,9 @@ var _ThaiDatePipe = class _ThaiDatePipe {
     const [datePart, timePart] = dateStr.split(" ");
     const [d2, m2, y2] = datePart.split("/");
     const buddhistYear = +y2 + 543;
-    return `${d2}/${m2}/${buddhistYear} ${timePart}`;
+    const [hour, min, second] = timePart.split(":");
+    const hasTime = hour != "00" || min != "00" || second != "00";
+    return hasTime ? `${d2}/${m2}/${buddhistYear} ${timePart}` : `${d2}/${m2}/${buddhistYear}`;
   }
 };
 _ThaiDatePipe.\u0275fac = function ThaiDatePipe_Factory(t2) {
@@ -44889,7 +44892,7 @@ function InventoryListComponent_Defer_42_Conditional_35_mat_cell_23_Template(rf,
 function InventoryListComponent_Defer_42_Conditional_35_mat_header_cell_25_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "mat-header-cell", 59);
-    \u0275\u0275text(1, "\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C");
+    \u0275\u0275text(1, "\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48\u0E44\u0E14\u0E49\u0E21\u0E32");
     \u0275\u0275elementEnd();
   }
 }
@@ -44903,7 +44906,7 @@ function InventoryListComponent_Defer_42_Conditional_35_mat_cell_26_Template(rf,
   if (rf & 2) {
     const element_r21 = ctx.$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind1(2, 1, element_r21.createdAt), " ");
+    \u0275\u0275textInterpolate1(" ", \u0275\u0275pipeBind1(2, 1, element_r21.receivedDate), " ");
   }
 }
 function InventoryListComponent_Defer_42_Conditional_35_mat_header_row_27_Template(rf, ctx) {
@@ -45115,8 +45118,8 @@ var _InventoryListComponent = class _InventoryListComponent {
       "category",
       "status",
       "location",
-      "description",
-      "createdAt"
+      "receivedDate",
+      "description"
     ];
     this.dataSource = new MatTableDataSource([]);
     this.selection = new SelectionModel(true, []);
@@ -45301,7 +45304,7 @@ _InventoryListComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent(
     \u0275\u0275queryRefresh(_t2 = \u0275\u0275loadQuery()) && (ctx.sort = _t2.first);
     \u0275\u0275queryRefresh(_t2 = \u0275\u0275loadQuery()) && (ctx.filterInput = _t2.first);
   }
-}, decls: 46, vars: 13, consts: [["auto", "matAutocomplete"], ["picker", ""], ["filterInput", ""], [300], ["routerLink", "new", "mat-fab", "", "color", "primary", 1, "mb-20"], [1, "mb-20", "mat-elevation-z8"], ["mat-stretch-tabs", "false", 3, "selectedIndexChange", "selectedIndex"], ["label", "\u0E23\u0E2B\u0E31\u0E2A\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C"], [3, "ngSubmit"], [1, "w-100"], ["type", "text", "matInput", "", 3, "input", "formControl", "matAutocomplete"], [3, "value"], ["type", "button", "matSuffix", "", "mat-icon-button", "", "color", "primary", 3, "click", 4, "ngIf"], ["type", "submit", "matSuffix", "", "mat-icon-button", ""], ["matSuffix", "", "fontIcon", "search"], ["label", "\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48"], [3, "rangePicker", "formGroup"], ["matStartDate", "", "formControlName", "start", "readonly", "", 3, "click"], ["matEndDate", "", "formControlName", "end", "readonly", "", 3, "click"], ["align", "end"], ["matIconSuffix", "", 3, "for"], [1, "justify-between"], ["type", "button", "mat-raised-button", "", "color", "primary", 3, "click", "disabled"], ["type", "button", "mat-raised-button", "", "color", "accent", 3, "click", "disabled"], ["mode", "indeterminate"], [3, "innerHTML"], ["type", "button", "matSuffix", "", "mat-icon-button", "", "color", "primary", 3, "click"], [1, "mat-elevation-z8"], [1, "mb-16", "d-flex", "justify-between", "align-center"], ["type", "button", "mat-button", "", "color", "warn", 3, "click"], [1, "filter-box", 3, "formGroup"], ["formControlName", "category", "multiple", ""], [1, "additional-selection"], ["formControlName", "status", "multiple", ""], ["matInput", "", 3, "keyup"], [1, "d-flex", "align-center", "gap-10"], [3, "ngModelChange", "click", "ngModel"], ["type", "button", "mat-button", "", "color", "accent", 3, "click", "disabled"], ["matSort", "", 3, "dataSource"], ["showFirstLastButtons", "", 3, "pageSizeOptions"], [3, "click", "value"], ["matColumnDef", "select"], ["matColumnDef", "no"], ["mat-sort-header", "", 4, "matHeaderCellDef"], [4, "matCellDef"], ["matColumnDef", "image"], ["matColumnDef", "code"], ["matColumnDef", "category"], ["matColumnDef", "status"], ["matColumnDef", "location"], ["matColumnDef", "description"], ["matColumnDef", "createdAt"], [4, "matHeaderRowDef"], [4, "matRowDef", "matRowDefColumns"], ["class", "p-0", 4, "matHeaderCellDef"], ["class", "p-0", 4, "matCellDef"], [1, "p-0"], [3, "change", "checked", "indeterminate"], [3, "click", "change", "checked"], ["mat-sort-header", ""], [1, "blurred-img", 3, "routerLink"], [3, "defaultImage", "lazyLoad"], [3, "form"]], template: function InventoryListComponent_Template(rf, ctx) {
+}, decls: 46, vars: 13, consts: [["auto", "matAutocomplete"], ["picker", ""], ["filterInput", ""], [300], ["routerLink", "new", "mat-fab", "", "color", "primary", 1, "mb-20"], [1, "mb-20", "mat-elevation-z8"], ["mat-stretch-tabs", "false", 3, "selectedIndexChange", "selectedIndex"], ["label", "\u0E23\u0E2B\u0E31\u0E2A\u0E04\u0E23\u0E38\u0E20\u0E31\u0E13\u0E11\u0E4C"], [3, "ngSubmit"], [1, "w-100"], ["type", "text", "matInput", "", 3, "input", "formControl", "matAutocomplete"], [3, "value"], ["type", "button", "matSuffix", "", "mat-icon-button", "", "color", "primary", 3, "click", 4, "ngIf"], ["type", "submit", "matSuffix", "", "mat-icon-button", ""], ["matSuffix", "", "fontIcon", "search"], ["label", "\u0E27\u0E31\u0E19\u0E17\u0E35\u0E48"], [3, "rangePicker", "formGroup"], ["matStartDate", "", "formControlName", "start", "readonly", "", 3, "click"], ["matEndDate", "", "formControlName", "end", "readonly", "", 3, "click"], ["align", "end"], ["matIconSuffix", "", 3, "for"], [1, "justify-between"], ["type", "button", "mat-raised-button", "", "color", "primary", 3, "click", "disabled"], ["type", "button", "mat-raised-button", "", "color", "accent", 3, "click", "disabled"], ["mode", "indeterminate"], [3, "innerHTML"], ["type", "button", "matSuffix", "", "mat-icon-button", "", "color", "primary", 3, "click"], [1, "mat-elevation-z8"], [1, "mb-16", "d-flex", "justify-between", "align-center"], ["type", "button", "mat-button", "", "color", "warn", 3, "click"], [1, "filter-box", 3, "formGroup"], ["formControlName", "category", "multiple", ""], [1, "additional-selection"], ["formControlName", "status", "multiple", ""], ["matInput", "", 3, "keyup"], [1, "d-flex", "align-center", "gap-10"], [3, "ngModelChange", "click", "ngModel"], ["type", "button", "mat-button", "", "color", "accent", 3, "click", "disabled"], ["matSort", "", 3, "dataSource"], ["showFirstLastButtons", "", 3, "pageSizeOptions"], [3, "click", "value"], ["matColumnDef", "select"], ["matColumnDef", "no"], ["mat-sort-header", "", 4, "matHeaderCellDef"], [4, "matCellDef"], ["matColumnDef", "image"], ["matColumnDef", "code"], ["matColumnDef", "category"], ["matColumnDef", "status"], ["matColumnDef", "location"], ["matColumnDef", "description"], ["matColumnDef", "receivedDate"], [4, "matHeaderRowDef"], [4, "matRowDef", "matRowDefColumns"], ["class", "p-0", 4, "matHeaderCellDef"], ["class", "p-0", 4, "matCellDef"], [1, "p-0"], [3, "change", "checked", "indeterminate"], [3, "click", "change", "checked"], ["mat-sort-header", ""], [1, "blurred-img", 3, "routerLink"], [3, "defaultImage", "lazyLoad"], [3, "form"]], template: function InventoryListComponent_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "a", 4)(1, "mat-icon");
@@ -45403,7 +45406,7 @@ _InventoryListComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent(
     \u0275\u0275advance(3);
     \u0275\u0275deferWhen(ctx.dataSource.data.length > 0 || ctx.isFirstLoading);
   }
-}, dependencies: [RouterLink, NgIf, \u0275NgNoValidate, DefaultValueAccessor, NgControlStatus, NgControlStatusGroup, FormControlDirective, FormGroupDirective, FormControlName, MatButton, MatIconButton, MatFabAnchor, MatIcon, MatCard, MatCardActions, MatCardContent, MatCardFooter, MatInput, MatFormField, MatLabel, MatHint, MatSuffix, MatProgressBar, MatOption, MatDatepickerToggle, MatDateRangeInput, MatStartDate, MatEndDate, MatDateRangePicker, MatTab, MatTabGroup, MatAutocomplete, MatAutocompleteTrigger, LoadingDataComponent, NgForm, AsyncPipe, HighlightPipe], styles: ["\n\n.mat-column-select[_ngcontent-%COMP%] {\n  flex: 0 0 60px;\n}\n.mat-column-no[_ngcontent-%COMP%] {\n  flex: 0 0 70px;\n}\n.mat-column-image[_ngcontent-%COMP%] {\n  flex: 0 0 120px;\n  padding-block: 8px;\n}\n.mat-column-code[_ngcontent-%COMP%] {\n  flex: 0 0 140px;\n}\n.mat-column-category[_ngcontent-%COMP%] {\n  flex: 0 0 150px;\n}\n.mat-column-status[_ngcontent-%COMP%] {\n  flex: 0 0 120px;\n}\n.mat-column-location[_ngcontent-%COMP%] {\n  flex: 0 0 100px;\n}\n.mat-column-description[_ngcontent-%COMP%] {\n  min-width: 200px;\n}\nimg[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 100%;\n}\nmat-row[_ngcontent-%COMP%]:hover {\n  background-color: #f5f5f5;\n  transition: 0.2s;\n}\n.dark-theme[_nghost-%COMP%]   mat-row[_ngcontent-%COMP%]:hover, .dark-theme   [_nghost-%COMP%]   mat-row[_ngcontent-%COMP%]:hover {\n  background-color: #343434;\n}\n.filter-box[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  gap: 10px;\n}\n.filter-box[_ngcontent-%COMP%]   mat-form-field[_ngcontent-%COMP%] {\n  flex: 1 1 calc(25% - 10px);\n  min-width: 150px;\n}\n.filter-box[_ngcontent-%COMP%]   .additional-selection[_ngcontent-%COMP%] {\n  opacity: 0.75;\n  font-size: 0.75em;\n}\n@media (max-width: 968px) {\n  .filter-box[_ngcontent-%COMP%]   mat-form-field[_ngcontent-%COMP%] {\n    flex: 1 1 calc(50% - 10px);\n  }\n}\n/*# sourceMappingURL=inventory-list.component.css.map */"] });
+}, dependencies: [RouterLink, NgIf, \u0275NgNoValidate, DefaultValueAccessor, NgControlStatus, NgControlStatusGroup, FormControlDirective, FormGroupDirective, FormControlName, MatButton, MatIconButton, MatFabAnchor, MatIcon, MatCard, MatCardActions, MatCardContent, MatCardFooter, MatInput, MatFormField, MatLabel, MatHint, MatSuffix, MatProgressBar, MatOption, MatDatepickerToggle, MatDateRangeInput, MatStartDate, MatEndDate, MatDateRangePicker, MatTab, MatTabGroup, MatAutocomplete, MatAutocompleteTrigger, LoadingDataComponent, NgForm, AsyncPipe, HighlightPipe], styles: ["\n\n.mat-column-select[_ngcontent-%COMP%] {\n  flex: 0 0 60px;\n}\n.mat-column-no[_ngcontent-%COMP%] {\n  flex: 0 0 70px;\n}\n.mat-column-image[_ngcontent-%COMP%] {\n  flex: 0 0 120px;\n  padding-block: 8px;\n}\n.mat-column-code[_ngcontent-%COMP%] {\n  flex: 0 0 140px;\n}\n.mat-column-category[_ngcontent-%COMP%] {\n  flex: 0 0 150px;\n}\n.mat-column-status[_ngcontent-%COMP%] {\n  flex: 0 0 120px;\n}\n.mat-column-location[_ngcontent-%COMP%] {\n  flex: 0 0 100px;\n}\n.mat-column-receivedDate[_ngcontent-%COMP%] {\n  flex: 0 0 120px;\n}\n.mat-column-description[_ngcontent-%COMP%] {\n  min-width: 200px;\n}\nimg[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 100%;\n}\nmat-row[_ngcontent-%COMP%]:hover {\n  background-color: #f5f5f5;\n  transition: 0.2s;\n}\n.dark-theme[_nghost-%COMP%]   mat-row[_ngcontent-%COMP%]:hover, .dark-theme   [_nghost-%COMP%]   mat-row[_ngcontent-%COMP%]:hover {\n  background-color: #343434;\n}\n.filter-box[_ngcontent-%COMP%] {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  gap: 10px;\n}\n.filter-box[_ngcontent-%COMP%]   mat-form-field[_ngcontent-%COMP%] {\n  flex: 1 1 calc(25% - 10px);\n  min-width: 150px;\n}\n.filter-box[_ngcontent-%COMP%]   .additional-selection[_ngcontent-%COMP%] {\n  opacity: 0.75;\n  font-size: 0.75em;\n}\n@media (max-width: 968px) {\n  .filter-box[_ngcontent-%COMP%]   mat-form-field[_ngcontent-%COMP%] {\n    flex: 1 1 calc(50% - 10px);\n  }\n}\n/*# sourceMappingURL=inventory-list.component.css.map */"] });
 var InventoryListComponent = _InventoryListComponent;
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(InventoryListComponent, { className: "InventoryListComponent", filePath: "src\\app\\modules\\dashboard\\components\\inventory\\inventory-list\\inventory-list.component.ts", lineNumber: 60 });
@@ -58099,4 +58102,4 @@ jspdf/dist/jspdf.es.min.js:
    * http://opensource.org/licenses/mit-license
    *)
 */
-//# sourceMappingURL=chunk-VJVI52I4.js.map
+//# sourceMappingURL=chunk-Y2ZALZPM.js.map
