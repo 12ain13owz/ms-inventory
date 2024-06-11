@@ -17,6 +17,11 @@ export class ThaiDatePipe implements PipeTransform {
     const [d, m, y] = datePart.split('/');
     const buddhistYear = +y + 543;
 
-    return `${d}/${m}/${buddhistYear} ${timePart}`;
+    const [hour, min, second] = timePart.split(':');
+    const hasTime = hour != '00' || min != '00' || second != '00';
+
+    return hasTime
+      ? `${d}/${m}/${buddhistYear} ${timePart}`
+      : `${d}/${m}/${buddhistYear}`;
   }
 }

@@ -105,8 +105,8 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     'category',
     'status',
     'location',
+    'receivedDate',
     'description',
-    'createdAt',
   ];
   dataSource = new MatTableDataSource<InventoryTable>([]);
   selection = new SelectionModel<InventoryTable>(true, []);

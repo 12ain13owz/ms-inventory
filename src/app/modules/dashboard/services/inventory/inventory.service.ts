@@ -51,8 +51,8 @@ export class InventoryService {
         status: inventory.Status.name,
         fund: inventory.Fund.name,
         location: inventory.Location.name,
+        receivedDate: inventory.receivedDate,
         description: inventory.description,
-        createdAt: inventory.createdAt,
       }))
       .slice();
   }
@@ -82,8 +82,8 @@ export class InventoryService {
         status: item.Status.name,
         fund: item.Fund.name,
         location: item.Location.name,
+        receivedDate: item.receivedDate,
         description: item.description,
-        createdAt: item.createdAt,
       }))
       .slice();
   }

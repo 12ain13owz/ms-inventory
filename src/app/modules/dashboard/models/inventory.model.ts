@@ -35,6 +35,7 @@ export interface InventoryTable {
   status: string;
   fund: string;
   location: string;
+  receivedDate: Date;
   description: string;
 }
 

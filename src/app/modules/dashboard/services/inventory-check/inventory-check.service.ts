@@ -45,6 +45,7 @@ export class InventoryCheckService {
         status: item.Inventory.Status.name,
         fund: item.Inventory.Fund.name,
         location: item.Inventory.Location.name,
+        receivedDate: item.Inventory.receivedDate,
         description: item.Inventory.description,
       }))
       .slice();

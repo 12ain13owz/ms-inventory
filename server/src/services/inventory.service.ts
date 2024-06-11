@@ -59,7 +59,7 @@ export const inventoryService = {
 
   findByDate(dateStart: Date, dateEnd: Date): Promise<Inventory[]> {
     return InventoryModel.findAll({
-      where: { createdAt: { [Op.between]: [dateStart, dateEnd] } },
+      where: { receivedDate: { [Op.between]: [dateStart, dateEnd] } },
       ...queryOptions(),
     });
   },

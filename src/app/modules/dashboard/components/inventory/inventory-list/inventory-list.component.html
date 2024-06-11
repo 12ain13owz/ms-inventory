@@ -262,12 +262,12 @@
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="createdAt">
+      <ng-container matColumnDef="receivedDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header
-          >วันที่เพิ่มครุภัณฑ์</mat-header-cell
+          >วันที่ได้มา</mat-header-cell
         >
         <mat-cell *matCellDef="let element">
-          {{ element.createdAt | thaiDate }}
+          {{ element.receivedDate | thaiDate }}
         </mat-cell>
       </ng-container>
 
