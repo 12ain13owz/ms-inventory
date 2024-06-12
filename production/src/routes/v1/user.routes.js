@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const user_controller_1 = require("../../controllers/user.controller");
+const validate_middleware_1 = require("../../middlewares/validate.middleware");
+const user_schema_1 = require("../../schemas/user.schema");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
+const router = (0, express_1.Router)();
+router.get('/', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin], user_controller_1.findAllUserController);
+router.post('/', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(user_schema_1.userSchema.create)], user_controller_1.createUserController);
+router.patch('/:id', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(user_schema_1.userSchema.update)], user_controller_1.updateUserController);
+router.post('/forgot-password', [(0, validate_middleware_1.validate)(user_schema_1.userSchema.forgotPassword)], user_controller_1.forgotPassworController);
+router.post('/reset-password/:id', [(0, validate_middleware_1.validate)(user_schema_1.userSchema.resetPassword)], user_controller_1.resetPasswordController);
+exports.default = router;

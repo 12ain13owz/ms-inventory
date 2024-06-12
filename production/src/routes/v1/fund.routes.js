@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const validate_middleware_1 = require("../../middlewares/validate.middleware");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
+const fund_controller_1 = require("../../controllers/fund.controller");
+const fund_schema_1 = require("../../schemas/fund.schema");
+const router = (0, express_1.Router)();
+router.get('/', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive], fund_controller_1.findAllFundController);
+router.post('/', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(fund_schema_1.fundSchema.create)], fund_controller_1.createFundController);
+router.put('/:id', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(fund_schema_1.fundSchema.update)], fund_controller_1.updateFundController);
+router.delete('/:id', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(fund_schema_1.fundSchema.delete)], fund_controller_1.deleteFundController);
+exports.default = router;

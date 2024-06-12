@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const validate_middleware_1 = require("../../middlewares/validate.middleware");
+const category_schema_1 = require("../../schemas/category.schema");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
+const category_controller_1 = require("../../controllers/category.controller");
+const router = (0, express_1.Router)();
+router.get('/', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive], category_controller_1.findAllCategoryController);
+router.post('/', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(category_schema_1.categorySehema.create)], category_controller_1.createCategoryController);
+router.put('/:id', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(category_schema_1.categorySehema.update)], category_controller_1.updateCategoryController);
+router.delete('/:id', [auth_middleware_1.verifyToken, auth_middleware_1.isUserActive, auth_middleware_1.isRoleAdmin, (0, validate_middleware_1.validate)(category_schema_1.categorySehema.delete)], category_controller_1.deleteCategoryController);
+exports.default = router;
