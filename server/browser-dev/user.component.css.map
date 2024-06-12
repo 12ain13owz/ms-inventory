@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/modules/dashboard/components/user/user.component.scss"],
-  "sourcesContent": [".mat-column-no {\r\n  flex: 0 0 70px;\r\n}\r\n\r\n.mat-column-email {\r\n  min-width: 150px;\r\n}\r\n\r\n.mat-column-name {\r\n  min-width: 150px;\r\n}\r\n\r\n.mat-column-role {\r\n  flex: 0 0 70px;\r\n}\r\n\r\n.mat-column-active {\r\n  flex: 0 0 120px;\r\n}\r\n\r\n.mat-column-action {\r\n  flex: 0 0 100px;\r\n}\r\n\r\n.mat-column-remark {\r\n  min-width: 150px;\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,QAAA,EAAA,EAAA;;AAGF,CAAA;AACE,aAAA;;AAGF,CAAA;AACE,aAAA;;AAGF,CAAA;AACE,QAAA,EAAA,EAAA;;AAGF,CAAA;AACE,QAAA,EAAA,EAAA;;AAGF,CAAA;AACE,QAAA,EAAA,EAAA;;AAGF,CAAA;AACE,aAAA;;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/modules/auth/auth.component.scss"],
-  "sourcesContent": [".view {\r\n  position: absolute;\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  background: url(\"/assets/images/bg-bsru.png\") no-repeat center;\r\n  background-size: cover;\r\n  z-index: -100;\r\n}\r\n\r\n.rgba-stylish-strong {\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  background-color: rgba(62, 69, 81, 0.6);\r\n  backdrop-filter: blur(4px);\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,YAAA;AACA,OAAA;AACA,SAAA;AACA,UAAA;AACA,QAAA;AACA,SAAA;AACA,UAAA;AACA,YAAA;AACA,cAAA,gCAAA,UAAA;AACA,mBAAA;AACA,WAAA;;AAGF,CAAA;AACE,OAAA;AACA,SAAA;AACA,UAAA;AACA,QAAA;AACA,SAAA;AACA,UAAA;AACA,oBAAA,KAAA,EAAA,EAAA,EAAA,EAAA,EAAA,EAAA;AACA,2BAAA,KAAA;AAAA,mBAAA,KAAA;;",
-  "names": []
-}

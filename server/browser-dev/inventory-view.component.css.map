@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/modules/dashboard/components/inventory/inventory-view/inventory-view.component.scss"],
-  "sourcesContent": ["mat-list-item {\r\n  padding: 0;\r\n}\r\n\r\nmat-subheader {\r\n  margin-left: 0;\r\n}\r\n\r\n.view-textarea {\r\n  margin-top: -12px;\r\n  color: rgba(0, 0, 0, 0.54);\r\n\r\n  p {\r\n    margin: 0 0 8px;\r\n  }\r\n}\r\n\r\n:host-context(.dark-theme) {\r\n  .view-textarea {\r\n    color: rgba(255, 255, 255, 0.7);\r\n  }\r\n}\r\n"],
-  "mappings": ";AAAA;AACE,WAAA;;AAGF;AACE,eAAA;;AAGF,CAAA;AACE,cAAA;AACA,SAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;;AAEA,CAJF,cAIE;AACE,UAAA,EAAA,EAAA;;AAKF,cAAA,CAAA,YAAA,CAVF;AAWI,SAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;;",
-  "names": []
-}

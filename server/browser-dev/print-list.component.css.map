@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/modules/dashboard/components/print/print-list/print-list.component.scss"],
-  "sourcesContent": ["img {\r\n  width: 100px;\r\n  height: 100px;\r\n}\r\n\r\n.printCount-field {\r\n  margin-top: 20px;\r\n  width: 80px;\r\n}\r\n\r\n.mat-column-image {\r\n  flex: 0 0 120px;\r\n}\r\n\r\n.mat-column-code {\r\n  flex: 0 0 140px;\r\n}\r\n\r\n.mat-column-description {\r\n  min-width: 200px;\r\n}\r\n\r\n.mat-column-printCount {\r\n  min-width: 200px;\r\n}\r\n\r\n.mat-column-action {\r\n  min-width: 60px;\r\n}\r\n"],
-  "mappings": ";AAAA;AACE,SAAA;AACA,UAAA;;AAGF,CAAA;AACE,cAAA;AACA,SAAA;;AAGF,CAAA;AACE,QAAA,EAAA,EAAA;;AAGF,CAAA;AACE,QAAA,EAAA,EAAA;;AAGF,CAAA;AACE,aAAA;;AAGF,CAAA;AACE,aAAA;;AAGF,CAAA;AACE,aAAA;;",
-  "names": []
-}

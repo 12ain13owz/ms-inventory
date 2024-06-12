@@ -1,10 +1,10 @@
-# Project MS-Stock-IT
+# Project MS-Inventory
 
 ## Getting started
 
 - Install Dependencies
 
-cd <project_name>\server
+cd <project_name>\backend
 
 ```
 npm install

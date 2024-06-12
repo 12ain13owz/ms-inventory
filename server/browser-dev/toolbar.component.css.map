@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/modules/dashboard/layouts/toolbar/toolbar.component.scss"],
-  "sourcesContent": [".toolbar-box {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  width: 100%;\r\n  align-items: center;\r\n\r\n  span {\r\n    text-transform: capitalize;\r\n  }\r\n\r\n  .toolbar-right {\r\n    display: flex;\r\n    gap: 10px;\r\n    align-items: center;\r\n  }\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,mBAAA;AACA,SAAA;AACA,eAAA;;AAEA,CANF,YAME;AACE,kBAAA;;AAGF,CAVF,YAUE,CAAA;AACE,WAAA;AACA,OAAA;AACA,eAAA;;",
-  "names": []
-}
