@@ -5,7 +5,7 @@ import log from "./logger";
 export function signAccessToken(userId: number): string | null {
   try {
     const accessToken = signJwt({ userId }, "accessTokenPrivateKey", {
-      expiresIn: "5s",
+      expiresIn: "1d",
     });
 
     return accessToken;
