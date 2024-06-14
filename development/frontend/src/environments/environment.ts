@@ -1,4 +1,4 @@
-const url = 'http://172.26.160.1:3000/';
+const url = 'https://192.168.1.33/';
 
 export const environment = {
   production: false,
