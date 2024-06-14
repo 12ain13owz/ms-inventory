@@ -1,0 +1,9 @@
+/.git
+/node_modules
+.dockerignore
+
+Dockerfile
+fly.toml
+
+.gitignore
+start.bat
