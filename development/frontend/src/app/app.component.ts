@@ -10,5 +10,5 @@ import { LoadingScreenComponent } from './core/components/loading-screen/loading
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'msbsru-stock-it';
+  title = 'ms-inventory';
 }

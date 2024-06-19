@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "msbsru-stock-it": {
+    "ms-inventory": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -86,10 +86,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "msbsru-stock-it:build:production"
+              "buildTarget": "ms-inventory:build:production"
             },
             "development": {
-              "buildTarget": "msbsru-stock-it:build:development"
+              "buildTarget": "ms-inventory:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -102,7 +102,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "msbsru-stock-it:build"
+            "buildTarget": "ms-inventoryt:build"
           }
         },
         "test": {
