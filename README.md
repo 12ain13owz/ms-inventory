@@ -1,4 +1,4 @@
-# Project MS-Stock-IT
+# Project MS Inventory
 
 ## Getting started
 
