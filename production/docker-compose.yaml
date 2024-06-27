@@ -5,11 +5,12 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./ssl:/etc/nginx/ssl
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     # depends_on:
     #   - nodejs
     # networks:
