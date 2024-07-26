@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAccessToken = exports.verifyJwt = exports.signJwt = exports.signRefreshToken = exports.signAccessToken = void 0;
-const config_1 = __importDefault(require("config"));
+const config_1 = require("../../config");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const logger_1 = __importDefault(require("./logger"));
 function signAccessToken(userId) {
@@ -37,8 +37,8 @@ function signRefreshToken(userId) {
 exports.signRefreshToken = signRefreshToken;
 function signJwt(object, keyName, options) {
     try {
-        const signingKey = config_1.default.get(keyName);
-        return (0, jsonwebtoken_1.sign)(object, signingKey, Object.assign({ algorithm: "RS256" }, (options && options)));
+        const signingKey = config_1.config.get(keyName);
+        return (0, jsonwebtoken_1.sign)(object, signingKey, Object.assign({ algorithm: "RS256" }, options));
     }
     catch (error) {
         const e = error;
@@ -49,7 +49,7 @@ function signJwt(object, keyName, options) {
 exports.signJwt = signJwt;
 function verifyJwt(token, keyName) {
     try {
-        const publicKey = config_1.default.get(keyName);
+        const publicKey = config_1.config.get(keyName);
         const decode = (0, jsonwebtoken_1.verify)(token, publicKey);
         return decode;
     }
@@ -63,7 +63,7 @@ exports.verifyJwt = verifyJwt;
 function verifyAccessToken(token) {
     try {
         const keyName = "accessTokenPublicKey";
-        const publicKey = config_1.default.get(keyName);
+        const publicKey = config_1.config.get(keyName);
         (0, jsonwebtoken_1.verify)(token, publicKey);
         return null;
     }

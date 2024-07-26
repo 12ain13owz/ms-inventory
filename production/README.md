@@ -4,19 +4,19 @@
 
 - Install Dependencies
 
-cd <project_name>\backend
+cd production
 
 ```
 npm install
 ```
 
-- run init-database.bat
+- run scripts/init-database.bat
 - config .env file
 
 ```
-PORT="3000"
-NODE_ENV="development"
-USER_MAIL="your_email@gmail.com"
+PORT="your_port"
+NODE_ENV="your_node_env"
+USER_MAIL="your_email"
 PASS_MAIL="your_app_passwords"
 
 RECAPTCHA_SITE_KEY="your_recaptcha_site_key"
@@ -29,30 +29,14 @@ REFRESH_TOKEN_PRIVATE_KEY="your_refresh_token_private_key"
 REFRESH_TOKEN_PUBLIC_KEY="your_refresh_token_public_key"
 ```
 
-## Run Application
+### Star Server
 
 ```
-npm run dev
+server-start.bat
 ```
 
----
-
-### Version NodeJS v20.10.0
-
-### Dev Dependencies Overview
+### Down Server
 
 ```
-npm i -D @types/bcrypt @types/config @types/cookie-parser @types/express @types/jsonwebtoken @types/lodash @types/morgan @types/multer @types/node @types/nodemailer @types/uuid pino-pretty ts-node tsx typescript
+server-down.bat
 ```
-
-### Dependencies Overview
-
-```
-npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lodash morgan multer nodemailer pino pm2 sequelize sqlite3 uuid zod
-```
-
-- generate keys rsa `(Key Size: 2048 bit)`: https://travistidwell.com/jsencrypt/demo/
-
-### Link
-
-https://ms-stock-it.web.app/

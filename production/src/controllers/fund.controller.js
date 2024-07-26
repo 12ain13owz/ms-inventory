@@ -16,7 +16,7 @@ const fund_model_1 = require("../models/fund.model");
 const fund_service_1 = require("../services/fund.service");
 function findAllFundController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findAllFundController';
+        res.locals.func = "findAllFundController";
         try {
             const funds = yield fund_service_1.fundService.findAll();
             res.json(funds);
@@ -28,8 +28,9 @@ function findAllFundController(req, res, next) {
 }
 exports.findAllFundController = findAllFundController;
 function createFundController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'createFundController';
+        res.locals.func = "createFundController";
         try {
             const name = (0, helper_1.removeWhitespace)(req.body.name);
             const fund = yield fund_service_1.fundService.findByName(name);
@@ -38,7 +39,7 @@ function createFundController(req, res, next) {
             const payload = new fund_model_1.Fund({
                 name: name,
                 active: req.body.active,
-                remark: req.body.remark || '',
+                remark: (_a = req.body.remark) !== null && _a !== void 0 ? _a : "",
             });
             const result = yield fund_service_1.fundService.create(payload);
             const newFund = (0, lodash_1.omit)(result.toJSON(), helper_1.privateFields);
@@ -54,13 +55,14 @@ function createFundController(req, res, next) {
 }
 exports.createFundController = createFundController;
 function updateFundController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'updateFundController';
+        res.locals.func = "updateFundController";
         try {
             const id = +req.params.id;
             const fund = yield fund_service_1.fundService.findById(id);
             if (!fund)
-                throw (0, helper_1.newError)(400, 'ไม่พบแหล่งเงิน');
+                throw (0, helper_1.newError)(400, "ไม่พบแหล่งเงิน");
             const name = (0, helper_1.removeWhitespace)(req.body.name);
             const existingFund = yield fund_service_1.fundService.findByName(name);
             if (existingFund && existingFund.id !== id)
@@ -68,7 +70,7 @@ function updateFundController(req, res, next) {
             const payload = {
                 name: name,
                 active: req.body.active,
-                remark: req.body.remark || '',
+                remark: (_a = req.body.remark) !== null && _a !== void 0 ? _a : "",
             };
             const [result] = yield fund_service_1.fundService.update(id, payload);
             if (!result)
@@ -86,12 +88,12 @@ function updateFundController(req, res, next) {
 exports.updateFundController = updateFundController;
 function deleteFundController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'deleteFundController';
+        res.locals.func = "deleteFundController";
         try {
             const id = +req.params.id;
             const fund = yield fund_service_1.fundService.findById(id);
             if (!fund)
-                throw (0, helper_1.newError)(400, 'ไม่พบแหล่งเงิน ที่ต้องการลบ');
+                throw (0, helper_1.newError)(400, "ไม่พบแหล่งเงิน ที่ต้องการลบ");
             const name = fund.name;
             const result = yield fund_service_1.fundService.delete(id);
             if (!result)

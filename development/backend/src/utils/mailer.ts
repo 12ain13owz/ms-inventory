@@ -1,27 +1,22 @@
-import config from 'config';
-import nodemailer, { SendMailOptions } from 'nodemailer';
-import log from './logger';
+import { config } from "../../config";
+import nodemailer, { SendMailOptions } from "nodemailer";
+import log from "./logger";
 
-const smtp = config.get<{
-  host: string;
-  port: number;
-  secure: boolean;
-  service: string;
-  user: string;
-  pass: string;
-}>('smtp');
+const mailer = config.get("mailer");
 
 const transporter = nodemailer.createTransport({
-  ...smtp,
+  ...mailer,
   auth: {
-    user: smtp.user,
-    pass: smtp.pass,
+    user: mailer.user,
+    pass: mailer.pass,
   },
 });
 
 export async function sendEmail(payload: SendMailOptions) {
   try {
-    return await transporter.sendMail(payload);
+    const info = await transporter.sendMail(payload);
+    log.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    return info;
   } catch (error) {
     const e = error as Error;
     log.error(`sendEmail: ${e.message}`);

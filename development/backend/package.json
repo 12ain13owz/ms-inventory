@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "start": "node src/index.js",
+    "start:prod": "pm2 start src/index.js --name ms-inventory",
+    "dev": "tsx watch --env-file=.env src/index.ts",
     "clean": "rimraf ../build",
     "build": "npm run clean && tsc"
   },

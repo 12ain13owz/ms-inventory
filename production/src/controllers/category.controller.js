@@ -16,7 +16,7 @@ const category_model_1 = require("../models/category.model");
 const category_service_1 = require("../services/category.service");
 function findAllCategoryController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findAllCategoryController';
+        res.locals.func = "findAllCategoryController";
         try {
             const resCategories = yield category_service_1.categoryService.findAll();
             res.json(resCategories);
@@ -28,8 +28,9 @@ function findAllCategoryController(req, res, next) {
 }
 exports.findAllCategoryController = findAllCategoryController;
 function createCategoryController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'createCategoryController';
+        res.locals.func = "createCategoryController";
         try {
             const name = (0, helper_1.removeWhitespace)(req.body.name);
             const category = yield category_service_1.categoryService.findByName(name);
@@ -38,7 +39,7 @@ function createCategoryController(req, res, next) {
             const payload = new category_model_1.Category({
                 name: name,
                 active: req.body.active,
-                remark: req.body.remark || '',
+                remark: (_a = req.body.remark) !== null && _a !== void 0 ? _a : "",
             });
             const result = yield category_service_1.categoryService.create(payload);
             const newCagegory = (0, lodash_1.omit)(result.toJSON(), helper_1.privateFields);
@@ -54,13 +55,14 @@ function createCategoryController(req, res, next) {
 }
 exports.createCategoryController = createCategoryController;
 function updateCategoryController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'updateCategoryController';
+        res.locals.func = "updateCategoryController";
         try {
             const id = +req.params.id;
             const cateogory = yield category_service_1.categoryService.findById(id);
             if (!cateogory)
-                throw (0, helper_1.newError)(400, 'ไม่พบประเภท');
+                throw (0, helper_1.newError)(400, "ไม่พบประเภท");
             const name = (0, helper_1.removeWhitespace)(req.body.name);
             const existingCategory = yield category_service_1.categoryService.findByName(name);
             if (existingCategory && existingCategory.id !== id)
@@ -68,7 +70,7 @@ function updateCategoryController(req, res, next) {
             const payload = {
                 name: name,
                 active: req.body.active,
-                remark: req.body.remark || '',
+                remark: (_a = req.body.remark) !== null && _a !== void 0 ? _a : "",
             };
             const [result] = yield category_service_1.categoryService.update(id, payload);
             if (!result)
@@ -86,12 +88,12 @@ function updateCategoryController(req, res, next) {
 exports.updateCategoryController = updateCategoryController;
 function deleteCategoryController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'deleteCategoryController';
+        res.locals.func = "deleteCategoryController";
         try {
             const id = +req.params.id;
             const category = yield category_service_1.categoryService.findById(id);
             if (!category)
-                throw (0, helper_1.newError)(400, 'ไม่พบประเภท ที่ต้องการลบ');
+                throw (0, helper_1.newError)(400, "ไม่พบประเภท ที่ต้องการลบ");
             const name = category.name;
             const result = yield category_service_1.categoryService.delete(id);
             if (!result)

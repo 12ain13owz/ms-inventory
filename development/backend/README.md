@@ -10,13 +10,13 @@ cd <project_name>\backend
 npm install
 ```
 
-- run init-database.bat
+- run scripts/init-database.bat
 - config .env file
 
 ```
-PORT="3000"
-NODE_ENV="development"
-USER_MAIL="your_email@gmail.com"
+PORT="your_port"
+NODE_ENV="your_node_env"
+USER_MAIL="your_email"
 PASS_MAIL="your_app_passwords"
 
 RECAPTCHA_SITE_KEY="your_recaptcha_site_key"
@@ -42,13 +42,13 @@ npm run dev
 ### Dev Dependencies Overview
 
 ```
-npm i -D @types/bcrypt @types/config @types/cookie-parser @types/express @types/jsonwebtoken @types/lodash @types/morgan @types/multer @types/node @types/nodemailer @types/uuid pino-pretty ts-node tsx typescript
+npm i -D @types/bcrypt @types/config @types/cookie-parser @types/express @types/jsonwebtoken @types/lodash @types/morgan @types/multer @types/node @types/nodemailer @types/uuid pino-pretty rimraf ts-node tsx typescript
 ```
 
 ### Dependencies Overview
 
 ```
-npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lodash morgan multer nodemailer pino pm2 sequelize sqlite3 uuid zod
+npm i bcrypt config cookie-parser cors dayjs dotenv express jimp jsonwebtoken lodash morgan multer nodemailer pino pm2 sequelize socket.io sqlite3 uuid zod
 ```
 
 - generate keys rsa `(Key Size: 2048 bit)`: https://travistidwell.com/jsencrypt/demo/

@@ -15,23 +15,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const logger_1 = __importDefault(require("../utils/logger"));
 const errorHandler = (error, req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     try {
-        const message = error.message || 'Internal Server Error!';
-        const status = error.status || 500;
+        const message = error.message || "Internal Server Error!";
+        const status = (_a = error.status) !== null && _a !== void 0 ? _a : 500;
         const logout = error.logout || false;
-        const func = res.locals.func || 'โunction not found ';
+        const func = (_b = res.locals.func) !== null && _b !== void 0 ? _b : "โunction not found ";
         const url = req.method + req.baseUrl + req.url;
         const image = res.locals.image || [];
-        for (let i = 0; i < image.length; i++) {
-            if ((0, fs_1.existsSync)(image[i]))
-                (0, fs_1.unlinkSync)(image[i]);
+        for (const element of image) {
+            if ((0, fs_1.existsSync)(element))
+                (0, fs_1.unlinkSync)(element);
         }
         logger_1.default.error(`${url}, ${func}: ${message}`);
         res.status(status).json({ message, logout });
     }
     catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });
 exports.default = errorHandler;

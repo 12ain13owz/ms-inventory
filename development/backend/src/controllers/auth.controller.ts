@@ -1,4 +1,4 @@
-import config from "config";
+import { config } from "../../config";
 import { NextFunction, Request } from "express";
 import { ExtendedResponse } from "../types/express";
 import { omit } from "lodash";
@@ -14,7 +14,7 @@ import {
 } from "../utils/jwt";
 
 const tokenKey = "refresh_token";
-const isProduction = config.get<string>("node_env") === "production";
+const isProduction = config.get("node_env") === "production";
 
 export async function loginController(
   req: Request<{}, {}, AuthType["login"]>,
@@ -46,8 +46,8 @@ export async function loginController(
       path: "/",
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: "lax",
-      secure: isProduction,
+      sameSite: isProduction ? "lax" : "none",
+      secure: true,
     });
 
     res.json({ accessToken, resUser });
@@ -78,7 +78,7 @@ export async function refreshTokenController(
 ) {
   res.locals.func = "refreshTokenController";
   try {
-    const accessToken = (req.headers.authorization || "").replace(
+    const accessToken = (req.headers.authorization ?? "").replace(
       /^Bearer\s/,
       ""
     );
@@ -115,8 +115,8 @@ export async function refreshTokenController(
       path: "/",
       expires: expiresCookie,
       httpOnly: true,
-      sameSite: "lax",
-      secure: isProduction,
+      sameSite: isProduction ? "lax" : "none",
+      secure: true,
     });
     res.json({ accessToken: newAccessToken });
   } catch (error) {

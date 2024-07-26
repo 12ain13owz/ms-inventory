@@ -8,19 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshTokenController = exports.logoutController = exports.loginController = void 0;
-const config_1 = __importDefault(require("config"));
+const config_1 = require("../../config");
 const lodash_1 = require("lodash");
 const user_service_1 = require("../services/user.service");
 const helper_1 = require("../utils/helper");
 const user_model_1 = require("../models/user.model");
 const jwt_1 = require("../utils/jwt");
 const tokenKey = "refresh_token";
-const isProduction = config_1.default.get("node_env") === "production";
+const isProduction = config_1.config.get("node_env") === "production";
 function loginController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         res.locals.func = "loginController";
@@ -45,8 +42,8 @@ function loginController(req, res, next) {
                 path: "/",
                 expires: expiresCookie,
                 httpOnly: true,
-                sameSite: "lax",
-                secure: isProduction,
+                sameSite: isProduction ? "lax" : "none",
+                secure: true,
             });
             res.json({ accessToken, resUser });
         }
@@ -70,10 +67,11 @@ function logoutController(req, res, next) {
 }
 exports.logoutController = logoutController;
 function refreshTokenController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         res.locals.func = "refreshTokenController";
         try {
-            const accessToken = (req.headers.authorization || "").replace(/^Bearer\s/, "");
+            const accessToken = ((_a = req.headers.authorization) !== null && _a !== void 0 ? _a : "").replace(/^Bearer\s/, "");
             if (!accessToken)
                 throw (0, helper_1.newError)(403, "ไม่พบ Token กรุณาเข้าสู่ระบบใหม่ (1)", true);
             const decodedAccessToken = (0, jwt_1.verifyAccessToken)(accessToken);
@@ -98,8 +96,8 @@ function refreshTokenController(req, res, next) {
                 path: "/",
                 expires: expiresCookie,
                 httpOnly: true,
-                sameSite: "lax",
-                secure: isProduction,
+                sameSite: isProduction ? "lax" : "none",
+                secure: true,
             });
             res.json({ accessToken: newAccessToken });
         }

@@ -93,11 +93,7 @@
             }
           },
           "defaultConfiguration": "development",
-          "options": {
-            "ssl": true,
-            "sslKey": "ssl_private.key",
-            "sslCert": "ssl.crt"
-          }
+          "options": {}
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

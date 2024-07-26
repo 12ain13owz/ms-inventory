@@ -2,7 +2,7 @@
 
 echo Start
 cd /d %~dp0
-node script/init-database.js
+node init-database.js
 
 rem Check success or failure
 if %errorlevel% equ 0 (
@@ -10,7 +10,6 @@ if %errorlevel% equ 0 (
 ) else (
     echo Compile failed
 )
-
 
 rem Prevent the command window from closing
 pause

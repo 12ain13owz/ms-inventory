@@ -1,12 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const config = require("config");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
 
 const sequelize = new Sequelize({
-  dialect: config.get("database.dialect"),
-  storage: config.get("database.storage"),
+  dialect: "sqlite",
+  storage: "../data/database/ms_inventory.sqlite",
 });
 
 const User = sequelize.define(
@@ -253,11 +252,12 @@ InventoryCheck.belongsTo(Inventory, { foreignKey: "inventoryId" });
 Inventory.hasMany(InventoryCheck, { foreignKey: "inventoryId" });
 
 const envContent = `
-PORT="3000"
-NODE_ENV="development"
-USER_MAIL="your_email@gmail.com"
+PORT="your_port"
+NODE_ENV="your_node_env"
+USER_MAIL="your_email"
 PASS_MAIL="your_app_passwords"
 WHITE_LIST="your_url"
+DATABASE_DIR="your_database_dir"
 
 RECAPTCHA_SITE_KEY="your_recaptcha_site_key"
 RECAPTCHA_SECRET_KEY="your_recaptcha_secret_key"
@@ -378,7 +378,7 @@ async function initializeDatabase() {
     console.log("4. Generate admin.");
 
     // await generateCategory();
-    console.log("5. Generate category.");
+    // console.log("5. Generate category.");
 
     await generateStatus();
     console.log("6. Generate status.");
@@ -393,10 +393,9 @@ async function initializeDatabase() {
     console.log("9. Disconnect database.");
 
     const envFilePath = path.join(__dirname, "../.env");
-
     console.log(envFilePath);
     if (!fs.existsSync(envFilePath)) {
-      fs.writeFileSync(".env", envContent, "utf8");
+      fs.writeFileSync("../.env", envContent, "utf8");
       console.log("10. Create .env");
     }
 
@@ -406,4 +405,5 @@ async function initializeDatabase() {
   }
 }
 
+console.log(1);
 initializeDatabase();

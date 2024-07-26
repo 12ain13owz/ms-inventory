@@ -1,17 +1,17 @@
-import { NextFunction, Request } from 'express';
-import { ExtendedResponse } from '../types/express';
-import { omit } from 'lodash';
-import { newError, privateFields, removeWhitespace } from '../utils/helper';
-import { Status } from '../models/status.model';
-import { StatusType } from '../schemas/status.schema';
-import { statusService } from '../services/status.service';
+import { NextFunction, Request } from "express";
+import { ExtendedResponse } from "../types/express";
+import { omit } from "lodash";
+import { newError, privateFields, removeWhitespace } from "../utils/helper";
+import { Status } from "../models/status.model";
+import { StatusType } from "../schemas/status.schema";
+import { statusService } from "../services/status.service";
 
 export async function findAllStatusController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findAllStatusController';
+  res.locals.func = "findAllStatusController";
 
   try {
     const statuses = await statusService.findAll();
@@ -22,11 +22,11 @@ export async function findAllStatusController(
 }
 
 export async function createStatusController(
-  req: Request<{}, {}, StatusType['create']>,
+  req: Request<{}, {}, StatusType["create"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'createStatusController';
+  res.locals.func = "createStatusController";
 
   try {
     const name = removeWhitespace(req.body.name);
@@ -36,7 +36,7 @@ export async function createStatusController(
     const payload = new Status({
       name: name,
       active: req.body.active,
-      remark: req.body.remark || '',
+      remark: req.body.remark ?? "",
     });
     const result = await statusService.create(payload);
     const newStatus = omit(result.toJSON(), privateFields);
@@ -52,19 +52,19 @@ export async function createStatusController(
 
 export async function updateStatusController(
   req: Request<
-    StatusType['update']['params'],
+    StatusType["update"]["params"],
     {},
-    StatusType['update']['body']
+    StatusType["update"]["body"]
   >,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateStatusController';
+  res.locals.func = "updateStatusController";
 
   try {
     const id = +req.params.id;
     const status = await statusService.findById(id);
-    if (!status) throw newError(400, 'ไม่พบสถานะ');
+    if (!status) throw newError(400, "ไม่พบสถานะ");
 
     const name = removeWhitespace(req.body.name);
     const existingStatus = await statusService.findByName(name);
@@ -74,7 +74,7 @@ export async function updateStatusController(
     const payload: Partial<Status> = {
       name: name,
       active: req.body.active,
-      remark: req.body.remark || '',
+      remark: req.body.remark ?? "",
     };
     const [result] = await statusService.update(id, payload);
     if (!result) throw newError(400, `แก้ไขสถานะ ${name} ไม่สำเร็จ`);
@@ -89,16 +89,16 @@ export async function updateStatusController(
 }
 
 export async function deleteStatusController(
-  req: Request<StatusType['delete']>,
+  req: Request<StatusType["delete"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'deleteStatusController';
+  res.locals.func = "deleteStatusController";
 
   try {
     const id = +req.params.id;
     const status = await statusService.findById(id);
-    if (!status) throw newError(400, 'ไม่พบสถานะ ที่ต้องการลบ');
+    if (!status) throw newError(400, "ไม่พบสถานะ ที่ต้องการลบ");
 
     const name = status.name;
     const result = await statusService.delete(id);

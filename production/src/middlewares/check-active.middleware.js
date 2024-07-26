@@ -16,13 +16,12 @@ const fund_service_1 = require("../services/fund.service");
 const location_service_1 = require("../services/location.service");
 function checkCategoryActive(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'checkCategoryActive';
+        res.locals.func = "checkCategoryActive";
         try {
             const categoryId = +req.body.categoryId;
             const category = yield category_service_1.categoryService.findById(categoryId);
-            if (!category || !category.active) {
-                return res.status(400).json({ message: 'ประเภทนี้ไม่สามารถใช้งานได้' });
-            }
+            if (!(category === null || category === void 0 ? void 0 : category.active))
+                return res.status(400).json({ message: "ประเภทนี้ไม่สามารถใช้งานได้" });
             next();
         }
         catch (error) {
@@ -33,13 +32,12 @@ function checkCategoryActive(req, res, next) {
 exports.checkCategoryActive = checkCategoryActive;
 function checkStatusActive(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'checkStatusActive';
+        res.locals.func = "checkStatusActive";
         try {
             const statusId = +req.body.statusId;
             const status = yield status_service_1.statusService.findById(statusId);
-            if (!status || !status.active) {
-                return res.status(400).json({ message: 'สถานะนี้ไม่สามารถใช้งานได้' });
-            }
+            if (!(status === null || status === void 0 ? void 0 : status.active))
+                return res.status(400).json({ message: "สถานะนี้ไม่สามารถใช้งานได้" });
             next();
         }
         catch (error) {
@@ -50,15 +48,14 @@ function checkStatusActive(req, res, next) {
 exports.checkStatusActive = checkStatusActive;
 function checkFundActive(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'checkFundActive';
+        res.locals.func = "checkFundActive";
         try {
             const fundId = +req.body.fundId;
             const fund = yield fund_service_1.fundService.findById(fundId);
-            if (!fund || !fund.active) {
+            if (!(fund === null || fund === void 0 ? void 0 : fund.active))
                 return res
                     .status(400)
-                    .json({ message: 'แหล่งเงินนี้ไม่สามารถใช้งานได้' });
-            }
+                    .json({ message: "แหล่งเงินนี้ไม่สามารถใช้งานได้" });
             next();
         }
         catch (error) {
@@ -69,13 +66,12 @@ function checkFundActive(req, res, next) {
 exports.checkFundActive = checkFundActive;
 function checkLocationActive(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'checkLocationActive';
+        res.locals.func = "checkLocationActive";
         try {
             const locationId = +req.body.locationId;
             const location = yield location_service_1.locationService.findById(locationId);
-            if (!location || !location.active) {
-                return res.status(400).json({ message: 'ห้องนี้ไม่สามารถใช้งานได้' });
-            }
+            if (!(location === null || location === void 0 ? void 0 : location.active))
+                return res.status(400).json({ message: "ห้องนี้ไม่สามารถใช้งานได้" });
             next();
         }
         catch (error) {

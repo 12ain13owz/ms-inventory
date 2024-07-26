@@ -24,7 +24,7 @@ const log_model_1 = require("../models/log.model");
 let cache = [];
 function searchInventoryController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'searchInventoryController';
+        res.locals.func = "searchInventoryController";
         try {
             const query = (0, helper_1.removeWhitespace)(req.query.code);
             const inventories = cache.filter((item) => item.includes(query));
@@ -44,7 +44,7 @@ function searchInventoryController(req, res, next) {
 exports.searchInventoryController = searchInventoryController;
 function searchInventoryByCodeController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'searchInventoryByCodeController';
+        res.locals.func = "searchInventoryByCodeController";
         try {
             const query = (0, helper_1.removeWhitespace)(req.query.code);
             const resInventories = yield inventory_service_1.inventoryService.searchByCode(query);
@@ -58,7 +58,7 @@ function searchInventoryByCodeController(req, res, next) {
 exports.searchInventoryByCodeController = searchInventoryByCodeController;
 function findAllInventoryController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findAllInventoryController';
+        res.locals.func = "findAllInventoryController";
         try {
             const resInventories = yield inventory_service_1.inventoryService.findAll();
             res.json(resInventories);
@@ -71,7 +71,7 @@ function findAllInventoryController(req, res, next) {
 exports.findAllInventoryController = findAllInventoryController;
 function initialInventoryController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'initialInventoryController';
+        res.locals.func = "initialInventoryController";
         try {
             const inventories = yield inventory_service_1.inventoryService.findLimit(30);
             const resInventories = inventories.sort((a, b) => a.id - b.id);
@@ -85,12 +85,12 @@ function initialInventoryController(req, res, next) {
 exports.initialInventoryController = initialInventoryController;
 function findInventoryByDateController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findInventoryByDateController';
+        res.locals.func = "findInventoryByDateController";
         try {
             const dateStart = new Date(req.params.dateStart);
             const dateEnd = new Date(req.params.dateEnd);
             if (isNaN(dateStart.getTime()) || isNaN(dateEnd.getTime()))
-                throw (0, helper_1.newError)(400, 'รูปแบบวันที่ไม่ถูกต้อง');
+                throw (0, helper_1.newError)(400, "รูปแบบวันที่ไม่ถูกต้อง");
             dateStart.setHours(0, 0, 0, 0);
             dateEnd.setHours(23, 59, 59, 999);
             const resInventories = yield inventory_service_1.inventoryService.findByDate(dateStart, dateEnd);
@@ -104,7 +104,7 @@ function findInventoryByDateController(req, res, next) {
 exports.findInventoryByDateController = findInventoryByDateController;
 function findInventoryByTrackController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findInventoryByTrackController';
+        res.locals.func = "findInventoryByTrackController";
         try {
             const track = req.params.track.toUpperCase();
             const resInventory = yield inventory_service_1.inventoryService.findByTrack(track);
@@ -118,7 +118,7 @@ function findInventoryByTrackController(req, res, next) {
 exports.findInventoryByTrackController = findInventoryByTrackController;
 function findInventoryByIdController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findInventoryByIdController';
+        res.locals.func = "findInventoryByIdController";
         try {
             const id = +req.params.id;
             const resInventory = yield inventory_service_1.inventoryService.findById(id);
@@ -132,7 +132,7 @@ function findInventoryByIdController(req, res, next) {
 exports.findInventoryByIdController = findInventoryByIdController;
 function findInventoryByCodeController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findInventoryByCodeController';
+        res.locals.func = "findInventoryByCodeController";
         try {
             const code = (0, helper_1.removeWhitespace)(req.params.code);
             const resInventory = yield inventory_service_1.inventoryService.findByCode(code);
@@ -145,8 +145,9 @@ function findInventoryByCodeController(req, res, next) {
 }
 exports.findInventoryByCodeController = findInventoryByCodeController;
 function createInventoryController(req, res, next) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'createInventoryController';
+        res.locals.func = "createInventoryController";
         const t = yield sequelize_1.default.transaction();
         try {
             const code = (0, helper_1.removeWhitespace)(req.body.code);
@@ -155,19 +156,19 @@ function createInventoryController(req, res, next) {
                 throw (0, helper_1.newError)(400, `รหัสครุภัณฑ์ ${code} ซ้ำ'`);
             const sequence = yield track_service_1.trackService.create(t);
             const track = yield (0, track_1.generateTrack)(sequence.id);
-            const value = parseFloat(req.body.value.replace(/,/g, ''));
+            const value = parseFloat(req.body.value.replace(/,/g, ""));
             const receivedDate = new Date(req.body.receivedDate);
-            const image = req.body.image === 'null' ? null : req.body.image;
+            const image = req.body.image === "null" ? null : req.body.image;
             const payloadInventory = new inventory_model_1.Inventory({
                 track: track,
                 code: code,
-                oldCode: req.body.oldCode || '',
+                oldCode: (_a = req.body.oldCode) !== null && _a !== void 0 ? _a : "",
                 description: req.body.description,
                 unit: req.body.unit,
                 value: value,
                 receivedDate: receivedDate,
-                remark: req.body.remark || '',
-                image: image || '',
+                remark: (_b = req.body.remark) !== null && _b !== void 0 ? _b : "",
+                image: image !== null && image !== void 0 ? image : "",
                 userId: res.locals.userId,
                 categoryId: +req.body.categoryId,
                 statusId: +req.body.statusId,
@@ -178,7 +179,7 @@ function createInventoryController(req, res, next) {
                 track: track,
                 value: value,
                 receivedDate: receivedDate,
-                image: image || '',
+                image: image !== null && image !== void 0 ? image : "",
                 isCreated: true,
                 firstname: res.locals.user.firstname,
                 lastname: res.locals.user.lastname,
@@ -209,33 +210,34 @@ function createInventoryController(req, res, next) {
 }
 exports.createInventoryController = createInventoryController;
 function updateInventoryController(req, res, next) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'updateInventoryController';
+        res.locals.func = "updateInventoryController";
         const t = yield sequelize_1.default.transaction();
         try {
             const id = +req.params.id;
             const inventory = yield inventory_service_1.inventoryService.findById(id);
             if (!inventory)
-                throw (0, helper_1.newError)(404, 'ไม่พบครุภัณฑ์');
+                throw (0, helper_1.newError)(404, "ไม่พบครุภัณฑ์");
             const code = (0, helper_1.removeWhitespace)(req.body.code);
             const existingInventory = yield inventory_service_1.inventoryService.findByCode(code);
             if (existingInventory && existingInventory.id !== id)
                 throw (0, helper_1.newError)(400, `รหัสครุภัณฑ์ ${code} ซ้ำ'`);
             const track = inventory.track;
-            const value = parseFloat(req.body.value.replace(/,/g, ''));
-            const imageEdit = req.body.imageEdit === 'true' ? true : false;
-            const file = req.body.image === 'null' ? null : req.body.image;
+            const value = parseFloat(req.body.value.replace(/,/g, ""));
+            const imageEdit = req.body.imageEdit === "true";
+            const file = req.body.image === "null" ? null : req.body.image;
             const image = imageEdit ? file : inventory.image;
             const receivedDate = new Date(req.body.receivedDate);
             const payloadInventory = {
                 code: code,
-                oldCode: req.body.oldCode || '',
+                oldCode: (_a = req.body.oldCode) !== null && _a !== void 0 ? _a : "",
                 description: req.body.description,
                 unit: req.body.unit,
                 value: value,
                 receivedDate: receivedDate,
-                remark: req.body.remark || '',
-                image: image || '',
+                remark: (_b = req.body.remark) !== null && _b !== void 0 ? _b : "",
+                image: image !== null && image !== void 0 ? image : "",
                 userId: res.locals.userId,
                 categoryId: +req.body.categoryId,
                 statusId: +req.body.statusId,
@@ -246,7 +248,7 @@ function updateInventoryController(req, res, next) {
                 track: track,
                 value: value,
                 receivedDate: receivedDate,
-                image: image || '',
+                image: image !== null && image !== void 0 ? image : "",
                 isCreated: false,
                 firstname: res.locals.user.firstname,
                 lastname: res.locals.user.lastname,
@@ -285,12 +287,12 @@ function updateInventoryController(req, res, next) {
 exports.updateInventoryController = updateInventoryController;
 function deleteInventoryController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'deleteInventoryController';
+        res.locals.func = "deleteInventoryController";
         try {
             const id = +req.params.id;
             const inventory = yield inventory_service_1.inventoryService.findById(id);
             if (!inventory)
-                throw (0, helper_1.newError)(400, 'ไม่พบ ครุภัณฑ์');
+                throw (0, helper_1.newError)(400, "ไม่พบ ครุภัณฑ์");
             const code = inventory.code;
             const result = yield inventory_service_1.inventoryService.delete(id);
             if (!result)
@@ -304,16 +306,17 @@ function deleteInventoryController(req, res, next) {
 }
 exports.deleteInventoryController = deleteInventoryController;
 function generateLog(body, property) {
+    var _a, _b, _c;
     return new log_model_1.Log({
         track: property.track,
         code: body.code,
-        oldCode: body.oldCode || '',
+        oldCode: (_a = body.oldCode) !== null && _a !== void 0 ? _a : "",
         description: body.description,
         unit: body.unit,
         value: property.value,
         receivedDate: property.receivedDate,
-        remark: body.remark || '',
-        image: property.image || '',
+        remark: (_b = body.remark) !== null && _b !== void 0 ? _b : "",
+        image: (_c = property.image) !== null && _c !== void 0 ? _c : "",
         isCreated: property.isCreated,
         firstname: property.firstname,
         lastname: property.lastname,

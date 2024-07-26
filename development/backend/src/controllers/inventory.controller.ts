@@ -1,23 +1,23 @@
-import { NextFunction, Request } from 'express';
-import { ExtendedResponse } from '../types/express';
-import { inventoryService } from '../services/inventory.service';
-import { InventoryType } from '../schemas/inventory.schema';
-import { newError, removeWhitespace } from '../utils/helper';
-import sequelize from '../utils/sequelize';
-import { generateTrack } from '../utils/track';
-import { trackService } from '../services/track.service';
-import { logService } from '../services/log.service';
-import { Inventory } from '../models/inventory.model';
-import { Log, PropertyLog } from '../models/log.model';
+import { NextFunction, Request } from "express";
+import { ExtendedResponse } from "../types/express";
+import { inventoryService } from "../services/inventory.service";
+import { InventoryType } from "../schemas/inventory.schema";
+import { newError, removeWhitespace } from "../utils/helper";
+import sequelize from "../utils/sequelize";
+import { generateTrack } from "../utils/track";
+import { trackService } from "../services/track.service";
+import { logService } from "../services/log.service";
+import { Inventory } from "../models/inventory.model";
+import { Log, PropertyLog } from "../models/log.model";
 
 let cache: string[] = [];
 
 export async function searchInventoryController(
-  req: Request<{}, {}, {}, InventoryType['search']>,
+  req: Request<{}, {}, {}, InventoryType["search"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'searchInventoryController';
+  res.locals.func = "searchInventoryController";
 
   try {
     const query = removeWhitespace(req.query.code);
@@ -36,11 +36,11 @@ export async function searchInventoryController(
 }
 
 export async function searchInventoryByCodeController(
-  req: Request<{}, {}, {}, InventoryType['search']>,
+  req: Request<{}, {}, {}, InventoryType["search"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'searchInventoryByCodeController';
+  res.locals.func = "searchInventoryByCodeController";
 
   try {
     const query = removeWhitespace(req.query.code);
@@ -56,7 +56,7 @@ export async function findAllInventoryController(
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findAllInventoryController';
+  res.locals.func = "findAllInventoryController";
 
   try {
     const resInventories = await inventoryService.findAll();
@@ -71,7 +71,7 @@ export async function initialInventoryController(
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'initialInventoryController';
+  res.locals.func = "initialInventoryController";
 
   try {
     const inventories = await inventoryService.findLimit(30);
@@ -84,18 +84,18 @@ export async function initialInventoryController(
 }
 
 export async function findInventoryByDateController(
-  req: Request<InventoryType['findByDate']>,
+  req: Request<InventoryType["findByDate"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findInventoryByDateController';
+  res.locals.func = "findInventoryByDateController";
 
   try {
     const dateStart = new Date(req.params.dateStart);
     const dateEnd = new Date(req.params.dateEnd);
 
     if (isNaN(dateStart.getTime()) || isNaN(dateEnd.getTime()))
-      throw newError(400, 'รูปแบบวันที่ไม่ถูกต้อง');
+      throw newError(400, "รูปแบบวันที่ไม่ถูกต้อง");
 
     dateStart.setHours(0, 0, 0, 0);
     dateEnd.setHours(23, 59, 59, 999);
@@ -111,11 +111,11 @@ export async function findInventoryByDateController(
 }
 
 export async function findInventoryByTrackController(
-  req: Request<InventoryType['findByTrack']>,
+  req: Request<InventoryType["findByTrack"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findInventoryByTrackController';
+  res.locals.func = "findInventoryByTrackController";
 
   try {
     const track = req.params.track.toUpperCase();
@@ -128,11 +128,11 @@ export async function findInventoryByTrackController(
 }
 
 export async function findInventoryByIdController(
-  req: Request<InventoryType['findById']>,
+  req: Request<InventoryType["findById"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findInventoryByIdController';
+  res.locals.func = "findInventoryByIdController";
 
   try {
     const id = +req.params.id;
@@ -145,11 +145,11 @@ export async function findInventoryByIdController(
 }
 
 export async function findInventoryByCodeController(
-  req: Request<InventoryType['findByCode']>,
+  req: Request<InventoryType["findByCode"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findInventoryByCodeController';
+  res.locals.func = "findInventoryByCodeController";
 
   try {
     const code = removeWhitespace(req.params.code);
@@ -162,11 +162,11 @@ export async function findInventoryByCodeController(
 }
 
 export async function createInventoryController(
-  req: Request<{}, {}, InventoryType['create']>,
+  req: Request<{}, {}, InventoryType["create"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'createInventoryController';
+  res.locals.func = "createInventoryController";
   const t = await sequelize.transaction();
 
   try {
@@ -176,20 +176,20 @@ export async function createInventoryController(
 
     const sequence = await trackService.create(t);
     const track = await generateTrack(sequence.id);
-    const value = parseFloat(req.body.value.replace(/,/g, ''));
+    const value = parseFloat(req.body.value.replace(/,/g, ""));
     const receivedDate = new Date(req.body.receivedDate);
-    const image = req.body.image === 'null' ? null : req.body.image;
+    const image = req.body.image === "null" ? null : req.body.image;
 
     const payloadInventory: Inventory = new Inventory({
       track: track,
       code: code,
-      oldCode: req.body.oldCode || '',
+      oldCode: req.body.oldCode ?? "",
       description: req.body.description,
       unit: req.body.unit,
       value: value,
       receivedDate: receivedDate,
-      remark: req.body.remark || '',
-      image: image || '',
+      remark: req.body.remark ?? "",
+      image: image ?? "",
       userId: res.locals.userId!,
       categoryId: +req.body.categoryId,
       statusId: +req.body.statusId,
@@ -201,7 +201,7 @@ export async function createInventoryController(
       track: track,
       value: value,
       receivedDate: receivedDate,
-      image: image || '',
+      image: image ?? "",
       isCreated: true,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
@@ -234,20 +234,20 @@ export async function createInventoryController(
 
 export async function updateInventoryController(
   req: Request<
-    InventoryType['update']['params'],
+    InventoryType["update"]["params"],
     {},
-    InventoryType['update']['body']
+    InventoryType["update"]["body"]
   >,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateInventoryController';
+  res.locals.func = "updateInventoryController";
   const t = await sequelize.transaction();
 
   try {
     const id = +req.params.id;
     const inventory = await inventoryService.findById(id);
-    if (!inventory) throw newError(404, 'ไม่พบครุภัณฑ์');
+    if (!inventory) throw newError(404, "ไม่พบครุภัณฑ์");
 
     const code = removeWhitespace(req.body.code);
     const existingInventory = await inventoryService.findByCode(code);
@@ -255,21 +255,21 @@ export async function updateInventoryController(
       throw newError(400, `รหัสครุภัณฑ์ ${code} ซ้ำ'`);
 
     const track = inventory.track;
-    const value = parseFloat(req.body.value.replace(/,/g, ''));
-    const imageEdit = req.body.imageEdit === 'true' ? true : false;
-    const file = req.body.image === 'null' ? null : req.body.image;
+    const value = parseFloat(req.body.value.replace(/,/g, ""));
+    const imageEdit = req.body.imageEdit === "true";
+    const file = req.body.image === "null" ? null : req.body.image;
     const image = imageEdit ? file : inventory.image;
     const receivedDate = new Date(req.body.receivedDate);
 
     const payloadInventory: Partial<Inventory> = {
       code: code,
-      oldCode: req.body.oldCode || '',
+      oldCode: req.body.oldCode ?? "",
       description: req.body.description,
       unit: req.body.unit,
       value: value,
       receivedDate: receivedDate,
-      remark: req.body.remark || '',
-      image: image || '',
+      remark: req.body.remark ?? "",
+      image: image ?? "",
       userId: res.locals.userId!,
       categoryId: +req.body.categoryId,
       statusId: +req.body.statusId,
@@ -281,7 +281,7 @@ export async function updateInventoryController(
       track: track,
       value: value,
       receivedDate: receivedDate,
-      image: image || '',
+      image: image ?? "",
       isCreated: false,
       firstname: res.locals.user!.firstname,
       lastname: res.locals.user!.lastname,
@@ -320,16 +320,16 @@ export async function updateInventoryController(
 }
 
 export async function deleteInventoryController(
-  req: Request<InventoryType['delete']>,
+  req: Request<InventoryType["delete"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'deleteInventoryController';
+  res.locals.func = "deleteInventoryController";
 
   try {
     const id = +req.params.id;
     const inventory = await inventoryService.findById(id);
-    if (!inventory) throw newError(400, 'ไม่พบ ครุภัณฑ์');
+    if (!inventory) throw newError(400, "ไม่พบ ครุภัณฑ์");
 
     const code = inventory.code;
     const result = await inventoryService.delete(id);
@@ -341,17 +341,17 @@ export async function deleteInventoryController(
   }
 }
 
-function generateLog(body: InventoryType['create'], property: PropertyLog) {
+function generateLog(body: InventoryType["create"], property: PropertyLog) {
   return new Log({
     track: property.track,
     code: body.code,
-    oldCode: body.oldCode || '',
+    oldCode: body.oldCode ?? "",
     description: body.description,
     unit: body.unit,
     value: property.value,
     receivedDate: property.receivedDate,
-    remark: body.remark || '',
-    image: property.image || '',
+    remark: body.remark ?? "",
+    image: property.image ?? "",
     isCreated: property.isCreated,
     firstname: property.firstname,
     lastname: property.lastname,

@@ -16,7 +16,7 @@ const location_model_1 = require("../models/location.model");
 const location_service_1 = require("../services/location.service");
 function findAllLocationController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'findAllLocationController';
+        res.locals.func = "findAllLocationController";
         try {
             const locations = yield location_service_1.locationService.findAll();
             res.json(locations);
@@ -28,8 +28,9 @@ function findAllLocationController(req, res, next) {
 }
 exports.findAllLocationController = findAllLocationController;
 function createLocationController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'createLocationController';
+        res.locals.func = "createLocationController";
         try {
             const name = (0, helper_1.removeWhitespace)(req.body.name);
             const location = yield location_service_1.locationService.findByName(name);
@@ -38,7 +39,7 @@ function createLocationController(req, res, next) {
             const payload = new location_model_1.Location({
                 name: name,
                 active: req.body.active,
-                remark: req.body.remark || '',
+                remark: (_a = req.body.remark) !== null && _a !== void 0 ? _a : "",
             });
             const result = yield location_service_1.locationService.create(payload);
             const newLocation = (0, lodash_1.omit)(result.toJSON(), helper_1.privateFields);
@@ -54,13 +55,14 @@ function createLocationController(req, res, next) {
 }
 exports.createLocationController = createLocationController;
 function updateLocationController(req, res, next) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'updateLocationController';
+        res.locals.func = "updateLocationController";
         try {
             const id = +req.params.id;
             const location = yield location_service_1.locationService.findById(id);
             if (!location)
-                throw (0, helper_1.newError)(400, 'ไม่พบห้อง');
+                throw (0, helper_1.newError)(400, "ไม่พบห้อง");
             const name = (0, helper_1.removeWhitespace)(req.body.name);
             const existingLocation = yield location_service_1.locationService.findByName(name);
             if (existingLocation && existingLocation.id !== id)
@@ -68,7 +70,7 @@ function updateLocationController(req, res, next) {
             const payload = {
                 name: name,
                 active: req.body.active,
-                remark: req.body.remark || '',
+                remark: (_a = req.body.remark) !== null && _a !== void 0 ? _a : "",
             };
             const [result] = yield location_service_1.locationService.update(id, payload);
             if (!result)
@@ -86,12 +88,12 @@ function updateLocationController(req, res, next) {
 exports.updateLocationController = updateLocationController;
 function deleteLocationController(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        res.locals.func = 'deleteLocationController';
+        res.locals.func = "deleteLocationController";
         try {
             const id = +req.params.id;
             const location = yield location_service_1.locationService.findById(id);
             if (!location)
-                throw (0, helper_1.newError)(400, 'ไม่พบห้อง ที่ต้องการลบ');
+                throw (0, helper_1.newError)(400, "ไม่พบห้อง ที่ต้องการลบ");
             const name = location.name;
             const result = yield location_service_1.locationService.delete(id);
             if (!result)

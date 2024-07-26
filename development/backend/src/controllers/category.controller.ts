@@ -1,17 +1,17 @@
-import { NextFunction, Request } from 'express';
-import { ExtendedResponse } from '../types/express';
-import { omit } from 'lodash';
-import { newError, privateFields, removeWhitespace } from '../utils/helper';
-import { Category } from '../models/category.model';
-import { CategoryType } from '../schemas/category.schema';
-import { categoryService } from '../services/category.service';
+import { NextFunction, Request } from "express";
+import { ExtendedResponse } from "../types/express";
+import { omit } from "lodash";
+import { newError, privateFields, removeWhitespace } from "../utils/helper";
+import { Category } from "../models/category.model";
+import { CategoryType } from "../schemas/category.schema";
+import { categoryService } from "../services/category.service";
 
 export async function findAllCategoryController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findAllCategoryController';
+  res.locals.func = "findAllCategoryController";
 
   try {
     const resCategories = await categoryService.findAll();
@@ -22,11 +22,11 @@ export async function findAllCategoryController(
 }
 
 export async function createCategoryController(
-  req: Request<{}, {}, CategoryType['create']>,
+  req: Request<{}, {}, CategoryType["create"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'createCategoryController';
+  res.locals.func = "createCategoryController";
 
   try {
     const name = removeWhitespace(req.body.name);
@@ -36,7 +36,7 @@ export async function createCategoryController(
     const payload = new Category({
       name: name,
       active: req.body.active,
-      remark: req.body.remark || '',
+      remark: req.body.remark ?? "",
     });
     const result = await categoryService.create(payload);
     const newCagegory = omit(result.toJSON(), privateFields);
@@ -52,19 +52,19 @@ export async function createCategoryController(
 
 export async function updateCategoryController(
   req: Request<
-    CategoryType['update']['params'],
+    CategoryType["update"]["params"],
     {},
-    CategoryType['update']['body']
+    CategoryType["update"]["body"]
   >,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateCategoryController';
+  res.locals.func = "updateCategoryController";
 
   try {
     const id = +req.params.id;
     const cateogory = await categoryService.findById(id);
-    if (!cateogory) throw newError(400, 'ไม่พบประเภท');
+    if (!cateogory) throw newError(400, "ไม่พบประเภท");
 
     const name = removeWhitespace(req.body.name);
     const existingCategory = await categoryService.findByName(name);
@@ -74,7 +74,7 @@ export async function updateCategoryController(
     const payload: Partial<Category> = {
       name: name,
       active: req.body.active,
-      remark: req.body.remark || '',
+      remark: req.body.remark ?? "",
     };
     const [result] = await categoryService.update(id, payload);
     if (!result) throw newError(400, `แก้ไขประเภท ${name} ไม่สำเร็จ`);
@@ -89,16 +89,16 @@ export async function updateCategoryController(
 }
 
 export async function deleteCategoryController(
-  req: Request<CategoryType['delete']>,
+  req: Request<CategoryType["delete"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'deleteCategoryController';
+  res.locals.func = "deleteCategoryController";
 
   try {
     const id = +req.params.id;
     const category = await categoryService.findById(id);
-    if (!category) throw newError(400, 'ไม่พบประเภท ที่ต้องการลบ');
+    if (!category) throw newError(400, "ไม่พบประเภท ที่ต้องการลบ");
 
     const name = category.name;
     const result = await categoryService.delete(id);

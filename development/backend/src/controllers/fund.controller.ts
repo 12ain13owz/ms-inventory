@@ -1,17 +1,17 @@
-import { NextFunction, Request } from 'express';
-import { ExtendedResponse } from '../types/express';
-import { omit } from 'lodash';
-import { newError, privateFields, removeWhitespace } from '../utils/helper';
-import { Fund } from '../models/fund.model';
-import { FundType } from '../schemas/fund.schema';
-import { fundService } from '../services/fund.service';
+import { NextFunction, Request } from "express";
+import { ExtendedResponse } from "../types/express";
+import { omit } from "lodash";
+import { newError, privateFields, removeWhitespace } from "../utils/helper";
+import { Fund } from "../models/fund.model";
+import { FundType } from "../schemas/fund.schema";
+import { fundService } from "../services/fund.service";
 
 export async function findAllFundController(
   req: Request,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'findAllFundController';
+  res.locals.func = "findAllFundController";
 
   try {
     const funds = await fundService.findAll();
@@ -22,11 +22,11 @@ export async function findAllFundController(
 }
 
 export async function createFundController(
-  req: Request<{}, {}, FundType['create']>,
+  req: Request<{}, {}, FundType["create"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'createFundController';
+  res.locals.func = "createFundController";
 
   try {
     const name = removeWhitespace(req.body.name);
@@ -36,7 +36,7 @@ export async function createFundController(
     const payload = new Fund({
       name: name,
       active: req.body.active,
-      remark: req.body.remark || '',
+      remark: req.body.remark ?? "",
     });
     const result = await fundService.create(payload);
     const newFund = omit(result.toJSON(), privateFields);
@@ -51,16 +51,16 @@ export async function createFundController(
 }
 
 export async function updateFundController(
-  req: Request<FundType['update']['params'], {}, FundType['update']['body']>,
+  req: Request<FundType["update"]["params"], {}, FundType["update"]["body"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'updateFundController';
+  res.locals.func = "updateFundController";
 
   try {
     const id = +req.params.id;
     const fund = await fundService.findById(id);
-    if (!fund) throw newError(400, 'ไม่พบแหล่งเงิน');
+    if (!fund) throw newError(400, "ไม่พบแหล่งเงิน");
 
     const name = removeWhitespace(req.body.name);
     const existingFund = await fundService.findByName(name);
@@ -70,7 +70,7 @@ export async function updateFundController(
     const payload: Partial<Fund> = {
       name: name,
       active: req.body.active,
-      remark: req.body.remark || '',
+      remark: req.body.remark ?? "",
     };
     const [result] = await fundService.update(id, payload);
     if (!result) throw newError(400, `แก้ไขแหล่งเงิน ${name} ไม่สำเร็จ`);
@@ -85,16 +85,16 @@ export async function updateFundController(
 }
 
 export async function deleteFundController(
-  req: Request<FundType['delete']>,
+  req: Request<FundType["delete"]>,
   res: ExtendedResponse,
   next: NextFunction
 ) {
-  res.locals.func = 'deleteFundController';
+  res.locals.func = "deleteFundController";
 
   try {
     const id = +req.params.id;
     const fund = await fundService.findById(id);
-    if (!fund) throw newError(400, 'ไม่พบแหล่งเงิน ที่ต้องการลบ');
+    if (!fund) throw newError(400, "ไม่พบแหล่งเงิน ที่ต้องการลบ");
 
     const name = fund.name;
     const result = await fundService.delete(id);

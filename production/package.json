@@ -1,11 +1,14 @@
 {
-  "name": "nodejs-ms-inventory",
+  "name": "ms-inventory",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "start:prod": "pm2 start src/index.js --name ms-inventory"
+    "start": "node --env-file=.env src/index.js",
+    "start:prod": "pm2 start src/index.js --name ms-inventory",
+    "dev": "tsx watch --env-file=.env src/index.ts",
+    "clean": "rimraf ../build",
+    "build": "npm run clean && tsc"
   },
   "keywords": [],
   "author": "",

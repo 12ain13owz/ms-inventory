@@ -1,4 +1,4 @@
-const url = 'https://192.168.1.37/';
+const url = 'http://localhost:3000/';
 
 export const environment = {
   production: false,

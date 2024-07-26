@@ -1,4 +1,5 @@
-import config from "config";
+require("dotenv").config();
+import { config } from "../config";
 import express from "express";
 import cors, { CorsOptions } from "cors";
 import morgan from "morgan";
@@ -16,8 +17,8 @@ import log from "./utils/logger";
 import socket from "./socket";
 
 const app = express();
-const port = config.get<number>("port");
-const whiteList = config.get<string>("whiteList").split(",");
+const port = config.get("port");
+const whiteList = config.get("whiteList").split(",");
 const corsOptions: CorsOptions = {
   origin: whiteList,
   allowedHeaders: ["Content-Type", "Authorization"],

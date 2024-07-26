@@ -12,7 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("config"));
+require("dotenv").config();
+const config_1 = require("../config");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -27,8 +28,8 @@ const connect_1 = require("./utils/connect");
 const logger_1 = __importDefault(require("./utils/logger"));
 const socket_1 = __importDefault(require("./socket"));
 const app = (0, express_1.default)();
-const port = config_1.default.get("port");
-const whiteList = config_1.default.get("whiteList").split(",");
+const port = config_1.config.get("port");
+const whiteList = config_1.config.get("whiteList").split(",");
 const corsOptions = {
     origin: whiteList,
     allowedHeaders: ["Content-Type", "Authorization"],

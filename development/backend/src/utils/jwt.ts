@@ -1,4 +1,4 @@
-import config from "config";
+import { config } from "../../config";
 import { SignOptions, sign, verify } from "jsonwebtoken";
 import log from "./logger";
 
@@ -38,11 +38,11 @@ export function signJwt(
   options?: SignOptions | undefined
 ): string | null {
   try {
-    const signingKey = config.get<string>(keyName);
+    const signingKey = config.get(keyName);
 
     return sign(object, signingKey, {
       algorithm: "RS256",
-      ...(options && options),
+      ...options,
     });
   } catch (error) {
     const e = error as Error;
@@ -57,7 +57,7 @@ export function verifyJwt<T>(
   keyName: "accessTokenPublicKey" | "refreshTokenPublicKey"
 ): T | null {
   try {
-    const publicKey = config.get<string>(keyName);
+    const publicKey = config.get(keyName);
     const decode = verify(token, publicKey) as T;
 
     return decode;
@@ -72,7 +72,7 @@ export function verifyJwt<T>(
 export function verifyAccessToken(token: string): string | null {
   try {
     const keyName = "accessTokenPublicKey";
-    const publicKey = config.get<string>(keyName);
+    const publicKey = config.get(keyName);
     verify(token, publicKey);
 
     return null;
