@@ -6,6 +6,6 @@ export const environment = {
   imageUrl: `${url}images/`,
   apiUrl: `${url}api/v1/`,
   recaptcha: {
-    siteKey: '6Ler7hgqAAAAAC81os831aA4MldT6HA66FOBuJ6i',
+    siteKey: '6LfGJdwpAAAAAJ4-l4EwVPvcdx8ka5NjvttR-4MH',
   },
 };
