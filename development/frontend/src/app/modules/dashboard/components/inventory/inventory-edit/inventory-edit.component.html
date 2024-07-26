@@ -260,6 +260,12 @@
         </button>
       </mat-card-actions>
     </form>
+
+    <mat-card-footer>
+      @if (isLoading) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+    </mat-card-footer>
   </mat-card>
   }
 </ng-template>
