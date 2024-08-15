@@ -2,4 +2,4 @@
 
 ### Link
 
-https://ms-inventory.fly.dev/scan
+https://ms-inventory.fly.dev/
