@@ -293,15 +293,47 @@ async function generateAdmin() {
 
 async function generateCategory() {
   const categories = [
-    { name: "CPU", active: true, remark: "" },
-    { name: "Main board", active: true, remark: "" },
-    { name: "Display Card", active: true, remark: "" },
-    { name: "RAM", active: true, remark: "" },
-    { name: "Hard disk", active: true, remark: "" },
-    { name: "Power Supply", active: true, remark: "" },
-    { name: "Case", active: true, remark: "" },
-    { name: "Keyboard", active: true, remark: "" },
-    { name: "Mouse", active: true, remark: "" },
+    { name: "โต๊ะ", active: true, remark: "" },
+    { name: "ตู้", active: true, remark: "" },
+    { name: "เก้าอี้", active: true, remark: "" },
+    { name: "กระดาน", active: true, remark: "" },
+    { name: "เครื่องเข้าเล่ม", active: true, remark: "" },
+    { name: "เครื่องเคลือบบัตร", active: true, remark: "" },
+    { name: "ชั้นวางของ", active: true, remark: "" },
+    { name: "เครื่องปรับอากาศ", active: true, remark: "" },
+    { name: "ชั้นวางหนังสือ", active: true, remark: "" },
+    { name: "จอ", active: true, remark: "" },
+    { name: "วิทยุ", active: true, remark: "" },
+    { name: "เครื่องตรวจข้อสอบ", active: true, remark: "" },
+    { name: "โซฟา", active: true, remark: "" },
+    { name: "เครื่องทำบัตร", active: true, remark: "" },
+    { name: "ฉากกั้นห้อง", active: true, remark: "" },
+    { name: "ม่านปรับแสง", active: true, remark: "" },
+    { name: "ชุดเครื่องเสียง", active: true, remark: "" },
+    { name: "ตู้แรค", active: true, remark: "" },
+    { name: "ไมโครโฟน", active: true, remark: "" },
+    { name: "แบตเตอรี่", active: true, remark: "" },
+    { name: "เครื่องถ่ายทอดสัญญาณ", active: true, remark: "" },
+    { name: "กล้อง", active: true, remark: "" },
+    { name: "คอมพิวเตอร์", active: true, remark: "" },
+    { name: "เลนส์", active: true, remark: "" },
+    { name: "แว่น VR", active: true, remark: "" },
+    { name: "เครื่องสลับควบคุมการใช้งาน", active: true, remark: "" },
+    { name: "เครื่องบันทึกภาพ", active: true, remark: "" },
+    { name: "เครื่องพิมพ์เลเซอร์", active: true, remark: "" },
+    { name: "IPad", active: true, remark: "" },
+    { name: "เครื่องสแกนเนอร์", active: true, remark: "" },
+    { name: "โปรเจคเตอร์", active: true, remark: "" },
+    { name: "ฮาร์ดดิสก์", active: true, remark: "" },
+    { name: "เครื่องสำรองไฟ", active: true, remark: "" },
+    { name: "แรม", active: true, remark: "" },
+    { name: "เครื่องแม่ข่าย", active: true, remark: "" },
+    { name: "เครื่องกระจายสัญญาณ", active: true, remark: "" },
+    { name: "ระบบปฏิบัติการ", active: true, remark: "" },
+    { name: "แอกเซสพอยต์", active: true, remark: "" },
+    { name: "แท็บเลต", active: true, remark: "" },
+    { name: "โน้ตบุ๊ก", active: true, remark: "" },
+    { name: "ซอร์ฟแวร์", active: true, remark: "" },
   ];
 
   for (const category of categories) {
@@ -377,8 +409,8 @@ async function initializeDatabase() {
     await generateAdmin();
     console.log("4. Generate admin.");
 
-    // await generateCategory();
-    // console.log("5. Generate category.");
+    await generateCategory();
+    console.log("5. Generate category.");
 
     await generateStatus();
     console.log("6. Generate status.");
@@ -405,5 +437,4 @@ async function initializeDatabase() {
   }
 }
 
-console.log(1);
 initializeDatabase();
