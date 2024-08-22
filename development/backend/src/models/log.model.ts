@@ -4,8 +4,8 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-} from 'sequelize';
-import sequelize from '../utils/sequelize';
+} from "sequelize";
+import sequelize from "../utils/sequelize";
 
 export class Log extends Model<
   InferAttributes<Log>,
@@ -34,7 +34,7 @@ export class Log extends Model<
 export default Log.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    track: { type: DataTypes.STRING(12), allowNull: false },
+    track: { type: DataTypes.STRING(7), allowNull: false },
     code: { type: DataTypes.STRING, allowNull: false },
     oldCode: { type: DataTypes.STRING },
     description: { type: DataTypes.TEXT, allowNull: false },
@@ -58,12 +58,12 @@ export default Log.init(
   },
   {
     indexes: [
-      { fields: ['track'] },
-      { fields: ['code'] },
-      { fields: ['createdAt'] },
+      { fields: ["track"] },
+      { fields: ["code"] },
+      { fields: ["createdAt"] },
     ],
     sequelize,
-    modelName: 'Log',
+    modelName: "Log",
     timestamps: false,
   }
 );

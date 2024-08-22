@@ -41,7 +41,7 @@ const Log = sequelize.define(
   "Log",
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    track: { type: DataTypes.STRING(12), allowNull: false },
+    track: { type: DataTypes.STRING(7), allowNull: false },
     code: { type: DataTypes.STRING, allowNull: false },
     oldCode: { type: DataTypes.STRING },
     description: { type: DataTypes.TEXT, allowNull: false },

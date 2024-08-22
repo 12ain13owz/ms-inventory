@@ -11,7 +11,7 @@ class Log extends sequelize_1.Model {
 exports.Log = Log;
 exports.default = Log.init({
     id: { type: sequelize_1.DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    track: { type: sequelize_1.DataTypes.STRING(12), allowNull: false },
+    track: { type: sequelize_1.DataTypes.STRING(7), allowNull: false },
     code: { type: sequelize_1.DataTypes.STRING, allowNull: false },
     oldCode: { type: sequelize_1.DataTypes.STRING },
     description: { type: sequelize_1.DataTypes.TEXT, allowNull: false },
@@ -34,11 +34,11 @@ exports.default = Log.init({
     },
 }, {
     indexes: [
-        { fields: ['track'] },
-        { fields: ['code'] },
-        { fields: ['createdAt'] },
+        { fields: ["track"] },
+        { fields: ["code"] },
+        { fields: ["createdAt"] },
     ],
     sequelize: sequelize_2.default,
-    modelName: 'Log',
+    modelName: "Log",
     timestamps: false,
 });
