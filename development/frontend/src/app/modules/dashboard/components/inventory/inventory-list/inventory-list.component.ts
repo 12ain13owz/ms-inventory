@@ -308,7 +308,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
 
       if (!this.isSort) {
         this.dataSource.sort.sort({
-          id: 'createdAt',
+          id: 'code',
           start: 'desc',
           disableClear: true,
         });
